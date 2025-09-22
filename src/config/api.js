@@ -9,8 +9,8 @@ const getAPIBaseURL = () => {
     // Development: Use local crawler API
     return 'http://localhost:8000'
   } else {
-    // Production: Use your deployed crawler API URL
-    return import.meta.env.VITE_API_BASE_URL || 'https://api.looklyy.com'
+    // Production: Use Vercel API endpoints
+    return import.meta.env.VITE_API_BASE_URL || 'https://looklyy.com/api'
   }
 }
 
