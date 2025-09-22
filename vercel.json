@@ -1,13 +1,9 @@
 {
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+  "functions": {
+    "api/**/*.py": {
+      "runtime": "python3.9"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/api/(.*)",
@@ -20,10 +16,5 @@
   ],
   "env": {
     "VITE_API_BASE_URL": "https://looklyy.com/api"
-  },
-  "functions": {
-    "api/**/*.py": {
-      "runtime": "python3.9"
-    }
   }
 }
