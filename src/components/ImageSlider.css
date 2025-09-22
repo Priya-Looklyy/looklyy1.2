@@ -1,0 +1,186 @@
+/* Image Slider Component - Purple Theme */
+
+.image-slider {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.1);
+  transition: all 0.4s ease;
+  cursor: pointer;
+  flex: 1;
+  height: 100%;
+  position: relative;
+}
+
+.image-slider:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(147, 51, 234, 0.2);
+}
+
+.slider-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.slider-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.4s ease;
+}
+
+.image-slider:hover .slider-image {
+  transform: scale(1.05);
+}
+
+.image-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #f3e8ff 25%, #e9d5ff 50%, #f3e8ff 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.slider-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(126, 34, 206, 0.3) 100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 1rem;
+}
+
+.image-slider:hover .slider-overlay {
+  opacity: 1;
+}
+
+.slider-actions {
+  display: flex;
+  gap: 0.3rem;
+  flex-direction: row;
+}
+
+.action-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 51, 234, 0.1);
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  border-color: rgba(147, 51, 234, 0.3);
+}
+
+.action-btn:focus {
+  outline: 2px solid #9333ea;
+  outline-offset: 2px;
+}
+
+.action-btn i {
+  font-size: 0.6rem;
+  color: #2d1b4e;
+  transition: all 0.3s ease;
+}
+
+.heart-btn.active i {
+  color: #db2777;
+  animation: heartBeat 0.6s ease;
+}
+
+.heart-btn.active i::before {
+  content: "\f004";
+}
+
+.pin-btn.active {
+  background: rgba(147, 51, 234, 0.9);
+  animation: pinRotate 0.6s ease;
+}
+
+.pin-btn.active i {
+  color: white;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes pinRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(15deg) scale(1.1); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+
+
+/* Responsive Design - Keep all 5 sliders visible */
+@media (max-width: 768px) {
+  .action-btn {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .action-btn i {
+    font-size: 0.5rem;
+  }
+  
+  .slider-actions {
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-btn {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .action-btn i {
+    font-size: 0.45rem;
+  }
+  
+  .slider-overlay {
+    padding: 0.5rem;
+  }
+  
+  .slider-actions {
+    gap: 0.2rem;
+  }
+}
+
+/* Smooth transitions */
+.image-slider, .action-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Purple theme focus states */
+.image-slider:focus-within {
+  outline: 2px solid #9333ea;
+  outline-offset: 2px;
+}

@@ -1,0 +1,318 @@
+/* Trending Card - Pinterest Style Layout */
+
+.trending-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.08);
+  transition: all 0.4s ease;
+  cursor: pointer;
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.trending-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(147, 51, 234, 0.15);
+}
+
+.trending-card.favorited {
+  border: 2px solid rgba(147, 51, 234, 0.3);
+  box-shadow: 0 6px 30px rgba(147, 51, 234, 0.2);
+}
+
+.trending-card.favorited::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #9333ea, #a855f7, #c084fc);
+  z-index: 2;
+}
+
+.card-image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: all 0.4s ease;
+}
+
+.trending-card:hover .card-image {
+  transform: scale(1.02);
+}
+
+.image-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(90deg, #f3e8ff 25%, #e9d5ff 50%, #f3e8ff 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(126, 34, 206, 0.2) 100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 1rem;
+}
+
+.trending-card:hover .card-overlay {
+  opacity: 1;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.action-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 51, 234, 0.1);
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  border-color: rgba(147, 51, 234, 0.3);
+}
+
+.action-btn:focus {
+  outline: 2px solid #9333ea;
+  outline-offset: 2px;
+}
+
+.action-btn i {
+  font-size: 0.9rem;
+  color: #2d1b4e;
+  transition: all 0.3s ease;
+}
+
+.heart-btn.active i {
+  color: #db2777;
+  animation: heartBeat 0.6s ease;
+}
+
+.heart-btn.active i::before {
+  content: "\f004";
+}
+
+.pin-btn:hover {
+  background: rgba(147, 51, 234, 0.1);
+}
+
+.pin-btn:hover i {
+  color: #9333ea;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.favorited-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: linear-gradient(135deg, #db2777, #ec4899);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 10px rgba(219, 39, 119, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 2px 10px rgba(219, 39, 119, 0.3);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(219, 39, 119, 0.5);
+  }
+}
+
+.card-info {
+  padding: 1.5rem;
+}
+
+.card-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #2d1b4e;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+
+.card-info p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.trend-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(168, 85, 247, 0.1));
+  color: #9333ea;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+/* Pinterest-style responsive grid in parent */
+.trending-grid {
+  columns: 5;
+  column-gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Responsive columns */
+@media (max-width: 1200px) {
+  .trending-grid {
+    columns: 4;
+    column-gap: 1.2rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .trending-grid {
+    columns: 3;
+    column-gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .card-info {
+    padding: 1.2rem;
+  }
+  
+  .card-info h3 {
+    font-size: 1.1rem;
+  }
+  
+  .action-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .action-btn i {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .trending-grid {
+    columns: 2;
+    column-gap: 0.8rem;
+    padding: 0.8rem;
+  }
+  
+  .trending-card {
+    margin-bottom: 1rem;
+  }
+  
+  .card-info {
+    padding: 1rem;
+  }
+  
+  .card-info h3 {
+    font-size: 1rem;
+  }
+  
+  .card-info p {
+    font-size: 0.8rem;
+  }
+  
+  .action-btn {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .action-btn i {
+    font-size: 0.7rem;
+  }
+  
+  .favorited-badge {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .trending-grid {
+    columns: 1;
+    column-gap: 0;
+  }
+}
+
+/* Smooth transitions */
+.trending-card, .action-btn, .card-image {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus states for accessibility */
+.trending-card:focus {
+  outline: 2px solid #9333ea;
+  outline-offset: 2px;
+}
+
+/* Hover effects for better UX */
+.trending-card:hover .card-info h3 {
+  color: #9333ea;
+}
+
+.trending-card:hover .trend-tag {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.15), rgba(168, 85, 247, 0.15));
+  border-color: rgba(147, 51, 234, 0.3);
+}
