@@ -3,14 +3,14 @@
 // Environment-based API URL configuration
 const getAPIBaseURL = () => {
   // Check if we're in development mode
-  const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost'
+  const isDevelopment = import.meta.env.DEV || window.location.hostname === 'localhost'
   
   if (isDevelopment) {
     // Development: Use local crawler API
     return 'http://localhost:8000'
   } else {
     // Production: Use your deployed crawler API URL
-    return process.env.REACT_APP_API_URL || 'https://api.looklyy.com'
+    return import.meta.env.VITE_API_BASE_URL || 'https://api.looklyy.com'
   }
 }
 
