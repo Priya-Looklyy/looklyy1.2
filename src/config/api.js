@@ -21,9 +21,7 @@ export const API_CONFIG = {
     TRENDING_FEATURED: '/trends/featured',
     TRENDING_SEARCH: '/trends/search',
     TRENDING_CATEGORIES: '/trends/categories',
-    TRENDING_BY_SOURCE: '/trends/by-source',
-    CRAWLER_STATS: '/crawler/stats',
-    CRAWLER_TRIGGER: '/admin/crawl'
+    HEALTH: '/health'
   },
   TIMEOUTS: {
     DEFAULT: 10000, // 10 seconds
