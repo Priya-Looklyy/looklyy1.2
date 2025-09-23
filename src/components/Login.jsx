@@ -7,7 +7,6 @@ const Login = ({ onSwitchToSignup }) => {
     email: '',
     password: ''
   })
-  const [showPassword, setShowPassword] = useState(false)
   
   const { login, isLoading, error, clearError } = useAuth()
 
@@ -33,84 +32,63 @@ const Login = ({ onSwitchToSignup }) => {
   }
 
   return (
-    <>
-      <h2 className="auth-title">Login</h2>
+    <form onSubmit={handleSubmit}>
+      <h1>Sign in</h1>
       
-      <form onSubmit={handleSubmit} className="auth-form">
-        <div className="form-group">
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email"
-            required
-            autoComplete="email"
-          />
+      <div className="social-container">
+        <a href="#" onClick={(e) => e.preventDefault()}>
+          <i className="fab fa-github"></i>
+        </a>
+        <a href="#" onClick={(e) => e.preventDefault()}>
+          <i className="fab fa-linkedin-in"></i>
+        </a>
+        <a href="#" onClick={(e) => e.preventDefault()}>
+          <i className="fab fa-google"></i>
+        </a>
+      </div>
+      
+      <span>or use your account</span>
+      
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Email"
+        required
+        autoComplete="email"
+      />
+      
+      <input
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        placeholder="Password"
+        required
+        autoComplete="current-password"
+      />
+      
+      <a href="#" onClick={(e) => e.preventDefault()}>Forgot your password?</a>
+      
+      {error && (
+        <div className="error-message">
+          <i className="fas fa-exclamation-circle"></i>
+          {error}
         </div>
-
-        <div className="form-group">
-          <div className="password-input">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              required
-              autoComplete="current-password"
-            />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-            </button>
-          </div>
-        </div>
-
-        {error && (
-          <div className="error-message">
-            <i className="fas fa-exclamation-circle"></i>
-            {error}
-          </div>
+      )}
+      
+      <button type="submit" disabled={isLoading || !formData.email || !formData.password}>
+        {isLoading ? (
+          <>
+            <i className="fas fa-spinner fa-spin"></i>
+            Signing In...
+          </>
+        ) : (
+          'Sign In'
         )}
-
-        <button
-          type="submit"
-          className="auth-button"
-          disabled={isLoading || !formData.email || !formData.password}
-        >
-          {isLoading ? (
-            <>
-              <i className="fas fa-spinner fa-spin"></i>
-              Signing In...
-            </>
-          ) : (
-            'Login'
-          )}
-        </button>
-      </form>
-
-      <div className="auth-footer">
-        <p>
-          Create an account?{' '}
-          <button
-            type="button"
-            className="link-button"
-            onClick={onSwitchToSignup}
-          >
-            SignUp
-          </button>
-        </p>
-      </div>
-
-      <div className="demo-credentials">
-        <p className="demo-text">Demo: Use any email and password to sign in</p>
-      </div>
-    </>
+      </button>
+    </form>
   )
 }
 
