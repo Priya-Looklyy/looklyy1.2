@@ -15,7 +15,17 @@ const AuthFlow = () => {
         {/* Left Half - Logo and Background */}
         <div className="auth-left">
           <div className="auth-logo-container">
-            <div className="auth-logo">
+            <img 
+              src="/logo.svg" 
+              alt="Looklyy" 
+              className="auth-logo-image"
+              onError={(e) => {
+                // Fallback to text logo if image not found
+                e.target.style.display = 'none'
+                e.target.nextSibling.style.display = 'flex'
+              }}
+            />
+            <div className="auth-logo" style={{display: 'none'}}>
               <span className="logo-l">L</span>
               <div className="logo-oo">
                 <div className="logo-o">
