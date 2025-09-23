@@ -1,68 +1,66 @@
-import { prisma } from '../../lib/db.js'
-import { verifyPassword, generateToken } from '../../lib/auth.js'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://amcegyadzphuvqtlseuf.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtY2VneWFkenBodXZxdGxzZXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1OTY4MTAsImV4cCI6MjA3NDE3MjgxMH0.geKae1U4qgI3JmJUPNQ5p7uho_dDy3NHC-0nEFJlP00'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+const JWT_SECRET = process.env.JWT_SECRET || 'looklyy-super-secret-jwt-key-2024-production-ready'
 
 export default async function handler(req, res) {
-  // Set CORS headers
+  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
+    return res.status(200).end()
   }
 
   if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' })
-    return
+    return res.status(405).json({ message: 'Method not allowed' })
+  }
+
+  const { email, password } = req.body
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Please enter all fields' })
   }
 
   try {
-    const { email, password } = req.body
+    const { data: user, error: findError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single()
 
-    // Validate input
-    if (!email || !password) {
-      return res.status(400).json({ 
-        error: 'Email and password are required' 
-      })
+    if (findError || !user) {
+      return res.status(400).json({ message: 'Invalid credentials' })
     }
 
-    // Find user by email
-    const user = await prisma.user.findUnique({
-      where: { email }
-    })
+    const isMatch = await bcrypt.compare(password, user.password)
 
-    if (!user) {
-      return res.status(401).json({ 
-        error: 'Invalid email or password' 
-      })
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' })
     }
 
-    // Verify password
-    const isPasswordValid = await verifyPassword(password, user.password)
-
-    if (!isPasswordValid) {
-      return res.status(401).json({ 
-        error: 'Invalid email or password' 
-      })
-    }
-
-    // Generate JWT token
-    const token = generateToken(user.id)
-
-    // Return user data (without password)
-    const { password: _, ...userWithoutPassword } = user
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' })
 
     res.status(200).json({
       success: true,
-      user: userWithoutPassword,
-      token
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        preferences: user.preferences,
+      },
+      token,
     })
 
   } catch (error) {
-    console.error('Login error:', error)
-    res.status(500).json({ 
-      error: 'Internal server error' 
-    })
+    console.error('Login error:', error.message)
+    res.status(500).json({ message: error.message || 'Server error during login' })
   }
 }

@@ -1,78 +1,87 @@
-import { prisma } from '../../lib/db.js'
-import { hashPassword, generateToken } from '../../lib/auth.js'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://amcegyadzphuvqtlseuf.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtY2VneWFkenBodXZxdGxzZXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1OTY4MTAsImV4cCI6MjA3NDE3MjgxMH0.geKae1U4qgI3JmJUPNQ5p7uho_dDy3NHC-0nEFJlP00'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+const JWT_SECRET = process.env.JWT_SECRET || 'looklyy-super-secret-jwt-key-2024-production-ready'
 
 export default async function handler(req, res) {
-  // Set CORS headers
+  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
+    return res.status(200).end()
   }
 
   if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' })
-    return
+    return res.status(405).json({ message: 'Method not allowed' })
+  }
+
+  const { name, email, password } = req.body
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'Please enter all fields' })
   }
 
   try {
-    const { name, email, password } = req.body
-
-    // Validate input
-    if (!name || !email || !password) {
-      return res.status(400).json({ 
-        error: 'Name, email, and password are required' 
-      })
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ 
-        error: 'Password must be at least 6 characters long' 
-      })
-    }
-
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email }
-    })
+    // Check if user exists
+    const { data: existingUser, error: findError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .single()
 
     if (existingUser) {
-      return res.status(400).json({ 
-        error: 'User with this email already exists' 
-      })
+      return res.status(400).json({ message: 'User already exists' })
+    }
+    if (findError && findError.code !== 'PGRST116') { // PGRST116 means no rows found
+      throw findError
     }
 
     // Hash password
-    const hashedPassword = await hashPassword(password)
+    const salt = await bcrypt.genSalt(12)
+    const hashedPassword = await bcrypt.hash(password, salt)
 
     // Create user
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f0f0f0&color=1a1a1a`
-      }
-    })
+    const { data: newUser, error: createError } = await supabase
+      .from('users')
+      .insert([
+        {
+          name,
+          email,
+          password: hashedPassword,
+          avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f0f0f0&color=1a1a1a`,
+          preferences: { theme: 'purple', notifications: true }
+        }
+      ])
+      .select()
+      .single()
 
-    // Generate JWT token
-    const token = generateToken(user.id)
+    if (createError) {
+      throw createError
+    }
 
-    // Return user data (without password)
-    const { password: _, ...userWithoutPassword } = user
+    const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET, { expiresIn: '7d' })
 
     res.status(201).json({
       success: true,
-      user: userWithoutPassword,
-      token
+      user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        avatar: newUser.avatar,
+        preferences: newUser.preferences,
+      },
+      token,
     })
 
   } catch (error) {
-    console.error('Signup error:', error)
-    res.status(500).json({ 
-      error: 'Internal server error' 
-    })
+    console.error('Signup error:', error.message)
+    res.status(500).json({ message: error.message || 'Server error during signup' })
   }
 }

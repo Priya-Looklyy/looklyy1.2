@@ -1,69 +1,60 @@
-import { prisma } from '../../lib/db.js'
-import { getTokenFromRequest, verifyToken } from '../../lib/auth.js'
+import jwt from 'jsonwebtoken'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'https://amcegyadzphuvqtlseuf.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtY2VneWFkenBodXZxdGxzZXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1OTY4MTAsImV4cCI6MjA3NDE3MjgxMH0.geKae1U4qgI3JmJUPNQ5p7uho_dDy3NHC-0nEFJlP00'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+const JWT_SECRET = process.env.JWT_SECRET || 'looklyy-super-secret-jwt-key-2024-production-ready'
 
 export default async function handler(req, res) {
-  // Set CORS headers
+  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
+    return res.status(200).end()
   }
 
   if (req.method !== 'GET') {
-    res.status(405).json({ error: 'Method not allowed' })
-    return
+    return res.status(405).json({ message: 'Method not allowed' })
   }
 
-  try {
-    // Get token from request
-    const token = getTokenFromRequest(req)
+  let token
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    try {
+      token = req.headers.authorization.split(' ')[1]
+      const decoded = jwt.verify(token, JWT_SECRET)
 
-    if (!token) {
-      return res.status(401).json({ 
-        error: 'No token provided' 
-      })
-    }
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', decoded.id)
+        .single()
 
-    // Verify token
-    const decoded = verifyToken(token)
-
-    if (!decoded) {
-      return res.status(401).json({ 
-        error: 'Invalid token' 
-      })
-    }
-
-    // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        avatar: true,
-        createdAt: true,
-        preferences: true
+      if (error || !data) {
+        return res.status(401).json({ message: 'Not authorized, user not found' })
       }
-    })
 
-    if (!user) {
-      return res.status(404).json({ 
-        error: 'User not found' 
+      res.status(200).json({
+        success: true,
+        user: {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          avatar: data.avatar,
+          preferences: data.preferences,
+        },
       })
+
+    } catch (error) {
+      console.error('Token verification failed:', error.message)
+      return res.status(401).json({ message: 'Not authorized, token failed' })
     }
-
-    res.status(200).json({
-      success: true,
-      user
-    })
-
-  } catch (error) {
-    console.error('Get user error:', error)
-    res.status(500).json({ 
-      error: 'Internal server error' 
-    })
+  }
+  
+  if (!token) {
+    return res.status(401).json({ message: 'Not authorized, no token' })
   }
 }
