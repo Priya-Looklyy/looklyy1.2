@@ -4,7 +4,7 @@ import Signup from './Signup'
 import './Auth.css'
 
 const AuthFlow = () => {
-  const [currentView, setCurrentView] = useState('login') // 'login' or 'signup'
+  const [currentView, setCurrentView] = useState('login') // 'login' or 'signup' - updated
 
   const switchToSignup = () => setCurrentView('signup')
   const switchToLogin = () => setCurrentView('login')
