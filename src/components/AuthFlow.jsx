@@ -4,51 +4,26 @@ import Signup from './Signup'
 import './Auth.css'
 
 const AuthFlow = () => {
-  const [currentView, setCurrentView] = useState('login') // 'login' or 'signup' - updated
+  const [currentView, setCurrentView] = useState('login') // 'login' or 'signup'
 
   const switchToSignup = () => setCurrentView('signup')
   const switchToLogin = () => setCurrentView('login')
 
   return (
     <div className="auth-container">
-      <div className="auth-card">
-        {/* Left Half - Logo and Background */}
-        <div className="auth-left">
-          <div className="auth-logo-container">
-            <img 
-              src="/logo.svg" 
-              alt="Looklyy" 
-              className="auth-logo-image"
-              onError={(e) => {
-                // Fallback to text logo if image not found
-                e.target.style.display = 'none'
-                e.target.nextSibling.style.display = 'flex'
-              }}
-            />
-            <div className="auth-logo" style={{display: 'none'}}>
-              <span className="logo-l">L</span>
-              <div className="logo-oo">
-                <div className="logo-o">
-                  <div className="logo-dot"></div>
-                </div>
-                <div className="logo-o">
-                  <div className="logo-dot"></div>
-                </div>
-              </div>
-              <span className="logo-klyy">klyy</span>
-            </div>
-          </div>
-        </div>
+      {/* Welcome Header */}
+      <div className="auth-welcome">
+        <h1>WELCOME</h1>
+      </div>
 
-        {/* Right Half - Form */}
-        <div className="auth-right">
-          <div className="auth-form-container">
-            {currentView === 'login' ? (
-              <Login onSwitchToSignup={switchToSignup} />
-            ) : (
-              <Signup onSwitchToLogin={switchToLogin} />
-            )}
-          </div>
+      {/* Form Container */}
+      <div className="auth-form-container">
+        <div className="auth-card">
+          {currentView === 'login' ? (
+            <Login onSwitchToSignup={switchToSignup} />
+          ) : (
+            <Signup onSwitchToLogin={switchToLogin} />
+          )}
         </div>
       </div>
     </div>

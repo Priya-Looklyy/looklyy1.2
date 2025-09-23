@@ -33,83 +33,84 @@ const Login = ({ onSwitchToSignup }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+    <>
+      <h2 className="auth-title">Login</h2>
+      
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-group">
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email"
+            required
+            autoComplete="email"
+          />
+        </div>
+
+        <div className="form-group">
+          <div className="password-input">
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder="Password"
               required
-              autoComplete="email"
+              autoComplete="current-password"
             />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div className="password-input">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                required
-                autoComplete="current-password"
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-              </button>
-            </div>
-          </div>
-
-          {error && (
-            <div className="error-message">
-              <i className="fas fa-exclamation-circle"></i>
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="auth-button"
-            disabled={isLoading || !formData.email || !formData.password}
-          >
-            {isLoading ? (
-              <>
-                <i className="fas fa-spinner fa-spin"></i>
-                Signing In...
-              </>
-            ) : (
-              'Sign In'
-            )}
-          </button>
-        <div className="auth-footer">
-          <p>
-            New to Looklyy?{' '}
             <button
               type="button"
-              className="link-button"
-              onClick={onSwitchToSignup}
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              Create an account
+              <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
             </button>
-          </p>
+          </div>
         </div>
 
-        <div className="demo-credentials">
-          <p className="demo-text">Demo: Use any email and password to sign in</p>
-        </div>
-    </form>
+        {error && (
+          <div className="error-message">
+            <i className="fas fa-exclamation-circle"></i>
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className="auth-button"
+          disabled={isLoading || !formData.email || !formData.password}
+        >
+          {isLoading ? (
+            <>
+              <i className="fas fa-spinner fa-spin"></i>
+              Signing In...
+            </>
+          ) : (
+            'Login'
+          )}
+        </button>
+      </form>
+
+      <div className="auth-footer">
+        <p>
+          Create an account?{' '}
+          <button
+            type="button"
+            className="link-button"
+            onClick={onSwitchToSignup}
+          >
+            SignUp
+          </button>
+        </p>
+      </div>
+
+      <div className="demo-credentials">
+        <p className="demo-text">Demo: Use any email and password to sign in</p>
+      </div>
+    </>
   )
 }
 

@@ -79,129 +79,126 @@ const Signup = ({ onSwitchToLogin }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="name">Full Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              required
-              autoComplete="name"
-            />
-            {validationErrors.name && (
-              <span className="field-error">{validationErrors.name}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              required
-              autoComplete="email"
-            />
-            {validationErrors.email && (
-              <span className="field-error">{validationErrors.email}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div className="password-input">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Create a password"
-                required
-                autoComplete="new-password"
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-              </button>
-            </div>
-            {validationErrors.password && (
-              <span className="field-error">{validationErrors.password}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <div className="password-input">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm your password"
-                required
-                autoComplete="new-password"
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-              >
-                <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-              </button>
-            </div>
-            {validationErrors.confirmPassword && (
-              <span className="field-error">{validationErrors.confirmPassword}</span>
-            )}
-          </div>
-
-          {error && (
-            <div className="error-message">
-              <i className="fas fa-exclamation-circle"></i>
-              {error}
-            </div>
+    <>
+      <h2 className="auth-title">Sign Up</h2>
+      
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-group">
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Full Name"
+            required
+            autoComplete="name"
+          />
+          {validationErrors.name && (
+            <span className="field-error">{validationErrors.name}</span>
           )}
+        </div>
 
-          <button
-            type="submit"
-            className="auth-button"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <i className="fas fa-spinner fa-spin"></i>
-                Creating Account...
-              </>
-            ) : (
-              'Create Account'
-            )}
-          </button>
-        <div className="auth-footer">
-          <p>
-            Already have an account?{' '}
+        <div className="form-group">
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email"
+            required
+            autoComplete="email"
+          />
+          {validationErrors.email && (
+            <span className="field-error">{validationErrors.email}</span>
+          )}
+        </div>
+
+        <div className="form-group">
+          <div className="password-input">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              required
+              autoComplete="new-password"
+            />
             <button
               type="button"
-              className="link-button"
-              onClick={onSwitchToLogin}
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              Sign in
+              <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
             </button>
-          </p>
+          </div>
+          {validationErrors.password && (
+            <span className="field-error">{validationErrors.password}</span>
+          )}
         </div>
-    </form>
+
+        <div className="form-group">
+          <div className="password-input">
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm Password"
+              required
+              autoComplete="new-password"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+            >
+              <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+            </button>
+          </div>
+          {validationErrors.confirmPassword && (
+            <span className="field-error">{validationErrors.confirmPassword}</span>
+          )}
+        </div>
+
+        {error && (
+          <div className="error-message">
+            <i className="fas fa-exclamation-circle"></i>
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className="auth-button"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <i className="fas fa-spinner fa-spin"></i>
+              Creating Account...
+            </>
+          ) : (
+            'Create Account'
+          )}
+        </button>
+      </form>
+
+      <div className="auth-footer">
+        <p>
+          Already have an account?{' '}
+          <button
+            type="button"
+            className="link-button"
+            onClick={onSwitchToLogin}
+          >
+            Sign In
+          </button>
+        </p>
+      </div>
+    </>
   )
 }
 

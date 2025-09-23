@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
+import { authenticateUser, createUser, getCurrentUser, logoutUser } from '../services/userService'
 
 const AuthContext = createContext()
 
@@ -69,15 +70,9 @@ export function AuthProvider({ children }) {
   // Check for existing session on app load
   useEffect(() => {
     const checkAuth = () => {
-      const savedUser = localStorage.getItem('looklyy_user')
-      if (savedUser) {
-        try {
-          const user = JSON.parse(savedUser)
-          dispatch({ type: LOGIN_SUCCESS, payload: user })
-        } catch (error) {
-          localStorage.removeItem('looklyy_user')
-          dispatch({ type: SET_LOADING, payload: false })
-        }
+      const currentUser = getCurrentUser()
+      if (currentUser) {
+        dispatch({ type: LOGIN_SUCCESS, payload: currentUser })
       } else {
         dispatch({ type: SET_LOADING, payload: false })
       }
@@ -91,24 +86,16 @@ export function AuthProvider({ children }) {
     dispatch({ type: CLEAR_ERROR })
 
     try {
-      // Simulate API call
+      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000))
       
-      // Mock authentication - in real app, this would be an API call
-      if (email && password) {
-        const user = {
-          id: Date.now(),
-          email,
-          name: email.split('@')[0],
-          avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=f0f0f0&color=1a1a1a`,
-          joinedDate: new Date().toISOString()
-        }
-        
-        localStorage.setItem('looklyy_user', JSON.stringify(user))
-        dispatch({ type: LOGIN_SUCCESS, payload: user })
+      const result = authenticateUser(email, password)
+      if (result.success) {
+        dispatch({ type: LOGIN_SUCCESS, payload: result.user })
         return { success: true }
       } else {
-        throw new Error('Invalid credentials')
+        dispatch({ type: SET_ERROR, payload: result.error })
+        return { success: false, error: result.error }
       }
     } catch (error) {
       dispatch({ type: SET_ERROR, payload: error.message })
@@ -121,24 +108,16 @@ export function AuthProvider({ children }) {
     dispatch({ type: CLEAR_ERROR })
 
     try {
-      // Simulate API call
+      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1200))
       
-      // Mock signup - in real app, this would be an API call
-      if (name && email && password) {
-        const user = {
-          id: Date.now(),
-          email,
-          name,
-          avatar: `https://ui-avatars.com/api/?name=${name}&background=f0f0f0&color=1a1a1a`,
-          joinedDate: new Date().toISOString()
-        }
-        
-        localStorage.setItem('looklyy_user', JSON.stringify(user))
-        dispatch({ type: LOGIN_SUCCESS, payload: user })
+      const result = createUser({ name, email, password })
+      if (result.success) {
+        dispatch({ type: LOGIN_SUCCESS, payload: result.user })
         return { success: true }
       } else {
-        throw new Error('Please fill in all fields')
+        dispatch({ type: SET_ERROR, payload: result.error })
+        return { success: false, error: result.error }
       }
     } catch (error) {
       dispatch({ type: SET_ERROR, payload: error.message })
@@ -147,7 +126,7 @@ export function AuthProvider({ children }) {
   }
 
   const logout = () => {
-    localStorage.removeItem('looklyy_user')
+    logoutUser()
     dispatch({ type: LOGOUT })
   }
 
