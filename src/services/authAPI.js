@@ -22,17 +22,24 @@ async function apiRequest(endpoint, options = {}) {
   }
 
   try {
+    console.log('Making API request to:', url)
     const response = await fetch(url, config)
-    const data = await response.json()
-
+    
     if (!response.ok) {
-      throw new Error(data.error || 'API request failed')
+      const errorText = await response.text()
+      console.error('API response error:', response.status, errorText)
+      return { success: false, error: `Server error: ${response.status}` }
     }
-
-    return data
+    
+    const data = await response.json()
+    console.log('API response success:', data)
+    return { success: true, ...data }
   } catch (error) {
-    console.error('API request error:', error)
-    throw error
+    console.error('API request failed:', error)
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      return { success: false, error: 'Network error - please check your connection' }
+    }
+    return { success: false, error: error.message || 'Network error' }
   }
 }
 
