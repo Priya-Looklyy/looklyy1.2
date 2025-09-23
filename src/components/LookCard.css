@@ -103,7 +103,7 @@
 }
 
 .heart-btn.active i {
-  color: #e74c3c;
+  color: #8f1eae;
   animation: heartBeat 0.6s ease;
 }
 
