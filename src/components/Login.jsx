@@ -33,14 +33,7 @@ const Login = ({ onSwitchToSignup }) => {
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1 className="auth-logo">LOOKLYY</h1>
-          <p className="auth-subtitle">Welcome back to your fashion journey</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="auth-form">
+    <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -100,8 +93,6 @@ const Login = ({ onSwitchToSignup }) => {
               'Sign In'
             )}
           </button>
-        </form>
-
         <div className="auth-footer">
           <p>
             New to Looklyy?{' '}
@@ -118,8 +109,7 @@ const Login = ({ onSwitchToSignup }) => {
         <div className="demo-credentials">
           <p className="demo-text">Demo: Use any email and password to sign in</p>
         </div>
-      </div>
-    </div>
+    </form>
   )
 }
 

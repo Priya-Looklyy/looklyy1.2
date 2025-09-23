@@ -79,14 +79,7 @@ const Signup = ({ onSwitchToLogin }) => {
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1 className="auth-logo">LOOKLYY</h1>
-          <p className="auth-subtitle">Join the fashion community</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="auth-form">
+    <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
             <input
@@ -196,8 +189,6 @@ const Signup = ({ onSwitchToLogin }) => {
               'Create Account'
             )}
           </button>
-        </form>
-
         <div className="auth-footer">
           <p>
             Already have an account?{' '}
@@ -210,8 +201,7 @@ const Signup = ({ onSwitchToLogin }) => {
             </button>
           </p>
         </div>
-      </div>
-    </div>
+    </form>
   )
 }
 
