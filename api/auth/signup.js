@@ -53,17 +53,14 @@ export default async function handler(req, res) {
     let newUser, createError
     
     try {
+      // Try minimal insert first - just the required fields
       const result = await supabase
         .from('users')
         .insert([
           {
             name,
             email,
-            password: hashedPassword,
-            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f0f0f0&color=1a1a1a`,
-            preferences: { theme: 'purple', notifications: true },
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            password: hashedPassword
           }
         ])
         .select()
@@ -71,20 +68,13 @@ export default async function handler(req, res) {
       
       newUser = result.data
       createError = result.error
+      
+      console.log('Minimal insert result:', { newUser, createError })
+      
     } catch (err) {
-      console.log('Table might not exist, creating user in memory:', err.message)
-      // If table doesn't exist, create user in memory for now
-      newUser = {
-        id: Date.now().toString(),
-        name,
-        email,
-        password: hashedPassword,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f0f0f0&color=1a1a1a`,
-        preferences: { theme: 'purple', notifications: true },
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-      createError = null
+      console.log('Insert failed:', err.message)
+      createError = { message: err.message }
+      newUser = null
     }
 
     console.log('User creation result:', { 
