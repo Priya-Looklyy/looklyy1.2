@@ -56,7 +56,9 @@ export default async function handler(req, res) {
           email,
           password: hashedPassword,
           avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f0f0f0&color=1a1a1a`,
-          preferences: { theme: 'purple', notifications: true }
+          preferences: { theme: 'purple', notifications: true },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         }
       ])
       .select()
