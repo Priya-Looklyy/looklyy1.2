@@ -43,12 +43,16 @@ class TrendingAPIService {
     const queryString = params.toString();
     const endpoint = `${this.endpoints.TRENDING_LATEST}${queryString ? `?${queryString}` : ''}`;
     
-    return await this.apiCall(endpoint);
+    const response = await this.apiCall(endpoint);
+    // Return the data array from the API response
+    return response.data || response;
   }
 
   // Get featured looks for home page sliders (keep separate from trending page)
   async getFeaturedLooks(limit = 25) {
-    return await this.apiCall(`${this.endpoints.TRENDING_FEATURED}?limit=${limit}`);
+    const response = await this.apiCall(`${this.endpoints.TRENDING_FEATURED}?limit=${limit}`);
+    // Return the data array from the API response
+    return response.data || response;
   }
 
   // Search trending looks
