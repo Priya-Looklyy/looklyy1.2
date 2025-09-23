@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = 'https://amcegyadzphuvqtlseuf.supabase.co'
+// Use anon key to respect RLS policies
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtY2VneWFkenBodXZxdGxzZXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1OTY4MTAsImV4cCI6MjA3NDE3MjgxMH0.geKae1U4qgI3JmJUPNQ5p7uho_dDy3NHC-0nEFJlP00'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
@@ -54,6 +55,8 @@ export default async function handler(req, res) {
     
     try {
       // Try minimal insert first - just the required fields
+      console.log('Attempting to insert user with anon role...')
+      
       const result = await supabase
         .from('users')
         .insert([
@@ -69,7 +72,10 @@ export default async function handler(req, res) {
       newUser = result.data
       createError = result.error
       
-      console.log('Minimal insert result:', { newUser, createError })
+      console.log('Minimal insert result:', { 
+        newUser: newUser ? { id: newUser.id, email: newUser.email } : null, 
+        error: createError ? { message: createError.message, code: createError.code, details: createError.details } : null 
+      })
       
     } catch (err) {
       console.log('Insert failed:', err.message)
