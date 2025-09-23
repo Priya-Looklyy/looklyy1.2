@@ -1,77 +1,31 @@
-// Vercel API Route for Featured Trends
-export default function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'GET') return res.status(405).json({ message: 'Method not allowed' })
 
-  if (req.method !== 'GET') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
-  }
+  const featuredLooks = [
+    { id: 'featured-001', title: 'Oversized Blazers', description: 'Power dressing redefined', category: 'runway_trends', source_site: 'harpers_bazaar', primary_image_url: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center', trend_score: 0.95, is_featured: true, slider_group: 1 },
+    { id: 'featured-002', title: 'Metallic Textures', description: 'Shimmer and shine', category: 'runway_trends', source_site: 'harpers_bazaar', primary_image_url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center', trend_score: 0.92, is_featured: true, slider_group: 1 },
+    { id: 'featured-003', title: 'Statement Sleeves', description: 'Dramatic details', category: 'runway_trends', source_site: 'harpers_bazaar', primary_image_url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center', trend_score: 0.89, is_featured: true, slider_group: 1 },
+    { id: 'featured-004', title: 'Bold Patterns', description: 'Eye-catching designs', category: 'runway_trends', source_site: 'harpers_bazaar', primary_image_url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center', trend_score: 0.86, is_featured: true, slider_group: 1 },
+    { id: 'featured-005', title: 'Tailored Perfection', description: 'Precision and elegance', category: 'runway_trends', source_site: 'harpers_bazaar', primary_image_url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=600&fit=crop&crop=center', trend_score: 0.83, is_featured: true, slider_group: 1 }
+  ]
 
-  // Parse query parameters
-  const { limit = 25 } = req.query;
-  const limitNum = parseInt(limit);
+  const { limit = 25 } = req.query
+  const sortedLooks = featuredLooks.sort((a, b) => b.trend_score - a.trend_score).slice(0, parseInt(limit))
 
-  // Generate featured trends for home page sliders
-  const featuredTitles = [
-    "Spring Runway Highlights", "Celebrity Street Style", "Sustainable Fashion",
-    "Vintage Revival", "Minimalist Chic", "Bold Statement Pieces",
-    "Neutral Palette", "Metallic Accents", "Oversized Silhouettes",
-    "Floral Patterns", "Leather Details", "Sheer Fabrics",
-    "Chunky Accessories", "Pastel Tones", "Geometric Prints",
-    "Fringe Elements", "Embroidered Textures", "Wide Leg Pants",
-    "Cropped Jackets", "Silk Scarves", "Animal Prints",
-    "Business Casual", "Evening Wear", "Athleisure", "Bohemian Style"
-  ];
-
-  const trends = [];
-  for (let i = 1; i <= Math.min(limitNum, 25); i++) {
-    const title = featuredTitles[i - 1];
-    
-    // Generate SVG placeholder image
-    const colors = [
-      "9333ea", "a855f7", "c084fc", "e879f9", "f0abfc",
-      "ec4899", "f472b6", "fbbf24", "f59e0b", "ef4444"
-    ];
-    const color = colors[i % colors.length];
-    
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
-      <defs>
-        <linearGradient id="grad${i}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#${color};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#${color}88;stop-opacity:1" />
-        </linearGradient>
-      </defs>
-      <rect width="400" height="600" fill="url(#grad${i})"/>
-      <text x="200" y="280" font-family="Arial, sans-serif" font-size="20" fill="white" text-anchor="middle" dominant-baseline="middle">${title}</text>
-      <text x="200" y="310" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0.8">Looklyy.com</text>
-      <text x="200" y="330" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0.6">Featured</text>
-    </svg>`;
-    
-    const imageUrl = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-    
-    trends.push({
-      id: i,
-      title: title,
-      description: `Featured trend: ${title} - curated by Looklyy fashion experts`,
-      primary_image_url: imageUrl,
-      image_alt_text: `${title} featured fashion trend`,
-      source_site: "looklyy_curated",
-      category: "featured",
-      tags: ["featured", "curated", "trending"],
-      trend_score: 0.8 + (i % 20) * 0.01, // Higher scores for featured
-      engagement_score: 0.7 + (i % 25) * 0.01,
+  res.status(200).json({
+    success: true,
+    data: sortedLooks,
+    meta: {
+      total: sortedLooks.length,
+      source: 'harpers_bazaar',
       crawled_at: new Date().toISOString(),
-      is_featured: true
-    });
-  }
-
-  res.status(200).json(trends);
+      slider_groups: 5,
+      images_per_slider: 5
+    }
+  })
 }

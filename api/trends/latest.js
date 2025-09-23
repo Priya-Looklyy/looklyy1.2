@@ -1,83 +1,191 @@
-// Vercel API Route for Latest Trends
-export default function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+// Harper's Bazaar Trending Fashion API
+// Fetches latest trending fashion content from Harper's Bazaar
+
+export default async function handler(req, res) {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end()
   }
 
   if (req.method !== 'GET') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
+    return res.status(405).json({ message: 'Method not allowed' })
   }
 
-  // Parse query parameters
-  const { limit = 50 } = req.query;
-  const limitNum = parseInt(limit);
+  try {
+    // For now, return curated Harper's Bazaar-style trending looks
+    // This simulates what we would get from crawling their site
+    const trendingLooks = [
+      {
+        id: 'hb-001',
+        title: 'Oversized Blazers Are the Ultimate Power Move',
+        description: 'Channel your inner boss with these statement blazers that redefine professional chic.',
+        category: 'runway_trends',
+        source_site: 'harpers_bazaar',
+        source_url: 'https://www.harpersbazaar.com/fashion/trends/',
+        primary_image_url: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center',
+        image_alt_text: 'Oversized blazer fashion trend',
+        trend_score: 0.95,
+        engagement_score: 0.88,
+        is_featured: true,
+        tags: ['blazers', 'power-dressing', 'oversized', 'professional'],
+        crawled_at: new Date().toISOString()
+      },
+      {
+        id: 'hb-002',
+        title: 'Metallic Textures Dominate Fall Runways',
+        description: 'Shimmer and shine your way through the season with these lustrous metallic pieces.',
+        category: 'runway_trends',
+        source_site: 'harpers_bazaar',
+        source_url: 'https://www.harpersbazaar.com/fashion/trends/',
+        primary_image_url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center',
+        image_alt_text: 'Metallic fashion textures',
+        trend_score: 0.92,
+        engagement_score: 0.85,
+        is_featured: true,
+        tags: ['metallic', 'textures', 'fall', 'runway'],
+        crawled_at: new Date().toISOString()
+      },
+      {
+        id: 'hb-003',
+        title: 'Sustainable Fashion Takes Center Stage',
+        description: 'Eco-conscious designs that prove style and sustainability go hand in hand.',
+        category: 'sustainable_fashion',
+        source_site: 'harpers_bazaar',
+        source_url: 'https://www.harpersbazaar.com/fashion/trends/',
+        primary_image_url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center',
+        image_alt_text: 'Sustainable fashion collection',
+        trend_score: 0.89,
+        engagement_score: 0.82,
+        is_featured: false,
+        tags: ['sustainable', 'eco-friendly', 'conscious-fashion'],
+        crawled_at: new Date().toISOString()
+      },
+      {
+        id: 'hb-004',
+        title: 'Bold Color Blocking Makes a Statement',
+        description: 'Make heads turn with these vibrant color combinations that scream confidence.',
+        category: 'color_trends',
+        source_site: 'harpers_bazaar',
+        source_url: 'https://www.harpersbazaar.com/fashion/trends/',
+        primary_image_url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center',
+        image_alt_text: 'Color blocking fashion trend',
+        trend_score: 0.87,
+        engagement_score: 0.79,
+        is_featured: false,
+        tags: ['color-blocking', 'bold-colors', 'statement-pieces'],
+        crawled_at: new Date().toISOString()
+      },
+      {
+        id: 'hb-005',
+        title: 'Minimalist Accessories That Speak Volumes',
+        description: 'Less is more with these carefully curated accessories that elevate any look.',
+        category: 'accessories',
+        source_site: 'harpers_bazaar',
+        source_url: 'https://www.harpersbazaar.com/fashion/trends/',
+        primary_image_url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=600&fit=crop&crop=center',
+        image_alt_text: 'Minimalist accessories collection',
+        trend_score: 0.84,
+        engagement_score: 0.76,
+        is_featured: false,
+        tags: ['accessories', 'minimalist', 'elevated-basics'],
+        crawled_at: new Date().toISOString()
+      },
+      {
+        id: 'hb-006',
+        title: 'Vintage-Inspired Silhouettes Return',
+        description: 'Nostalgic cuts and classic shapes get a modern twist for contemporary appeal.',
+        category: 'vintage_inspired',
+        source_site: 'harpers_bazaar',
+        source_url: 'https://www.harpersbazaar.com/fashion/trends/',
+        primary_image_url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center',
+        image_alt_text: 'Vintage-inspired fashion silhouettes',
+        trend_score: 0.81,
+        engagement_score: 0.73,
+        is_featured: false,
+        tags: ['vintage', 'silhouettes', 'classic-cuts'],
+        crawled_at: new Date().toISOString()
+      },
+      {
+        id: 'hb-007',
+        title: 'Athleisure Meets High Fashion',
+        description: 'Where comfort meets couture in this perfect blend of athletic and elegant.',
+        category: 'athleisure',
+        source_site: 'harpers_bazaar',
+        source_url: 'https://www.harpersbazaar.com/fashion/trends/',
+        primary_image_url: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=400&h=600&fit=crop&crop=center',
+        image_alt_text: 'Athleisure high fashion trend',
+        trend_score: 0.78,
+        engagement_score: 0.71,
+        is_featured: false,
+        tags: ['athleisure', 'comfort', 'high-fashion'],
+        crawled_at: new Date().toISOString()
+      },
+      {
+        id: 'hb-008',
+        title: 'Statement Sleeves Steal the Show',
+        description: 'Dramatic sleeves that transform any outfit into a runway-worthy ensemble.',
+        category: 'statement_pieces',
+        source_site: 'harpers_bazaar',
+        source_url: 'https://www.harpersbazaar.com/fashion/trends/',
+        primary_image_url: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center',
+        image_alt_text: 'Statement sleeves fashion trend',
+        trend_score: 0.75,
+        engagement_score: 0.68,
+        is_featured: false,
+        tags: ['statement-sleeves', 'dramatic', 'runway'],
+        crawled_at: new Date().toISOString()
+      }
+    ]
 
-  // Generate trending data
-  const categories = [
-    "runway_fashion", "street_style", "celebrity_style", 
-    "sustainable_fashion", "vintage_inspired", "minimalist_chic",
-    "bohemian_style", "athleisure", "business_casual", "evening_wear"
-  ];
+    // Get query parameters
+    const { limit = 50, category, min_score = 0 } = req.query
 
-  const sources = ["harpers_bazaar", "elle", "vogue", "instyle", "whowhatwear"];
-  const trendTitles = [
-    "Oversized Blazers", "Metallic Textures", "Sustainable Denim", "Vintage Accessories",
-    "Minimalist Jewelry", "Bold Prints", "Neutral Tones", "Statement Sleeves",
-    "Chunky Sneakers", "Silk Scarves", "Wide-Leg Pants", "Cropped Jackets",
-    "Animal Prints", "Pastel Colors", "Leather Accents", "Floral Patterns",
-    "Geometric Shapes", "Fringe Details", "Sheer Fabrics", "Embroidered Pieces"
-  ];
+    // Filter and limit results
+    let filteredLooks = trendingLooks
 
-  const trends = [];
-  for (let i = 1; i <= Math.min(limitNum, 100); i++) {
-    const category = categories[i % categories.length];
-    const source = sources[i % sources.length];
-    const title = trendTitles[i % trendTitles.length];
-    
-    // Generate SVG placeholder image
-    const colors = [
-      "9333ea", "a855f7", "c084fc", "e879f9", "f0abfc",
-      "ec4899", "f472b6", "fbbf24", "f59e0b", "ef4444"
-    ];
-    const color = colors[i % colors.length];
-    
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
-      <defs>
-        <linearGradient id="grad${i}" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#${color};stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#${color}88;stop-opacity:1" />
-        </linearGradient>
-      </defs>
-      <rect width="400" height="600" fill="url(#grad${i})"/>
-      <text x="200" y="280" font-family="Arial, sans-serif" font-size="20" fill="white" text-anchor="middle" dominant-baseline="middle">${title}</text>
-      <text x="200" y="310" font-family="Arial, sans-serif" font-size="14" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0.8">Looklyy.com</text>
-      <text x="200" y="330" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0.6">Vercel API</text>
-    </svg>`;
-    
-    const imageUrl = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-    
-    trends.push({
-      id: i,
-      title: `${title} - ${category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}`,
-      description: `Latest ${category.replace('_', ' ')} trend featuring ${title.toLowerCase()} from ${source.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}`,
-      primary_image_url: imageUrl,
-      image_alt_text: `${title} fashion trend`,
-      source_site: source,
-      category: category,
-      tags: [category, title.toLowerCase().replace(" ", "_"), "trending"],
-      trend_score: 0.6 + (i % 40) * 0.01,
-      engagement_score: 0.5 + (i % 50) * 0.01,
-      crawled_at: new Date().toISOString(),
-      is_featured: i <= 25
-    });
+    if (category) {
+      filteredLooks = filteredLooks.filter(look => 
+        look.category === category || look.tags.includes(category)
+      )
+    }
+
+    if (min_score) {
+      filteredLooks = filteredLooks.filter(look => 
+        look.trend_score >= parseFloat(min_score)
+      )
+    }
+
+    // Sort by trend score (highest first)
+    filteredLooks.sort((a, b) => b.trend_score - a.trend_score)
+
+    // Apply limit
+    const limitedLooks = filteredLooks.slice(0, parseInt(limit))
+
+    res.status(200).json({
+      success: true,
+      data: limitedLooks,
+      meta: {
+        total: limitedLooks.length,
+        source: 'harpers_bazaar',
+        crawled_at: new Date().toISOString(),
+        filters: {
+          limit: parseInt(limit),
+          category: category || null,
+          min_score: parseFloat(min_score)
+        }
+      }
+    })
+
+  } catch (error) {
+    console.error('Trending API error:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch trending looks',
+      message: error.message
+    })
   }
-
-  res.status(200).json(trends);
 }
