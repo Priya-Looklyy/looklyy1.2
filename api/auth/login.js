@@ -22,6 +22,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' })
   }
 
+  console.log('Login endpoint called with:', req.body)
+
   const { email, password } = req.body
 
   if (!email || !password) {
@@ -29,24 +31,30 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('Attempting to connect to Supabase...')
     const { data: user, error: findError } = await supabase
       .from('users')
       .select('*')
       .eq('email', email)
       .single()
 
+    console.log('Supabase query result:', { user: !!user, error: findError })
+
     if (findError || !user) {
+      console.log('User not found or error:', findError)
       return res.status(400).json({ message: 'Invalid credentials' })
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
+      console.log('Password mismatch')
       return res.status(400).json({ message: 'Invalid credentials' })
     }
 
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' })
 
+    console.log('Login successful for user:', user.email)
     res.status(200).json({
       success: true,
       user: {
