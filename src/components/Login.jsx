@@ -37,13 +37,10 @@ const Login = ({ onSwitchToSignup }) => {
       
       <div className="social-container">
         <a href="#" onClick={(e) => e.preventDefault()}>
-          <i className="fab fa-github"></i>
-        </a>
-        <a href="#" onClick={(e) => e.preventDefault()}>
-          <i className="fab fa-linkedin-in"></i>
-        </a>
-        <a href="#" onClick={(e) => e.preventDefault()}>
           <i className="fab fa-google"></i>
+        </a>
+        <a href="#" onClick={(e) => e.preventDefault()}>
+          <i className="fab fa-facebook-f"></i>
         </a>
       </div>
       
