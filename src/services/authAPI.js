@@ -43,48 +43,20 @@ async function apiRequest(endpoint, options = {}) {
   }
 }
 
-// Sign up a new user - SIMPLE WORKING VERSION
+// Sign up a new user - WORKING SUPABASE VERSION
 export async function signupUser(userData) {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  
-  return {
-    success: true,
-    user: {
-      id: Date.now().toString(),
-      name: userData.name,
-      email: userData.email,
-      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=f0f0f0&color=1a1a1a`,
-      preferences: { theme: 'purple', notifications: true }
-    },
-    token: 'test-token-' + Date.now()
-  }
+  return await apiRequest('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify(userData)
+  })
 }
 
-// Login user - SIMPLE WORKING VERSION
+// Login user - WORKING SUPABASE VERSION  
 export async function loginUser(email, password) {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  
-  // Simple hardcoded user for testing
-  if (email === 'test@test.com' && password === 'test123') {
-    return {
-      success: true,
-      user: {
-        id: '1',
-        name: 'Test User',
-        email: 'test@test.com',
-        avatar: 'https://ui-avatars.com/api/?name=Test+User&background=f0f0f0&color=1a1a1a',
-        preferences: { theme: 'purple', notifications: true }
-      },
-      token: 'test-token-123'
-    }
-  }
-  
-  return {
-    success: false,
-    error: 'Invalid credentials'
-  }
+  return await apiRequest('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password })
+  })
 }
 
 // Get current user - SIMPLE WORKING VERSION

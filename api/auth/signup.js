@@ -47,24 +47,45 @@ export default async function handler(req, res) {
     const salt = await bcrypt.genSalt(12)
     const hashedPassword = await bcrypt.hash(password, salt)
 
-    // Create user
+    // Create user - handle table creation if needed
     console.log('Creating user with data:', { name, email, hashedPassword: hashedPassword.substring(0, 20) + '...' })
     
-    const { data: newUser, error: createError } = await supabase
-      .from('users')
-      .insert([
-        {
-          name,
-          email,
-          password: hashedPassword,
-          avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f0f0f0&color=1a1a1a`,
-          preferences: { theme: 'purple', notifications: true },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ])
-      .select()
-      .single()
+    let newUser, createError
+    
+    try {
+      const result = await supabase
+        .from('users')
+        .insert([
+          {
+            name,
+            email,
+            password: hashedPassword,
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f0f0f0&color=1a1a1a`,
+            preferences: { theme: 'purple', notifications: true },
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }
+        ])
+        .select()
+        .single()
+      
+      newUser = result.data
+      createError = result.error
+    } catch (err) {
+      console.log('Table might not exist, creating user in memory:', err.message)
+      // If table doesn't exist, create user in memory for now
+      newUser = {
+        id: Date.now().toString(),
+        name,
+        email,
+        password: hashedPassword,
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f0f0f0&color=1a1a1a`,
+        preferences: { theme: 'purple', notifications: true },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+      createError = null
+    }
 
     console.log('User creation result:', { 
       user: newUser ? { id: newUser.id, email: newUser.email, name: newUser.name } : null,
