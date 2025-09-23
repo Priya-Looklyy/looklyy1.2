@@ -45,7 +45,7 @@ async function apiRequest(endpoint, options = {}) {
 
 // Sign up a new user
 export async function signupUser(userData) {
-  return await apiRequest('/auth/signup', {
+  return await apiRequest('/auth/simple-signup', {
     method: 'POST',
     body: JSON.stringify(userData)
   })
@@ -53,7 +53,7 @@ export async function signupUser(userData) {
 
 // Login user
 export async function loginUser(email, password) {
-  return await apiRequest('/auth/login', {
+  return await apiRequest('/auth/simple-login', {
     method: 'POST',
     body: JSON.stringify({ email, password })
   })
