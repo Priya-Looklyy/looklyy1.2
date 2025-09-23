@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
-import { authenticateUser, createUser, getCurrentUser, logoutUser } from '../services/userService'
+import { signupUser, loginUser, getCurrentUser, logoutUser, storeToken, removeToken, getToken } from '../services/authAPI'
 
 const AuthContext = createContext()
 
@@ -69,10 +69,21 @@ export function AuthProvider({ children }) {
 
   // Check for existing session on app load
   useEffect(() => {
-    const checkAuth = () => {
-      const currentUser = getCurrentUser()
-      if (currentUser) {
-        dispatch({ type: LOGIN_SUCCESS, payload: currentUser })
+    const checkAuth = async () => {
+      const token = getToken()
+      if (token) {
+        try {
+          const response = await getCurrentUser()
+          if (response.success) {
+            dispatch({ type: LOGIN_SUCCESS, payload: response.user })
+          } else {
+            removeToken()
+            dispatch({ type: SET_LOADING, payload: false })
+          }
+        } catch (error) {
+          removeToken()
+          dispatch({ type: SET_LOADING, payload: false })
+        }
       } else {
         dispatch({ type: SET_LOADING, payload: false })
       }
@@ -86,16 +97,14 @@ export function AuthProvider({ children }) {
     dispatch({ type: CLEAR_ERROR })
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      const result = authenticateUser(email, password)
-      if (result.success) {
-        dispatch({ type: LOGIN_SUCCESS, payload: result.user })
+      const response = await loginUser(email, password)
+      if (response.success) {
+        storeToken(response.token)
+        dispatch({ type: LOGIN_SUCCESS, payload: response.user })
         return { success: true }
       } else {
-        dispatch({ type: SET_ERROR, payload: result.error })
-        return { success: false, error: result.error }
+        dispatch({ type: SET_ERROR, payload: response.error })
+        return { success: false, error: response.error }
       }
     } catch (error) {
       dispatch({ type: SET_ERROR, payload: error.message })
@@ -108,16 +117,14 @@ export function AuthProvider({ children }) {
     dispatch({ type: CLEAR_ERROR })
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1200))
-      
-      const result = createUser({ name, email, password })
-      if (result.success) {
-        dispatch({ type: LOGIN_SUCCESS, payload: result.user })
+      const response = await signupUser({ name, email, password })
+      if (response.success) {
+        storeToken(response.token)
+        dispatch({ type: LOGIN_SUCCESS, payload: response.user })
         return { success: true }
       } else {
-        dispatch({ type: SET_ERROR, payload: result.error })
-        return { success: false, error: result.error }
+        dispatch({ type: SET_ERROR, payload: response.error })
+        return { success: false, error: response.error }
       }
     } catch (error) {
       dispatch({ type: SET_ERROR, payload: error.message })
@@ -125,9 +132,15 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const logout = () => {
-    logoutUser()
-    dispatch({ type: LOGOUT })
+  const logout = async () => {
+    try {
+      await logoutUser()
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      removeToken()
+      dispatch({ type: LOGOUT })
+    }
   }
 
   const clearError = () => {

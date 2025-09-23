@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // User preferences
+  preferences Json? @default("{\"theme\": \"purple\", \"notifications\": true}")
+
+  // User interactions
+  favorites LookFavorite[]
+  pins      LookPin[]
+
+  @@map("users")
+}
+
+model LookFavorite {
+  id     String @id @default(cuid())
+  userId String
+  lookId String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lookId])
+  @@map("look_favorites")
+}
+
+model LookPin {
+  id     String @id @default(cuid())
+  userId String
+  lookId String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lookId])
+  @@map("look_pins")
+}
