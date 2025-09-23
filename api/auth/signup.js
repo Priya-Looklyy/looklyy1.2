@@ -48,6 +48,8 @@ export default async function handler(req, res) {
     const hashedPassword = await bcrypt.hash(password, salt)
 
     // Create user
+    console.log('Creating user with data:', { name, email, hashedPassword: hashedPassword.substring(0, 20) + '...' })
+    
     const { data: newUser, error: createError } = await supabase
       .from('users')
       .insert([
@@ -64,8 +66,14 @@ export default async function handler(req, res) {
       .select()
       .single()
 
+    console.log('User creation result:', { 
+      user: newUser ? { id: newUser.id, email: newUser.email, name: newUser.name } : null,
+      error: createError ? { message: createError.message, code: createError.code, details: createError.details } : null
+    })
+
     if (createError) {
-      throw createError
+      console.log('User creation error:', createError)
+      return res.status(500).json({ message: 'Database error: ' + createError.message })
     }
 
     const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET, { expiresIn: '7d' })
