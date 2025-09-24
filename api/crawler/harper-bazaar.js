@@ -24,16 +24,45 @@ export default async function handler(req, res) {
   try {
     console.log('Starting crawler...')
     
-    // Simple test - just return success for now
+    // Test URLs to crawl
+    const testUrls = [
+      'https://www.harpersbazaar.com/fashion/',
+      'https://www.harpersbazaar.com/fashion/trends/'
+    ]
+    
+    let imagesFound = 0
+    const errors = []
+    
+    // Try to crawl one URL
+    try {
+      const response = await fetch(testUrls[0], {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+      })
+      
+      if (response.ok) {
+        const html = await response.text()
+        // Simple image count
+        const imageMatches = html.match(/<img[^>]+src="[^"]+"/gi)
+        imagesFound = imageMatches ? imageMatches.length : 0
+        console.log(`Found ${imagesFound} images`)
+      } else {
+        errors.push(`HTTP ${response.status}`)
+      }
+    } catch (error) {
+      errors.push(error.message)
+    }
+    
     const result = {
       success: true,
-      message: 'Crawler test successful',
+      message: 'Crawler test with real data',
       results: {
-        sections_crawled: 0,
-        images_found: 0,
+        sections_crawled: 1,
+        images_found: imagesFound,
         images_stored: 0,
-        errors: 0,
-        status: 'test'
+        errors: errors.length,
+        status: errors.length === 0 ? 'success' : 'partial'
       }
     }
     
