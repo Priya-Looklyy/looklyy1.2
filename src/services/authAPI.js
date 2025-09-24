@@ -2,7 +2,7 @@
 // Optimized for minimal API usage (100 calls/day limit)
 // CORS Fix: Updated to use relative URLs - v4 - FORCE CACHE BUST
 
-// Use dynamic origin to avoid domain mismatch issues
+// Use dynamic origin to avoid domain mismatch issues - FORCE SAME DOMAIN
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${window.location.origin}/api`
 
 // DEBUG: Log the actual values being used
@@ -18,10 +18,15 @@ const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 
 // Helper function to make API requests with minimal logging
 async function apiRequest(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`
+  // FORCE SAME DOMAIN - Runtime check to ensure we use the exact same origin
+  const currentOrigin = window.location.origin
+  const forcedAPIBaseURL = `${currentOrigin}/api`
+  const url = `${forcedAPIBaseURL}${endpoint}`
+  
   console.log('🌐 API Base URL:', API_BASE_URL, 'Full URL:', url)
   console.log('🌍 Current origin:', window.location.origin)
   console.log('🔗 URL being called:', url)
+  console.log('🚨 FORCED API Base URL:', forcedAPIBaseURL)
   
   const config = {
     headers: {
