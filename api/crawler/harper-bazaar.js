@@ -124,27 +124,47 @@ export default async function handler(req, res) {
               errors.push(`Table test exception: ${tableTestError.message}`)
             }
             
-            // Then test with a simple known-good URL
+            // Then test with a simple known-good URL - try minimal fields first
             try {
-              console.log('Testing database connection with simple URL...')
+              console.log('Testing database connection with minimal fields...')
               const { error: testError } = await supabase
                 .from('fashion_images')
                 .insert([
                   {
                     original_url: 'https://example.com/test.jpg',
-                    stored_url: 'https://example.com/test.jpg',
-                    title: 'Test Image',
-                    source_url: testUrls[0],
-                    platform: 'harper-bazaar'
+                    stored_url: 'https://example.com/test.jpg'
                   }
                 ])
               
               if (!testError) {
-                console.log('✅ Database connection test successful')
+                console.log('✅ Database connection test successful with minimal fields')
                 imagesStored++
               } else {
-                console.log('❌ Database connection test failed:', testError)
+                console.log('❌ Database connection test failed with minimal fields:', testError)
                 errors.push(`Database test error: ${testError.message}`)
+                
+                // Try with even more minimal fields
+                try {
+                  console.log('Testing with only original_url...')
+                  const { error: minimalError } = await supabase
+                    .from('fashion_images')
+                    .insert([
+                      {
+                        original_url: 'https://example.com/test.jpg'
+                      }
+                    ])
+                  
+                  if (!minimalError) {
+                    console.log('✅ Database connection test successful with only original_url')
+                    imagesStored++
+                  } else {
+                    console.log('❌ Database connection test failed with only original_url:', minimalError)
+                    errors.push(`Minimal test error: ${minimalError.message}`)
+                  }
+                } catch (minimalTestError) {
+                  console.log('❌ Minimal test exception:', minimalTestError)
+                  errors.push(`Minimal test exception: ${minimalTestError.message}`)
+                }
               }
             } catch (testError) {
               console.log('❌ Database connection test exception:', testError)
