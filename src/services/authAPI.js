@@ -2,7 +2,8 @@
 // Optimized for minimal API usage (100 calls/day limit)
 // CORS Fix: Updated to use www subdomain - v3 - CACHE BUST
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://www.looklyy.com/api'
+// Use relative URL to avoid domain mismatch issues
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 // Cache for user data to reduce API calls
 let userCache = null
