@@ -103,6 +103,21 @@ export default async function handler(req, res) {
               } else {
                 console.log('✅ Table exists and is accessible')
                 console.log('Table structure sample:', tableData)
+                
+                // Try to get table schema info
+                try {
+                  const { data: schemaData, error: schemaError } = await supabase
+                    .from('information_schema.columns')
+                    .select('column_name, data_type')
+                    .eq('table_name', 'fashion_images')
+                    .eq('table_schema', 'public')
+                  
+                  if (!schemaError && schemaData) {
+                    console.log('Table columns:', schemaData.map(col => `${col.column_name} (${col.data_type})`))
+                  }
+                } catch (schemaTestError) {
+                  console.log('Could not get schema info:', schemaTestError.message)
+                }
               }
             } catch (tableTestError) {
               console.log('❌ Table test exception:', tableTestError)
