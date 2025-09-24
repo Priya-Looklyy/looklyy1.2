@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
+// Use service role key for storage operations, fallback to anon key
+const supabase = supabaseUrl && (supabaseServiceKey || supabaseAnonKey) ? 
+  createClient(supabaseUrl, supabaseServiceKey || supabaseAnonKey) : null
 
 // Harper's Bazaar fashion sections to crawl
 const FASHION_SECTIONS = [
