@@ -135,7 +135,6 @@ export default async function handler(req, res) {
                     stored_url: 'https://example.com/test.jpg',
                     title: 'Test Image',
                     source_url: testUrls[0],
-                    crawled_at: new Date().toISOString(),
                     platform: 'harper-bazaar'
                   }
                 ])
@@ -164,7 +163,6 @@ export default async function handler(req, res) {
                       stored_url: imageUrl, // For now, just store the original URL
                       title: 'Fashion Image',
                       source_url: testUrls[0],
-                      crawled_at: new Date().toISOString(),
                       platform: 'harper-bazaar'
                     }
                   ])
