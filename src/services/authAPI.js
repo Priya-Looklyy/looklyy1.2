@@ -1,6 +1,6 @@
 // Authentication API Service for Looklyy App
 // Optimized for minimal API usage (100 calls/day limit)
-// CORS Fix: Updated to use www subdomain - v3 - CACHE BUST
+// CORS Fix: Updated to use relative URLs - v4 - FORCE CACHE BUST
 
 // Use relative URL to avoid domain mismatch issues
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
