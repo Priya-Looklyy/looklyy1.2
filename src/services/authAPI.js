@@ -1,5 +1,6 @@
 // Authentication API Service for Looklyy App
 // Optimized for minimal API usage (100 calls/day limit)
+// CORS Fix: Updated to use www subdomain - v2
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://www.looklyy.com/api'
 
@@ -11,6 +12,7 @@ const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 // Helper function to make API requests with minimal logging
 async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`
+  console.log('🌐 API Base URL:', API_BASE_URL, 'Full URL:', url)
   
   const config = {
     headers: {
