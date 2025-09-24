@@ -21,40 +21,38 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' })
   }
 
-  let token
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    try {
-      token = req.headers.authorization.split(' ')[1]
-      const decoded = jwt.verify(token, JWT_SECRET)
-
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', decoded.id)
-        .single()
-
-      if (error || !data) {
-        return res.status(401).json({ message: 'Not authorized, user not found' })
-      }
-
-      res.status(200).json({
-        success: true,
-        user: {
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          avatar: data.avatar,
-          preferences: data.preferences,
-        },
-      })
-
-    } catch (error) {
-      console.error('Token verification failed:', error.message)
-      return res.status(401).json({ message: 'Not authorized, token failed' })
-    }
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided' })
   }
-  
-  if (!token) {
-    return res.status(401).json({ message: 'Not authorized, no token' })
+
+  const token = authHeader.substring(7)
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET)
+    
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('id, name, email, avatar, preferences')
+      .eq('id', decoded.id)
+      .single()
+
+    if (error || !user) {
+      return res.status(401).json({ message: 'Invalid token' })
+    }
+
+    res.status(200).json({
+      success: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        preferences: user.preferences,
+      }
+    })
+
+  } catch (error) {
+    return res.status(401).json({ message: 'Invalid token' })
   }
 }

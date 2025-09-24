@@ -48,15 +48,10 @@ export default async function handler(req, res) {
     const salt = await bcrypt.genSalt(12)
     const hashedPassword = await bcrypt.hash(password, salt)
 
-    // Create user - handle table creation if needed
-    console.log('Creating user with data:', { name, email, hashedPassword: hashedPassword.substring(0, 20) + '...' })
-    
+    // Create user - optimized for minimal logging
     let newUser, createError
     
     try {
-      // Try minimal insert first - just the required fields
-      console.log('Attempting to insert user with anon role...')
-      
       const result = await supabase
         .from('users')
         .insert([
@@ -72,24 +67,12 @@ export default async function handler(req, res) {
       newUser = result.data
       createError = result.error
       
-      console.log('Minimal insert result:', { 
-        newUser: newUser ? { id: newUser.id, email: newUser.email } : null, 
-        error: createError ? { message: createError.message, code: createError.code, details: createError.details } : null 
-      })
-      
     } catch (err) {
-      console.log('Insert failed:', err.message)
       createError = { message: err.message }
       newUser = null
     }
 
-    console.log('User creation result:', { 
-      user: newUser ? { id: newUser.id, email: newUser.email, name: newUser.name } : null,
-      error: createError ? { message: createError.message, code: createError.code, details: createError.details } : null
-    })
-
     if (createError) {
-      console.log('User creation error:', createError)
       return res.status(500).json({ message: 'Database error: ' + createError.message })
     }
 
