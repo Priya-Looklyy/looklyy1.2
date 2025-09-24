@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
     const { data: user, error } = await supabase
       .from('users')
-      .select('id, name, email, password_hash')
+      .select('id, name, email, password')
       .eq('email', email)
       .maybeSingle()
 
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ success: false, error: 'Database error while fetching user' })
     }
 
-    if (!user || user.password_hash !== passwordHash) {
+    if (!user || user.password !== passwordHash) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' })
     }
 

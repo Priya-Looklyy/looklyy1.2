@@ -61,14 +61,14 @@ export default async function handler(req, res) {
     // Hash password with sha256 for now (keeps zero extra deps). Replace with bcrypt later.
     const passwordHash = crypto.createHash('sha256').update(password).digest('hex')
 
-    // Try inserting into existing 'users' table with common columns
+    // Try inserting into existing 'users' table with correct column names
     const { data: inserted, error: insertErr } = await supabase
       .from('users')
       .insert([
         {
           name,
           email,
-          password_hash: passwordHash,
+          password: passwordHash,
         },
       ])
       .select('id, name, email')
