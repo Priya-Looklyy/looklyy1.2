@@ -26,9 +26,15 @@ const Login = ({ onSwitchToSignup }) => {
     }
     
     const result = await login(formData.email, formData.password)
-    if (!result.success) {
-      // Error is handled by context
+    if (result.success) {
+      // Success! User will be redirected automatically by App.jsx
+      // Clear form data
+      setFormData({
+        email: '',
+        password: ''
+      })
     }
+    // Error is handled by context
   }
 
   return (

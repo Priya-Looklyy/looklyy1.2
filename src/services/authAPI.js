@@ -78,6 +78,23 @@ export async function getCurrentUser() {
   if (result.success && result.user) {
     userCache = result.user
     cacheTimestamp = now
+  } else {
+    // If API call fails, try to decode token for basic user info
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      const fallbackUser = {
+        id: payload.id,
+        email: payload.email,
+        name: payload.email.split('@')[0], // Use email prefix as name
+        avatar: null,
+        preferences: { theme: 'purple', notifications: true }
+      }
+      userCache = fallbackUser
+      cacheTimestamp = now
+      return { success: true, user: fallbackUser }
+    } catch (error) {
+      return { success: false, error: 'Invalid token' }
+    }
   }
   return result
 }
