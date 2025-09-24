@@ -14,20 +14,12 @@ const AuthFlow = () => {
       <div className={`auth-card ${currentView === 'signup' ? 'right-panel-active' : ''}`}>
         {/* Sign In Container */}
         <div className="form-container sign-in-container">
-          {currentView === 'login' ? (
-            <Login onSwitchToSignup={switchToSignup} />
-          ) : (
-            <Signup onSwitchToLogin={switchToLogin} />
-          )}
+          <Login />
         </div>
 
         {/* Sign Up Container */}
         <div className="form-container sign-up-container">
-          {currentView === 'signup' ? (
-            <Signup onSwitchToLogin={switchToLogin} />
-          ) : (
-            <Login onSwitchToSignup={switchToSignup} />
-          )}
+          <Signup />
         </div>
 
         {/* Overlay Container */}

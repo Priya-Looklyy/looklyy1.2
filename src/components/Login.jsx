@@ -1,98 +1,70 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import './Auth.css'
 
-const Login = ({ onSwitchToSignup }) => {
+export default function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
-  
-  const { login, isLoading, error, clearError } = useAuth()
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-    if (error) clearError()
-  }
+  const { login, isLoading, error } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!formData.email || !formData.password) {
-      return
-    }
-    
     const result = await login(formData.email, formData.password)
+    
     if (result.success) {
-      // Success! User will be redirected automatically by App.jsx
-      // Clear form data
-      setFormData({
-        email: '',
-        password: ''
-      })
+      setFormData({ email: '', password: '' })
     }
-    // Error is handled by context
+  }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Sign in</h1>
+    <div className="auth-form">
+      <h2>Sign in</h2>
       
-      <div className="social-container">
-        <a href="#" onClick={(e) => e.preventDefault()}>
-          <i className="fab fa-google"></i>
-        </a>
-        <a href="#" onClick={(e) => e.preventDefault()}>
-          <i className="fab fa-facebook-f"></i>
-        </a>
+      <div className="social-login">
+        <button className="social-btn google">G</button>
+        <button className="social-btn facebook">f</button>
       </div>
       
-      <span>or use your account</span>
+      <p className="divider">or use your account</p>
       
-      <input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        placeholder="Email"
-        required
-        autoComplete="email"
-      />
-      
-      <input
-        type="password"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        placeholder="Password"
-        required
-        autoComplete="current-password"
-      />
-      
-      <a href="#" onClick={(e) => e.preventDefault()}>Forgot your password?</a>
-      
-      {error && (
-        <div className="error-message">
-          <i className="fas fa-exclamation-circle"></i>
-          {error}
-        </div>
-      )}
-      
-      <button type="submit" disabled={isLoading || !formData.email || !formData.password}>
-        {isLoading ? (
-          <>
-            <i className="fas fa-spinner fa-spin"></i>
-            Signing In...
-          </>
-        ) : (
-          'Sign In'
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        
+        <a href="#" className="forgot-password">Forgot your password?</a>
+        
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
         )}
-      </button>
-    </form>
+        
+        <button type="submit" disabled={isLoading} className="auth-btn">
+          {isLoading ? 'Signing in...' : 'SIGN IN'}
+        </button>
+      </form>
+    </div>
   )
 }
-
-export default Login

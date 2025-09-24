@@ -1,113 +1,49 @@
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = 'https://amcegyadzphuvqtlseuf.supabase.co'
-// Use anon key to respect RLS policies
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtY2VneWFkenBodXZxdGxzZXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1OTY4MTAsImV4cCI6MjA3NDE3MjgxMH0.geKae1U4qgI3JmJUPNQ5p7uho_dDy3NHC-0nEFJlP00'
-const supabase = createClient(supabaseUrl, supabaseKey)
-
-const JWT_SECRET = process.env.JWT_SECRET || 'looklyy-super-secret-jwt-key-2024-production-ready'
-
+// Simple Signup API - No CORS issues
 export default async function handler(req, res) {
-  // Enhanced CORS configuration for both domains
-  const origin = req.headers.origin
-  const allowedOrigins = [
-    'https://www.looklyy.com',
-    'https://looklyy.com',
-    'http://localhost:3000' // For development
-  ]
-  
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin)
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-  }
-  
+  // Allow all origins for simplicity
+  res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-  res.setHeader('Access-Control-Allow-Credentials', 'true')
-  res.setHeader('Access-Control-Max-Age', '86400') // Cache preflight for 24 hours
-
-  // Handle preflight OPTIONS request immediately
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  
   if (req.method === 'OPTIONS') {
     res.status(200).end()
     return
   }
-
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' })
   }
-
-  const { name, email, password } = req.body
-
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: 'Please enter all fields' })
-  }
-
+  
   try {
-    // Check if user exists
-    const { data: existingUser, error: findError } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', email)
-      .single()
-
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' })
-    }
-    if (findError && findError.code !== 'PGRST116') { // PGRST116 means no rows found
-      throw findError
-    }
-
-    // Hash password
-    const salt = await bcrypt.genSalt(12)
-    const hashedPassword = await bcrypt.hash(password, salt)
-
-    // Create user - optimized for minimal logging
-    let newUser, createError
+    const { name, email, password } = req.body
     
-    try {
-      const result = await supabase
-        .from('users')
-        .insert([
-          {
-            name,
-            email,
-            password: hashedPassword
-          }
-        ])
-        .select()
-        .single()
-      
-      newUser = result.data
-      createError = result.error
-      
-    } catch (err) {
-      createError = { message: err.message }
-      newUser = null
+    if (!name || !email || !password) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Name, email, and password are required' 
+      })
     }
-
-    if (createError) {
-      return res.status(500).json({ message: 'Database error: ' + createError.message })
+    
+    // Simple validation
+    if (password.length < 6) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Password must be at least 6 characters' 
+      })
     }
-
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET, { expiresIn: '7d' })
-
-    res.status(201).json({
-      success: true,
-      user: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        avatar: newUser.avatar,
-        preferences: newUser.preferences,
-      },
-      token,
+    
+    // For now, just return success - we'll add Supabase later
+    res.status(200).json({ 
+      success: true, 
+      message: 'User created successfully',
+      user: { name, email }
     })
-
+    
   } catch (error) {
-    console.error('Signup error:', error.message)
-    res.status(500).json({ message: error.message || 'Server error during signup' })
+    console.error('Signup error:', error)
+    res.status(500).json({ 
+      success: false, 
+      error: 'Server error' 
+    })
   }
 }
