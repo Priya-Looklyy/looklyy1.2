@@ -1,6 +1,13 @@
 // Harper's Bazaar Trending Fashion API
 // Fetches latest trending fashion content from Harper's Bazaar
 
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.SUPABASE_URL
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -16,9 +23,44 @@ export default async function handler(req, res) {
   }
 
   try {
-    // For now, return curated Harper's Bazaar-style trending looks
-    // This simulates what we would get from crawling their site
-    const trendingLooks = [
+    // Try to get real data from Supabase first
+    let trendingLooks = []
+    
+    if (supabase) {
+      try {
+        const { data: realData, error } = await supabase
+          .from('fashion_images')
+          .select('*')
+          .order('crawled_at', { ascending: false })
+          .limit(50)
+        
+        if (!error && realData && realData.length > 0) {
+          // Transform real data to match expected format
+          trendingLooks = realData.map((item, index) => ({
+            id: `hb-real-${item.id}`,
+            title: item.title || `Harper's Bazaar Fashion Look ${index + 1}`,
+            description: item.alt_text || 'Latest fashion trend from Harper\'s Bazaar',
+            category: 'harper_bazaar',
+            source_site: 'harpers_bazaar',
+            source_url: item.source_url,
+            primary_image_url: item.stored_url,
+            image_alt_text: item.alt_text,
+            trend_score: 0.9 - (index * 0.05), // Decreasing score for older items
+            engagement_score: 0.8 - (index * 0.03),
+            is_featured: index < 3,
+            tags: ['harper-bazaar', 'fashion', 'trending'],
+            crawled_at: item.crawled_at
+          }))
+        }
+      } catch (dbError) {
+        console.log('Database query failed, using fallback data:', dbError.message)
+      }
+    }
+    
+    // Fallback to curated data if no real data available
+    if (trendingLooks.length === 0) {
+      console.log('Using fallback data - no real crawled data available')
+      trendingLooks = [
       {
         id: 'hb-001',
         title: 'Oversized Blazers Are the Ultimate Power Move',

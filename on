@@ -1,0 +1,27 @@
+[33mcommit 4a32b3eb30008f203f684c6116fdb1b60060e2e3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Priya <priya@looklyy.com>
+Date:   Wed Sep 24 14:34:38 2025 +0530
+
+    Fix database column names - use 'password' instead of 'password_hash'
+
+[1mdiff --git a/api/auth/signup.js b/api/auth/signup.js[m
+[1mindex 2e2c9a3..276f726 100644[m
+[1m--- a/api/auth/signup.js[m
+[1m+++ b/api/auth/signup.js[m
+[36m@@ -61,14 +61,14 @@[m [mexport default async function handler(req, res) {[m
+     // Hash password with sha256 for now (keeps zero extra deps). Replace with bcrypt later.[m
+     const passwordHash = crypto.createHash('sha256').update(password).digest('hex')[m
+ [m
+[31m-    // Try inserting into existing 'users' table with common columns[m
+[32m+[m[32m    // Try inserting into existing 'users' table with correct column names[m
+     const { data: inserted, error: insertErr } = await supabase[m
+       .from('users')[m
+       .insert([[m
+         {[m
+           name,[m
+           email,[m
+[31m-          password_hash: passwordHash,[m
+[32m+[m[32m          password: passwordHash,[m
+         },[m
+       ])[m
+       .select('id, name, email')[m

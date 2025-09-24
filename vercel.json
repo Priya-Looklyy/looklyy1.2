@@ -1,17 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.looklyy.com"
-        }
-      ],
-      "destination": "https://looklyy.com/$1",
-      "permanent": false
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -39,6 +26,12 @@
           "value": "true"
         }
       ]
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/daily-crawl",
+      "schedule": "0 6 * * *"
     }
   ]
 }
