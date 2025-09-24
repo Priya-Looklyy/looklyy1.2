@@ -1,8 +1,9 @@
 export default function handler(req, res) {
   res.status(200).json({ 
-    message: 'API is working!',
+    status: 'working',
     timestamp: new Date().toISOString(),
     method: req.method,
-    url: req.url
+    url: req.url,
+    framework: 'no framework detected but functions work'
   })
 }
