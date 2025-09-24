@@ -56,12 +56,25 @@ export default async function handler(req, res) {
           
           const imageUrls = imageMatches.slice(0, 3).map(match => {
             const srcMatch = match.match(/src="([^"]+)"/)
-            const url = srcMatch ? srcMatch[1] : null
+            let url = srcMatch ? srcMatch[1] : null
             console.log(`Raw image match: ${match}`)
             console.log(`Extracted URL: ${url}`)
+            
+            // Convert relative URLs to absolute URLs
+            if (url && !url.startsWith('http')) {
+              if (url.startsWith('//')) {
+                url = 'https:' + url
+              } else if (url.startsWith('/')) {
+                url = 'https://www.harpersbazaar.com' + url
+              } else {
+                url = 'https://www.harpersbazaar.com/' + url
+              }
+              console.log(`Converted to absolute URL: ${url}`)
+            }
+            
             return url
           }).filter(url => {
-            const isValid = url && url.includes('http')
+            const isValid = url && (url.includes('http') || url.includes('data:'))
             console.log(`URL ${url} is valid: ${isValid}`)
             return isValid
           })
