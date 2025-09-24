@@ -76,7 +76,8 @@ export default async function handler(req, res) {
 
     if (insertErr) {
       console.error('Supabase insert error (users):', insertErr)
-      return res.status(500).json({ success: false, error: 'Database error while creating user' })
+      console.error('Error details:', JSON.stringify(insertErr, null, 2))
+      return res.status(500).json({ success: false, error: `Database error: ${insertErr.message}` })
     }
 
     return res.status(200).json({ success: true, user: inserted })
