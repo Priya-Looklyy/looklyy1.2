@@ -5,6 +5,11 @@
 // Use relative URL to avoid domain mismatch issues
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
+// DEBUG: Log the actual values being used
+console.log('🔧 DEBUG - VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL)
+console.log('🔧 DEBUG - Final API_BASE_URL:', API_BASE_URL)
+console.log('🔧 DEBUG - Current origin:', window.location.origin)
+
 // Cache for user data to reduce API calls
 let userCache = null
 let cacheTimestamp = null
