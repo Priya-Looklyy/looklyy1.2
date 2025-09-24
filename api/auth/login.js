@@ -9,13 +9,29 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 const JWT_SECRET = process.env.JWT_SECRET || 'looklyy-super-secret-jwt-key-2024-production-ready'
 
 export default async function handler(req, res) {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*')
+  // Enhanced CORS configuration for both domains
+  const origin = req.headers.origin
+  const allowedOrigins = [
+    'https://www.looklyy.com',
+    'https://looklyy.com',
+    'http://localhost:3000' // For development
+  ]
+  
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+  }
+  
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Max-Age', '86400') // Cache preflight for 24 hours
 
+  // Handle preflight OPTIONS request immediately
   if (req.method === 'OPTIONS') {
-    return res.status(200).end()
+    res.status(200).end()
+    return
   }
 
   if (req.method !== 'POST') {
