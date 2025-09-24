@@ -31,6 +31,7 @@ export default async function handler(req, res) {
     ]
     
     let imagesFound = 0
+    let imagesStored = 0
     const errors = []
     
     // Try to crawl one URL
@@ -43,10 +44,46 @@ export default async function handler(req, res) {
       
       if (response.ok) {
         const html = await response.text()
-        // Simple image count
-        const imageMatches = html.match(/<img[^>]+src="[^"]+"/gi)
+        // Extract image URLs
+        const imageMatches = html.match(/<img[^>]+src="([^"]+)"/gi)
         imagesFound = imageMatches ? imageMatches.length : 0
         console.log(`Found ${imagesFound} images`)
+        
+        // Try to store first few images
+        if (imageMatches && imageMatches.length > 0) {
+          const imageUrls = imageMatches.slice(0, 3).map(match => {
+            const srcMatch = match.match(/src="([^"]+)"/)
+            return srcMatch ? srcMatch[1] : null
+          }).filter(url => url && url.includes('http'))
+          
+          // Store images in database
+          for (const imageUrl of imageUrls) {
+            try {
+              const { error } = await supabase
+                .from('fashion_images')
+                .insert([
+                  {
+                    original_url: imageUrl,
+                    stored_url: imageUrl, // For now, just store the original URL
+                    alt_text: 'Harper\'s Bazaar fashion image',
+                    title: 'Fashion Image',
+                    source_url: testUrls[0],
+                    crawled_at: new Date().toISOString(),
+                    platform: 'harper-bazaar'
+                  }
+                ])
+              
+              if (!error) {
+                imagesStored++
+                console.log(`Stored image: ${imageUrl}`)
+              } else {
+                errors.push(`Database error: ${error.message}`)
+              }
+            } catch (error) {
+              errors.push(`Storage error: ${error.message}`)
+            }
+          }
+        }
       } else {
         errors.push(`HTTP ${response.status}`)
       }
@@ -60,7 +97,7 @@ export default async function handler(req, res) {
       results: {
         sections_crawled: 1,
         images_found: imagesFound,
-        images_stored: 0,
+        images_stored: imagesStored,
         errors: errors.length,
         status: errors.length === 0 ? 'success' : 'partial'
       }
