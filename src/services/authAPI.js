@@ -1,7 +1,7 @@
 // Authentication API Service for Looklyy App
 // Optimized for minimal API usage (100 calls/day limit)
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://looklyy.com/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://www.looklyy.com/api'
 
 // Cache for user data to reduce API calls
 let userCache = null
