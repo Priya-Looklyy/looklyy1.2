@@ -56,16 +56,20 @@ export default async function handler(req, res) {
             return srcMatch ? srcMatch[1] : null
           }).filter(url => url && url.includes('http'))
           
+          console.log(`Extracted ${imageUrls.length} image URLs`)
+          console.log('First few URLs:', imageUrls.slice(0, 2))
+          
           // Store images in database
           for (const imageUrl of imageUrls) {
             try {
+              console.log(`Attempting to store: ${imageUrl}`)
               const { error } = await supabase
                 .from('fashion_images')
                 .insert([
                   {
                     original_url: imageUrl,
                     stored_url: imageUrl, // For now, just store the original URL
-                    alt_text: 'Harper\'s Bazaar fashion image',
+                    alt_text: 'Harpers Bazaar fashion image',
                     title: 'Fashion Image',
                     source_url: testUrls[0],
                     crawled_at: new Date().toISOString(),
@@ -75,14 +79,18 @@ export default async function handler(req, res) {
               
               if (!error) {
                 imagesStored++
-                console.log(`Stored image: ${imageUrl}`)
+                console.log(`Successfully stored image: ${imageUrl}`)
               } else {
+                console.log(`Database error for ${imageUrl}:`, error)
                 errors.push(`Database error: ${error.message}`)
               }
             } catch (error) {
+              console.log(`Storage error for ${imageUrl}:`, error)
               errors.push(`Storage error: ${error.message}`)
             }
           }
+        } else {
+          console.log('No image matches found to store')
         }
       } else {
         errors.push(`HTTP ${response.status}`)
