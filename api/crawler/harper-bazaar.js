@@ -88,6 +88,37 @@ export default async function handler(req, res) {
           } else {
             // Store images in database
             console.log('Starting database storage...')
+            
+            // First, test with a simple known-good URL
+            try {
+              console.log('Testing database connection with simple URL...')
+              const { error: testError } = await supabase
+                .from('fashion_images')
+                .insert([
+                  {
+                    original_url: 'https://example.com/test.jpg',
+                    stored_url: 'https://example.com/test.jpg',
+                    alt_text: 'Test image',
+                    title: 'Test Image',
+                    source_url: testUrls[0],
+                    crawled_at: new Date().toISOString(),
+                    platform: 'harper-bazaar'
+                  }
+                ])
+              
+              if (!testError) {
+                console.log('✅ Database connection test successful')
+                imagesStored++
+              } else {
+                console.log('❌ Database connection test failed:', testError)
+                errors.push(`Database test error: ${testError.message}`)
+              }
+            } catch (testError) {
+              console.log('❌ Database connection test exception:', testError)
+              errors.push(`Database test exception: ${testError.message}`)
+            }
+            
+            // Now try to store the actual crawled images
             for (const imageUrl of imageUrls) {
               try {
                 console.log(`Attempting to store: ${imageUrl}`)
