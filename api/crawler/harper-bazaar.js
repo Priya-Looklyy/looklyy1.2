@@ -118,7 +118,6 @@ export default async function handler(req, res) {
                   {
                     original_url: 'https://example.com/test.jpg',
                     stored_url: 'https://example.com/test.jpg',
-                    alt_text: 'Test image',
                     title: 'Test Image',
                     source_url: testUrls[0],
                     crawled_at: new Date().toISOString(),
@@ -148,7 +147,6 @@ export default async function handler(req, res) {
                     {
                       original_url: imageUrl,
                       stored_url: imageUrl, // For now, just store the original URL
-                      alt_text: 'Harpers Bazaar fashion image',
                       title: 'Fashion Image',
                       source_url: testUrls[0],
                       crawled_at: new Date().toISOString(),
