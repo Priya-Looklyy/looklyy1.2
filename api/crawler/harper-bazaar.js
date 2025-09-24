@@ -89,7 +89,27 @@ export default async function handler(req, res) {
             // Store images in database
             console.log('Starting database storage...')
             
-            // First, test with a simple known-good URL
+            // First, test database table existence and structure
+            try {
+              console.log('Testing database table existence...')
+              const { data: tableData, error: tableError } = await supabase
+                .from('fashion_images')
+                .select('*')
+                .limit(1)
+              
+              if (tableError) {
+                console.log('❌ Table access error:', tableError)
+                errors.push(`Table access error: ${tableError.message}`)
+              } else {
+                console.log('✅ Table exists and is accessible')
+                console.log('Table structure sample:', tableData)
+              }
+            } catch (tableTestError) {
+              console.log('❌ Table test exception:', tableTestError)
+              errors.push(`Table test exception: ${tableTestError.message}`)
+            }
+            
+            // Then test with a simple known-good URL
             try {
               console.log('Testing database connection with simple URL...')
               const { error: testError } = await supabase
