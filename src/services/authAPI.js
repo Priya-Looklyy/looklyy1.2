@@ -1,4 +1,4 @@
-// Simple Authentication API Service
+// Simple Authentication API Service - DEPLOYMENT TEST v6
 const API_BASE_URL = '/api'
 
 // Simple API request function
@@ -14,11 +14,13 @@ async function apiRequest(endpoint, options = {}) {
   }
 
   try {
+    console.log('🚀 NEW AUTH API CALLING:', url)
     const response = await fetch(url, config)
     const data = await response.json()
+    console.log('✅ NEW AUTH API SUCCESS:', data)
     return data
   } catch (error) {
-    console.error('API Error:', error)
+    console.error('❌ NEW AUTH API ERROR:', error)
     return { success: false, error: 'Network error' }
   }
 }
