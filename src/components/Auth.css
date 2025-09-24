@@ -160,7 +160,7 @@ a:hover {
 
 .social-container a,
 .social-btn {
-  border: 1px solid #8f1eae;
+  border: 2px solid #8f1eae;
   border-radius: 50%;
   display: inline-flex;
   justify-content: center;
@@ -172,7 +172,7 @@ a:hover {
   color: #8f1eae;
   background: transparent;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
 }
 
@@ -184,15 +184,15 @@ a:hover {
 }
 
 .social-btn.google {
-  background: #8f1eae;
+  background: transparent;
   border-color: #8f1eae;
-  color: white;
+  color: #8f1eae;
 }
 
 .social-btn.facebook {
-  background: #8f1eae;
+  background: transparent;
   border-color: #8f1eae;
-  color: white;
+  color: #8f1eae;
 }
 
 /* Form Inputs */

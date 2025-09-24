@@ -30,7 +30,7 @@ export default function Login() {
       
       <div className="social-container">
         <button type="button" className="social-btn google">G</button>
-        <button type="button" className="social-btn facebook">f</button>
+        <button type="button" className="social-btn facebook">F</button>
       </div>
       
       <p>or use your account</p>

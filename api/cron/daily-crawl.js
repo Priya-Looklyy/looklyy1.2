@@ -106,13 +106,13 @@ async function storeImages(images, sourceUrl) {
         continue
       }
       
-      const imageBuffer = await imageResponse.arrayBuffer()
+      const imageArrayBuffer = await imageResponse.arrayBuffer()
       const fileName = `harper-bazaar-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`
       
       // Upload to Supabase storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('fashion-images')
-        .upload(fileName, new Uint8Array(imageBuffer), {
+        .upload(fileName, new Uint8Array(imageArrayBuffer), {
           contentType: 'image/jpeg',
           upsert: false
         })
