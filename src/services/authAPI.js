@@ -1,4 +1,5 @@
-// Simple Authentication API Service - DEPLOYMENT TEST v6
+// Simple Authentication API Service - FORCE RELATIVE URL
+// Ignore any environment variable override to prevent CORS issues
 const API_BASE_URL = '/api'
 
 // Simple API request function
