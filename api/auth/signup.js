@@ -4,6 +4,11 @@ import crypto from 'crypto'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET
+
+// Debug logging for environment variables
+console.log('🔧 Supabase URL:', supabaseUrl ? 'SET' : 'NOT SET')
+console.log('🔧 Supabase Service Role:', supabaseServiceRole ? 'SET' : 'NOT SET')
+
 const supabase = supabaseUrl && supabaseServiceRole ? createClient(supabaseUrl, supabaseServiceRole) : null
 
 export default async function handler(req, res) {
