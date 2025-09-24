@@ -56,8 +56,15 @@ export default async function handler(req, res) {
           
           const imageUrls = imageMatches.slice(0, 3).map(match => {
             const srcMatch = match.match(/src="([^"]+)"/)
-            return srcMatch ? srcMatch[1] : null
-          }).filter(url => url && url.includes('http'))
+            const url = srcMatch ? srcMatch[1] : null
+            console.log(`Raw image match: ${match}`)
+            console.log(`Extracted URL: ${url}`)
+            return url
+          }).filter(url => {
+            const isValid = url && url.includes('http')
+            console.log(`URL ${url} is valid: ${isValid}`)
+            return isValid
+          })
           
           console.log(`Extracted ${imageUrls.length} image URLs`)
           console.log('First few URLs:', imageUrls.slice(0, 2))
