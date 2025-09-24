@@ -173,7 +173,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log('🚀 Starting daily Harper\'s Bazaar crawl...')
+    console.log('🚀 Starting daily Harpers Bazaar crawl...')
     
     const results = []
     let totalImages = 0
@@ -223,7 +223,7 @@ export default async function handler(req, res) {
     
     return res.status(200).json({
       success: true,
-      message: 'Daily Harper\'s Bazaar crawl completed',
+      message: 'Daily Harpers Bazaar crawl completed',
       results: {
         sections_crawled: FASHION_SECTIONS.length,
         images_found: totalImages,
