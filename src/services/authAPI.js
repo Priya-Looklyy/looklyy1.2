@@ -27,16 +27,22 @@ async function apiRequest(endpoint, options = {}) {
   }
 
   try {
+    console.log('🔍 API Request:', { url, method: config.method, body: config.body })
     const response = await fetch(url, config)
+    
+    console.log('📡 API Response:', { status: response.status, statusText: response.statusText })
     
     if (!response.ok) {
       const errorText = await response.text()
-      return { success: false, error: `Server error: ${response.status}` }
+      console.error('❌ API Error:', { status: response.status, errorText })
+      return { success: false, error: `Server error: ${response.status} - ${errorText}` }
     }
     
     const data = await response.json()
+    console.log('✅ API Success:', data)
     return { success: true, ...data }
   } catch (error) {
+    console.error('💥 API Exception:', error)
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
       return { success: false, error: 'Network error - please check your connection' }
     }

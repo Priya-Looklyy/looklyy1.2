@@ -97,16 +97,22 @@ export function AuthProvider({ children }) {
     dispatch({ type: CLEAR_ERROR })
 
     try {
+      console.log('🚀 Starting login for:', { email })
       const response = await loginUser(email, password)
+      console.log('📋 Login response:', response)
+      
       if (response.success) {
+        console.log('✅ Login successful, storing token and user data')
         storeToken(response.token)
         dispatch({ type: LOGIN_SUCCESS, payload: response.user })
         return { success: true }
       } else {
+        console.error('❌ Login failed:', response.error)
         dispatch({ type: SET_ERROR, payload: response.error })
         return { success: false, error: response.error }
       }
     } catch (error) {
+      console.error('💥 Login exception:', error)
       dispatch({ type: SET_ERROR, payload: error.message })
       return { success: false, error: error.message }
     }
@@ -117,16 +123,22 @@ export function AuthProvider({ children }) {
     dispatch({ type: CLEAR_ERROR })
 
     try {
+      console.log('🚀 Starting signup for:', { name, email })
       const response = await signupUser({ name, email, password })
+      console.log('📋 Signup response:', response)
+      
       if (response.success) {
+        console.log('✅ Signup successful, storing token and user data')
         storeToken(response.token)
         dispatch({ type: LOGIN_SUCCESS, payload: response.user })
         return { success: true }
       } else {
+        console.error('❌ Signup failed:', response.error)
         dispatch({ type: SET_ERROR, payload: response.error })
         return { success: false, error: response.error }
       }
     } catch (error) {
+      console.error('💥 Signup exception:', error)
       dispatch({ type: SET_ERROR, payload: error.message })
       return { success: false, error: error.message }
     }
