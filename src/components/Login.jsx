@@ -25,46 +25,44 @@ export default function Login() {
   }
 
   return (
-    <div className="auth-form">
+    <form onSubmit={handleSubmit}>
       <h2>Sign in</h2>
       
-      <div className="social-login">
-        <button className="social-btn google">G</button>
-        <button className="social-btn facebook">f</button>
+      <div className="social-container">
+        <button type="button" className="social-btn google">G</button>
+        <button type="button" className="social-btn facebook">f</button>
       </div>
       
-      <p className="divider">or use your account</p>
+      <p>or use your account</p>
       
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        
-        <a href="#" className="forgot-password">Forgot your password?</a>
-        
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
-        
-        <button type="submit" disabled={isLoading} className="auth-btn">
-          {isLoading ? 'Signing in...' : 'SIGN IN'}
-        </button>
-      </form>
-    </div>
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        value={formData.password}
+        onChange={handleChange}
+        required
+      />
+      
+      <a href="#" className="forgot-password">Forgot your password?</a>
+      
+      {error && (
+        <div className="error-message">
+          {error}
+        </div>
+      )}
+      
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? 'Signing in...' : 'SIGN IN'}
+      </button>
+    </form>
   )
 }
