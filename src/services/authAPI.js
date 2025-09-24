@@ -13,6 +13,8 @@ const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`
   console.log('🌐 API Base URL:', API_BASE_URL, 'Full URL:', url)
+  console.log('🌍 Current origin:', window.location.origin)
+  console.log('🔗 URL being called:', url)
   
   const config = {
     headers: {
@@ -144,4 +146,27 @@ export function getToken() {
 export function clearUserCache() {
   userCache = null
   cacheTimestamp = null
+}
+
+// Test CORS function for debugging
+export async function testCORS() {
+  console.log('🧪 Testing CORS...')
+  console.log('🌍 Current origin:', window.location.origin)
+  console.log('🌐 API Base URL:', API_BASE_URL)
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/test-cors`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    const data = await response.json()
+    console.log('✅ CORS Test Success:', data)
+    return { success: true, data }
+  } catch (error) {
+    console.error('❌ CORS Test Failed:', error)
+    return { success: false, error: error.message }
+  }
 }
