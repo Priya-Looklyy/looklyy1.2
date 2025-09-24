@@ -2,13 +2,14 @@
 // Optimized for minimal API usage (100 calls/day limit)
 // CORS Fix: Updated to use relative URLs - v4 - FORCE CACHE BUST
 
-// Use relative URL to avoid domain mismatch issues
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+// Use dynamic origin to avoid domain mismatch issues
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${window.location.origin}/api`
 
 // DEBUG: Log the actual values being used
 console.log('🔧 DEBUG - VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL)
 console.log('🔧 DEBUG - Final API_BASE_URL:', API_BASE_URL)
 console.log('🔧 DEBUG - Current origin:', window.location.origin)
+console.log('🔧 DEBUG - Current hostname:', window.location.hostname)
 
 // Cache for user data to reduce API calls
 let userCache = null
