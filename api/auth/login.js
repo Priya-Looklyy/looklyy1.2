@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 
 const supabaseUrl = process.env.SUPABASE_URL
-const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET
-const supabase = supabaseUrl && supabaseServiceRole ? createClient(supabaseUrl, supabaseServiceRole) : null
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')

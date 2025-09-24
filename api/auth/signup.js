@@ -3,13 +3,13 @@ import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 
 const supabaseUrl = process.env.SUPABASE_URL
-const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 // Debug logging for environment variables
 console.log('🔧 Supabase URL:', supabaseUrl ? 'SET' : 'NOT SET')
-console.log('🔧 Supabase Service Role:', supabaseServiceRole ? 'SET' : 'NOT SET')
+console.log('🔧 Supabase Anon Key:', supabaseAnonKey ? 'SET' : 'NOT SET')
 
-const supabase = supabaseUrl && supabaseServiceRole ? createClient(supabaseUrl, supabaseServiceRole) : null
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
 
 export default async function handler(req, res) {
   // Allow all origins for simplicity while we stabilize

@@ -10,12 +10,12 @@ export default async function handler(req, res) {
   }
   
   const supabaseUrl = process.env.SUPABASE_URL
-  const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   
   res.status(200).json({
     success: true,
     supabaseUrl: supabaseUrl ? 'SET' : 'NOT SET',
-    supabaseServiceRole: supabaseServiceRole ? 'SET' : 'NOT SET',
+    supabaseAnonKey: supabaseAnonKey ? 'SET' : 'NOT SET',
     supabaseUrlValue: supabaseUrl,
     timestamp: new Date().toISOString()
   })
