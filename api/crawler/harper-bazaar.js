@@ -24,173 +24,148 @@ export default async function handler(req, res) {
   try {
     console.log('Starting crawler...')
     
-    // Test URLs to crawl
-    const testUrls = [
-      'https://www.harpersbazaar.com/fashion/',
-      'https://www.harpersbazaar.com/fashion/trends/'
-    ]
+             // Test URLs to crawl - focus on actual fashion content pages
+             const testUrls = [
+               'https://www.harpersbazaar.com/fashion/trends/',
+               'https://www.harpersbazaar.com/fashion/runway/',
+               'https://www.harpersbazaar.com/fashion/street-style/',
+               'https://www.harpersbazaar.com/fashion/celebrity-style/',
+               'https://www.harpersbazaar.com/fashion/designers/'
+             ]
     
     let imagesFound = 0
     let imagesStored = 0
     const errors = []
     
-    // Try to crawl one URL
-    try {
-      const response = await fetch(testUrls[0], {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
-      })
+    // Try to crawl multiple URLs to get more fashion images
+    let allImageUrls = []
+    for (const url of testUrls.slice(0, 3)) { // Try first 3 URLs
+      try {
+        console.log(`Crawling URL: ${url}`)
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          }
+        })
       
-      if (response.ok) {
-        const html = await response.text()
-        // Extract image URLs
-        const imageMatches = html.match(/<img[^>]+src="([^"]+)"/gi)
-        imagesFound = imageMatches ? imageMatches.length : 0
-        console.log(`Found ${imagesFound} images`)
-        
-        // Try to store first few images
-        console.log('About to process image matches...')
-        if (imageMatches && imageMatches.length > 0) {
-          console.log(`Processing ${imageMatches.length} image matches`)
+        if (response.ok) {
+          const html = await response.text()
+          // Extract image URLs
+          const imageMatches = html.match(/<img[^>]+src="([^"]+)"/gi)
+          const pageImagesFound = imageMatches ? imageMatches.length : 0
+          imagesFound += pageImagesFound
+          console.log(`Found ${pageImagesFound} images on ${url}`)
           
-                  const imageUrls = imageMatches.slice(0, 10).map(match => {
-                    const srcMatch = match.match(/src="([^"]+)"/)
-                    let url = srcMatch ? srcMatch[1] : null
-                    console.log(`Raw image match: ${match}`)
-                    console.log(`Extracted URL: ${url}`)
+          if (imageMatches && imageMatches.length > 0) {
+            const imageUrls = imageMatches.slice(0, 15).map(match => {
+              const srcMatch = match.match(/src="([^"]+)"/)
+              let url = srcMatch ? srcMatch[1] : null
 
-                    // Convert relative URLs to absolute URLs
-                    if (url && !url.startsWith('http')) {
-                      if (url.startsWith('//')) {
-                        url = 'https:' + url
-                      } else if (url.startsWith('/')) {
-                        url = 'https://www.harpersbazaar.com' + url
-                      } else {
-                        url = 'https://www.harpersbazaar.com/' + url
-                      }
-                      console.log(`Converted to absolute URL: ${url}`)
-                    }
-
-                    return url
-                  }).filter(url => {
-                    // Filter out icons, SVGs, and non-fashion images
-                    const isValid = url && 
-                      (url.includes('http') || url.includes('data:')) &&
-                      !url.includes('.svg') &&
-                      !url.includes('icon') &&
-                      !url.includes('logo') &&
-                      !url.includes('button') &&
-                      !url.includes('_assets') &&
-                      !url.includes('design-tokens') &&
-                      (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.webp'))
-                    
-                    console.log(`URL ${url} is valid fashion image: ${isValid}`)
-                    return isValid
-                  })
-          
-          console.log(`Extracted ${imageUrls.length} image URLs`)
-          console.log('First few URLs:', imageUrls.slice(0, 2))
-          
-          if (imageUrls.length === 0) {
-            console.log('No valid HTTP URLs found in image matches')
-            errors.push('No valid HTTP URLs found')
-          } else {
-            // Store images in database
-            console.log('Starting database storage...')
-            
-            // First, test database table existence and structure
-            try {
-              console.log('Testing database table existence...')
-              const { data: tableData, error: tableError } = await supabase
-                .from('fashion_images')
-                .select('*')
-                .limit(1)
-              
-              if (tableError) {
-                console.log('❌ Table access error:', tableError)
-                errors.push(`Table access error: ${tableError.message}`)
-              } else {
-                console.log('✅ Table exists and is accessible')
-                console.log('Table structure sample:', tableData)
-                
-                // Try to get table schema info
-                try {
-                  const { data: schemaData, error: schemaError } = await supabase
-                    .from('information_schema.columns')
-                    .select('column_name, data_type, is_nullable')
-                    .eq('table_name', 'fashion_images')
-                    .eq('table_schema', 'public')
-                  
-                  if (!schemaError && schemaData) {
-                    console.log('Table columns:', schemaData.map(col => `${col.column_name} (${col.data_type}, nullable: ${col.is_nullable})`))
-                  } else {
-                    console.log('Schema error:', schemaError)
-                  }
-                } catch (schemaTestError) {
-                  console.log('Could not get schema info:', schemaTestError.message)
-                }
-              }
-            } catch (tableTestError) {
-              console.log('❌ Table test exception:', tableTestError)
-              errors.push(`Table test exception: ${tableTestError.message}`)
-            }
-            
-            // Test with only the id column (auto-generated)
-            try {
-              console.log('Testing database connection with empty insert (id auto-generated)...')
-              const { error: testError } = await supabase
-                .from('fashion_images')
-                .insert([{}])
-              
-              if (!testError) {
-                console.log('✅ Database connection test successful with empty insert')
-                imagesStored++
-              } else {
-                console.log('❌ Database connection test failed with empty insert:', testError)
-                errors.push(`Database test error: ${testError.message}`)
-              }
-            } catch (testError) {
-              console.log('❌ Database connection test exception:', testError)
-              errors.push(`Database test exception: ${testError.message}`)
-            }
-            
-            // Now try to store the actual crawled images (just store the URL in memory for now)
-            for (const imageUrl of imageUrls) {
-              try {
-                console.log(`Attempting to store: ${imageUrl}`)
-                // Store actual image data with proper columns
-                const { error } = await supabase
-                  .from('fashion_images_new')
-                  .insert([{
-                    original_url: imageUrl,
-                    title: `Harper's Bazaar Fashion Look ${imagesStored + 1}`,
-                    description: 'Latest fashion trend from Harper\'s Bazaar',
-                    category: 'harper_bazaar'
-                  }])
-                
-                if (!error) {
-                  imagesStored++
-                  console.log(`Successfully stored image record for: ${imageUrl}`)
+              // Convert relative URLs to absolute URLs
+              if (url && !url.startsWith('http')) {
+                if (url.startsWith('//')) {
+                  url = 'https:' + url
+                } else if (url.startsWith('/')) {
+                  url = 'https://www.harpersbazaar.com' + url
                 } else {
-                  console.log(`Database error for ${imageUrl}:`, error)
-                  errors.push(`Database error: ${error.message}`)
+                  url = 'https://www.harpersbazaar.com/' + url
                 }
-              } catch (error) {
-                console.log(`Storage error for ${imageUrl}:`, error)
-                errors.push(`Storage error: ${error.message}`)
               }
-            }
+
+              return url
+            }).filter(url => {
+              // Enhanced filtering for real fashion images
+              const isValid = url && 
+                (url.includes('http') || url.includes('data:')) &&
+                // Exclude icons, SVGs, and design elements
+                !url.includes('.svg') &&
+                !url.includes('icon') &&
+                !url.includes('logo') &&
+                !url.includes('button') &&
+                !url.includes('_assets') &&
+                !url.includes('design-tokens') &&
+                !url.includes('checkmark') &&
+                !url.includes('magnifying') &&
+                !url.includes('arrow') &&
+                !url.includes('play') &&
+                !url.includes('close') &&
+                !url.includes('menu') &&
+                !url.includes('search') &&
+                !url.includes('social') &&
+                !url.includes('share') &&
+                !url.includes('like') &&
+                !url.includes('heart') &&
+                !url.includes('pin') &&
+                !url.includes('star') &&
+                !url.includes('badge') &&
+                !url.includes('sponsor') &&
+                !url.includes('ad') &&
+                !url.includes('banner') &&
+                !url.includes('header') &&
+                !url.includes('footer') &&
+                !url.includes('nav') &&
+                !url.includes('sidebar') &&
+                // Only include common image formats
+                (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.webp')) &&
+                // Look for fashion-related keywords in URL
+                (url.includes('fashion') || url.includes('style') || url.includes('runway') || 
+                 url.includes('trend') || url.includes('look') || url.includes('outfit') ||
+                 url.includes('model') || url.includes('celebrity') || url.includes('street') ||
+                 url.includes('designer') || url.includes('collection') || url.includes('show') ||
+                 url.includes('photo') || url.includes('image') || url.includes('gallery') ||
+                 url.includes('editorial') || url.includes('shoot') || url.includes('campaign'))
+              
+              return isValid
+            })
+            
+            allImageUrls = allImageUrls.concat(imageUrls)
+            console.log(`Added ${imageUrls.length} valid fashion images from ${url}`)
           }
         } else {
-          console.log('No image matches found to store')
-          errors.push('No image matches found')
+          console.log(`Failed to fetch ${url}: ${response.status}`)
+          errors.push(`HTTP ${response.status} for ${url}`)
         }
-      } else {
-        errors.push(`HTTP ${response.status}`)
+      } catch (error) {
+        console.log(`Error crawling ${url}:`, error.message)
+        errors.push(`Error crawling ${url}: ${error.message}`)
       }
-    } catch (error) {
-      errors.push(error.message)
+    }
+    
+    // Remove duplicates and store unique images
+    const uniqueImageUrls = [...new Set(allImageUrls)]
+    console.log(`Total unique fashion images found: ${uniqueImageUrls.length}`)
+    
+    if (uniqueImageUrls.length > 0) {
+      // Store images in database
+      console.log('Starting database storage...')
+      
+      for (const imageUrl of uniqueImageUrls.slice(0, 25)) { // Store up to 25 images
+        try {
+          console.log(`Attempting to store: ${imageUrl}`)
+          const { error } = await supabase
+            .from('fashion_images_new')
+            .insert([{
+              original_url: imageUrl,
+              title: `Harper's Bazaar Fashion Look ${imagesStored + 1}`,
+              description: 'Latest fashion trend from Harper\'s Bazaar',
+              category: 'harper_bazaar'
+            }])
+          
+          if (!error) {
+            imagesStored++
+            console.log(`Successfully stored image record for: ${imageUrl}`)
+          } else {
+            console.log(`Database error for ${imageUrl}:`, error)
+            errors.push(`Database error: ${error.message}`)
+          }
+        } catch (error) {
+          console.log(`Storage error for ${imageUrl}:`, error)
+          errors.push(`Storage error: ${error.message}`)
+        }
+      }
+    } else {
+      console.log('No valid fashion images found across all URLs')
+      errors.push('No valid fashion images found')
     }
     
     const result = {
