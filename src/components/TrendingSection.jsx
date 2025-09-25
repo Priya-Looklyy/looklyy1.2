@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import TrendingCard from './TrendingCard'
-import NotificationCenter from './NotificationCenter'
-import Frame2Canvas from './Frame2Canvas'
-import { useLook } from '../context/LookContext'
 import trendingAPI from '../services/trendingAPI'
 import './TrendingSection.css'
 
 const TrendingSection = () => {
-  const [pinnedLook, setPinnedLook] = useState(null)
-  const [showFrame2, setShowFrame2] = useState(false)
   const [allCards, setAllCards] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { favorites } = useLook()
   
   // Load trending looks from crawler API
   useEffect(() => {
@@ -55,18 +49,7 @@ const TrendingSection = () => {
     loadTrendingLooks()
   }, []) // Load once on component mount
 
-  const handlePinLook = (card) => {
-    setPinnedLook({
-      slider: card.slider,
-      currentImage: card.image
-    })
-    setShowFrame2(true)
-  }
-
-  const closeFrame2 = () => {
-    setShowFrame2(false)
-    setPinnedLook(null)
-  }
+  // No pin functionality - clean image display only
 
   // Group cards into rows of 5
   const groupedCards = []
@@ -91,7 +74,6 @@ const TrendingSection = () => {
                   <TrendingCard 
                     key={card.id} 
                     card={card}
-                    onPinLook={handlePinLook}
                   />
                 ))}
               </div>
@@ -125,14 +107,7 @@ const TrendingSection = () => {
         </>
       )}
       
-      {showFrame2 && (
-        <Frame2Canvas 
-          pinnedLook={pinnedLook}
-          onClose={closeFrame2}
-        />
-      )}
-      
-      <NotificationCenter />
+      {/* No Frame2 or notifications - clean display only */}
     </div>
   )
 }
