@@ -10,7 +10,7 @@ const getAPIBaseURL = () => {
     return 'http://localhost:8000'
   } else {
     // Production: Use working Vercel API endpoints
-    return import.meta.env.VITE_API_BASE_URL || 'https://looklyy04.vercel.app/api'
+    return import.meta.env.VITE_API_BASE_URL || 'https://looklyy04.vercel.app'
   }
 }
 

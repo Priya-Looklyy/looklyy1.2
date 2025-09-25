@@ -35,7 +35,7 @@ const TrendingSection = () => {
         
       } catch (apiError) {
         console.warn('Crawler API failed, using fallback data:', apiError)
-        setError('Using offline data - crawler unavailable')
+        // Remove the error message - just use fallback data silently
         
         try {
           // Use fallback dummy data if API fails
