@@ -15,7 +15,7 @@ const getAPIBaseURL = () => {
 }
 
 export const API_CONFIG = {
-  BASE_URL: getAPIBaseURL(),
+  BASE_URL: 'https://looklyy04.vercel.app', // Force correct baseURL
   ENDPOINTS: {
     TRENDING_LATEST: '/api/trends/latest',
     TRENDING_FEATURED: '/api/trends/featured',
