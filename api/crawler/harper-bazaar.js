@@ -217,10 +217,6 @@ export default async function handler(req, res) {
           }
           
           // For other domains, check for fashion keywords
-          const hasFashionKeyword = fashionKeywords.some(keyword => 
-            absoluteUrl.includes(keyword) || alt.includes(keyword)
-          )
-          
           return hasFashionKeyword
         }).map(img => {
           let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
