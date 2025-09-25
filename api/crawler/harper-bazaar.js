@@ -104,7 +104,7 @@ export default async function handler(req, res) {
         console.log(`📸 Found ${images.length} images on ${urlData.url}`)
         totalImages += images.length
         
-        // Filter for fashion images
+        // Filter for fashion images - prioritize full-size people, avoid collages
         const fashionImages = images.filter(img => {
           const src = img.src.toLowerCase()
           const alt = img.alt.toLowerCase()
@@ -129,7 +129,12 @@ export default async function handler(req, res) {
             'badge', 'sponsor', 'ad', 'banner', 'header', 'footer',
             'nav', 'sidebar', 'menu', 'search', 'arrow', 'play',
             'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
-            'facebook', 'twitter', 'instagram', 'pinterest', 'youtube'
+            'facebook', 'twitter', 'instagram', 'pinterest', 'youtube',
+            // Exclude collage/montage images
+            'collage', 'montage', 'grid', 'mosaic', 'compilation',
+            'roundup', 'round-up', 'collection', 'gallery', 'slideshow',
+            'carousel', 'slider', 'multiple', 'several', 'various',
+            'mix', 'assortment', 'array', 'group', 'set', 'series'
           ]
           
           if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
@@ -141,18 +146,41 @@ export default async function handler(req, res) {
             return false
           }
           
-          // Look for fashion-related keywords
+          // Look for fashion-related keywords that indicate full-size people
           const fashionKeywords = [
             'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
             'model', 'celebrity', 'street', 'designer', 'collection',
-            'show', 'photo', 'image', 'gallery', 'editorial', 'shoot',
+            'show', 'photo', 'image', 'editorial', 'shoot',
             'campaign', 'dress', 'clothing', 'apparel', 'beauty',
-            'harpersbazaar', 'bazaar'
+            'harpersbazaar', 'bazaar', 'wearing', 'styled', 'ensemble',
+            'fashion-week', 'red-carpet', 'street-style', 'runway-show'
           ]
           
-          return fashionKeywords.some(keyword => 
+          // Prioritize images that suggest full-body shots
+          const fullBodyKeywords = [
+            'full', 'body', 'outfit', 'ensemble', 'look', 'styled',
+            'wearing', 'dressed', 'fashion', 'street', 'runway',
+            'model', 'celebrity', 'person', 'woman', 'man'
+          ]
+          
+          const hasFashionKeyword = fashionKeywords.some(keyword => 
             absoluteUrl.includes(keyword) || alt.includes(keyword)
           )
+          
+          const hasFullBodyKeyword = fullBodyKeywords.some(keyword => 
+            alt.includes(keyword)
+          )
+          
+          // Check for image size indicators (larger images are more likely to be full-body)
+          const isLargeImage = absoluteUrl.includes('1200') || 
+                              absoluteUrl.includes('800') || 
+                              absoluteUrl.includes('600') ||
+                              absoluteUrl.includes('crop=1.00xw') ||
+                              absoluteUrl.includes('resize=1200') ||
+                              absoluteUrl.includes('resize=800')
+          
+          // Prefer images with full-body indicators and larger sizes
+          return hasFashionKeyword && (hasFullBodyKeyword || isLargeImage || !alt.includes('collage'))
         }).map(img => ({
           src: img.src.startsWith('//') ? 'https:' + img.src :
                img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
