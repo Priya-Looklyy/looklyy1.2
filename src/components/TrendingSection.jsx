@@ -177,43 +177,19 @@ const TrendingSection = () => {
       <div className="trending-scroll-container">
         <div className="trending-grid-container">
           
-          {/* Trending Section - Top 10 Most Trending */}
-          {categorizedData.trending.length > 0 && (
-            <div className="category-section">
-              <h2 className="category-title">🔥 Most Trending</h2>
-              {groupCardsIntoRows(categorizedData.trending).map((row, rowIndex) => (
-                <div key={`trending-${rowIndex}`} className="trending-row">
-                  {row.map((card) => (
-                    <TrendingCard
-                      key={card.id}
-                      card={card}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Category Sections */}
-          {Object.entries(categorizedData.categories).map(([categoryKey, cards]) => {
-            if (cards.length === 0) return null
+          {/* Seamless Visual Experience - No Text, Pure Fashion */}
+          <div className="seamless-fashion-grid">
+            {/* All images flow seamlessly - no categories, no titles, just pure visual beauty */}
+            {categorizedData.trending.map((card) => (
+              <TrendingCard key={card.id} card={card} />
+            ))}
             
-            return (
-              <div key={categoryKey} className="category-section">
-                <h2 className="category-title">✨ {formatCategoryName(categoryKey)}</h2>
-                {groupCardsIntoRows(cards).map((row, rowIndex) => (
-                  <div key={`${categoryKey}-${rowIndex}`} className="trending-row">
-                    {row.map((card) => (
-                      <TrendingCard
-                        key={card.id}
-                        card={card}
-                      />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )
-          })}
+            {Object.entries(categorizedData.categories).map(([categoryKey, cards]) => 
+              cards.map((card) => (
+                <TrendingCard key={card.id} card={card} />
+              ))
+            )}
+          </div>
 
         </div>
       </div>

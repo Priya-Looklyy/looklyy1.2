@@ -1,38 +1,21 @@
-/* Trending Page - Homepage Style Layout with Categories */
+/* High Fashion Trending Page - Clean, Minimalist, Visual-First */
 
 .trending-section {
   position: relative;
   min-height: 100vh;
   padding: 0;
-  background: transparent;
+  background: #fafafa;
+  overflow: hidden;
 }
 
-/* Category Sections */
-.category-section {
-  margin-bottom: 3rem;
-}
-
-.category-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #8b5cf6;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  position: relative;
-}
-
-.category-title::after {
-  content: '';
-  position: absolute;
-  bottom: -0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, #8b5cf6, #a855f7);
-  border-radius: 1px;
+/* Seamless Fashion Grid - No Text, Pure Visual Experience */
+.seamless-fashion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2px;
+  padding: 0;
+  width: 100%;
+  max-width: none;
 }
 
 /* Remove any background patterns or embossed text */
