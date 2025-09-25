@@ -75,7 +75,7 @@ const TrendingSection = () => {
   }
 
   return (
-    <div className="trending-section">
+    <div className="trending-section" data-version="2.0">
       {/* Loading State */}
       {loading ? (
         <div className="trending-loading">
