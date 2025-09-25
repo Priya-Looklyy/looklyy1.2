@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js'
-import { HttpCrawler, Dataset, Configuration } from 'crawlee'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -23,7 +22,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log('🚀 Starting Crawlee-powered crawler (Vercel compatible)...')
+    console.log('🚀 Starting simple HTTP crawler (Vercel compatible)...')
     
     if (!supabase) {
       return res.status(500).json({ 
@@ -32,198 +31,174 @@ export default async function handler(req, res) {
       })
     }
 
-    // Configure Crawlee for Vercel serverless environment
-    Configuration.getGlobalConfig().set('storageClientOptions', {
-      localDataDirectory: '/tmp', // Use Vercel's writable directory
-      persistStorage: false, // Don't persist data to disk in serverless
-    })
+    // URLs to crawl - comprehensive list of Harper's Bazaar fashion pages
+    const urlsToCrawl = [
+      'https://www.harpersbazaar.com/fashion/trends/',
+      'https://www.harpersbazaar.com/fashion/runway/',
+      'https://www.harpersbazaar.com/fashion/street-style/',
+      'https://www.harpersbazaar.com/fashion/celebrity-style/',
+      'https://www.harpersbazaar.com/fashion/designers/',
+      'https://www.harpersbazaar.com/fashion/',
+      'https://www.harpersbazaar.com/fashion/trends/fall-2024/',
+      'https://www.harpersbazaar.com/fashion/runway/spring-2025/',
+      'https://www.harpersbazaar.com/fashion/street-style/paris-fashion-week/',
+      'https://www.harpersbazaar.com/fashion/celebrity-style/red-carpet/',
+      'https://www.harpersbazaar.com/fashion/trends/spring-2025/',
+      'https://www.harpersbazaar.com/fashion/runway/fall-2024/',
+      'https://www.harpersbazaar.com/fashion/street-style/new-york-fashion-week/',
+      'https://www.harpersbazaar.com/fashion/celebrity-style/street-style/',
+      'https://www.harpersbazaar.com/fashion/designers/spring-2025/'
+    ]
     
-    // Disable system process monitoring (not available in Vercel)
-    Configuration.getGlobalConfig().set('systemInfoOptions', {
-      disableSystemInfo: true,
-    })
-
-    // Initialize HTTP-based Crawlee crawler with Vercel optimizations
-    const crawler = new HttpCrawler({
-      maxRequestsPerCrawl: 20, // Reduced for serverless timeout limits
-      requestHandlerTimeoutSecs: 25, // Under Vercel's 30s limit
-      maxConcurrency: 3, // Reduced concurrency for serverless
-      
-      // Vercel-compatible configuration
-      additionalMimeTypes: ['text/html'],
-      useSessionPool: false, // Disable session pooling for serverless
-      autoscaledPoolOptions: {
-        maxConcurrency: 3,
-        desiredConcurrency: 1,
-        scaleUpStepRatio: 0.5, // Must be less than 1
-        scaleDownStepRatio: 0.5, // Must be less than 1
-      },
-      
-      // Request handler for each page
-      async requestHandler({ request, response, enqueueLinks, log }) {
-        log.info(`🎯 Crawling: ${request.url}`)
-        
-        try {
-          const html = await response.text()
-          
-          // Extract all images from HTML
-          const imageMatches = html.match(/<img[^>]+src="([^"]+)"/gi) || []
-          const images = imageMatches.map(match => {
-            const srcMatch = match.match(/src="([^"]+)"/)
-            const altMatch = match.match(/alt="([^"]*)"/)
-            return {
-              src: srcMatch ? srcMatch[1] : '',
-              alt: altMatch ? altMatch[1] : ''
-            }
-          })
-          
-          log.info(`📸 Found ${images.length} images on ${request.url}`)
-          
-          // Filter for fashion images
-          const fashionImages = images.filter(img => {
-            const src = img.src.toLowerCase()
-            const alt = img.alt.toLowerCase()
-            
-            // Must be a valid image URL
-            if (!src || !src.includes('http')) return false
-            
-            // Convert relative URLs to absolute URLs
-            let absoluteUrl = src
-            if (src.startsWith('//')) {
-              absoluteUrl = 'https:' + src
-            } else if (src.startsWith('/')) {
-              absoluteUrl = 'https://www.harpersbazaar.com' + src
-            } else if (!src.startsWith('http')) {
-              absoluteUrl = 'https://www.harpersbazaar.com/' + src
-            }
-            
-            // Exclude icons, SVGs, and design elements
-            const excludeKeywords = [
-              'icon', 'logo', 'button', 'svg', 'avatar', 'thumbnail',
-              'social', 'share', 'like', 'heart', 'pin', 'star',
-              'badge', 'sponsor', 'ad', 'banner', 'header', 'footer',
-              'nav', 'sidebar', 'menu', 'search', 'arrow', 'play',
-              'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
-              'facebook', 'twitter', 'instagram', 'pinterest', 'youtube'
-            ]
-            
-            if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
-              return false
-            }
-            
-            // Must be common image formats
-            if (!absoluteUrl.match(/\.(jpg|jpeg|png|webp)(\?|$)/i)) {
-              return false
-            }
-            
-            // Look for fashion-related keywords
-            const fashionKeywords = [
-              'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
-              'model', 'celebrity', 'street', 'designer', 'collection',
-              'show', 'photo', 'image', 'gallery', 'editorial', 'shoot',
-              'campaign', 'dress', 'clothing', 'apparel', 'beauty',
-              'harpersbazaar', 'bazaar'
-            ]
-            
-            return fashionKeywords.some(keyword => 
-              absoluteUrl.includes(keyword) || alt.includes(keyword)
-            )
-          }).map(img => ({
-            src: img.src.startsWith('//') ? 'https:' + img.src :
-                 img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
-                 img.src.startsWith('http') ? img.src :
-                 'https://www.harpersbazaar.com/' + img.src,
-            alt: img.alt
-          }))
-          
-          log.info(`✨ Found ${fashionImages.length} fashion images on ${request.url}`)
-          
-          // Store fashion images in dataset (in-memory for Vercel)
-          if (fashionImages.length > 0) {
-            await Dataset.pushData({
-              url: request.url,
-              images: fashionImages,
-              crawledAt: new Date().toISOString()
-            })
-          }
-          
-          // Discover new URLs to crawl (only fashion-related pages)
-          await enqueueLinks({
-            selector: 'a[href*="/fashion/"]',
-            label: 'FASHION_PAGE',
-            transformRequestFunction: (request) => {
-              // Only crawl Harper's Bazaar fashion pages
-              if (request.url.includes('harpersbazaar.com') && 
-                  request.url.includes('/fashion/') &&
-                  !request.url.includes('#') &&
-                  !request.url.includes('?') &&
-                  !request.url.match(/\.(pdf|jpg|png|gif|css|js)$/i)) {
-                return request
-              }
-              return false
-            }
-          })
-          
-        } catch (error) {
-          log.error(`❌ Error processing ${request.url}:`, error.message)
-        }
-      },
-      
-      // Handle failed requests
-      failedRequestHandler({ request, error, log }) {
-        log.error(`❌ Failed to crawl ${request.url}:`, error.message)
-      }
-    })
-    
-    // Start crawling from Harper's Bazaar fashion section
-    await crawler.run(['https://www.harpersbazaar.com/fashion/'])
-    
-    // Get all crawled data
-    const dataset = await Dataset.getData()
-    console.log(`📊 Crawled ${dataset.items.length} pages`)
-    
-    // Process and store images in Supabase
     let totalImages = 0
     let storedImages = 0
+    let pagesCrawled = 0
     const errors = []
+    const allFashionImages = []
     
-    for (const item of dataset.items) {
-      if (item.images && item.images.length > 0) {
-        totalImages += item.images.length
+    // Crawl each URL with proper error handling
+    for (const url of urlsToCrawl) {
+      try {
+        console.log(`🎯 Crawling: ${url}`)
+        pagesCrawled++
         
-        // Store each image in Supabase
-        for (const image of item.images.slice(0, 3)) { // Limit to 3 images per page for serverless
-          try {
-            const { error } = await supabase
-              .from('fashion_images_new')
-              .insert([{
-                original_url: image.src,
-                title: `Harper's Bazaar Fashion Look ${storedImages + 1}`,
-                description: image.alt || 'Latest fashion trend from Harper\'s Bazaar',
-                category: 'harper_bazaar'
-              }])
-            
-            if (!error) {
-              storedImages++
-              console.log(`✅ Stored image: ${image.src}`)
-            } else {
-              console.log(`❌ Database error:`, error.message)
-              errors.push(`Database error: ${error.message}`)
-            }
-          } catch (error) {
-            console.log(`❌ Storage error:`, error.message)
-            errors.push(`Storage error: ${error.message}`)
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1'
           }
+        })
+        
+        if (!response.ok) {
+          console.log(`❌ Failed to fetch ${url}: ${response.status}`)
+          errors.push(`HTTP ${response.status} for ${url}`)
+          continue
         }
+        
+        const html = await response.text()
+        
+        // Extract all images from HTML
+        const imageMatches = html.match(/<img[^>]+src="([^"]+)"/gi) || []
+        const images = imageMatches.map(match => {
+          const srcMatch = match.match(/src="([^"]+)"/)
+          const altMatch = match.match(/alt="([^"]*)"/)
+          return {
+            src: srcMatch ? srcMatch[1] : '',
+            alt: altMatch ? altMatch[1] : ''
+          }
+        })
+        
+        console.log(`📸 Found ${images.length} images on ${url}`)
+        totalImages += images.length
+        
+        // Filter for fashion images
+        const fashionImages = images.filter(img => {
+          const src = img.src.toLowerCase()
+          const alt = img.alt.toLowerCase()
+          
+          // Must be a valid image URL
+          if (!src || !src.includes('http')) return false
+          
+          // Convert relative URLs to absolute URLs
+          let absoluteUrl = src
+          if (src.startsWith('//')) {
+            absoluteUrl = 'https:' + src
+          } else if (src.startsWith('/')) {
+            absoluteUrl = 'https://www.harpersbazaar.com' + src
+          } else if (!src.startsWith('http')) {
+            absoluteUrl = 'https://www.harpersbazaar.com/' + src
+          }
+          
+          // Exclude icons, SVGs, and design elements
+          const excludeKeywords = [
+            'icon', 'logo', 'button', 'svg', 'avatar', 'thumbnail',
+            'social', 'share', 'like', 'heart', 'pin', 'star',
+            'badge', 'sponsor', 'ad', 'banner', 'header', 'footer',
+            'nav', 'sidebar', 'menu', 'search', 'arrow', 'play',
+            'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
+            'facebook', 'twitter', 'instagram', 'pinterest', 'youtube'
+          ]
+          
+          if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
+            return false
+          }
+          
+          // Must be common image formats
+          if (!absoluteUrl.match(/\.(jpg|jpeg|png|webp)(\?|$)/i)) {
+            return false
+          }
+          
+          // Look for fashion-related keywords
+          const fashionKeywords = [
+            'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
+            'model', 'celebrity', 'street', 'designer', 'collection',
+            'show', 'photo', 'image', 'gallery', 'editorial', 'shoot',
+            'campaign', 'dress', 'clothing', 'apparel', 'beauty',
+            'harpersbazaar', 'bazaar'
+          ]
+          
+          return fashionKeywords.some(keyword => 
+            absoluteUrl.includes(keyword) || alt.includes(keyword)
+          )
+        }).map(img => ({
+          src: img.src.startsWith('//') ? 'https:' + img.src :
+               img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
+               img.src.startsWith('http') ? img.src :
+               'https://www.harpersbazaar.com/' + img.src,
+          alt: img.alt
+        }))
+        
+        console.log(`✨ Found ${fashionImages.length} fashion images on ${url}`)
+        allFashionImages.push(...fashionImages)
+        
+      } catch (error) {
+        console.log(`❌ Error crawling ${url}:`, error.message)
+        errors.push(`Error crawling ${url}: ${error.message}`)
+      }
+    }
+    
+    // Remove duplicates and store unique images
+    const uniqueImages = [...new Set(allFashionImages.map(img => img.src))]
+      .map(src => allFashionImages.find(img => img.src === src))
+    
+    console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
+    
+    // Store images in Supabase
+    for (const image of uniqueImages.slice(0, 50)) { // Store up to 50 images
+      try {
+        const { error } = await supabase
+          .from('fashion_images_new')
+          .insert([{
+            original_url: image.src,
+            title: `Harper's Bazaar Fashion Look ${storedImages + 1}`,
+            description: image.alt || 'Latest fashion trend from Harper\'s Bazaar',
+            category: 'harper_bazaar'
+          }])
+        
+        if (!error) {
+          storedImages++
+          console.log(`✅ Stored image: ${image.src}`)
+        } else {
+          console.log(`❌ Database error:`, error.message)
+          errors.push(`Database error: ${error.message}`)
+        }
+      } catch (error) {
+        console.log(`❌ Storage error:`, error.message)
+        errors.push(`Storage error: ${error.message}`)
       }
     }
     
     const result = {
       success: true,
-      message: 'Crawlee-powered crawler completed successfully (Vercel optimized)',
+      message: 'Simple HTTP crawler completed successfully (Vercel compatible)',
       results: {
-        pages_crawled: dataset.items.length,
+        pages_crawled: pagesCrawled,
         total_images_found: totalImages,
+        unique_fashion_images: uniqueImages.length,
         images_stored: storedImages,
         errors: errors.length,
         status: errors.length === 0 ? 'success' : 'partial'
