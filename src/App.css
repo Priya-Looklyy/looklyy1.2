@@ -29,7 +29,7 @@
   width: 100%;
   height: 100%;
   font-family: 'Playfair Display', serif;
-  font-size: 8rem;
+  font-size: 4rem;
   font-weight: 900;
   color: rgba(143, 30, 174, 0.02);
   display: flex;
@@ -37,7 +37,7 @@
   justify-content: center;
   pointer-events: none;
   z-index: -1;
-  letter-spacing: 2rem;
+  letter-spacing: 1rem;
   text-shadow: 2px 2px 4px rgba(143, 30, 174, 0.1);
   transform: rotate(-15deg);
   animation: float 20s ease-in-out infinite;

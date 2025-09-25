@@ -28,12 +28,6 @@ export default function Login() {
     <form onSubmit={handleSubmit}>
       <h2>Sign in</h2>
       
-      <div className="social-container">
-        <button type="button" className="social-btn google">G</button>
-        <button type="button" className="social-btn facebook">F</button>
-      </div>
-      
-      <p>or use your account</p>
       
       <input
         type="email"

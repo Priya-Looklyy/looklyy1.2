@@ -17,11 +17,11 @@ const getAPIBaseURL = () => {
 export const API_CONFIG = {
   BASE_URL: getAPIBaseURL(),
   ENDPOINTS: {
-    TRENDING_LATEST: '/trends/latest',
-    TRENDING_FEATURED: '/trends/featured',
-    TRENDING_SEARCH: '/trends/search',
-    TRENDING_CATEGORIES: '/trends/categories',
-    HEALTH: '/health'
+    TRENDING_LATEST: '/api/trends/latest',
+    TRENDING_FEATURED: '/api/trends/featured',
+    TRENDING_SEARCH: '/api/trends/search',
+    TRENDING_CATEGORIES: '/api/trends/categories',
+    HEALTH: '/api/health'
   },
   TIMEOUTS: {
     DEFAULT: 10000, // 10 seconds
