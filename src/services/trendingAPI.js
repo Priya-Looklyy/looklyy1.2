@@ -7,6 +7,7 @@ class TrendingAPIService {
     this.baseURL = API_CONFIG.BASE_URL;
     this.endpoints = API_CONFIG.ENDPOINTS;
     this.timeout = API_CONFIG.TIMEOUTS.DEFAULT;
+    console.log('🔧 API Config:', { baseURL: this.baseURL, endpoints: this.endpoints });
   }
 
   // Generic API call method
