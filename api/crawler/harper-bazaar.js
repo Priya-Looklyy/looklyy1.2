@@ -37,6 +37,16 @@ export default async function handler(req, res) {
       localDataDirectory: '/tmp', // Use Vercel's writable directory
       persistStorage: false, // Don't persist data to disk in serverless
     })
+    
+    // Disable system process monitoring (not available in Vercel)
+    Configuration.getGlobalConfig().set('systemInfoOptions', {
+      disableSystemInfo: true,
+    })
+    
+    // Disable process monitoring
+    Configuration.getGlobalConfig().set('processMonitorOptions', {
+      disableProcessMonitor: true,
+    })
 
     // Initialize HTTP-based Crawlee crawler with Vercel optimizations
     const crawler = new HttpCrawler({
@@ -47,6 +57,13 @@ export default async function handler(req, res) {
       // Vercel-compatible configuration
       additionalMimeTypes: ['text/html'],
       useSessionPool: false, // Disable session pooling for serverless
+      autoscaledPoolOptions: {
+        maxConcurrency: 3,
+        desiredConcurrency: 1,
+        scaleUpStepRatio: 1,
+        scaleDownStepRatio: 1,
+        enableSystemInfo: false, // Disable system info for Vercel
+      },
       
       // Request handler for each page
       async requestHandler({ request, response, enqueueLinks, log }) {
