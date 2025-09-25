@@ -23,7 +23,9 @@ const TrendingSection = () => {
       
       try {
         // Fetch trending looks from crawler API
+        console.log('🔄 Fetching trending looks from API...')
         const trendingLooks = await trendingAPI.getLatestTrends({ limit: 100 })
+        console.log('📊 API Response:', trendingLooks)
         
         // Transform API data to component format
         const transformedCards = trendingLooks.map(look => 
@@ -31,7 +33,8 @@ const TrendingSection = () => {
         )
         
         setAllCards(transformedCards)
-        console.log(`Loaded ${transformedCards.length} trending looks from crawler`)
+        console.log(`✅ Loaded ${transformedCards.length} trending looks from crawler`)
+        console.log('🎨 First few cards:', transformedCards.slice(0, 3))
         
       } catch (apiError) {
         console.warn('Crawler API failed, using fallback data:', apiError)
