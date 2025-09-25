@@ -179,20 +179,38 @@ export default async function handler(req, res) {
                               absoluteUrl.includes('resize=1200') ||
                               absoluteUrl.includes('resize=800')
           
+          // Exclude small resized images (360px, 400px, etc.)
+          const isSmallImage = absoluteUrl.includes('resize=360') ||
+                              absoluteUrl.includes('resize=400') ||
+                              absoluteUrl.includes('resize=300') ||
+                              absoluteUrl.includes('resize=200')
+          
+          if (isSmallImage) return false
+          
           // Prefer images with full-body indicators and larger sizes
           return hasFashionKeyword && (hasFullBodyKeyword || isLargeImage || !alt.includes('collage'))
-        }).map(img => ({
-          src: img.src.startsWith('//') ? 'https:' + img.src :
-               img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
-               img.src.startsWith('http') ? img.src :
-               'https://www.harpersbazaar.com/' + img.src,
-          alt: img.alt,
-          category: urlData.category,
-          subcategory: urlData.subcategory,
-          trendScore: urlData.trendScore,
-          sourceUrl: urlData.url,
-          crawledAt: new Date().toISOString()
-        }))
+        }).map(img => {
+          let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
+                            img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
+                            img.src.startsWith('http') ? img.src :
+                            'https://www.harpersbazaar.com/' + img.src
+          
+          // Remove resize parameters to get original larger images
+          processedSrc = processedSrc.replace(/&resize=\d+:\*/g, '')
+          processedSrc = processedSrc.replace(/&resize=\d+:\d+/g, '')
+          processedSrc = processedSrc.replace(/resize=\d+:\*/g, '')
+          processedSrc = processedSrc.replace(/resize=\d+:\d+/g, '')
+          
+          return {
+            src: processedSrc,
+            alt: img.alt,
+            category: urlData.category,
+            subcategory: urlData.subcategory,
+            trendScore: urlData.trendScore,
+            sourceUrl: urlData.url,
+            crawledAt: new Date().toISOString()
+          }
+        })
         
         console.log(`✨ Found ${fashionImages.length} fashion images on ${urlData.url}`)
         allFashionImages.push(...fashionImages)
