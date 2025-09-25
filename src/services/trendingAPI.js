@@ -12,7 +12,9 @@ class TrendingAPIService {
   // Generic API call method
   async apiCall(endpoint, options = {}) {
     try {
-      const response = await fetch(`${this.baseURL}${endpoint}`, {
+      const fullURL = `${this.baseURL}${endpoint}`
+      console.log('🌐 API Call URL:', fullURL)
+      const response = await fetch(fullURL, {
         headers: {
           'Content-Type': 'application/json',
           ...options.headers,
