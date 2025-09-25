@@ -63,6 +63,44 @@
   display: none !important;
 }
 
+/* Empty state styling */
+.trending-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  color: #8b5cf6;
+}
+
+.trending-empty h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #8b5cf6;
+}
+
+.trending-empty p {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #6b7280;
+}
+
+.trending-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  color: #ef4444;
+}
+
+.trending-error p {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
 /* Scrollable container for vertical scrolling */
 .trending-scroll-container {
   height: 100vh;

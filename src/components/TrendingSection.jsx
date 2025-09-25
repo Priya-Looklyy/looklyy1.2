@@ -29,6 +29,10 @@ const TrendingSection = () => {
         const response = await trendingAPI.getLatestTrends({ limit: 100 })
         console.log('📊 API Response:', response)
         
+        console.log('🔍 Full API Response:', response)
+        console.log('🔍 Response.data:', response.data)
+        console.log('🔍 Response.data.trending:', response.data?.trending)
+        
         if (response.data && response.data.trending) {
           // Transform categorized data
           const transformedData = {
@@ -58,8 +62,39 @@ const TrendingSection = () => {
           console.log(`✅ Loaded categorized trending looks from crawler`)
           console.log('🎨 Trending:', transformedData.trending.length)
           console.log('📂 Categories:', Object.keys(transformedData.categories))
+        } else if (response.data && Array.isArray(response.data)) {
+          // Fallback: if API returns old format (array), convert to new format
+          console.log('🔄 Converting old API format to new categorized format')
+          const transformedData = {
+            trending: response.data.slice(0, 10).map(look => 
+              trendingAPI.transformTrendingLook(look)
+            ),
+            categories: {
+              trends: response.data.filter(look => look.category === 'trends').slice(0, 15).map(look => 
+                trendingAPI.transformTrendingLook(look)
+              ),
+              runway: response.data.filter(look => look.category === 'runway').slice(0, 15).map(look => 
+                trendingAPI.transformTrendingLook(look)
+              ),
+              'street-style': response.data.filter(look => look.category === 'street-style').slice(0, 15).map(look => 
+                trendingAPI.transformTrendingLook(look)
+              ),
+              'celebrity-style': response.data.filter(look => look.category === 'celebrity-style').slice(0, 15).map(look => 
+                trendingAPI.transformTrendingLook(look)
+              ),
+              designers: response.data.filter(look => look.category === 'designers').slice(0, 15).map(look => 
+                trendingAPI.transformTrendingLook(look)
+              )
+            }
+          }
+          
+          setCategorizedData(transformedData)
+          console.log(`✅ Converted old format to categorized data`)
+          console.log('🎨 Trending:', transformedData.trending.length)
+          console.log('📂 Categories:', Object.keys(transformedData.categories))
         } else {
-          throw new Error('Invalid API response format')
+          console.log('❌ No data in response, showing empty state')
+          throw new Error('No data available')
         }
         
       } catch (apiError) {
@@ -115,6 +150,23 @@ const TrendingSection = () => {
       <div className="trending-section">
         <div className="trending-error">
           <p>⚠️ {error}</p>
+          <p>🔧 Check browser console for debugging info</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show message if no data at all
+  const totalImages = categorizedData.trending.length + 
+    Object.values(categorizedData.categories).reduce((sum, cat) => sum + cat.length, 0)
+  
+  if (totalImages === 0) {
+    return (
+      <div className="trending-section">
+        <div className="trending-empty">
+          <h2>📸 No Trending Looks Available</h2>
+          <p>The crawler hasn't collected any fashion images yet.</p>
+          <p>🔧 Check browser console for debugging info</p>
         </div>
       </div>
     )
