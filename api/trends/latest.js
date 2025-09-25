@@ -55,7 +55,7 @@ export default async function handler(req, res) {
               source_url: 'https://www.harpersbazaar.com/fashion/',
               primary_image_url: item.original_url,
               image_alt_text: item.title || 'Harper\'s Bazaar fashion image',
-              trend_score: 0.9 - (index * 0.05), // Generate trend score based on position
+              trend_score: Math.max(0.1, 0.9 - (index * 0.05)), // Generate trend score based on position, minimum 0.1
               engagement_score: 0.8 - (index * 0.01),
               is_featured: index < 10, // Top 10 are featured
               tags: ['harper-bazaar', 'fashion', item.category || 'trending'],
