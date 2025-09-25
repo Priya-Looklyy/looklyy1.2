@@ -149,11 +149,15 @@ export default async function handler(req, res) {
             for (const imageUrl of imageUrls) {
               try {
                 console.log(`Attempting to store: ${imageUrl}`)
-                // Since the table only has an id column, we'll just insert empty records
-                // and store the URL information in our application logic
+                // Store actual image data with proper columns
                 const { error } = await supabase
                   .from('fashion_images')
-                  .insert([{}])
+                  .insert([{
+                    original_url: imageUrl,
+                    title: `Harper's Bazaar Fashion Look ${imagesStored + 1}`,
+                    description: 'Latest fashion trend from Harper\'s Bazaar',
+                    category: 'harper_bazaar'
+                  }])
                 
                 if (!error) {
                   imagesStored++

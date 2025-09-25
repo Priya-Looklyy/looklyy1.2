@@ -34,18 +34,18 @@ export default async function handler(req, res) {
           console.log(`Found ${realData.length} real crawled images`)
           trendingLooks = realData.map((item, index) => ({
             id: `hb-real-${item.id}`,
-            title: `Harper's Bazaar Fashion Look ${index + 1}`,
-            description: 'Latest fashion trend from Harper\'s Bazaar',
-            category: 'harper_bazaar',
+            title: item.title || `Harper's Bazaar Fashion Look ${index + 1}`,
+            description: item.description || 'Latest fashion trend from Harper\'s Bazaar',
+            category: item.category || 'harper_bazaar',
             source_site: 'harpers_bazaar',
             source_url: 'https://www.harpersbazaar.com/fashion/',
-            primary_image_url: `https://images.unsplash.com/photo-${1441986300917 + index}?w=400&h=600&fit=crop&auto=format`,
-            image_alt_text: 'Harper\'s Bazaar fashion image',
+            primary_image_url: item.original_url || `https://images.unsplash.com/photo-${1441986300917 + index}?w=400&h=600&fit=crop&auto=format`,
+            image_alt_text: item.title || 'Harper\'s Bazaar fashion image',
             trend_score: 0.9 - (index * 0.05),
             engagement_score: 0.8 - (index * 0.03),
             is_featured: index < 3,
             tags: ['harper-bazaar', 'fashion', 'trending'],
-            crawled_at: new Date().toISOString()
+            crawled_at: item.crawled_at || new Date().toISOString()
           }))
         }
       } catch (dbError) {
