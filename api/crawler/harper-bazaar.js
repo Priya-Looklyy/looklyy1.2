@@ -31,23 +31,23 @@ export default async function handler(req, res) {
       })
     }
 
-    // URLs to crawl - comprehensive list of Harper's Bazaar fashion pages
+    // URLs to crawl with category mapping
     const urlsToCrawl = [
-      'https://www.harpersbazaar.com/fashion/trends/',
-      'https://www.harpersbazaar.com/fashion/runway/',
-      'https://www.harpersbazaar.com/fashion/street-style/',
-      'https://www.harpersbazaar.com/fashion/celebrity-style/',
-      'https://www.harpersbazaar.com/fashion/designers/',
-      'https://www.harpersbazaar.com/fashion/',
-      'https://www.harpersbazaar.com/fashion/trends/fall-2024/',
-      'https://www.harpersbazaar.com/fashion/runway/spring-2025/',
-      'https://www.harpersbazaar.com/fashion/street-style/paris-fashion-week/',
-      'https://www.harpersbazaar.com/fashion/celebrity-style/red-carpet/',
-      'https://www.harpersbazaar.com/fashion/trends/spring-2025/',
-      'https://www.harpersbazaar.com/fashion/runway/fall-2024/',
-      'https://www.harpersbazaar.com/fashion/street-style/new-york-fashion-week/',
-      'https://www.harpersbazaar.com/fashion/celebrity-style/street-style/',
-      'https://www.harpersbazaar.com/fashion/designers/spring-2025/'
+      { url: 'https://www.harpersbazaar.com/fashion/trends/', category: 'trends', subcategory: 'general', trendScore: 0.95 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/', category: 'runway', subcategory: 'general', trendScore: 0.90 },
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/', category: 'street-style', subcategory: 'general', trendScore: 0.85 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/', category: 'celebrity-style', subcategory: 'general', trendScore: 0.88 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/', category: 'designers', subcategory: 'general', trendScore: 0.87 },
+      { url: 'https://www.harpersbazaar.com/fashion/', category: 'trends', subcategory: 'general', trendScore: 0.92 },
+      { url: 'https://www.harpersbazaar.com/fashion/trends/fall-2024/', category: 'trends', subcategory: 'fall-2024', trendScore: 0.93 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/spring-2025/', category: 'runway', subcategory: 'spring-2025', trendScore: 0.94 },
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/paris-fashion-week/', category: 'street-style', subcategory: 'fashion-week', trendScore: 0.89 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/red-carpet/', category: 'celebrity-style', subcategory: 'red-carpet', trendScore: 0.91 },
+      { url: 'https://www.harpersbazaar.com/fashion/trends/spring-2025/', category: 'trends', subcategory: 'spring-2025', trendScore: 0.96 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/fall-2024/', category: 'runway', subcategory: 'fall-2024', trendScore: 0.88 },
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/new-york-fashion-week/', category: 'street-style', subcategory: 'fashion-week', trendScore: 0.90 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/street-style/', category: 'celebrity-style', subcategory: 'street-style', trendScore: 0.86 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/spring-2025/', category: 'designers', subcategory: 'spring-2025', trendScore: 0.89 }
     ]
     
     let totalImages = 0
@@ -57,12 +57,12 @@ export default async function handler(req, res) {
     const allFashionImages = []
     
     // Crawl each URL with proper error handling
-    for (const url of urlsToCrawl) {
+    for (const urlData of urlsToCrawl) {
       try {
-        console.log(`🎯 Crawling: ${url}`)
+        console.log(`🎯 Crawling: ${urlData.url} (${urlData.category})`)
         pagesCrawled++
         
-        const response = await fetch(url, {
+        const response = await fetch(urlData.url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -74,8 +74,8 @@ export default async function handler(req, res) {
         })
         
         if (!response.ok) {
-          console.log(`❌ Failed to fetch ${url}: ${response.status}`)
-          errors.push(`HTTP ${response.status} for ${url}`)
+          console.log(`❌ Failed to fetch ${urlData.url}: ${response.status}`)
+          errors.push(`HTTP ${response.status} for ${urlData.url}`)
           continue
         }
         
@@ -92,7 +92,7 @@ export default async function handler(req, res) {
           }
         })
         
-        console.log(`📸 Found ${images.length} images on ${url}`)
+        console.log(`📸 Found ${images.length} images on ${urlData.url}`)
         totalImages += images.length
         
         // Filter for fashion images
@@ -149,15 +149,20 @@ export default async function handler(req, res) {
                img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
                img.src.startsWith('http') ? img.src :
                'https://www.harpersbazaar.com/' + img.src,
-          alt: img.alt
+          alt: img.alt,
+          category: urlData.category,
+          subcategory: urlData.subcategory,
+          trendScore: urlData.trendScore,
+          sourceUrl: urlData.url,
+          crawledAt: new Date().toISOString()
         }))
         
-        console.log(`✨ Found ${fashionImages.length} fashion images on ${url}`)
+        console.log(`✨ Found ${fashionImages.length} fashion images on ${urlData.url}`)
         allFashionImages.push(...fashionImages)
         
       } catch (error) {
-        console.log(`❌ Error crawling ${url}:`, error.message)
-        errors.push(`Error crawling ${url}: ${error.message}`)
+        console.log(`❌ Error crawling ${urlData.url}:`, error.message)
+        errors.push(`Error crawling ${urlData.url}: ${error.message}`)
       }
     }
     
@@ -174,9 +179,13 @@ export default async function handler(req, res) {
           .from('fashion_images_new')
           .insert([{
             original_url: image.src,
-            title: `Harper's Bazaar Fashion Look ${storedImages + 1}`,
-            description: image.alt || 'Latest fashion trend from Harper\'s Bazaar',
-            category: 'harper_bazaar'
+            title: `Harper's Bazaar ${image.category.charAt(0).toUpperCase() + image.category.slice(1)} Look ${storedImages + 1}`,
+            description: image.alt || `Latest ${image.category} trend from Harper's Bazaar`,
+            category: image.category,
+            subcategory: image.subcategory,
+            trend_score: image.trendScore,
+            source_url: image.sourceUrl,
+            crawled_at: image.crawledAt
           }])
         
         if (!error) {
