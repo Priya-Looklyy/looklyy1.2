@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { PlaywrightCrawler, Dataset } from 'crawlee'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -22,219 +23,184 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log('Starting crawler...')
+    console.log('🚀 Starting Crawlee-powered crawler...')
     
-             // Start with main fashion page and discover all URLs
-             const baseUrl = 'https://www.harpersbazaar.com'
-             const startUrl = 'https://www.harpersbazaar.com/fashion/'
-             
-             // URLs to crawl - will be populated dynamically
-             let urlsToCrawl = [startUrl]
-             let crawledUrls = new Set()
-             let discoveredUrls = new Set()
-    
-    let imagesFound = 0
-    let imagesStored = 0
-    const errors = []
-    
-    // Recursive crawling to discover all fashion pages
-    let allImageUrls = []
-    let maxPages = 50 // Limit to prevent infinite crawling
-    let pagesCrawled = 0
-    
-    while (urlsToCrawl.length > 0 && pagesCrawled < maxPages) {
-      const currentUrl = urlsToCrawl.shift()
-      
-      if (crawledUrls.has(currentUrl)) {
-        continue // Skip already crawled URLs
-      }
-      
-      crawledUrls.add(currentUrl)
-      pagesCrawled++
-      
-      try {
-        console.log(`Crawling page ${pagesCrawled}/${maxPages}: ${currentUrl}`)
-        const response = await fetch(currentUrl, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-          }
-        })
-      
-        if (response.ok) {
-          const html = await response.text()
-          
-          // Extract image URLs
-          const imageMatches = html.match(/<img[^>]+src="([^"]+)"/gi)
-          const pageImagesFound = imageMatches ? imageMatches.length : 0
-          imagesFound += pageImagesFound
-          console.log(`Found ${pageImagesFound} images on ${currentUrl}`)
-          
-          // Extract fashion images
-          if (imageMatches && imageMatches.length > 0) {
-            const imageUrls = imageMatches.slice(0, 20).map(match => {
-              const srcMatch = match.match(/src="([^"]+)"/)
-              let url = srcMatch ? srcMatch[1] : null
+    if (!supabase) {
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Supabase is not configured' 
+      })
+    }
 
-              // Convert relative URLs to absolute URLs
-              if (url && !url.startsWith('http')) {
-                if (url.startsWith('//')) {
-                  url = 'https:' + url
-                } else if (url.startsWith('/')) {
-                  url = baseUrl + url
-                } else {
-                  url = baseUrl + '/' + url
-                }
-              }
-
-              return url
-            }).filter(url => {
-              // Enhanced filtering for real fashion images
-              const isValid = url && 
-                (url.includes('http') || url.includes('data:')) &&
-                // Exclude icons, SVGs, and design elements
-                !url.includes('.svg') &&
-                !url.includes('icon') &&
-                !url.includes('logo') &&
-                !url.includes('button') &&
-                !url.includes('_assets') &&
-                !url.includes('design-tokens') &&
-                !url.includes('checkmark') &&
-                !url.includes('magnifying') &&
-                !url.includes('arrow') &&
-                !url.includes('play') &&
-                !url.includes('close') &&
-                !url.includes('menu') &&
-                !url.includes('search') &&
-                !url.includes('social') &&
-                !url.includes('share') &&
-                !url.includes('like') &&
-                !url.includes('heart') &&
-                !url.includes('pin') &&
-                !url.includes('star') &&
-                !url.includes('badge') &&
-                !url.includes('sponsor') &&
-                !url.includes('ad') &&
-                !url.includes('banner') &&
-                !url.includes('header') &&
-                !url.includes('footer') &&
-                !url.includes('nav') &&
-                !url.includes('sidebar') &&
-                // Only include common image formats
-                (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.webp')) &&
-                // Look for fashion-related keywords in URL
-                (url.includes('fashion') || url.includes('style') || url.includes('runway') || 
-                 url.includes('trend') || url.includes('look') || url.includes('outfit') ||
-                 url.includes('model') || url.includes('celebrity') || url.includes('street') ||
-                 url.includes('designer') || url.includes('collection') || url.includes('show') ||
-                 url.includes('photo') || url.includes('image') || url.includes('gallery') ||
-                 url.includes('editorial') || url.includes('shoot') || url.includes('campaign'))
-              
-              return isValid
-            })
+    // Initialize Crawlee crawler
+    const crawler = new PlaywrightCrawler({
+      maxRequestsPerCrawl: 50, // Limit to prevent infinite crawling
+      requestHandlerTimeoutSecs: 30,
+      navigationTimeoutSecs: 30,
+      
+      // Anti-blocking configuration
+      launchContext: {
+        launchOptions: {
+          headless: true,
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
+        }
+      },
+      
+      // Request handler for each page
+      async requestHandler({ request, page, enqueueLinks, log }) {
+        log.info(`🎯 Crawling: ${request.url}`)
+        
+        try {
+          // Wait for page to load
+          await page.waitForLoadState('networkidle', { timeout: 10000 })
+          
+          // Extract all images from the page
+          const images = await page.evaluate(() => {
+            const imgElements = Array.from(document.querySelectorAll('img'))
+            return imgElements.map(img => ({
+              src: img.src,
+              alt: img.alt || '',
+              width: img.naturalWidth || 0,
+              height: img.naturalHeight || 0
+            }))
+          })
+          
+          log.info(`📸 Found ${images.length} images on ${request.url}`)
+          
+          // Filter for fashion images
+          const fashionImages = images.filter(img => {
+            const src = img.src.toLowerCase()
+            const alt = img.alt.toLowerCase()
             
-            allImageUrls = allImageUrls.concat(imageUrls)
-            console.log(`Added ${imageUrls.length} valid fashion images from ${currentUrl}`)
+            // Must be a valid image URL
+            if (!src || !src.includes('http')) return false
+            
+            // Exclude icons, SVGs, and design elements
+            const excludeKeywords = [
+              'icon', 'logo', 'button', 'svg', 'avatar', 'thumbnail',
+              'social', 'share', 'like', 'heart', 'pin', 'star',
+              'badge', 'sponsor', 'ad', 'banner', 'header', 'footer',
+              'nav', 'sidebar', 'menu', 'search', 'arrow', 'play',
+              'close', 'checkmark', 'magnifying', '_assets', 'design-tokens'
+            ]
+            
+            if (excludeKeywords.some(keyword => src.includes(keyword) || alt.includes(keyword))) {
+              return false
+            }
+            
+            // Must be common image formats
+            if (!src.match(/\.(jpg|jpeg|png|webp)(\?|$)/i)) {
+              return false
+            }
+            
+            // Look for fashion-related keywords
+            const fashionKeywords = [
+              'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
+              'model', 'celebrity', 'street', 'designer', 'collection',
+              'show', 'photo', 'image', 'gallery', 'editorial', 'shoot',
+              'campaign', 'dress', 'clothing', 'apparel', 'beauty'
+            ]
+            
+            return fashionKeywords.some(keyword => 
+              src.includes(keyword) || alt.includes(keyword)
+            ) || img.width > 200 || img.height > 200 // Large images are likely fashion photos
+          })
+          
+          log.info(`✨ Found ${fashionImages.length} fashion images on ${request.url}`)
+          
+          // Store fashion images in dataset
+          if (fashionImages.length > 0) {
+            await Dataset.pushData({
+              url: request.url,
+              images: fashionImages,
+              crawledAt: new Date().toISOString()
+            })
           }
           
           // Discover new URLs to crawl (only fashion-related pages)
-          const linkMatches = html.match(/<a[^>]+href="([^"]+)"/gi)
-          if (linkMatches) {
-            linkMatches.forEach(match => {
-              const hrefMatch = match.match(/href="([^"]+)"/)
-              if (hrefMatch) {
-                let linkUrl = hrefMatch[1]
-                
-                // Convert relative URLs to absolute URLs
-                if (linkUrl.startsWith('/')) {
-                  linkUrl = baseUrl + linkUrl
-                } else if (!linkUrl.startsWith('http')) {
-                  linkUrl = baseUrl + '/' + linkUrl
-                }
-                
-                // Only add Harper's Bazaar fashion-related URLs
-                if (linkUrl.includes('harpersbazaar.com') && 
-                    linkUrl.includes('/fashion/') &&
-                    !crawledUrls.has(linkUrl) &&
-                    !discoveredUrls.has(linkUrl) &&
-                    !linkUrl.includes('#') &&
-                    !linkUrl.includes('?') &&
-                    !linkUrl.includes('.pdf') &&
-                    !linkUrl.includes('.jpg') &&
-                    !linkUrl.includes('.png') &&
-                    !linkUrl.includes('.gif') &&
-                    !linkUrl.includes('.css') &&
-                    !linkUrl.includes('.js')) {
-                  
-                  discoveredUrls.add(linkUrl)
-                  urlsToCrawl.push(linkUrl)
-                }
+          await enqueueLinks({
+            selector: 'a[href*="/fashion/"]',
+            label: 'FASHION_PAGE',
+            transformRequestFunction: (request) => {
+              // Only crawl Harper's Bazaar fashion pages
+              if (request.url.includes('harpersbazaar.com') && 
+                  request.url.includes('/fashion/') &&
+                  !request.url.includes('#') &&
+                  !request.url.includes('?') &&
+                  !request.url.match(/\.(pdf|jpg|png|gif|css|js)$/i)) {
+                return request
               }
-            })
-          }
+              return false
+            }
+          })
           
-          console.log(`Discovered ${discoveredUrls.size} new URLs to crawl`)
-          
-        } else {
-          console.log(`Failed to fetch ${currentUrl}: ${response.status}`)
-          errors.push(`HTTP ${response.status} for ${currentUrl}`)
-        }
-      } catch (error) {
-        console.log(`Error crawling ${currentUrl}:`, error.message)
-        errors.push(`Error crawling ${currentUrl}: ${error.message}`)
-      }
-    }
-    
-    // Remove duplicates and store unique images
-    const uniqueImageUrls = [...new Set(allImageUrls)]
-    console.log(`Total unique fashion images found: ${uniqueImageUrls.length}`)
-    
-    if (uniqueImageUrls.length > 0) {
-      // Store images in database
-      console.log('Starting database storage...')
-      
-      for (const imageUrl of uniqueImageUrls.slice(0, 25)) { // Store up to 25 images
-        try {
-          console.log(`Attempting to store: ${imageUrl}`)
-          const { error } = await supabase
-            .from('fashion_images_new')
-            .insert([{
-              original_url: imageUrl,
-              title: `Harper's Bazaar Fashion Look ${imagesStored + 1}`,
-              description: 'Latest fashion trend from Harper\'s Bazaar',
-              category: 'harper_bazaar'
-            }])
-          
-          if (!error) {
-            imagesStored++
-            console.log(`Successfully stored image record for: ${imageUrl}`)
-          } else {
-            console.log(`Database error for ${imageUrl}:`, error)
-            errors.push(`Database error: ${error.message}`)
-          }
         } catch (error) {
-          console.log(`Storage error for ${imageUrl}:`, error)
-          errors.push(`Storage error: ${error.message}`)
+          log.error(`❌ Error processing ${request.url}:`, error.message)
+        }
+      },
+      
+      // Handle failed requests
+      failedRequestHandler({ request, error, log }) {
+        log.error(`❌ Failed to crawl ${request.url}:`, error.message)
+      }
+    })
+    
+    // Start crawling from Harper's Bazaar fashion section
+    await crawler.run(['https://www.harpersbazaar.com/fashion/'])
+    
+    // Get all crawled data
+    const dataset = await Dataset.getData()
+    console.log(`📊 Crawled ${dataset.items.length} pages`)
+    
+    // Process and store images in Supabase
+    let totalImages = 0
+    let storedImages = 0
+    const errors = []
+    
+    for (const item of dataset.items) {
+      if (item.images && item.images.length > 0) {
+        totalImages += item.images.length
+        
+        // Store each image in Supabase
+        for (const image of item.images.slice(0, 5)) { // Limit to 5 images per page
+          try {
+            const { error } = await supabase
+              .from('fashion_images_new')
+              .insert([{
+                original_url: image.src,
+                title: `Harper's Bazaar Fashion Look ${storedImages + 1}`,
+                description: image.alt || 'Latest fashion trend from Harper\'s Bazaar',
+                category: 'harper_bazaar'
+              }])
+            
+            if (!error) {
+              storedImages++
+              console.log(`✅ Stored image: ${image.src}`)
+            } else {
+              console.log(`❌ Database error:`, error.message)
+              errors.push(`Database error: ${error.message}`)
+            }
+          } catch (error) {
+            console.log(`❌ Storage error:`, error.message)
+            errors.push(`Storage error: ${error.message}`)
+          }
         }
       }
-    } else {
-      console.log('No valid fashion images found across all URLs')
-      errors.push('No valid fashion images found')
     }
     
     const result = {
       success: true,
-      message: 'Full website crawler completed',
+      message: 'Crawlee-powered crawler completed successfully',
       results: {
-        pages_crawled: pagesCrawled,
-        urls_discovered: discoveredUrls.size,
-        images_found: imagesFound,
-        unique_images_found: uniqueImageUrls.length,
-        images_stored: imagesStored,
+        pages_crawled: dataset.items.length,
+        total_images_found: totalImages,
+        images_stored: storedImages,
         errors: errors.length,
         status: errors.length === 0 ? 'success' : 'partial'
       }
     }
     
+    console.log('🎉 Crawler completed:', result)
     return res.status(200).json(result)
     
   } catch (error) {
