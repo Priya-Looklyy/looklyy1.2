@@ -9,8 +9,6 @@ import './TrendingSection.css'
 const TrendingSection = () => {
   const [pinnedLook, setPinnedLook] = useState(null)
   const [showFrame2, setShowFrame2] = useState(false)
-  const [sortBy, setSortBy] = useState('trending') // 'trending', 'favorites', 'newest'
-  const [viewMode, setViewMode] = useState('grid') // 'grid', 'slider'
   const [allCards, setAllCards] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -39,7 +37,6 @@ const TrendingSection = () => {
         
       } catch (apiError) {
         console.warn('Crawler API failed, using fallback data:', apiError)
-        // Remove the error message - just use fallback data silently
         
         try {
           // Use fallback dummy data if API fails
@@ -57,44 +54,6 @@ const TrendingSection = () => {
 
     loadTrendingLooks()
   }, []) // Load once on component mount
-  
-  // Sort cards based on selected criteria
-  const getSortedCards = () => {
-    const cards = [...allCards]
-    
-    switch (sortBy) {
-      case 'favorites':
-        return cards.sort((a, b) => {
-          const aFavorited = favorites.includes(a.sliderId)
-          const bFavorited = favorites.includes(b.sliderId)
-          
-          if (aFavorited && !bFavorited) return -1
-          if (!aFavorited && bFavorited) return 1
-          return 0
-        })
-      case 'newest':
-        return cards.sort((a, b) => {
-          const aDate = new Date(a.crawled_at || a.slider?.crawled_at || 0)
-          const bDate = new Date(b.crawled_at || b.slider?.crawled_at || 0)
-          return bDate - aDate // Newest first
-        })
-      case 'trending':
-      default:
-        // Sort by trend score, but keep favorited items at top
-        return cards.sort((a, b) => {
-          const aFavorited = favorites.includes(a.sliderId)
-          const bFavorited = favorites.includes(b.sliderId)
-          
-          if (aFavorited && !bFavorited) return -1
-          if (!aFavorited && bFavorited) return 1
-          
-          // If both favorited or both not favorited, sort by trend score
-          const aScore = a.trend_score || a.slider?.trend_score || 0
-          const bScore = b.trend_score || b.slider?.trend_score || 0
-          return bScore - aScore // Higher trend score first
-        })
-    }
-  }
 
   const handlePinLook = (card) => {
     setPinnedLook({
@@ -109,119 +68,60 @@ const TrendingSection = () => {
     setPinnedLook(null)
   }
 
-  const sortedCards = getSortedCards()
+  // Group cards into rows of 5
+  const groupedCards = []
+  for (let i = 0; i < allCards.length; i += 5) {
+    groupedCards.push(allCards.slice(i, i + 5))
+  }
 
   return (
     <div className="trending-section">
-      {/* Trending Page Header */}
-      <div className="trending-header">
-        <h2 className="trending-title">Trending Fashion Looks</h2>
-        <p className="trending-subtitle">
-          Discover curated fashion inspirations from Harper's Bazaar, Elle, and Vogue
-        </p>
-        {error && (
-          <div className="api-status-warning">
-            <i className="fas fa-exclamation-triangle"></i> {error}
-          </div>
-        )}
-      </div>
-
       {/* Loading State */}
       {loading ? (
         <div className="trending-loading">
           <div className="loading-spinner"></div>
-          <p>Loading latest trending looks...</p>
         </div>
       ) : (
         <>
-          {/* Sort Controls */}
-          <div className="sort-controls">
-            <div className="sort-options">
-              <button 
-                className={`sort-btn ${sortBy === 'trending' ? 'active' : ''}`}
-                onClick={() => setSortBy('trending')}
-              >
-                <i className="fas fa-fire"></i> Trending
-              </button>
-              <button 
-                className={`sort-btn ${sortBy === 'favorites' ? 'active' : ''}`}
-                onClick={() => setSortBy('favorites')}
-              >
-                <i className="fas fa-heart"></i> Favorites First
-              </button>
-              <button 
-                className={`sort-btn ${sortBy === 'newest' ? 'active' : ''}`}
-                onClick={() => setSortBy('newest')}
-              >
-                <i className="fas fa-clock"></i> Newest
-              </button>
-            </div>
-            
-            <div className="view-controls">
-              <div className="view-toggle">
-                <button 
-                  className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                  onClick={() => setViewMode('grid')}
-                  title="Grid View"
-                >
-                  <i className="fas fa-th"></i>
-                </button>
-                <button 
-                  className={`view-btn ${viewMode === 'slider' ? 'active' : ''}`}
-                  onClick={() => setViewMode('slider')}
-                  title="Slider View"
-                >
-                  <i className="fas fa-images"></i>
-                </button>
-              </div>
-              
-              <div className="results-count">
-                {sortedCards.length} looks found
-              </div>
-            </div>
-          </div>
-
-          {/* Cards Display */}
-          {viewMode === 'grid' ? (
-            /* Pinterest-style Cards Grid */
-            <div className="trending-grid">
-              {sortedCards.length > 0 ? (
-                sortedCards.map(card => (
+          {/* Home Page Style Grid - 5 images per row */}
+          <div className="trending-home-grid">
+            {groupedCards.map((row, rowIndex) => (
+              <div key={rowIndex} className="trending-row" data-row={rowIndex}>
+                {row.map(card => (
                   <TrendingCard 
                     key={card.id} 
                     card={card}
                     onPinLook={handlePinLook}
                   />
-                ))
-              ) : (
-                <div className="no-results">
-                  <i className="fas fa-search"></i>
-                  <p>No trending looks found</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            /* Horizontal Slider */
-            <div className="trending-slider-container">
-              <div className="trending-slider">
-                {sortedCards.length > 0 ? (
-                  sortedCards.map(card => (
-                    <div key={card.id} className="slider-card">
-                      <TrendingCard 
-                        card={card}
-                        onPinLook={handlePinLook}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div className="no-results">
-                    <i className="fas fa-search"></i>
-                    <p>No trending looks found</p>
-                  </div>
-                )}
+                ))}
               </div>
+            ))}
+          </div>
+
+          {/* Right Corner Slider Navigation */}
+          <div className="trending-nav-slider">
+            <div className="nav-slider-track">
+              {allCards.map((card, index) => (
+                <div 
+                  key={card.id} 
+                  className="nav-slider-dot"
+                  onClick={() => {
+                    const targetRow = Math.floor(index / 5)
+                    const targetElement = document.querySelector(`[data-row="${targetRow}"]`)
+                    if (targetElement) {
+                      targetElement.scrollIntoView({ behavior: 'smooth' })
+                    }
+                  }}
+                >
+                  <img 
+                    src={card.image.url} 
+                    alt={card.image.alt}
+                    className="nav-slider-thumb"
+                  />
+                </div>
+              ))}
             </div>
-          )}
+          </div>
         </>
       )}
       
