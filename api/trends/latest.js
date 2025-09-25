@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     if (supabase) {
       try {
         const { data: realData, error } = await supabase
-          .from('fashion_images')
+          .from('fashion_images_new')
           .select('*')
           .order('id', { ascending: false })
           .limit(50)

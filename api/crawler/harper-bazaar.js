@@ -151,7 +151,7 @@ export default async function handler(req, res) {
                 console.log(`Attempting to store: ${imageUrl}`)
                 // Store actual image data with proper columns
                 const { error } = await supabase
-                  .from('fashion_images')
+                  .from('fashion_images_new')
                   .insert([{
                     original_url: imageUrl,
                     title: `Harper's Bazaar Fashion Look ${imagesStored + 1}`,
