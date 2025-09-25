@@ -7,6 +7,12 @@
   background: transparent;
 }
 
+/* Remove any background patterns or embossed text */
+.trending-section::before,
+.trending-section::after {
+  display: none !important;
+}
+
 /* Scrollable container for vertical scrolling */
 .trending-scroll-container {
   height: 100vh;

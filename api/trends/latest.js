@@ -53,40 +53,19 @@ export default async function handler(req, res) {
       }
     }
 
-    // Fallback data if no real data
+    // No fallback data - only show real crawled data
     if (trendingLooks.length === 0) {
-      trendingLooks = [
-        {
-          id: 'hb-001',
-          title: 'Oversized Blazers Are the Ultimate Power Move',
-          description: 'Channel your inner boss with these statement blazers.',
-          category: 'runway_trends',
-          source_site: 'harpers_bazaar',
-          source_url: 'https://www.harpersbazaar.com/fashion/trends/',
-          primary_image_url: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center',
-          image_alt_text: 'Oversized blazer fashion trend',
-          trend_score: 0.95,
-          engagement_score: 0.88,
-          is_featured: true,
-          tags: ['blazers', 'power-dressing', 'oversized', 'professional'],
-          crawled_at: new Date().toISOString()
-        },
-        {
-          id: 'hb-002',
-          title: 'Metallic Textures Dominate Fall Runways',
-          description: 'Shimmer and shine your way through the season.',
-          category: 'runway_trends',
-          source_site: 'harpers_bazaar',
-          source_url: 'https://www.harpersbazaar.com/fashion/trends/',
-          primary_image_url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center',
-          image_alt_text: 'Metallic fashion textures',
-          trend_score: 0.92,
-          engagement_score: 0.85,
-          is_featured: true,
-          tags: ['metallic', 'textures', 'fall', 'runway'],
-          crawled_at: new Date().toISOString()
+      console.log('No crawled data available - crawler may not be working')
+      return res.status(200).json({
+        success: true,
+        data: [],
+        meta: {
+          total: 0,
+          source: 'no_data_available',
+          crawled_at: new Date().toISOString(),
+          message: 'Crawler has not provided any data yet'
         }
-      ]
+      })
     }
 
     const { limit = 50, category, min_score = 0 } = req.query
