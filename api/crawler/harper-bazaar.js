@@ -179,16 +179,17 @@ export default async function handler(req, res) {
                               absoluteUrl.includes('resize=1200') ||
                               absoluteUrl.includes('resize=800')
           
-          // Exclude small resized images (360px, 400px, etc.)
-          const isSmallImage = absoluteUrl.includes('resize=360') ||
-                              absoluteUrl.includes('resize=400') ||
-                              absoluteUrl.includes('resize=300') ||
-                              absoluteUrl.includes('resize=200')
+          // Only exclude very small images (200px, 300px), keep 360px+ for now
+          const isVerySmallImage = absoluteUrl.includes('resize=200') ||
+                                  absoluteUrl.includes('resize=300')
           
-          if (isSmallImage) return false
+          if (isVerySmallImage) return false
           
-          // Prefer images with full-body indicators and larger sizes
-          return hasFashionKeyword && (hasFullBodyKeyword || isLargeImage || !alt.includes('collage'))
+          // Accept most fashion images, only exclude obvious non-fashion content
+          return hasFashionKeyword && 
+                 !alt.includes('collage') && 
+                 !alt.includes('grid') && 
+                 !alt.includes('roundup')
         }).map(img => {
           let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
                             img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
@@ -228,7 +229,7 @@ export default async function handler(req, res) {
     console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
     
     // Store images in Supabase
-    for (const image of uniqueImages.slice(0, 50)) { // Store up to 50 images
+    for (const image of uniqueImages.slice(0, 100)) { // Store up to 100 images
       try {
         const { error } = await supabase
           .from('fashion_images_new')
