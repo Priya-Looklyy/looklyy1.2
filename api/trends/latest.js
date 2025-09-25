@@ -27,7 +27,7 @@ export default async function handler(req, res) {
         const { data: realData, error } = await supabase
           .from('fashion_images_new')
           .select('*')
-          .order('trend_score', { ascending: false }) // Order by trend score (highest first)
+          .order('id', { ascending: false }) // Order by id (newest first)
           .limit(100)
 
         if (!error && realData && realData.length > 0) {
@@ -50,16 +50,16 @@ export default async function handler(req, res) {
               title: item.title || `Harper's Bazaar Fashion Look ${index + 1}`,
               description: item.description || 'Latest fashion trend from Harper\'s Bazaar',
               category: item.category || 'trends',
-              subcategory: item.subcategory || 'general',
+              subcategory: 'general',
               source_site: 'harpers_bazaar',
-              source_url: item.source_url || 'https://www.harpersbazaar.com/fashion/',
+              source_url: 'https://www.harpersbazaar.com/fashion/',
               primary_image_url: item.original_url,
               image_alt_text: item.title || 'Harper\'s Bazaar fashion image',
-              trend_score: item.trend_score || 0.8,
+              trend_score: 0.9 - (index * 0.05), // Generate trend score based on position
               engagement_score: 0.8 - (index * 0.01),
               is_featured: index < 10, // Top 10 are featured
               tags: ['harper-bazaar', 'fashion', item.category || 'trending'],
-              crawled_at: item.crawled_at || new Date().toISOString()
+              crawled_at: new Date().toISOString()
             }
             
             // Add to trending (top 10)

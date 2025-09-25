@@ -181,11 +181,7 @@ export default async function handler(req, res) {
             original_url: image.src,
             title: `Harper's Bazaar ${image.category.charAt(0).toUpperCase() + image.category.slice(1)} Look ${storedImages + 1}`,
             description: image.alt || `Latest ${image.category} trend from Harper's Bazaar`,
-            category: image.category,
-            subcategory: image.subcategory,
-            trend_score: image.trendScore,
-            source_url: image.sourceUrl,
-            crawled_at: image.crawledAt
+            category: image.category
           }])
         
         if (!error) {
