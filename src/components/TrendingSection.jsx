@@ -4,7 +4,16 @@ import trendingAPI from '../services/trendingAPI'
 import './TrendingSection.css'
 
 const TrendingSection = () => {
-  const [allCards, setAllCards] = useState([])
+  const [categorizedData, setCategorizedData] = useState({
+    trending: [],
+    categories: {
+      trends: [],
+      runway: [],
+      'street-style': [],
+      'celebrity-style': [],
+      designers: []
+    }
+  })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   
@@ -16,31 +25,56 @@ const TrendingSection = () => {
       
       try {
         // Fetch trending looks from crawler API
-        console.log('🔄 Fetching trending looks from API...')
-        const trendingLooks = await trendingAPI.getLatestTrends({ limit: 100 })
-        console.log('📊 API Response:', trendingLooks)
+        console.log('🔄 Fetching categorized trending looks from API...')
+        const response = await trendingAPI.getLatestTrends({ limit: 100 })
+        console.log('📊 API Response:', response)
         
-        // Transform API data to component format
-        const transformedCards = trendingLooks.map(look => 
-          trendingAPI.transformTrendingLook(look)
-        )
-        
-        setAllCards(transformedCards)
-        console.log(`✅ Loaded ${transformedCards.length} trending looks from crawler`)
-        console.log('🎨 First few cards:', transformedCards.slice(0, 3))
+        if (response.data && response.data.trending) {
+          // Transform categorized data
+          const transformedData = {
+            trending: response.data.trending.map(look => 
+              trendingAPI.transformTrendingLook(look)
+            ),
+            categories: {
+              trends: response.data.categories.trends.map(look => 
+                trendingAPI.transformTrendingLook(look)
+              ),
+              runway: response.data.categories.runway.map(look => 
+                trendingAPI.transformTrendingLook(look)
+              ),
+              'street-style': response.data.categories['street-style'].map(look => 
+                trendingAPI.transformTrendingLook(look)
+              ),
+              'celebrity-style': response.data.categories['celebrity-style'].map(look => 
+                trendingAPI.transformTrendingLook(look)
+              ),
+              designers: response.data.categories.designers.map(look => 
+                trendingAPI.transformTrendingLook(look)
+              )
+            }
+          }
+          
+          setCategorizedData(transformedData)
+          console.log(`✅ Loaded categorized trending looks from crawler`)
+          console.log('🎨 Trending:', transformedData.trending.length)
+          console.log('📂 Categories:', Object.keys(transformedData.categories))
+        } else {
+          throw new Error('Invalid API response format')
+        }
         
       } catch (apiError) {
-        console.warn('Crawler API failed, using fallback data:', apiError)
-        
-        try {
-          // Use fallback dummy data if API fails
-          const fallbackCards = await trendingAPI.getFallbackData()
-          setAllCards(fallbackCards)
-        } catch (fallbackError) {
-          console.error('Both API and fallback failed:', fallbackError)
-          setError('Unable to load trending looks')
-          setAllCards([])
-        }
+        console.warn('Crawler API failed:', apiError)
+        setError('Unable to load trending looks')
+        setCategorizedData({
+          trending: [],
+          categories: {
+            trends: [],
+            runway: [],
+            'street-style': [],
+            'celebrity-style': [],
+            designers: []
+          }
+        })
       } finally {
         setLoading(false)
       }
@@ -49,38 +83,88 @@ const TrendingSection = () => {
     loadTrendingLooks()
   }, []) // Load once on component mount
 
-  // No pin functionality - clean image display only
+  // Helper function to group cards into rows of 5
+  const groupCardsIntoRows = (cards) => {
+    const rows = []
+    for (let i = 0; i < cards.length; i += 5) {
+      rows.push(cards.slice(i, i + 5))
+    }
+    return rows
+  }
 
-  // Group cards into rows of 5
-  const groupedCards = []
-  for (let i = 0; i < allCards.length; i += 5) {
-    groupedCards.push(allCards.slice(i, i + 5))
+  // Helper function to format category names
+  const formatCategoryName = (category) => {
+    return category.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ')
+  }
+
+  if (loading) {
+    return (
+      <div className="trending-section">
+        <div className="trending-loading">
+          <div className="loading-spinner"></div>
+          <p>Loading trending looks...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="trending-section">
+        <div className="trending-error">
+          <p>⚠️ {error}</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="trending-section">
-      {/* Loading State */}
-      {loading ? (
-        <div className="trending-loading">
-          <div className="loading-spinner"></div>
-        </div>
-      ) : (
-        <div className="trending-scroll-container">
-          {/* 5 images per row with vertical scroll */}
-          <div className="trending-grid-container">
-            {groupedCards.map((row, rowIndex) => (
-              <div key={rowIndex} className="trending-row">
-                {row.map(card => (
-                  <TrendingCard 
-                    key={card.id} 
-                    card={card}
-                  />
+      <div className="trending-scroll-container">
+        <div className="trending-grid-container">
+          
+          {/* Trending Section - Top 10 Most Trending */}
+          {categorizedData.trending.length > 0 && (
+            <div className="category-section">
+              <h2 className="category-title">🔥 Most Trending</h2>
+              {groupCardsIntoRows(categorizedData.trending).map((row, rowIndex) => (
+                <div key={`trending-${rowIndex}`} className="trending-row">
+                  {row.map((card) => (
+                    <TrendingCard
+                      key={card.id}
+                      card={card}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Category Sections */}
+          {Object.entries(categorizedData.categories).map(([categoryKey, cards]) => {
+            if (cards.length === 0) return null
+            
+            return (
+              <div key={categoryKey} className="category-section">
+                <h2 className="category-title">✨ {formatCategoryName(categoryKey)}</h2>
+                {groupCardsIntoRows(cards).map((row, rowIndex) => (
+                  <div key={`${categoryKey}-${rowIndex}`} className="trending-row">
+                    {row.map((card) => (
+                      <TrendingCard
+                        key={card.id}
+                        card={card}
+                      />
+                    ))}
+                  </div>
                 ))}
               </div>
-            ))}
-          </div>
+            )
+          })}
+
         </div>
-      )}
+      </div>
     </div>
   )
 }
