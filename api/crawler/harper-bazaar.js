@@ -60,8 +60,8 @@ export default async function handler(req, res) {
       autoscaledPoolOptions: {
         maxConcurrency: 3,
         desiredConcurrency: 1,
-        scaleUpStepRatio: 1,
-        scaleDownStepRatio: 1,
+        scaleUpStepRatio: 0.5, // Must be less than 1
+        scaleDownStepRatio: 0.5, // Must be less than 1
         enableSystemInfo: false, // Disable system info for Vercel
       },
       
