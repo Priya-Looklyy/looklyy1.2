@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { PlaywrightCrawler, Dataset } from 'crawlee'
+import { HttpCrawler, Dataset } from 'crawlee'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -32,37 +32,30 @@ export default async function handler(req, res) {
       })
     }
 
-    // Initialize Crawlee crawler
-    const crawler = new PlaywrightCrawler({
+    // Initialize HTTP-based Crawlee crawler (no browser dependencies)
+    const crawler = new HttpCrawler({
       maxRequestsPerCrawl: 50, // Limit to prevent infinite crawling
       requestHandlerTimeoutSecs: 30,
-      navigationTimeoutSecs: 30,
       
       // Anti-blocking configuration
-      launchContext: {
-        launchOptions: {
-          headless: true,
-          args: ['--no-sandbox', '--disable-setuid-sandbox']
-        }
-      },
+      additionalMimeTypes: ['text/html', 'application/json'],
       
       // Request handler for each page
-      async requestHandler({ request, page, enqueueLinks, log }) {
+      async requestHandler({ request, response, enqueueLinks, log }) {
         log.info(`🎯 Crawling: ${request.url}`)
         
         try {
-          // Wait for page to load
-          await page.waitForLoadState('networkidle', { timeout: 10000 })
+          const html = await response.text()
           
-          // Extract all images from the page
-          const images = await page.evaluate(() => {
-            const imgElements = Array.from(document.querySelectorAll('img'))
-            return imgElements.map(img => ({
-              src: img.src,
-              alt: img.alt || '',
-              width: img.naturalWidth || 0,
-              height: img.naturalHeight || 0
-            }))
+          // Extract all images from HTML
+          const imageMatches = html.match(/<img[^>]+src="([^"]+)"/gi) || []
+          const images = imageMatches.map(match => {
+            const srcMatch = match.match(/src="([^"]+)"/)
+            const altMatch = match.match(/alt="([^"]*)"/)
+            return {
+              src: srcMatch ? srcMatch[1] : '',
+              alt: altMatch ? altMatch[1] : ''
+            }
           })
           
           log.info(`📸 Found ${images.length} images on ${request.url}`)
@@ -75,6 +68,16 @@ export default async function handler(req, res) {
             // Must be a valid image URL
             if (!src || !src.includes('http')) return false
             
+            // Convert relative URLs to absolute URLs
+            let absoluteUrl = src
+            if (src.startsWith('//')) {
+              absoluteUrl = 'https:' + src
+            } else if (src.startsWith('/')) {
+              absoluteUrl = 'https://www.harpersbazaar.com' + src
+            } else if (!src.startsWith('http')) {
+              absoluteUrl = 'https://www.harpersbazaar.com/' + src
+            }
+            
             // Exclude icons, SVGs, and design elements
             const excludeKeywords = [
               'icon', 'logo', 'button', 'svg', 'avatar', 'thumbnail',
@@ -84,12 +87,12 @@ export default async function handler(req, res) {
               'close', 'checkmark', 'magnifying', '_assets', 'design-tokens'
             ]
             
-            if (excludeKeywords.some(keyword => src.includes(keyword) || alt.includes(keyword))) {
+            if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
               return false
             }
             
             // Must be common image formats
-            if (!src.match(/\.(jpg|jpeg|png|webp)(\?|$)/i)) {
+            if (!absoluteUrl.match(/\.(jpg|jpeg|png|webp)(\?|$)/i)) {
               return false
             }
             
@@ -102,9 +105,15 @@ export default async function handler(req, res) {
             ]
             
             return fashionKeywords.some(keyword => 
-              src.includes(keyword) || alt.includes(keyword)
-            ) || img.width > 200 || img.height > 200 // Large images are likely fashion photos
-          })
+              absoluteUrl.includes(keyword) || alt.includes(keyword)
+            )
+          }).map(img => ({
+            src: img.src.startsWith('//') ? 'https:' + img.src :
+                 img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
+                 img.src.startsWith('http') ? img.src :
+                 'https://www.harpersbazaar.com/' + img.src,
+            alt: img.alt
+          }))
           
           log.info(`✨ Found ${fashionImages.length} fashion images on ${request.url}`)
           
