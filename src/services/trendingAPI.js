@@ -47,8 +47,8 @@ class TrendingAPIService {
     const endpoint = `${this.endpoints.TRENDING_LATEST}${queryString ? `?${queryString}` : ''}`;
     
     const response = await this.apiCall(endpoint);
-    // Return the data array from the API response
-    return response.data || response;
+    // Return the full response object for categorized data
+    return response;
   }
 
   // Get featured looks for home page sliders (keep separate from trending page)

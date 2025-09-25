@@ -41,6 +41,28 @@
   display: none !important;
 }
 
+/* Ensure no embossed background from App.css affects trending page */
+.trending-section {
+  background: transparent !important;
+  position: relative;
+  z-index: 10;
+}
+
+.trending-section * {
+  background: transparent !important;
+}
+
+/* Override App.css embossed background specifically for trending page */
+.trending-section::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* Ensure the app's ::before pseudo-element doesn't show on trending page */
+.app:has(.trending-section)::before {
+  display: none !important;
+}
+
 /* Scrollable container for vertical scrolling */
 .trending-scroll-container {
   height: 100vh;
