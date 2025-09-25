@@ -88,6 +88,50 @@
   box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4);
 }
 
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(147, 51, 234, 0.05);
+  padding: 0.3rem;
+  border-radius: 25px;
+  border: 1px solid rgba(147, 51, 234, 0.1);
+}
+
+.view-btn {
+  background: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #666;
+}
+
+.view-btn:hover {
+  background: rgba(147, 51, 234, 0.1);
+  color: #9333ea;
+}
+
+.view-btn.active {
+  background: linear-gradient(135deg, #9333ea, #a855f7);
+  color: white;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);
+}
+
+.view-btn i {
+  font-size: 0.9rem;
+}
+
 .results-count {
   color: #666;
   font-size: 0.9rem;
@@ -101,6 +145,51 @@
 /* Pinterest-style masonry grid is defined in TrendingCard.css */
 .trending-grid {
   /* Grid styles are in TrendingCard.css for better organization */
+}
+
+/* Horizontal Slider Styles */
+.trending-slider-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.trending-slider {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(147, 51, 234, 0.3) transparent;
+}
+
+.trending-slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+.trending-slider::-webkit-scrollbar-track {
+  background: rgba(147, 51, 234, 0.05);
+  border-radius: 4px;
+}
+
+.trending-slider::-webkit-scrollbar-thumb {
+  background: rgba(147, 51, 234, 0.3);
+  border-radius: 4px;
+}
+
+.trending-slider::-webkit-scrollbar-thumb:hover {
+  background: rgba(147, 51, 234, 0.5);
+}
+
+.slider-card {
+  flex: 0 0 300px;
+  max-width: 300px;
+}
+
+.slider-card .trending-card {
+  margin-bottom: 0;
+  height: 100%;
 }
 
 /* API Status Warning */
@@ -218,6 +307,12 @@
     margin-bottom: 2rem;
   }
   
+  .view-controls {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+  }
+  
   .sort-options {
     gap: 0.8rem;
   }
@@ -246,6 +341,15 @@
   .sort-btn {
     width: 200px;
     justify-content: center;
+  }
+  
+  .slider-card {
+    flex: 0 0 250px;
+    max-width: 250px;
+  }
+  
+  .trending-slider-container {
+    padding: 1rem;
   }
 }
 

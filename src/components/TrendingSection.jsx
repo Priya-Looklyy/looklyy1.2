@@ -10,6 +10,7 @@ const TrendingSection = () => {
   const [pinnedLook, setPinnedLook] = useState(null)
   const [showFrame2, setShowFrame2] = useState(false)
   const [sortBy, setSortBy] = useState('trending') // 'trending', 'favorites', 'newest'
+  const [viewMode, setViewMode] = useState('grid') // 'grid', 'slider'
   const [allCards, setAllCards] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -156,28 +157,71 @@ const TrendingSection = () => {
               </button>
             </div>
             
-            <div className="results-count">
-              {sortedCards.length} looks found
+            <div className="view-controls">
+              <div className="view-toggle">
+                <button 
+                  className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                  onClick={() => setViewMode('grid')}
+                  title="Grid View"
+                >
+                  <i className="fas fa-th"></i>
+                </button>
+                <button 
+                  className={`view-btn ${viewMode === 'slider' ? 'active' : ''}`}
+                  onClick={() => setViewMode('slider')}
+                  title="Slider View"
+                >
+                  <i className="fas fa-images"></i>
+                </button>
+              </div>
+              
+              <div className="results-count">
+                {sortedCards.length} looks found
+              </div>
             </div>
           </div>
 
-          {/* Pinterest-style Cards Grid */}
-          <div className="trending-grid">
-            {sortedCards.length > 0 ? (
-              sortedCards.map(card => (
-                <TrendingCard 
-                  key={card.id} 
-                  card={card}
-                  onPinLook={handlePinLook}
-                />
-              ))
-            ) : (
-              <div className="no-results">
-                <i className="fas fa-search"></i>
-                <p>No trending looks found</p>
+          {/* Cards Display */}
+          {viewMode === 'grid' ? (
+            /* Pinterest-style Cards Grid */
+            <div className="trending-grid">
+              {sortedCards.length > 0 ? (
+                sortedCards.map(card => (
+                  <TrendingCard 
+                    key={card.id} 
+                    card={card}
+                    onPinLook={handlePinLook}
+                  />
+                ))
+              ) : (
+                <div className="no-results">
+                  <i className="fas fa-search"></i>
+                  <p>No trending looks found</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Horizontal Slider */
+            <div className="trending-slider-container">
+              <div className="trending-slider">
+                {sortedCards.length > 0 ? (
+                  sortedCards.map(card => (
+                    <div key={card.id} className="slider-card">
+                      <TrendingCard 
+                        card={card}
+                        onPinLook={handlePinLook}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-results">
+                    <i className="fas fa-search"></i>
+                    <p>No trending looks found</p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </>
       )}
       
