@@ -42,11 +42,6 @@ export default async function handler(req, res) {
     Configuration.getGlobalConfig().set('systemInfoOptions', {
       disableSystemInfo: true,
     })
-    
-    // Disable process monitoring
-    Configuration.getGlobalConfig().set('processMonitorOptions', {
-      disableProcessMonitor: true,
-    })
 
     // Initialize HTTP-based Crawlee crawler with Vercel optimizations
     const crawler = new HttpCrawler({
@@ -62,7 +57,6 @@ export default async function handler(req, res) {
         desiredConcurrency: 1,
         scaleUpStepRatio: 0.5, // Must be less than 1
         scaleDownStepRatio: 0.5, // Must be less than 1
-        enableSystemInfo: false, // Disable system info for Vercel
       },
       
       // Request handler for each page
