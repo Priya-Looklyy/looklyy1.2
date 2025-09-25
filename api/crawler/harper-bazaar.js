@@ -54,30 +54,40 @@ export default async function handler(req, res) {
         if (imageMatches && imageMatches.length > 0) {
           console.log(`Processing ${imageMatches.length} image matches`)
           
-          const imageUrls = imageMatches.slice(0, 3).map(match => {
-            const srcMatch = match.match(/src="([^"]+)"/)
-            let url = srcMatch ? srcMatch[1] : null
-            console.log(`Raw image match: ${match}`)
-            console.log(`Extracted URL: ${url}`)
-            
-            // Convert relative URLs to absolute URLs
-            if (url && !url.startsWith('http')) {
-              if (url.startsWith('//')) {
-                url = 'https:' + url
-              } else if (url.startsWith('/')) {
-                url = 'https://www.harpersbazaar.com' + url
-              } else {
-                url = 'https://www.harpersbazaar.com/' + url
-              }
-              console.log(`Converted to absolute URL: ${url}`)
-            }
-            
-            return url
-          }).filter(url => {
-            const isValid = url && (url.includes('http') || url.includes('data:'))
-            console.log(`URL ${url} is valid: ${isValid}`)
-            return isValid
-          })
+                  const imageUrls = imageMatches.slice(0, 10).map(match => {
+                    const srcMatch = match.match(/src="([^"]+)"/)
+                    let url = srcMatch ? srcMatch[1] : null
+                    console.log(`Raw image match: ${match}`)
+                    console.log(`Extracted URL: ${url}`)
+
+                    // Convert relative URLs to absolute URLs
+                    if (url && !url.startsWith('http')) {
+                      if (url.startsWith('//')) {
+                        url = 'https:' + url
+                      } else if (url.startsWith('/')) {
+                        url = 'https://www.harpersbazaar.com' + url
+                      } else {
+                        url = 'https://www.harpersbazaar.com/' + url
+                      }
+                      console.log(`Converted to absolute URL: ${url}`)
+                    }
+
+                    return url
+                  }).filter(url => {
+                    // Filter out icons, SVGs, and non-fashion images
+                    const isValid = url && 
+                      (url.includes('http') || url.includes('data:')) &&
+                      !url.includes('.svg') &&
+                      !url.includes('icon') &&
+                      !url.includes('logo') &&
+                      !url.includes('button') &&
+                      !url.includes('_assets') &&
+                      !url.includes('design-tokens') &&
+                      (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.webp'))
+                    
+                    console.log(`URL ${url} is valid fashion image: ${isValid}`)
+                    return isValid
+                  })
           
           console.log(`Extracted ${imageUrls.length} image URLs`)
           console.log('First few URLs:', imageUrls.slice(0, 2))
