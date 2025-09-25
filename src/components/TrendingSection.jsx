@@ -58,18 +58,18 @@ const TrendingSection = () => {
   }
 
   return (
-    <div className="trending-section" data-version="2.0">
+    <div className="trending-section">
       {/* Loading State */}
       {loading ? (
         <div className="trending-loading">
           <div className="loading-spinner"></div>
         </div>
       ) : (
-        <>
-          {/* Home Page Style Grid - 5 images per row */}
-          <div className="trending-home-grid">
+        <div className="trending-scroll-container">
+          {/* 5 images per row with vertical scroll */}
+          <div className="trending-grid-container">
             {groupedCards.map((row, rowIndex) => (
-              <div key={rowIndex} className="trending-row" data-row={rowIndex}>
+              <div key={rowIndex} className="trending-row">
                 {row.map(card => (
                   <TrendingCard 
                     key={card.id} 
@@ -79,35 +79,8 @@ const TrendingSection = () => {
               </div>
             ))}
           </div>
-
-          {/* Right Corner Slider Navigation */}
-          <div className="trending-nav-slider">
-            <div className="nav-slider-track">
-              {allCards.map((card, index) => (
-                <div 
-                  key={card.id} 
-                  className="nav-slider-dot"
-                  onClick={() => {
-                    const targetRow = Math.floor(index / 5)
-                    const targetElement = document.querySelector(`[data-row="${targetRow}"]`)
-                    if (targetElement) {
-                      targetElement.scrollIntoView({ behavior: 'smooth' })
-                    }
-                  }}
-                >
-                  <img 
-                    src={card.image.url} 
-                    alt={card.image.alt}
-                    className="nav-slider-thumb"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
+        </div>
       )}
-      
-      {/* No Frame2 or notifications - clean display only */}
     </div>
   )
 }
