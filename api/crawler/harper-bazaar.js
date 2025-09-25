@@ -122,19 +122,15 @@ export default async function handler(req, res) {
             absoluteUrl = 'https://www.harpersbazaar.com/' + src
           }
           
-          // Exclude icons, SVGs, and design elements
+          // Only exclude the most obvious non-fashion elements
           const excludeKeywords = [
             'icon', 'logo', 'button', 'svg', 'avatar', 'thumbnail',
             'social', 'share', 'like', 'heart', 'pin', 'star',
             'badge', 'sponsor', 'ad', 'banner', 'header', 'footer',
             'nav', 'sidebar', 'menu', 'search', 'arrow', 'play',
             'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
-            'facebook', 'twitter', 'instagram', 'pinterest', 'youtube',
-            // Exclude collage/montage images
-            'collage', 'montage', 'grid', 'mosaic', 'compilation',
-            'roundup', 'round-up', 'collection', 'gallery', 'slideshow',
-            'carousel', 'slider', 'multiple', 'several', 'various',
-            'mix', 'assortment', 'array', 'group', 'set', 'series'
+            'facebook', 'twitter', 'instagram', 'pinterest', 'youtube'
+            // Removed collage/montage exclusions to capture more content
           ]
           
           if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
@@ -146,14 +142,17 @@ export default async function handler(req, res) {
             return false
           }
           
-          // Look for fashion-related keywords that indicate full-size people
+          // Look for fashion-related keywords - be more inclusive
           const fashionKeywords = [
             'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
             'model', 'celebrity', 'street', 'designer', 'collection',
             'show', 'photo', 'image', 'editorial', 'shoot',
             'campaign', 'dress', 'clothing', 'apparel', 'beauty',
             'harpersbazaar', 'bazaar', 'wearing', 'styled', 'ensemble',
-            'fashion-week', 'red-carpet', 'street-style', 'runway-show'
+            'fashion-week', 'red-carpet', 'street-style', 'runway-show',
+            'woman', 'man', 'person', 'people', 'girl', 'boy',
+            'jacket', 'shirt', 'pants', 'shoes', 'bag', 'accessory',
+            'hair', 'makeup', 'jewelry', 'watch', 'sunglasses'
           ]
           
           // Prioritize images that suggest full-body shots
@@ -185,11 +184,22 @@ export default async function handler(req, res) {
           
           if (isVerySmallImage) return false
           
-          // Accept most fashion images, only exclude obvious non-fashion content
-          return hasFashionKeyword && 
-                 !alt.includes('collage') && 
-                 !alt.includes('grid') && 
-                 !alt.includes('roundup')
+          // Be very permissive - include almost all images from Harper's Bazaar
+          const isFromHarpersBazaar = absoluteUrl.includes('harpersbazaar') || 
+                                     absoluteUrl.includes('hips.hearstapps.com') ||
+                                     absoluteUrl.includes('hearstapps.com')
+          
+          // If it's from Harper's Bazaar domains, include it (very permissive)
+          if (isFromHarpersBazaar) {
+            return true
+          }
+          
+          // For other domains, check for fashion keywords
+          const hasFashionKeyword = fashionKeywords.some(keyword => 
+            absoluteUrl.includes(keyword) || alt.includes(keyword)
+          )
+          
+          return hasFashionKeyword
         }).map(img => {
           let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
                             img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
@@ -229,7 +239,7 @@ export default async function handler(req, res) {
     console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
     
     // Store images in Supabase
-    for (const image of uniqueImages.slice(0, 100)) { // Store up to 100 images
+    for (const image of uniqueImages.slice(0, 200)) { // Store up to 200 images
       try {
         const { error } = await supabase
           .from('fashion_images_new')
