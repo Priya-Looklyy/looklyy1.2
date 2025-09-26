@@ -15,9 +15,10 @@ const HomePage = () => {
   const [error, setError] = useState(null)
   const { favorites } = useLook()
   
-  // Convert trending API data to HomePage slider format  
+  // Convert trending API data to HomePage slider format - simplified
   const transformTrendingDataToSliders = (trendingData) => {
     if (!trendingData || !trendingData.trending) {
+      console.log('No trending data')
       return []
     }
 
@@ -35,18 +36,20 @@ const HomePage = () => {
 
     categoryGroups.forEach((categoryGroup, index) => {
       const categoryImages = categories[categoryGroup.key] || []
+      console.log(`${categoryGroup.name}: ${categoryImages.length} images`)
       
       // Get images for this slider (minimum 5, maximum 8)
       const sliderImages = categoryImages.slice(0, 8)
         .map((item, imgIndex) => ({
           id: `${categoryGroup.key}-${imgIndex}`,
-          url: item.image?.url || '',
-          alt: item.image?.alt || item.slider?.title || `${categoryGroup.name} Look ${imgIndex + 1}`
+          url: item.primary_image_url || '', // Use API raw format
+          alt: item.image_alt_text || item.title || `${categoryGroup.name} Look ${imgIndex + 1}`
         }))
         .filter(img => img.url && img.url.trim() !== '') // Filter out empty images
 
       // If we have enough images, create the slider
       if (sliderImages.length >= 3) {
+        console.log(`Created slider for ${categoryGroup.name} with ${sliderImages.length} images`)
         sliders.push({
           id: categoryGroup.key,
           title: categoryGroup.name,
@@ -59,6 +62,7 @@ const HomePage = () => {
 
     // Fallback: If we don't have enough category-based sliders, use the trending data
     if (sliders.length < 3 && trending && trending.length > 0) {
+      console.log('Using trending fallback', trending.length)
       // Split trending data into chunks for remaining sliders
       const remainingSlidersNeeded = 5 - sliders.length
       const chunksPerSlider = Math.ceil(trending.length / remainingSlidersNeeded)
@@ -72,8 +76,8 @@ const HomePage = () => {
           const sliderImages = chunk
             .map((item, imgIndex) => ({
               id: `trending-${i}-${imgIndex}`,
-              url: item.image?.url || '',
-              alt: item.image?.alt || item.slider?.title || `Trending Look ${imgIndex + 1}`
+              url: item.primary_image_url || '',
+              alt: item.image_alt_text || item.title || `Trending Look ${imgIndex + 1}`
             }))
             .filter(img => img.url && img.url.trim() !== '') // Filter out empty images
           
@@ -90,6 +94,7 @@ const HomePage = () => {
       }
     }
 
+    console.log('Final HomePage sliders:', sliders.length)
     return sliders
   }
 
@@ -104,17 +109,21 @@ const HomePage = () => {
         const response = await trendingAPI.getLatestTrends({ limit: 100 })
         console.log('📊 Trending API Response for Homepage:', response)
         
-        if (response.data && response.data.trending && response.data.categories) {
+        if (response && response.data && response.data.trending && response.data.categories) {
           const transformedSliders = transformTrendingDataToSliders(response.data)
           console.log('✅ Transformed sliders:', transformedSliders)
           
           if (transformedSliders.length > 0) {
             setSliderData(transformedSliders)
           } else {
-            throw new Error('No valid slider data created from trending API')
+            console.warn('No valid slider data created from trending API - using fallback')
+            const fallbackSliders = getAllSliders()
+            setSliderData(fallbackSliders)
           }
         } else {
-          throw new Error('Invalid API response format')
+          console.warn('Invalid API response format - using fallback')
+          const fallbackSliders = getAllSliders()
+          setSliderData(fallbackSliders)
         }
       } catch (apiError) {
         console.warn('Trending API failed for homepage, falling back to dummy data:', apiError)
