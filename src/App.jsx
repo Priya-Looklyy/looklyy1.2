@@ -6,6 +6,7 @@ import TrendingSection from './components/TrendingSection'
 import LooklyySuggests from './components/LooklyySuggests'
 import Closet from './components/Closet'
 import AuthFlow from './components/AuthFlow'
+import Admin from './pages/Admin'
 import { LookProvider } from './context/LookContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import './App.css'
@@ -66,12 +67,19 @@ function LoadingScreen() {
   )
 }
 
-// Main App Component with Auth Logic
+// Main App Component with Auth Logic  
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth()
 
   if (isLoading) {
     return <LoadingScreen />
+  }
+
+  // Check for admin route
+  const isAdminRoute = window.location.pathname === '/admin'
+
+  if (isAdminRoute) {
+    return <Admin />
   }
 
   return isAuthenticated ? <ProtectedApp /> : <AuthFlow />
