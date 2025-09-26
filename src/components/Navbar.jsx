@@ -34,14 +34,19 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
       <div className="nav-right">
         <div className="profile-info">
           <img 
-            src={user?.avatar} 
-            alt={user?.name}
+            src={user?.avatar || '/default-avatar.png'} 
+            alt={user?.name || 'User'}
             className="profile-avatar"
+            onError={(e) => {
+              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTIiIGZpbGw9IiNENUQxRUIiLz4KPHN2Zz4=';
+            }}
           />
-          <span className="profile-name">Hi, {user?.name}</span>
+          <span className="profile-name">Hi, {user?.name || 'User'}</span>
         </div>
         <div className="logout-icon" onClick={onLogout} title="Logout">
-          <i className="fas fa-sign-out-alt"></i>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0 1 18 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.46 1.27-4.64 3.19-5.9L6.96 4.96A8.967 8.967 0 0 0 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+          </svg>
         </div>
       </div>
     </nav>
