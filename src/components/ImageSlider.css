@@ -130,16 +130,16 @@
 }
 
 .pin-btn svg {
-  fill: #ffffff;
+  fill: #9333ea; /* Purple by default */
 }
 
 .pin-btn:hover svg {
-  fill: #ffffff;
-  opacity: 0.8;
+  fill: #8b5cf6; /* Lighter purple on hover */
+  opacity: 1;
 }
 
 .pin-btn.active svg {
-  fill: #8e24aa !important; /* Purple when active */
+  fill: #7c3aed !important; /* Darker purple when active */
   animation: pinRotate 0.6s ease;
 }
 

@@ -88,7 +88,7 @@ const ImageSlider = ({ slider, onPinLook }) => {
               aria-label={isPinned(slider.id) ? 'Unpin look' : 'Pin look'}
             >
               <svg viewBox="0 0 24 24" className="pin-icon" fill="currentColor">
-                <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2h-5l-2 10H4c-1.11 0-2-.89-2-2s.89-2 2-2h7l2-10H16z"/>
+                <path d="M12 2c-3.87 0-7 3.13-7 7 0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
               </svg>
             </button>
           </div>
