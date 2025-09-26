@@ -333,36 +333,13 @@ export default async function handler(req, res) {
             alt.includes('movie') || alt.includes('film') || alt.includes('trailer') ||
             absoluteUrl.includes('poster') || absoluteUrl.includes('campaign')
           
-          // ULTRA-AGGRESSIVE Collage Detection based on visual patterns common in the screenshots
-          const isCompositeBusinessImage = alt.includes('shown here') ||
-                                          alt.includes('round-up') ||
-                                          alt.includes('header') ||
-                                          alt.includes('overview shot') ||
-                                          alt.includes('featured selection') ||
-                                          alt.includes('circle') ||
-                                          alt.includes('rings') ||
-                                          alt.includes('watch') &&
-                                          (alt.includes('jewelry') ||
-                                          alt.includes('fashion collection')) || 
-                                          /woman wearing.*diamond|ring|jewelry/i.test(alt) ||
-                                          /collection.*jewelry/i.test(alt) ||
-                                          /(multiple|crew|group)/.test(alt) ||
-                                          // Additional EXTREMELY SPECIFIC content blocking from the multi-part shots
-                                          alt.includes('overlay') ||
-                                          alt.includes('overlapping') ||
-                                          alt.includes('layered') ||  
-                                          alt.includes('combining') || 
-                                          alt.includes('together') || 
-                                          alt.includes('featuring') && (alt.includes('elements')) ||
-                                          /composed.*model|model.*posed/i.test(alt) || 
-                                          /woven.*fabric|mounted.*jewelry|full.*length.*run/i.test(alt) ||       
-                                          absoluteUrl.includes('frameworks') ||
-                                          absoluteUrl.includes('blends') ||
-                                          absoluteUrl.includes('bundled') ||
-                                          absoluteUrl.includes('faceted-multi') ||
-                                          /complex layout image|multi-striated|framed collection/i.test(alt) ||
-                                          (absoluteUrl.toLowerCase().includes('archive') && 
-                                           absoluteUrl.toLowerCase().includes('.jpg'))
+          // BALANCED Collage Detection - Reduced from overly aggressive filter
+          const isCompositeBusinessImage = (alt.includes('overview shot') && 
+                                           (alt.includes('multiple') || alt.includes('arranged'))) ||
+                                          (alt.includes('shown here') && alt.includes('collection')) ||
+                                          /(complex layout|multi-striated|framed collection)/i.test(alt) ||
+                                          (alt.includes('overlay') && alt.includes('overlapping')) ||
+                                          (absoluteUrl.includes('frameworks') && absoluteUrl.includes('faceted-multi'))
           
           const hasFashionKeyword = fashionKeywords.some(keyword => 
             absoluteUrl.includes(keyword) || alt.includes(keyword)
@@ -457,10 +434,12 @@ export default async function handler(req, res) {
                                      absoluteUrl.includes('rex') ||
                                      absoluteUrl.includes('shutterstock')
           
-          // CRITICAL: Re-check for exclusions AFTER all URL analysis to ensure they are NEVER overridden
-          const finalExcludeCheck = isCollagePattern || isCollageDescription || isFaceShotCrop || isFaceShot || isCompositeBusinessImage || isPosterCampaign
-          if (finalExcludeCheck) {
-            return false // NEVER include these types regardless of domain
+          // BALANCED EXCLUSIONS: Don't block everything indiscriminately
+          // Only use the strictest exclusion checks for clearest problematic content
+          const finalExcludeCheck = isCollagePattern || isFaceShotCrop || isFaceShot || isPosterCampaign
+          // Only strict problem cases are blocked universally  
+          if (finalExcludeCheck && (!isFromHarpersBazaar || isFaceShot)) {
+            return false // Only block definite problems
           }
           
           // Additional visual pattern checks that might indicate collages/montages
@@ -473,27 +452,24 @@ export default async function handler(req, res) {
                                      /roundup/i.test(rootFilename) ||
                                      /editorial/i.test(rootFilename) && (rootFilename.includes('table') || rootFilename.includes('slideshow'))
           
-          // Strict exclusion for overlapping layout images- block if image has been used for complex editorials
-          const hasDocumentaryStyleContent = alt.includes('display') || alt.includes('layout') || alt.includes('arrangement') ||
-                                            alt.includes('showcase') || alt.includes('arranging') ||
-                                            alt.includes('compilation') || alt.includes('editorial') ||
-                                            alt.includes('shifts') || alt.includes('trends') && alt.includes('pack') ||
-                                            alt.includes('archive') || alt.includes('collection') ||
-                                            alt.includes('behind') || alt.includes('front') ||
-                                            alt.includes('curated') // More comprehensive coverage  
+          // SIMPLIFIED FILTERING - Only prevent clearly identifiable problematic content
+          // Removed overly complex filtering that was blocking legitimate fashion images
+          const hasSevereDocumentaryStyleContent = alt.includes('archival and new pieces works together with silhouettes') ||
+                                                   alt.includes('frameworks') && alt.includes('faceted-multi') ||
+                                                   alt.includes('layout') && alt.includes('mounted jewelry')
           
-          // MEGA-STRICT BLOCKER: Check EVERY possible exclusion FIRST
-          if (looksLikeCollageFile || hasDocumentaryStyleContent || isCompositeBusinessImage) {
-            return false // BLOCK WITHOUT EXCEPTION - REGARDLESS OF DOMAIN
+          // Updated filtering logic for better detection
+          if (looksLikeCollageFile || hasSevereDocumentaryStyleContent || (isCompositeBusinessImage && !isFromHarpersBazaar)) {
+            return false // Only block clearly problematic content
           }
           
-          // If image passes ALL exclusion tests, then check if it's from preferred domains
+          // SIMPLIFIED INCLUSION LOGIC - Much more permissive
           if (isFromHarpersBazaar) {
-            // Allow fashion content but block faces
-            return (hasFashionKeyword || hasFullBodyKeyword) && !isFaceShot
+            // Allow fashion content but still block clear faces
+            return (hasFashionKeyword || hasFullBodyKeyword || absoluteUrl.includes('harpersbazaar')) && !isFaceShotCrop
           }
           
-          // For non-Harper's domains, be selective but not excessive
+          // For non-Harper's domains, be more inclusive
           return (hasFashionKeyword || hasFullBodyKeyword) && !isFaceShot
         }).map(img => {
           let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
