@@ -31,30 +31,41 @@ export default async function handler(req, res) {
       })
     }
 
-    // URLs to crawl with category mapping - Core URLs for testing
+    // URLs to crawl with category mapping - High-Quality Fashion Articles with Full-Size Images
     const urlsToCrawl = [
+      // SPECIFIC HIGH-QUALITY ARTICLES - Full-size fashion images
+      { url: 'https://www.harpersbazaar.com/fashion/trends/a65837104/wide-leg-jeans-outfit-ideas/', category: 'street-style', subcategory: 'outfit-ideas', trendScore: 0.99 },
+      
       // RUNWAY - Core Runway URLs
       { url: 'https://www.harpersbazaar.com/fashion/runway/', category: 'runway', subcategory: 'general', trendScore: 0.98 },
       { url: 'https://www.harpersbazaar.com/fashion/runway/spring-2025/', category: 'runway', subcategory: 'spring-2025', trendScore: 0.99 },
       { url: 'https://www.harpersbazaar.com/fashion/runway/fall-2024/', category: 'runway', subcategory: 'fall-2024', trendScore: 0.97 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/paris-fashion-week/', category: 'runway', subcategory: 'paris-fw', trendScore: 0.96 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/new-york-fashion-week/', category: 'runway', subcategory: 'nyfw', trendScore: 0.95 },
       
       // CELEBRITY STYLE - Core Celebrity URLs
       { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/', category: 'celebrity-style', subcategory: 'general', trendScore: 0.98 },
       { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/red-carpet/', category: 'celebrity-style', subcategory: 'red-carpet', trendScore: 0.97 },
       { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/met-gala/', category: 'celebrity-style', subcategory: 'met-gala', trendScore: 0.96 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/oscars/', category: 'celebrity-style', subcategory: 'oscars', trendScore: 0.95 },
       
       // DESIGNERS - Core Designer URLs
       { url: 'https://www.harpersbazaar.com/fashion/designers/', category: 'designers', subcategory: 'general', trendScore: 0.98 },
       { url: 'https://www.harpersbazaar.com/fashion/designers/spring-2025/', category: 'designers', subcategory: 'spring-2025', trendScore: 0.97 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/chanel/', category: 'designers', subcategory: 'chanel', trendScore: 0.96 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/dior/', category: 'designers', subcategory: 'dior', trendScore: 0.95 },
       
-      // TRENDS - Core Trend URLs
+      // TRENDS - Core Trend URLs with Street Style
       { url: 'https://www.harpersbazaar.com/fashion/trends/', category: 'trends', subcategory: 'general', trendScore: 0.95 },
       { url: 'https://www.harpersbazaar.com/fashion/trends/fall-2024/', category: 'trends', subcategory: 'fall-2024', trendScore: 0.94 },
+      { url: 'https://www.harpersbazaar.com/fashion/trends/street-style/', category: 'trends', subcategory: 'street-style', trendScore: 0.93 },
       { url: 'https://www.harpersbazaar.com/fashion/', category: 'trends', subcategory: 'general', trendScore: 0.90 },
       
       // STREET STYLE - Core Street Style URLs
       { url: 'https://www.harpersbazaar.com/fashion/street-style/', category: 'street-style', subcategory: 'general', trendScore: 0.90 },
-      { url: 'https://www.harpersbazaar.com/fashion/street-style/paris-fashion-week/', category: 'street-style', subcategory: 'paris-fw', trendScore: 0.89 }
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/paris-fashion-week/', category: 'street-style', subcategory: 'paris-fw', trendScore: 0.89 },
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/new-york-fashion-week/', category: 'street-style', subcategory: 'nyfw', trendScore: 0.88 },
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/milan-fashion-week/', category: 'street-style', subcategory: 'milan-fw', trendScore: 0.87 }
     ]
     
     let totalImages = 0
@@ -140,7 +151,7 @@ export default async function handler(req, res) {
             return false
           }
           
-          // Look for fashion-related keywords - be more inclusive
+          // Look for fashion-related keywords - be more inclusive for article images
           const fashionKeywords = [
             'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
             'model', 'celebrity', 'street', 'designer', 'collection',
@@ -150,7 +161,9 @@ export default async function handler(req, res) {
             'fashion-week', 'red-carpet', 'street-style', 'runway-show',
             'woman', 'man', 'person', 'people', 'girl', 'boy',
             'jacket', 'shirt', 'pants', 'shoes', 'bag', 'accessory',
-            'hair', 'makeup', 'jewelry', 'watch', 'sunglasses'
+            'hair', 'makeup', 'jewelry', 'watch', 'sunglasses',
+            'jeans', 'coat', 'blazer', 'trench', 'boots', 'heels',
+            'outfit-ideas', 'street-style', 'getty', 'edward-berthelot'
           ]
           
           // Prioritize images that suggest full-body shots
@@ -226,9 +239,15 @@ export default async function handler(req, res) {
       }
     }
     
-    // Remove duplicates and store unique images
-    const uniqueImages = [...new Set(allFashionImages.map(img => img.src))]
-      .map(src => allFashionImages.find(img => img.src === src))
+    // Remove duplicates and store unique images - more robust deduplication
+    const seenUrls = new Set()
+    const uniqueImages = allFashionImages.filter(img => {
+      if (seenUrls.has(img.src)) {
+        return false
+      }
+      seenUrls.add(img.src)
+      return true
+    })
     
     console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
     
