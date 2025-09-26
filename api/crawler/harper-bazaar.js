@@ -158,7 +158,7 @@ export default async function handler(req, res) {
             absoluteUrl = 'https://www.harpersbazaar.com/' + src
           }
           
-          // Only exclude the most obvious non-fashion elements
+          // STRICT filtering - NO movie posters, campaigns, or brand artwork
           const excludeKeywords = [
             'icon', 'logo', 'button', 'svg', 'avatar', 'thumbnail',
             'social', 'share', 'like', 'heart', 'pin', 'star',
@@ -166,25 +166,38 @@ export default async function handler(req, res) {
             'nav', 'sidebar', 'menu', 'search', 'arrow', 'play',
             'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
             'facebook', 'twitter', 'instagram', 'pinterest', 'youtube',
-            // AGGRESSIVE face filtering - Block ALL face shots  
+            
+            // AGGRESSIVE face/collage filtering
             'beauty', 'makeup', 'skincare', 'portrait', 'headshot', 'close-up', 'closeup',
             'face', 'facial', 'beauty-shot', 'beauty-shoot', 'beauty-campaign',
             'makeup-look', 'skincare-routine', 'beauty-tips', 'beauty-trends',
             'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign',
             'head-and-shoulders', 'headshot', 'portrait-photo', 'portrait-shot',
             'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article',
-            // ADD EXTRA aggressive face blocking
             'model-face', 'celebrity-face', 'star-face', 'cropped-face', 'face-crop',
             'facial-beauty', 'selfie', 'mugshot', 'beauty-photo', 'makeup-model',
             'red-carpet-model', 'closeup-model', 'facial-shot', 'beauty-closeup',
             'closeup', 'upper-body', 'head-and', 'model-portrait',
-            // Collage and montage images - avoid multi-image compilations
+            
+            // Collage, montage, poster content - BLOCK ALL
             'collage', 'montage', 'grid', 'compilation', 'collection', 'mosaic',
             'gallery', 'gallery-grid', 'photo-grid', 'image-grid', 'image-collage',
             'multi-image', 'image-collection', 'fashion-collage', 'style-collage',
             'lookbook-collection', 'mood-board', 'moodboard', 'inspiration-board',
             'product-showcase', 'brand-showcase', 'trend-roundup', 'style-guide',
-            'fashion-compilation', 'style-compilation', 'trend-compilation'
+            'fashion-compilation', 'style-compilation', 'trend-compilation',
+            
+            // MOVIE POSTER & BRAND CAMPAIGNS - BLOCK STRICTLY
+            'poster', 'movie', 'film', 'trailer', 'promotional', 'brand-campaign',
+            'marc-jacobs', 'heaven', 'vanna', 'gabbriette', 'iris-law',
+            'brand-collection', 'fashion-campaign', 'model-portfolio',
+            'editorial-spread', 'magazine-layout', 'design-spread',
+            'brand-artwork', 'creative-director', 'artwork', 'creative-campaign',
+            'music-video', 'video-stills', 'album-cover', 'artistic-portrait',
+            'artwork-gallery', 'creative-shoot', 'fashion-social', 'brand-content',
+            'cinematic', 'stills', 'scene', 'director', 'photoshoot',
+            'showcase', 'highlight', 'feature', 'spread', 'layout', 'editorial',
+            'stage', 'performance', 'music', 'album', 'record', 'single'
           ]
           
           if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
@@ -196,7 +209,24 @@ export default async function handler(req, res) {
             return false
           }
           
-          // Look for fashion-related keywords - MASSIVELY EXPANDED for maximum content capture
+          // BLOCK ALL cinema/poster/campaign content - STRICTER CHECK
+          const urlName = absoluteUrl.slice(absoluteUrl.lastIndexOf('/') + 1).toLowerCase()
+          const isCinemaContent = alt.includes('heaven') || alt.includes('marc jacobs') ||
+                                alt.includes('brand') || alt.includes('campaign') ||
+                                alt.includes('poster') || alt.includes('cover') ||
+                                alt.includes('layout') || alt.includes('artwork') ||
+                                alt.includes('marc') || alt.includes('heaven') ||
+                                alt.includes('gabbriette') || alt.includes('iris-law') ||
+                                urlName.includes('poster') || urlName.includes('campaign') ||
+                                urlName.includes('brand') || urlName.includes('movie') ||
+                                urlName.includes('heaven') || urlName.includes('marc') ||
+                                urlName.includes('layout') || urlName.includes('artwork')
+                                
+          if (isCinemaContent) {
+            return false
+          }
+          
+          // Look for ONLY clean fashion wear - BE RESTRICTIVE
           const fashionKeywords = [
             // Core fashion terms
             'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
