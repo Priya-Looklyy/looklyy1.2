@@ -139,7 +139,7 @@ const TrendingSection = () => {
       .sort((a, b) => a.sortKey - b.sortKey)
       .map(item => item.card)
     setShuffledData(shuffledImages)
-  }, [categorizedData, imageShuffleSeed])
+  }, [categorizedData, imageShuffleSeed]) // RESTORE: Shuffle images on login
 
   // Helper function to format category names
   const formatCategoryName = (category) => {

@@ -138,7 +138,7 @@ const HomePage = () => {
     }
 
     loadTrendingData()
-  }, [imageShuffleSeed])
+  }, [imageShuffleSeed]) // RE-ENABLE: Reloads with fresh images when users login
   
   // Sort sliders: favorited ones first, then others
   const sortedSliders = [...sliderData].sort((a, b) => {

@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
       if (response.success) {
         setUser(response.user)
         setIsAuthenticated(true)
-        setImageShuffleSeed(generateShuffleSeed()) // Reshuffle images on login
+        setImageShuffleSeed(generateShuffleSeed()) // BACK TO: Reshuffle images on login
         if (response.token) {
           storeToken(response.token)
         }
