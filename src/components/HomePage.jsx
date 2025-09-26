@@ -1,20 +1,136 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ImageSlider from './ImageSlider'
 import NotificationCenter from './NotificationCenter'
 import SlidingCanvas from './SlidingCanvas'
 import { getAllSliders } from '../data/fashionDatabase'
+import trendingAPI from '../services/trendingAPI'
 import { useLook } from '../context/LookContext'
 import './HomePage.css'
 
 const HomePage = () => {
   const [pinnedLook, setPinnedLook] = useState(null)
   const [isFrame2Active, setIsFrame2Active] = useState(false)
+  const [sliderData, setSliderData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const { favorites } = useLook()
   
-  const allSliders = getAllSliders()
+  // Convert trending API data to HomePage slider format  
+  const transformTrendingDataToSliders = (trendingData) => {
+    if (!trendingData || !trendingData.trending) {
+      return []
+    }
+
+    const { trending, categories } = trendingData
+    const sliders = []
+    
+    // Create 5 sliders from categories
+    const categoryGroups = [
+      { key: 'celebrity-style', name: 'Celebrity Style', description: 'Red carpet and celebrity fashion' },
+      { key: 'street-style', name: 'Street Style', description: 'Urban fashion captured on the streets' },
+      { key: 'runway', name: 'Runway', description: 'Latest from fashion weeks' },
+      { key: 'designers', name: 'Designers', description: 'Luxury and emerging designers' },
+      { key: 'trends', name: 'Trends', description: 'What\'s trending now' }
+    ]
+
+    categoryGroups.forEach((categoryGroup, index) => {
+      const categoryImages = categories[categoryGroup.key] || []
+      
+      // Get images for this slider (minimum 5, maximum 8)
+      const sliderImages = categoryImages.slice(0, 8)
+        .map((item, imgIndex) => ({
+          id: `${categoryGroup.key}-${imgIndex}`,
+          url: item.image?.url || '',
+          alt: item.image?.alt || item.slider?.title || `${categoryGroup.name} Look ${imgIndex + 1}`
+        }))
+        .filter(img => img.url && img.url.trim() !== '') // Filter out empty images
+
+      // If we have enough images, create the slider
+      if (sliderImages.length >= 3) {
+        sliders.push({
+          id: categoryGroup.key,
+          title: categoryGroup.name,
+          description: categoryGroup.description,
+          tag: categoryGroup.name,
+          images: sliderImages
+        })
+      }
+    })
+
+    // Fallback: If we don't have enough category-based sliders, use the trending data
+    if (sliders.length < 3 && trending && trending.length > 0) {
+      // Split trending data into chunks for remaining sliders
+      const remainingSlidersNeeded = 5 - sliders.length
+      const chunksPerSlider = Math.ceil(trending.length / remainingSlidersNeeded)
+      
+      for (let i = 0; i < remainingSlidersNeeded; i++) {
+        const startIndex = i * chunksPerSlider
+        const endIndex = startIndex + chunksPerSlider
+        const chunk = trending.slice(startIndex, endIndex)
+        
+        if (chunk.length > 0) {
+          const sliderImages = chunk
+            .map((item, imgIndex) => ({
+              id: `trending-${i}-${imgIndex}`,
+              url: item.image?.url || '',
+              alt: item.image?.alt || item.slider?.title || `Trending Look ${imgIndex + 1}`
+            }))
+            .filter(img => img.url && img.url.trim() !== '') // Filter out empty images
+          
+          if (sliderImages.length >= 3) {
+            sliders.push({
+              id: `trending-${i}`,
+              title: `Trending ${i + 1}`,
+              description: 'The latest trending looks',
+              tag: 'Trending',
+              images: sliderImages
+            })
+          }
+        }
+      }
+    }
+
+    return sliders
+  }
+
+  // Load trending data and transform to slider format
+  useEffect(() => {
+    const loadTrendingData = async () => {
+      setLoading(true)
+      setError(null)
+      
+      try {
+        console.log('🔄 Loading trending data for homepage...')
+        const response = await trendingAPI.getLatestTrends({ limit: 100 })
+        console.log('📊 Trending API Response for Homepage:', response)
+        
+        if (response.data && response.data.trending && response.data.categories) {
+          const transformedSliders = transformTrendingDataToSliders(response.data)
+          console.log('✅ Transformed sliders:', transformedSliders)
+          
+          if (transformedSliders.length > 0) {
+            setSliderData(transformedSliders)
+          } else {
+            throw new Error('No valid slider data created from trending API')
+          }
+        } else {
+          throw new Error('Invalid API response format')
+        }
+      } catch (apiError) {
+        console.warn('Trending API failed for homepage, falling back to dummy data:', apiError)
+        // Fallback to dummy data
+        const fallbackSliders = getAllSliders()
+        setSliderData(fallbackSliders)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTrendingData()
+  }, [])
   
   // Sort sliders: favorited ones first, then others
-  const sortedSliders = [...allSliders].sort((a, b) => {
+  const sortedSliders = [...sliderData].sort((a, b) => {
     const aFavorited = favorites.includes(a.id)
     const bFavorited = favorites.includes(b.id)
     
@@ -34,6 +150,31 @@ const HomePage = () => {
   const closeFrame2 = () => {
     setIsFrame2Active(false)
     setPinnedLook(null)
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="home-page">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading trending looks...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="home-page">
+        <div className="error-container">
+          <h2>Unable to load trending looks</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -63,7 +204,7 @@ const HomePage = () => {
             </div>
           </div>
         ) : (
-          // Frame 1: Original 5 sliders
+          // Frame 1: Original 5 sliders - now using live trending data
           sortedSliders.map(slider => (
             <ImageSlider 
               key={slider.id} 
