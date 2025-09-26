@@ -185,6 +185,10 @@ export default async function handler(req, res) {
         })
         
         console.log(`✨ Found ${fashionImages.length} fashion images on ${urlData.url}`)
+        if (fashionImages.length === 0) {
+          console.log(`⚠️ No fashion images passed filter on ${urlData.url}`)
+          console.log(`Debug - Sample image:`, images[0]) 
+        }
         allFashionImages.push(...fashionImages)
         
       } catch (error) {
@@ -215,6 +219,7 @@ export default async function handler(req, res) {
     })
     
     console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
+    console.log(`🔍 First 3 images for debugging:`, uniqueImages.slice(0, 3))
     
     // CLEAR DATABASE FIRST - Complete refresh ensures only new filtered content
     console.log('🗑️ Clearing old unfiltered images from database...')
@@ -232,11 +237,12 @@ export default async function handler(req, res) {
     }
     
     console.log('✅ Database cleared - fresh start guaranteed')
+    console.log(`📥 About to store ${Math.min(uniqueImages.length, 500)} images to database`)
     
     // Store images in Supabase - FLOOD WITH CONTENT for amazing user experience
     for (const image of uniqueImages.slice(0, 500)) { // Store up to 500 images
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('fashion_images_new')
           .insert([{
             original_url: image.src,
@@ -247,18 +253,20 @@ export default async function handler(req, res) {
             training_status: 'pending'
           }])
         
-        if (!error) {
+        if (!error && data) {
           storedImages++
-          console.log(`✅ Stored image: ${image.src}`)
+          console.log(`✅ Stored image ${storedImages}: ${image.src}`)
         } else {
-          console.log(`❌ Database error:`, error.message)
-          errors.push(`Database error: ${error.message}`)
+          console.log(`❌ Database error:`, error?.message || 'Unknown error', error)
+          errors.push(`Database error: ${error?.message || 'Unknown error'}`)
         }
       } catch (error) {
         console.log(`❌ Storage error:`, error.message)
         errors.push(`Storage error: ${error.message}`)
       }
     }
+    
+    console.log(`📊 Final storage result: ${storedImages} successfully stored, ${errors.length} errors`)
     
     const result = {
       success: true,
