@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState } from 'react'
 import { signupUser, loginUser, logoutUser, storeToken, getToken } from '../services/authAPI'
 
+// Generate a shuffle seed whenever user authentication state changes
+function generateShuffleSeed() {
+  return Date.now() + Math.random()
+}
+
 const AuthContext = createContext()
 
 export function useAuth() {
@@ -12,6 +17,7 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [imageShuffleSeed, setImageShuffleSeed] = useState(generateShuffleSeed())
 
   const signup = async (userData) => {
     setIsLoading(true)
@@ -47,6 +53,7 @@ export function AuthProvider({ children }) {
       if (response.success) {
         setUser(response.user)
         setIsAuthenticated(true)
+        setImageShuffleSeed(generateShuffleSeed()) // Reshuffle images on login
         if (response.token) {
           storeToken(response.token)
         }
@@ -80,6 +87,7 @@ export function AuthProvider({ children }) {
     isAuthenticated,
     isLoading,
     error,
+    imageShuffleSeed,
     signup,
     login,
     logout

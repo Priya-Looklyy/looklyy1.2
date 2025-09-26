@@ -5,6 +5,7 @@ import SlidingCanvas from './SlidingCanvas'
 import { getAllSliders } from '../data/fashionDatabase'
 import trendingAPI from '../services/trendingAPI'
 import { useLook } from '../context/LookContext'
+import { useAuth } from '../context/AuthContext'
 import './HomePage.css'
 
 const HomePage = () => {
@@ -14,6 +15,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { favorites } = useLook()
+  const { imageShuffleSeed } = useAuth()
   
   // Convert trending API data to HomePage slider format - simplified
   const transformTrendingDataToSliders = (trendingData) => {
@@ -136,7 +138,7 @@ const HomePage = () => {
     }
 
     loadTrendingData()
-  }, [])
+  }, [imageShuffleSeed])
   
   // Sort sliders: favorited ones first, then others
   const sortedSliders = [...sliderData].sort((a, b) => {

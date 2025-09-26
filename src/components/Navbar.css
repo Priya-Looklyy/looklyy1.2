@@ -34,6 +34,15 @@
   margin: 0;
 }
 
+.nav-left .tagline {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  margin: -5px 0 0 0;
+  color: #9ca3af;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
 .nav-center {
   display: flex;
   gap: 1.5rem;

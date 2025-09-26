@@ -402,10 +402,15 @@ export default async function handler(req, res) {
           // Strict exclusion for overlapping layout images- block if image has been used for complex editorials
           // Very conservative safety to block collage images by design and layout context
           const hasDocumentaryStyleContent = alt.includes('display') || alt.includes('layout') || alt.includes('arrangement') ||
-                                            alt.includes('showcase') || alt.includes('arranging')
+                                            alt.includes('showcase') || alt.includes('arranging') ||
+                                            alt.includes('compilation') || alt.includes('editorial') ||
+                                            alt.includes('shifts') || alt.includes('trends') && alt.includes('pack') ||
+                                            alt.includes('archive') || alt.includes('collection') ||
+                                            alt.includes('behind') || alt.includes('front') ||
+                                            alt.includes('curated') // More comprehensive coverage  
           
-          if (hasDocumentaryStyleContent) {
-            return false
+          if (hasDocumentaryStyleContent || looksLikeCollageFile) {
+            return false // BLOCK THESE PATTERNS
           }
           
           // If it's from Harper's Bazaar or recognized fashion image domains, include it (ULTRA permissive)

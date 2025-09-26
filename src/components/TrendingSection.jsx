@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import TrendingCard from './TrendingCard'
 import trendingAPI from '../services/trendingAPI'
+import { useAuth } from '../context/AuthContext'
 import './TrendingSection.css'
 
 const TrendingSection = () => {
+  const { imageShuffleSeed } = useAuth()
   const [categorizedData, setCategorizedData] = useState({
     trending: [],
     categories: {
@@ -16,6 +18,7 @@ const TrendingSection = () => {
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [shuffledData, setShuffledData] = useState([])
   
   // Load trending looks from crawler API
   useEffect(() => {
@@ -127,6 +130,17 @@ const TrendingSection = () => {
     return rows
   }
 
+  // Shuffle images whenever categorisedData or shuffle seed changes
+  useEffect(() => {
+    const allImages = [...categorizedData.trending, ...Object.values(categorizedData.categories).flat()]
+    const shufflingFactor = Math.floor(imageShuffleSeed * 100) % 100
+    const shuffledImages = allImages
+      .map((card, index) => ({ card, sortKey: (index + shufflingFactor) * Math.random() }))
+      .sort((a, b) => a.sortKey - b.sortKey)
+      .map(item => item.card)
+    setShuffledData(shuffledImages)
+  }, [categorizedData, imageShuffleSeed])
+
   // Helper function to format category names
   const formatCategoryName = (category) => {
     return category.split('-').map(word => 
@@ -180,15 +194,9 @@ const TrendingSection = () => {
           {/* Seamless Visual Experience - No Text, Pure Fashion */}
           <div className="seamless-fashion-grid">
             {/* All images flow seamlessly - no categories, no titles, just pure visual beauty */}
-            {categorizedData.trending.map((card) => (
+            {shuffledData.map((card) => (
               <TrendingCard key={card.id} card={card} />
             ))}
-            
-            {Object.entries(categorizedData.categories).map(([categoryKey, cards]) => 
-              cards.map((card) => (
-                <TrendingCard key={card.id} card={card} />
-              ))
-            )}
           </div>
 
         </div>
