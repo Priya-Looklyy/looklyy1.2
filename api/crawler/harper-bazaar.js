@@ -172,7 +172,14 @@ export default async function handler(req, res) {
             'makeup-look', 'skincare-routine', 'beauty-tips', 'beauty-trends',
             'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign',
             'head-and-shoulders', 'headshot', 'portrait-photo', 'portrait-shot',
-            'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article'
+            'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article',
+            // Collage and montage images - avoid multi-image compilations
+            'collage', 'montage', 'grid', 'compilation', 'collection', 'mosaic',
+            'gallery', 'gallery-grid', 'photo-grid', 'image-grid', 'image-collage',
+            'multi-image', 'image-collection', 'fashion-collage', 'style-collage',
+            'lookbook-collection', 'mood-board', 'moodboard', 'inspiration-board',
+            'product-showcase', 'brand-showcase', 'trend-roundup', 'style-guide',
+            'fashion-compilation', 'style-compilation', 'trend-compilation'
           ]
           
           if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
@@ -314,6 +321,44 @@ export default async function handler(req, res) {
           
           // Exclude face-focused crops
           if (isFaceShotCrop) {
+            return false
+          }
+          
+          // Check for collage/montage indicators - detect multi-image compositions
+          const isCollagePattern = absoluteUrl.includes('collage') ||
+                                  absoluteUrl.includes('montage') ||
+                                  absoluteUrl.includes('grid') ||
+                                  absoluteUrl.includes('compilation') ||
+                                  absoluteUrl.includes('collection-') ||
+                                  absoluteUrl.includes('gallery-') ||
+                                  absoluteUrl.includes('image-grid') ||
+                                  absoluteUrl.includes('photo-collage') ||
+                                  absoluteUrl.includes('fashion-grid') ||
+                                  absoluteUrl.includes('lookbook-') ||
+                                  absoluteUrl.includes('moodboard') ||
+                                  (absoluteUrl.includes('grid-') && absoluteUrl.includes('jpg'))
+          
+          const isCollageDescription = alt.includes('collage') ||
+                                      alt.includes('montage') ||
+                                      alt.includes('grid') ||
+                                      alt.includes('compilation') ||
+                                      alt.includes('collection of') ||
+                                      alt.includes('multiple images') ||
+                                      alt.includes('image montage') ||
+                                      alt.includes('photo collage') ||
+                                      (alt.includes('multi') && alt.includes('image')) ||
+                                      alt.includes('mix of') ||
+                                      alt.includes('various looks') ||
+                                      alt.includes('fashion roundup') ||
+                                      alt.includes('style roundup') ||
+                                      alt.includes('trends roundup') ||
+                                      alt.includes('style guide') ||
+                                      alt.includes('multiple looks') ||
+                                      alt.includes('various fashion') ||
+                                      alt.includes('different styles')
+          
+          // Exclude collage/montage images immediately
+          if (isCollagePattern || isCollageDescription) {
             return false
           }
           
