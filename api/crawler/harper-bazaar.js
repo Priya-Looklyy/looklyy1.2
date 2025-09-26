@@ -165,8 +165,14 @@ export default async function handler(req, res) {
             'badge', 'sponsor', 'ad', 'banner', 'header', 'footer',
             'nav', 'sidebar', 'menu', 'search', 'arrow', 'play',
             'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
-            'facebook', 'twitter', 'instagram', 'pinterest', 'youtube'
-            // Removed collage/montage exclusions to capture more content
+            'facebook', 'twitter', 'instagram', 'pinterest', 'youtube',
+            // Face shots and beauty portraits - avoid close-ups
+            'beauty', 'makeup', 'skincare', 'portrait', 'headshot', 'close-up',
+            'face', 'facial', 'beauty-shot', 'beauty-shoot', 'beauty-campaign',
+            'makeup-look', 'skincare-routine', 'beauty-tips', 'beauty-trends',
+            'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign',
+            'head-and-shoulders', 'headshot', 'portrait-photo', 'portrait-shot',
+            'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article'
           ]
           
           if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
@@ -256,6 +262,26 @@ export default async function handler(req, res) {
             'model', 'celebrity', 'person', 'woman', 'man'
           ]
           
+          // Face shot detection - exclude images that are clearly face-focused
+          const faceShotKeywords = [
+            'beauty', 'makeup', 'skincare', 'portrait', 'headshot', 'close-up',
+            'face', 'facial', 'beauty-shot', 'beauty-shoot', 'beauty-campaign',
+            'makeup-look', 'skincare-routine', 'beauty-tips', 'beauty-trends',
+            'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign',
+            'head-and-shoulders', 'headshot', 'portrait-photo', 'portrait-shot',
+            'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article',
+            'closeup', 'headshot', 'portrait', 'beauty', 'makeup', 'skincare'
+          ]
+          
+          const isFaceShot = faceShotKeywords.some(keyword => 
+            absoluteUrl.includes(keyword) || alt.includes(keyword)
+          )
+          
+          // Exclude face shots immediately
+          if (isFaceShot) {
+            return false
+          }
+          
           const hasFashionKeyword = fashionKeywords.some(keyword => 
             absoluteUrl.includes(keyword) || alt.includes(keyword)
           )
@@ -278,6 +304,19 @@ export default async function handler(req, res) {
           
           if (isVerySmallImage) return false
           
+          // Check for face shot indicators in image dimensions/crop parameters
+          const isFaceShotCrop = absoluteUrl.includes('crop=face') ||
+                                absoluteUrl.includes('crop=center') ||
+                                absoluteUrl.includes('crop=top') ||
+                                absoluteUrl.includes('crop=1:1') ||
+                                absoluteUrl.includes('square') ||
+                                absoluteUrl.includes('portrait-crop')
+          
+          // Exclude face-focused crops
+          if (isFaceShotCrop) {
+            return false
+          }
+          
           // Be ULTRA permissive - include almost all images from Harper's Bazaar domains
           const isFromHarpersBazaar = absoluteUrl.includes('harpersbazaar') || 
                                      absoluteUrl.includes('hips.hearstapps.com') ||
@@ -288,7 +327,12 @@ export default async function handler(req, res) {
           
           // If it's from Harper's Bazaar or recognized fashion image domains, include it (ULTRA permissive)
           if (isFromHarpersBazaar) {
-            return true
+            // But still prioritize full-body shots over face shots
+            if (hasFullBodyKeyword && isLargeImage) {
+              return true // High priority for full-body fashion shots
+            }
+            // Include other fashion images but with lower priority
+            return hasFashionKeyword || alt.length > 0
           }
           
           // For other domains, check for extensive fashion keywords
