@@ -18,7 +18,7 @@ const HomePage = () => {
   const { imageShuffleSeed } = useAuth()
   
   // Convert trending API data to HomePage slider format - simplified
-  const transformTrendingDataToSliders = (trendingData) => {
+  const transformTrendingDataToSliders = (trendingData, shuffleSeed = 0) => {
     if (!trendingData || !trendingData.trending) {
       console.log('No trending data')
       return []
@@ -37,8 +37,18 @@ const HomePage = () => {
     ]
 
     categoryGroups.forEach((categoryGroup, index) => {
-      const categoryImages = categories[categoryGroup.key] || []
+      let categoryImages = categories[categoryGroup.key] || []
       console.log(`${categoryGroup.name}: ${categoryImages.length} images`)
+      
+      // APPLY SHUFFLING to each category's images based on shuffleSeed
+      const shufflingFactor = Math.floor(shuffleSeed * 100) % 100
+      categoryImages = categoryImages
+        .map((item, imgIndex) => ({ 
+          item, 
+          sortKey: (imgIndex + shufflingFactor + index * 10) * Math.random() 
+        }))
+        .sort((a, b) => a.sortKey - b.sortKey)
+        .map(vo => vo.item)
       
       // Get images for this slider (minimum 5, maximum 8)
       const sliderImages = categoryImages.slice(0, 8)
@@ -61,7 +71,7 @@ const HomePage = () => {
         })
       }
     })
-
+    
     // Fallback: If we don't have enough category-based sliders, use the trending data
     if (sliders.length < 3 && trending && trending.length > 0) {
       console.log('Using trending fallback', trending.length)
@@ -97,7 +107,15 @@ const HomePage = () => {
     }
 
     console.log('Final HomePage sliders:', sliders.length)
-    return sliders
+    
+    // Also shuffle all sliders themselves when shuffling multiple times
+    const shufflingFactor = Math.floor(shuffleSeed * 100) % 100
+    const shuffledSliders = sliders
+      .map((slider, index) => ({ slider, sortKey: (index + shufflingFactor) * Math.random() }))
+      .sort((a, b) => a.sortKey - b.sortKey)
+      .map(vo => vo.slider)
+
+    return shuffledSliders
   }
 
   // Load trending data and transform to slider format
@@ -112,7 +130,7 @@ const HomePage = () => {
         console.log('📊 Trending API Response for Homepage:', response)
         
         if (response && response.data && response.data.trending && response.data.categories) {
-          const transformedSliders = transformTrendingDataToSliders(response.data)
+          const transformedSliders = transformTrendingDataToSliders(response.data, imageShuffleSeed)
           console.log('✅ Transformed sliders:', transformedSliders)
           
           if (transformedSliders.length > 0) {
