@@ -226,7 +226,7 @@ export default async function handler(req, res) {
             return false
           }
           
-          // Look for ONLY clean fashion wear - BE RESTRICTIVE
+          // Look for fashion-related content - BALANCED approach
           const fashionKeywords = [
             // Core fashion terms
             'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
@@ -297,11 +297,12 @@ export default async function handler(req, res) {
             'museum', 'gallery', 'theater', 'theatre', 'concerthall'
           ]
           
-          // Prioritize images that suggest full-body shots
+          // Include images with broader fashion relevance
           const fullBodyKeywords = [
             'full', 'body', 'outfit', 'ensemble', 'look', 'styled',
             'wearing', 'dressed', 'fashion', 'street', 'runway',
-            'model', 'celebrity', 'person', 'woman', 'man'
+            'model', 'celebrity', 'person', 'woman', 'man', 'wear',
+            'style', 'clothes', 'clothing', 'apparel'
           ]
           
           // Face shot detection - exclude images that are clearly face-focused
@@ -475,12 +476,12 @@ export default async function handler(req, res) {
           
           // If image passes ALL exclusion tests, then check if it's from preferred domains
           if (isFromHarpersBazaar) {
-            // Only allow BODY SHOTS (not faces)
-            return hasFullBodyKeyword && hasFashionKeyword && !isFaceShot
+            // Allow fashion content but block faces
+            return (hasFashionKeyword || hasFullBodyKeyword) && !isFaceShot
           }
           
-          // For non-Harper's domains, be VERY selective
-          return hasFashionKeyword && hasFullBodyKeyword && !isFaceShot
+          // For non-Harper's domains, be selective but not excessive
+          return (hasFashionKeyword || hasFullBodyKeyword) && !isFaceShot
         }).map(img => {
           let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
                             img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
