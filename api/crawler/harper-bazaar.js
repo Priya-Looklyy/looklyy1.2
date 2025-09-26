@@ -328,7 +328,18 @@ export default async function handler(req, res) {
                                   absoluteUrl.includes('fashion-grid') ||
                                   absoluteUrl.includes('lookbook-') ||
                                   absoluteUrl.includes('moodboard') ||
-                                  (absoluteUrl.includes('grid-') && absoluteUrl.includes('jpg'))
+                                  absoluteUrl.includes('frameworks') ||
+                                  absoluteUrl.includes('overlays') ||
+                                  absoluteUrl.includes('composite') ||
+                                  absoluteUrl.includes('assembled') ||
+                                  absoluteUrl.includes('combined') ||
+                                  (absoluteUrl.includes('grid-') && absoluteUrl.includes('jpg')) ||
+                                  // URL patterns that suggest multi-content images
+                                  /-collage/.test(absoluteUrl) ||
+                                  /-montage/.test(absoluteUrl) ||
+                                  /-overview/.test(absoluteUrl) ||
+                                  /-gallery/.test(absoluteUrl) ||
+                                  /-roundup/.test(absoluteUrl)
           
           const isCollageDescription = alt.includes('collage') ||
                                       alt.includes('montage') ||
@@ -348,7 +359,6 @@ export default async function handler(req, res) {
                                       alt.includes('multiple looks') ||
                                       alt.includes('various fashion') ||
                                       alt.includes('different styles') ||
-                                      // Additional collage detection
                                       alt.includes('several images') ||
                                       alt.includes('group of') ||
                                       alt.includes('assorted') ||
@@ -373,6 +383,29 @@ export default async function handler(req, res) {
           const finalExcludeCheck = isCollagePattern || isCollageDescription || isFaceShotCrop || isFaceShot
           if (finalExcludeCheck) {
             return false // NEVER include these types regardless of domain
+          }
+          
+          // Additional visual pattern checks that might indicate collages/montages
+          // Check for image filename patterns often associated with editorial collages  
+          const rootFilename = absoluteUrl.split('/').pop() || ''
+          const looksLikeCollageFile = /\d+-panel/i.test(rootFilename) ||
+                                     /\d+-grid/i.test(rootFilename) ||
+                                     /collage/i.test(rootFilename) ||
+                                     /montage/i.test(rootFilename) ||
+                                     /roundup/i.test(rootFilename) ||
+                                     /editorial/i.test(rootFilename) && (rootFilename.includes('table') || rootFilename.includes('slideshow'))
+          
+          if (looksLikeCollageFile) {
+            return false
+          }
+          
+          // Strict exclusion for overlapping layout images- block if image has been used for complex editorials
+          // Very conservative safety to block collage images by design and layout context
+          const hasDocumentaryStyleContent = alt.includes('display') || alt.includes('layout') || alt.includes('arrangement') ||
+                                            alt.includes('showcase') || alt.includes('arranging')
+          
+          if (hasDocumentaryStyleContent) {
+            return false
           }
           
           // If it's from Harper's Bazaar or recognized fashion image domains, include it (ULTRA permissive)
