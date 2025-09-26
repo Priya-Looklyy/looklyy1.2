@@ -49,7 +49,15 @@ export default async function handler(req, res) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' })
     }
 
-    return res.status(200).json({ success: true, user: { id: user.id, name: user.name, email: user.email } })
+    // Generate a simple session token (for simplicity)
+    const sessionToken = crypto.randomBytes(16).toString('hex')
+    const token = `token_${Date.now()}_${sessionToken}`
+    
+    return res.status(200).json({ 
+      success: true, 
+      token: token,
+      user: { id: user.id, name: user.name, email: user.email } 
+    })
   } catch (error) {
     console.error('Login error:', error)
     res.status(500).json({ success: false, error: 'Server error' })

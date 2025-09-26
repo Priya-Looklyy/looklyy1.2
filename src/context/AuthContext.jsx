@@ -19,25 +19,25 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null)
   const [imageShuffleSeed, setImageShuffleSeed] = useState(generateShuffleSeed())
 
-    // Check authentication on mount/app refresh
-    useEffect(() => {
+  // Check authentication on mount/app refresh
+  useEffect(() => {
     const checkAuthStatus = async () => {
       const token = getToken()
-      if (token) {
-        // If token exists, try to validate it
-        try {
-          // For simplicity, assume token is valid since we don't have token validation endpoint
-          // In a real app, you'd validate with the backend
-          setIsAuthenticated(true)
-          setUser({ name: 'User', email: 'user@looklyy.com' }) // Mock user data
-        } catch (err) {
-          // Token invalid, clear storage
-          localStorage.removeItem('looklyy_token')
-          setIsAuthenticated(false)
-          setUser(null)
-        }
+      console.log('🔍 Check auth on refresh - token exists:', !!token)
+      
+      if (token && token.trim() !== '') {
+        // If token exists, assume the user is authenticated and keep them on the app
+        setIsAuthenticated(true)
+        setUser({ name: 'User', email: 'user@looklyy.com' }) // Mock user data for now
+        setIsLoading(false)
+        console.log('✅ User authenticated from stored token on refresh')
+      } else {
+        // No token, so user needs to login
+        setIsAuthenticated(false)
+        setUser(null)
+        setIsLoading(false)
+        console.log('❌ No auth token - showing login page')
       }
-      setIsLoading(false)
     }
     
     checkAuthStatus()
@@ -80,6 +80,9 @@ export function AuthProvider({ children }) {
         setImageShuffleSeed(generateShuffleSeed()) // BACK TO: Reshuffle images on login
         if (response.token) {
           storeToken(response.token)
+          console.log('🔄 Storing auth token:', response.token)
+        } else {
+          console.warn('⚠️ No token returned from login API')
         }
         return { success: true }
       } else {
