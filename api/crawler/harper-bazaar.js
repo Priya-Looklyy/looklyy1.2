@@ -31,41 +31,68 @@ export default async function handler(req, res) {
       })
     }
 
-    // URLs to crawl with category mapping - High-Quality Fashion Articles with Full-Size Images
+    // URLs to crawl with category mapping - EXPANDED Harper's Bazaar Coverage for Maximum Content
     const urlsToCrawl = [
       // SPECIFIC HIGH-QUALITY ARTICLES - Full-size fashion images
       { url: 'https://www.harpersbazaar.com/fashion/trends/a65837104/wide-leg-jeans-outfit-ideas/', category: 'street-style', subcategory: 'outfit-ideas', trendScore: 0.99 },
       
-      // RUNWAY - Core Runway URLs
+      // CELEBRITY STYLE - COMPREHENSIVE Coverage
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/', category: 'celebrity-style', subcategory: 'general', trendScore: 0.98 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/red-carpet/', category: 'celebrity-style', subcategory: 'red-carpet', trendScore: 0.97 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/met-gala/', category: 'celebrity-style', subcategory: 'met-gala', trendScore: 0.96 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/oscars/', category: 'celebrity-style', subcategory: 'oscars', trendScore: 0.95 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/golden-globes/', category: 'celebrity-style', subcategory: 'golden-globes', trendScore: 0.94 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/cannes/', category: 'celebrity-style', subcategory: 'cannes', trendScore: 0.93 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/emmys/', category: 'celebrity-style', subcategory: 'emmys', trendScore: 0.92 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/grahams/', category: 'celebrity-style', subcategory: 'grahams', trendScore: 0.91 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/street-style/', category: 'celebrity-style', subcategory: 'street-style', trendScore: 0.90 },
+      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/off-duty/', category: 'celebrity-style', subcategory: 'off-duty', trendScore: 0.89 },
+      
+      // RUNWAY - COMPREHENSIVE Runway Coverage
       { url: 'https://www.harpersbazaar.com/fashion/runway/', category: 'runway', subcategory: 'general', trendScore: 0.98 },
       { url: 'https://www.harpersbazaar.com/fashion/runway/spring-2025/', category: 'runway', subcategory: 'spring-2025', trendScore: 0.99 },
       { url: 'https://www.harpersbazaar.com/fashion/runway/fall-2024/', category: 'runway', subcategory: 'fall-2024', trendScore: 0.97 },
       { url: 'https://www.harpersbazaar.com/fashion/runway/paris-fashion-week/', category: 'runway', subcategory: 'paris-fw', trendScore: 0.96 },
       { url: 'https://www.harpersbazaar.com/fashion/runway/new-york-fashion-week/', category: 'runway', subcategory: 'nyfw', trendScore: 0.95 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/milan-fashion-week/', category: 'runway', subcategory: 'milan-fw', trendScore: 0.94 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/london-fashion-week/', category: 'runway', subcategory: 'lfw', trendScore: 0.93 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/couture/', category: 'runway', subcategory: 'couture', trendScore: 0.92 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/ready-to-wear/', category: 'runway', subcategory: 'rtw', trendScore: 0.91 },
+      { url: 'https://www.harpersbazaar.com/fashion/runway/cruise/', category: 'runway', subcategory: 'cruise', trendScore: 0.90 },
       
-      // CELEBRITY STYLE - Core Celebrity URLs
-      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/', category: 'celebrity-style', subcategory: 'general', trendScore: 0.98 },
-      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/red-carpet/', category: 'celebrity-style', subcategory: 'red-carpet', trendScore: 0.97 },
-      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/met-gala/', category: 'celebrity-style', subcategory: 'met-gala', trendScore: 0.96 },
-      { url: 'https://www.harpersbazaar.com/fashion/celebrity-style/oscars/', category: 'celebrity-style', subcategory: 'oscars', trendScore: 0.95 },
-      
-      // DESIGNERS - Core Designer URLs
+      // DESIGNERS - COMPREHENSIVE Designer Coverage
       { url: 'https://www.harpersbazaar.com/fashion/designers/', category: 'designers', subcategory: 'general', trendScore: 0.98 },
       { url: 'https://www.harpersbazaar.com/fashion/designers/spring-2025/', category: 'designers', subcategory: 'spring-2025', trendScore: 0.97 },
-      { url: 'https://www.harpersbazaar.com/fashion/designers/chanel/', category: 'designers', subcategory: 'chanel', trendScore: 0.96 },
-      { url: 'https://www.harpersbazaar.com/fashion/designers/dior/', category: 'designers', subcategory: 'dior', trendScore: 0.95 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/fall-2024/', category: 'designers', subcategory: 'fall-2024', trendScore: 0.96 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/chanel/', category: 'designers', subcategory: 'chanel', trendScore: 0.95 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/dior/', category: 'designers', subcategory: 'dior', trendScore: 0.94 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/gucci/', category: 'designers', subcategory: 'gucci', trendScore: 0.93 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/louis-vuitton/', category: 'designers', subcategory: 'louis-vuitton', trendScore: 0.92 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/balenciaga/', category: 'designers', subcategory: 'balenciaga', trendScore: 0.91 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/prada/', category: 'designers', subcategory: 'prada', trendScore: 0.90 },
+      { url: 'https://www.harpersbazaar.com/fashion/designers/versace/', category: 'designers', subcategory: 'versace', trendScore: 0.89 },
       
-      // TRENDS - Core Trend URLs with Street Style
+      // TRENDS - COMPREHENSIVE Trend Coverage
       { url: 'https://www.harpersbazaar.com/fashion/trends/', category: 'trends', subcategory: 'general', trendScore: 0.95 },
       { url: 'https://www.harpersbazaar.com/fashion/trends/fall-2024/', category: 'trends', subcategory: 'fall-2024', trendScore: 0.94 },
-      { url: 'https://www.harpersbazaar.com/fashion/trends/street-style/', category: 'trends', subcategory: 'street-style', trendScore: 0.93 },
-      { url: 'https://www.harpersbazaar.com/fashion/', category: 'trends', subcategory: 'general', trendScore: 0.90 },
+      { url: 'https://www.harpersbazaar.com/fashion/trends/spring-2025/', category: 'trends', subcategory: 'spring-2025', trendScore: 0.93 },
+      { url: 'https://www.harpersbazaar.com/fashion/trends/street-style/', category: 'trends', subcategory: 'street-style', trendScore: 0.92 },
+      { url: 'https://www.harpersbazaar.com/fashion/trends/color-trends/', category: 'trends', subcategory: 'color-trends', trendScore: 0.91 },
+      { url: 'https://www.harpersbazaar.com/fashion/trends/accessories/', category: 'trends', subcategory: 'accessories', trendScore: 0.90 },
+      { url: 'https://www.harpersbazaar.com/fashion/trends/denim/', category: 'trends', subcategory: 'denim', trendScore: 0.89 },
+      { url: 'https://www.harpersbazaar.com/fashion/', category: 'trends', subcategory: 'general', trendScore: 0.88 },
       
-      // STREET STYLE - Core Street Style URLs
+      // STREET STYLE - COMPREHENSIVE Street Style Coverage
       { url: 'https://www.harpersbazaar.com/fashion/street-style/', category: 'street-style', subcategory: 'general', trendScore: 0.90 },
       { url: 'https://www.harpersbazaar.com/fashion/street-style/paris-fashion-week/', category: 'street-style', subcategory: 'paris-fw', trendScore: 0.89 },
       { url: 'https://www.harpersbazaar.com/fashion/street-style/new-york-fashion-week/', category: 'street-style', subcategory: 'nyfw', trendScore: 0.88 },
-      { url: 'https://www.harpersbazaar.com/fashion/street-style/milan-fashion-week/', category: 'street-style', subcategory: 'milan-fw', trendScore: 0.87 }
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/milan-fashion-week/', category: 'street-style', subcategory: 'milan-fw', trendScore: 0.87 },
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/london-fashion-week/', category: 'street-style', subcategory: 'lfw', trendScore: 0.86 },
+      { url: 'https://www.harpersbazaar.com/fashion/street-style/daily/', category: 'street-style', subcategory: 'daily', trendScore: 0.85 },
+      
+      // BEAUTY & LIFESTYLE - Additional Content Areas
+      { url: 'https://www.harpersbazaar.com/beauty/', category: 'celebrity-style', subcategory: 'beauty', trendScore: 0.84 },
+      { url: 'https://www.harpersbazaar.com/culture/', category: 'celebrity-style', subcategory: 'culture', trendScore: 0.83 }
     ]
     
     let totalImages = 0
@@ -151,8 +178,9 @@ export default async function handler(req, res) {
             return false
           }
           
-          // Look for fashion-related keywords - be more inclusive for article images
+          // Look for fashion-related keywords - MASSIVELY EXPANDED for maximum content capture
           const fashionKeywords = [
+            // Core fashion terms
             'fashion', 'style', 'runway', 'trend', 'look', 'outfit',
             'model', 'celebrity', 'street', 'designer', 'collection',
             'show', 'photo', 'image', 'editorial', 'shoot',
@@ -163,7 +191,62 @@ export default async function handler(req, res) {
             'jacket', 'shirt', 'pants', 'shoes', 'bag', 'accessory',
             'hair', 'makeup', 'jewelry', 'watch', 'sunglasses',
             'jeans', 'coat', 'blazer', 'trench', 'boots', 'heels',
-            'outfit-ideas', 'street-style', 'getty', 'edward-berthelot'
+            'outfit-ideas', 'street-style', 'getty', 'edward-berthelot',
+            
+            // Celebrity & Event terms
+            'celebrity', 'actress', 'actor', 'star', 'famous', 'celebrity-style',
+            'red-carpet', 'met-gala', 'oscars', 'golden-globes', 'cannes',
+            'emmys', 'grahams', 'awards', 'ceremony', 'event', 'gala',
+            'premiere', 'launch', 'party', 'after-party', 'afterparty',
+            'movie', 'film', 'premiere', 'screening', 'festival',
+            'instagram', 'social', 'media', 'influencer', 'blogger',
+            
+            // Fashion specific terms
+            'couture', 'ready-to-wear', 'rtw', 'cruise', 'pre-fall',
+            'spring', 'fall', 'summer', 'winter', 'seasonal',
+            'paris', 'milan', 'london', 'new-york', 'nyfw', 'pfw', 'mfw', 'lfw',
+            'designer', 'brand', 'luxury', 'haute', 'pret-a-porter',
+            'dress', 'gown', 'evening-wear', 'cocktail', 'formal',
+            'casual', 'smart-casual', 'business', 'formal', 'semi-formal',
+            'suit', 'tuxedo', 'tux', 'blazer', 'sport-coat',
+            
+            // Style types  
+            'bohemian', 'minimalist', 'vintage', 'retro', 'classic',
+            'edgy', 'romantic', 'preppy', 'chic', 'sophisticated',
+            'tomboy', 'feminine', 'masculine', 'androgynous', 'neutral',
+            'colorful', 'monochrome', 'maximalist', 'scandinavian',
+            
+            // Specific clothing items
+            'dress', 'skirt', 'pants', 'leggings', 'jeans', 'shorts',
+            'shirt', 'blouse', 'tank', 'tee', 't-shirt', 'button-down',
+            'sweater', 'cardigan', 'pullover', 'hoodie', 'sweatshirt',
+            'coat', 'jacket', 'blazer', 'trench', 'parka', 'bomber',
+            'shoes', 'boots', 'heels', 'sneakers', 'flats', 'sandals',
+            'handbag', 'purse', 'clutch', 'tote', 'crossbody', 'backpack',
+            
+            // Colors & patterns
+            'black', 'white', 'neutral', 'colorful', 'bold', 'bright',
+            'earth-tone', 'pastel', 'vibrant', 'rich', 'deep',
+            'print', 'pattern', 'striped', 'polka-dot', 'floral',
+            'plaid', 'checkered', 'polka', 'leopard', 'animal-print',
+            
+            // Photography & Image terms
+            'portrait', 'headshot', 'full-length', 'full-body', 'close-up',
+            'getty', 'rex', 'shutterstock', 'unsplash', 'freepik',
+            'edward-berthelot', 'christian-vierig', 'raimonda',
+            'street-style', 'backstage', 'behind-scenes', 'candid',
+            'posing', 'walking', 'sitting', 'standing', 'movement',
+            
+            // Brand & Designer names (common ones)
+            'chanel', 'dior', 'gucci', 'louis-vuitton', 'hermes',
+            'prada', 'versace', 'balenciaga', 'marc-jacobs', 'yves-saint-laurent',
+            'valentino', 'dolce-gabbana', 'givenchy', 'alexander-mcqueen',
+            'stella-mccartney', 'zac-posen', 'oscar-de-la-renta',
+            
+            // Location & Event terms
+            'manhattan', 'beverly-hills', 'hamptons', 'tribeca',
+            'studio', 'set', 'location', 'venue', 'hotel', 'restaurant',
+            'museum', 'gallery', 'theater', 'theatre', 'concerthall'
           ]
           
           // Prioritize images that suggest full-body shots
@@ -195,18 +278,21 @@ export default async function handler(req, res) {
           
           if (isVerySmallImage) return false
           
-          // Be very permissive - include almost all images from Harper's Bazaar
+          // Be ULTRA permissive - include almost all images from Harper's Bazaar domains
           const isFromHarpersBazaar = absoluteUrl.includes('harpersbazaar') || 
                                      absoluteUrl.includes('hips.hearstapps.com') ||
-                                     absoluteUrl.includes('hearstapps.com')
+                                     absoluteUrl.includes('hearstapps.com') ||
+                                     absoluteUrl.includes('getty') ||
+                                     absoluteUrl.includes('rex') ||
+                                     absoluteUrl.includes('shutterstock')
           
-          // If it's from Harper's Bazaar domains, include it (very permissive)
+          // If it's from Harper's Bazaar or recognized fashion image domains, include it (ULTRA permissive)
           if (isFromHarpersBazaar) {
             return true
           }
           
-          // For other domains, check for fashion keywords
-          return hasFashionKeyword
+          // For other domains, check for extensive fashion keywords
+          return hasFashionKeyword || alt.length > 0 // Also include images with any alt text
         }).map(img => {
           let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
                             img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
