@@ -242,15 +242,14 @@ export default async function handler(req, res) {
     // Store images in Supabase - FLOOD WITH CONTENT for amazing user experience
     for (const image of uniqueImages.slice(0, 500)) { // Store up to 500 images
       try {
+        // REVERT TO BASIC INSERT FORMAT (what was working)
         const { data, error } = await supabase
           .from('fashion_images_new')
           .insert([{
             original_url: image.src,
             title: `Harper's Bazaar ${image.category.charAt(0).toUpperCase() + image.category.slice(1)} Look ${storedImages + 1}`,
             description: image.alt || `Latest ${image.category} trend from Harper's Bazaar`,
-            category: image.category,
-            needs_training: true, // Mark as needing training feedback
-            training_status: 'pending'
+            category: image.category
           }])
         
         if (!error && data) {
