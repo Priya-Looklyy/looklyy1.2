@@ -167,26 +167,23 @@ export default async function handler(req, res) {
             'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
             'facebook', 'twitter', 'instagram', 'pinterest', 'youtube',
             
-            // ULTRA-AGGRESSIVE face filtering - block all face-related content
-            'beauty', 'makeup', 'skincare', 'portrait', 'headshot', 'close-up', 'closeup',
-            'face', 'facial', 'beauty-shot', 'beauty-shoot', 'beauty-campaign',
+            // TARGETED face filtering - block only clearest face shots
+            'beauty-shot', 'beauty-shoot', 'beauty-campaign',
             'makeup-look', 'skincare-routine', 'beauty-tips', 'beauty-trends',
             'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign', 'beauty-image',
             'head-and-shoulders', 'headshot', 'portrait-photo', 'portrait-shot',
             'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article',
             'model-face', 'celebrity-face', 'star-face', 'cropped-face', 'face-crop',
             'facial-beauty', 'selfie', 'mugshot', 'beauty-photo', 'makeup-model',
-            'red-carpet-model', 'closeup-model', 'facial-shot', 'beauty-closeup',
-            'closeup', 'upper-body', 'head-and', 'model-portrait', 'face-shape',
-            'cheek', 'lip', 'eye', 'hair', 'blush', 'foundation', 'beauty-product',
-            'facial-exercise', 'face-mask', 'skincare-shelf', 'beauty-fluids',
+            'closeup-model', 'facial-shot', 'beauty-closeup',
+            'closeup', 'model-portrait', 'face-shape',
+            'facial-exercise', 'face-mask', 'skincare-shelf',
             
-            // Collage, montage, poster content - BLOCK ALL
-            'collage', 'montage', 'grid', 'compilation', 'collection', 'mosaic',
-            'gallery', 'gallery-grid', 'photo-grid', 'image-grid', 'image-collage',
-            'multi-image', 'image-collection', 'fashion-collage', 'style-collage',
+            // ONLY SPECIFIC collage, montage content - Allow fashion collections
+            'collage', 'montage', 'grid', 'compilation', 'mosaic',
+            'gallery-grid', 'photo-grid', 'image-grid', 'image-collage',
+            'fashion-collage', 'style-collage',
             'lookbook-collection', 'mood-board', 'moodboard', 'inspiration-board',
-            'product-showcase', 'brand-showcase', 'trend-roundup', 'style-guide',
             'fashion-compilation', 'style-compilation', 'trend-compilation',
             
             // MOVIE POSTER & BRAND CAMPAIGNS - BLOCK STRICTLY
@@ -197,8 +194,7 @@ export default async function handler(req, res) {
             'brand-artwork', 'creative-director', 'artwork', 'creative-campaign',
             'music-video', 'video-stills', 'album-cover', 'artistic-portrait',
             'artwork-gallery', 'creative-shoot', 'fashion-social', 'brand-content',
-            'cinematic', 'stills', 'scene', 'director', 'photoshoot', 'cover-image',
-            'showcase', 'highlight', 'feature', 'spread', 'layout', 'editorial',
+            'cinematic', 'stills', 'scene', 'director', 'cover-image',
             'stage', 'performance', 'music', 'album', 'record', 'single',
             'campaign-image', 'advertisement', 'brand-print', 'commercial-header'
           ]
@@ -212,18 +208,13 @@ export default async function handler(req, res) {
             return false
           }
           
-          // BLOCK ALL cinema/poster/campaign content - STRICTER CHECK
+          // BLOCK ONLY CLEAR cinema/poster content - SPECIFIC CHECK
           const urlName = absoluteUrl.slice(absoluteUrl.lastIndexOf('/') + 1).toLowerCase()
-          const isCinemaContent = alt.includes('heaven') || alt.includes('marc jacobs') ||
-                                alt.includes('brand') || alt.includes('campaign') ||
-                                alt.includes('poster') || alt.includes('cover') ||
-                                alt.includes('layout') || alt.includes('artwork') ||
-                                alt.includes('marc') || alt.includes('heaven') ||
-                                alt.includes('gabbriette') || alt.includes('iris-law') ||
-                                urlName.includes('poster') || urlName.includes('campaign') ||
-                                urlName.includes('brand') || urlName.includes('movie') ||
-                                urlName.includes('heaven') || urlName.includes('marc') ||
-                                urlName.includes('layout') || urlName.includes('artwork')
+          const isCinemaContent = alt.includes('heaven') && alt.includes('marc-jacobs') ||
+                                (alt.includes('movie') || alt.includes('cinema') || alt.includes('film')) &&
+                                (alt.includes('poster') || alt.includes('cover')) ||
+                                urlName.includes('poster') && urlName.includes('movie') ||
+                                urlName.includes('heaven') && urlName.includes('campaign')
                                 
           if (isCinemaContent) {
             return false
