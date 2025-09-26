@@ -8,28 +8,6 @@ const TrendingCard = ({ card }) => {
     setImageLoaded(true)
   }
 
-  // Format category name for display with high-fashion precision
-  const formatCategoryName = (category) => {
-    if (!category) return 'trends'
-    
-    // Handle specific category formatting for better readability
-    let formatted = category
-      .replace(/-/g, ' ')
-      .replace(/_/g, ' ')
-    
-    // Fix "street-style" specifically
-    if (category.toLowerCase().includes('street')) {
-      return 'STREET STYLE'
-    }
-    
-    return formatted
-      .replace(/\b\w/g, l => l.toUpperCase())
-      .split(' ')
-      .slice(0, 2) // Limit to maximum 2 words for clean display
-      .join(' ')
-      .trim()
-  }
-
   return (
     <div className="trending-card">
       <div className="card-image-container">
@@ -42,12 +20,7 @@ const TrendingCard = ({ card }) => {
           className="card-image"
         />
         
-        {/* High Fashion Category Overlay - Minimalist, Precise */}
-        <div className="category-overlay">
-          <span className="category-label">
-            {formatCategoryName(card.category)}
-          </span>
-        </div>
+        {/* No category overlays - Clean image display only */}
       </div>
     </div>
   )
