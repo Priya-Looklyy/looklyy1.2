@@ -7,6 +7,7 @@ import LooklyySuggests from './components/LooklyySuggests'
 import Closet from './components/Closet'
 import AuthFlow from './components/AuthFlow'
 import Admin from './pages/Admin'
+import Training from './pages/Training'
 import { LookProvider } from './context/LookContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import './App.css'
@@ -75,11 +76,17 @@ function AppContent() {
     return <LoadingScreen />
   }
 
-  // Check for admin route
-  const isAdminRoute = window.location.pathname === '/admin'
+  // Check for special routes
+  const currentPath = window.location.pathname
+  const isAdminRoute = currentPath === '/admin'
+  const isTrainingRoute = currentPath === '/training'
 
   if (isAdminRoute) {
     return <Admin />
+  }
+
+  if (isTrainingRoute) {
+    return <Training />
   }
 
   return isAuthenticated ? <ProtectedApp /> : <AuthFlow />

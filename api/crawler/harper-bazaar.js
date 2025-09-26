@@ -576,7 +576,9 @@ export default async function handler(req, res) {
             original_url: image.src,
             title: `Harper's Bazaar ${image.category.charAt(0).toUpperCase() + image.category.slice(1)} Look ${storedImages + 1}`,
             description: image.alt || `Latest ${image.category} trend from Harper's Bazaar`,
-            category: image.category
+            category: image.category,
+            needs_training: true, // Mark as needing training feedback
+            training_status: 'pending'
           }])
         
         if (!error) {
