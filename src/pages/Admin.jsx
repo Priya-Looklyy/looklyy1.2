@@ -68,7 +68,7 @@ const Admin = () => {
       const result = await response.json()
       
       if (result.success) {
-        setMessage(`✅ Crawl completed: ${result.results.images_found} images found, ${result.results.images_stored} stored`)
+        setMessage(`✅ Crawl completed: ${result.results.total_images_found} images found, ${result.results.images_stored} stored`)
         fetchCrawlData() // Refresh data
       } else {
         setMessage(`❌ Crawl failed: ${result.error}`)
