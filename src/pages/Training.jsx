@@ -34,26 +34,30 @@ const Training = () => {
     try {
       setIsLoading(true)
       
-      // First try to find images that need training
+      // Try different approaches to load images for training
       let { data: images, error } = await supabase
         .from('fashion_images_new')
         .select('*')
-        .or('needs_training.is.true,training_status.is.null,training_status.eq.pending')
-        .order('created_at', { ascending: false })
+        .order('id', { ascending: false })
         .limit(20)
 
-      // If no training images found, try any recent images as backup
-      if ((!images || images.length === 0) && !error) {
-        console.log('No training-specific images found, fetching recent images...')
-        const recentResponse = await supabase
-          .from('fashion_images_new')
-          .select('*')
-          .order('id', { ascending: false })
-          .limit(10)
+      if (!error && images && images.length === 0) {
+        console.log('No images found in fashion_images_new table')
+      } else if (error) {
+        console.log('Error fetching images:', error)
         
-        if (!recentResponse.error && recentResponse.data) {
-          images = recentResponse.data
-          console.log(`Found ${images.length} recent images for training`)
+        // Try alternative approach if needed
+        try {
+          const testQuery = await supabase
+            .from('fashion_images_new')
+            .select('count')
+            .limit(0)
+            
+          if (testQuery.error) {
+            console.error('Database query error:', testQuery.error)
+          }
+        } catch (err) {
+          console.error('Database connection test failed:', err)
         }
       }
 
