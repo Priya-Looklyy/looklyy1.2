@@ -11,12 +11,21 @@ const TrendingCard = ({ card }) => {
   // Format category name for display with high-fashion precision
   const formatCategoryName = (category) => {
     if (!category) return 'trends'
-    return category
+    
+    // Handle specific category formatting for better readability
+    let formatted = category
       .replace(/-/g, ' ')
       .replace(/_/g, ' ')
+    
+    // Fix "street-style" specifically
+    if (category.toLowerCase().includes('street')) {
+      return 'STREET STYLE'
+    }
+    
+    return formatted
       .replace(/\b\w/g, l => l.toUpperCase())
       .split(' ')
-      .slice(0, 2) // Limit to 2 words for clean display
+      .slice(0, 2) // Limit to maximum 2 words for clean display
       .join(' ')
       .trim()
   }

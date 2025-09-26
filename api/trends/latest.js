@@ -28,14 +28,18 @@ export default async function handler(req, res) {
           .from('fashion_images_new')
           .select('*')
           .order('id', { ascending: false }) // Order by id (newest first)
-          .limit(100)
+          .limit(300) // Increased from 100 to 300 to get more images
+        
+        // Remove duplicates from database results (same original_url)
+        const uniqueResults = realData ? [...new Set(realData.map(item => item.original_url))]
+          .map(url => realData.find(item => item.original_url === url)) : []
 
-        if (!error && realData && realData.length > 0) {
-          console.log(`Found ${realData.length} real crawled images`)
+        if (!error && uniqueResults && uniqueResults.length > 0) {
+          console.log(`Found ${uniqueResults.length} unique crawled images (${realData ? realData.length : 0} total)`)
           
           // Organize data by categories
           const categorizedData = {
-            trending: [], // Top 10 most trending
+            trending: [], // Top 20 most trending
             trends: [],
             runway: [],
             'street-style': [],
@@ -44,7 +48,7 @@ export default async function handler(req, res) {
           }
           
           // Sort by trend score and categorize
-          realData.forEach((item, index) => {
+          uniqueResults.forEach((item, index) => {
             const transformedItem = {
               id: `hb-real-${item.id}`,
               title: item.title || `Harper's Bazaar Fashion Look ${index + 1}`,
@@ -78,13 +82,13 @@ export default async function handler(req, res) {
           
           // Return organized data
           trendingLooks = {
-            trending: categorizedData.trending.slice(0, 10), // Top 10 trending
+            trending: categorizedData.trending.slice(0, 20), // Top 20 trending
             categories: {
-              trends: categorizedData.trends.slice(0, 15),
-              runway: categorizedData.runway.slice(0, 15),
-              'street-style': categorizedData['street-style'].slice(0, 15),
-              'celebrity-style': categorizedData['celebrity-style'].slice(0, 15),
-              designers: categorizedData.designers.slice(0, 15)
+              trends: categorizedData.trends.slice(0, 30),
+              runway: categorizedData.runway.slice(0, 30),
+              'street-style': categorizedData['street-style'].slice(0, 30),
+              'celebrity-style': categorizedData['celebrity-style'].slice(0, 30),
+              designers: categorizedData.designers.slice(0, 30)
             }
           }
         }
