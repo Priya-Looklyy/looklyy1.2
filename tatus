@@ -1,0 +1,5 @@
+[33m0ecf0b0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix: Page refresh now correctly preserves authentication with token-based persistence
+[33m07d84b0[m feat: Update heart and pin icons with Instagram-style circle design matching reference
+[33m2cd3e72[m fix: Improve UX with authentication persistence on refresh, Instagram-style icons, heart ranking for trending page title case tagline
+[33m30e835a[m fix: Add proper homepage shuffle logic so images change order on every login
+[33mdec02ed[m fix: Restore automatic image refresh/shuffle functionality on every login

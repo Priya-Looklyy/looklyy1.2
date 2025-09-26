@@ -166,13 +166,18 @@ export default async function handler(req, res) {
             'nav', 'sidebar', 'menu', 'search', 'arrow', 'play',
             'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
             'facebook', 'twitter', 'instagram', 'pinterest', 'youtube',
-            // Face shots and beauty portraits - avoid close-ups
-            'beauty', 'makeup', 'skincare', 'portrait', 'headshot', 'close-up',
+            // AGGRESSIVE face filtering - Block ALL face shots  
+            'beauty', 'makeup', 'skincare', 'portrait', 'headshot', 'close-up', 'closeup',
             'face', 'facial', 'beauty-shot', 'beauty-shoot', 'beauty-campaign',
             'makeup-look', 'skincare-routine', 'beauty-tips', 'beauty-trends',
             'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign',
             'head-and-shoulders', 'headshot', 'portrait-photo', 'portrait-shot',
             'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article',
+            // ADD EXTRA aggressive face blocking
+            'model-face', 'celebrity-face', 'star-face', 'cropped-face', 'face-crop',
+            'facial-beauty', 'selfie', 'mugshot', 'beauty-photo', 'makeup-model',
+            'red-carpet-model', 'closeup-model', 'facial-shot', 'beauty-closeup',
+            'closeup', 'upper-body', 'head-and', 'model-portrait',
             // Collage and montage images - avoid multi-image compilations
             'collage', 'montage', 'grid', 'compilation', 'collection', 'mosaic',
             'gallery', 'gallery-grid', 'photo-grid', 'image-grid', 'image-collage',

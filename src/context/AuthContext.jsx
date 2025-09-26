@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
       const token = getToken()
       console.log('🔍 Check auth on refresh - token exists:', !!token)
       
-      if (token && token.trim() !== '') {
+      if (token && token.trim() !== '' && token !== 'null' && token !== 'undefined') {
         // If token exists, assume the user is authenticated and keep them on the app
         setIsAuthenticated(true)
         setUser({ name: 'User', email: 'user@looklyy.com' }) // Mock user data for now
