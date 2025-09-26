@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import TrendingCard from './TrendingCard'
 import trendingAPI from '../services/trendingAPI'
 import { useAuth } from '../context/AuthContext'
+import { useLook } from '../context/LookContext'
 import './TrendingSection.css'
 
 const TrendingSection = () => {
   const { imageShuffleSeed } = useAuth()
+  const { favorites, isFavorited } = useLook() // Add favorites for hearting ranking
   const [categorizedData, setCategorizedData] = useState({
     trending: [],
     categories: {
@@ -130,16 +132,28 @@ const TrendingSection = () => {
     return rows
   }
 
-  // Shuffle images whenever categorisedData or shuffle seed changes
+  // Shuffle images whenever categorisedData or shuffle seed changes and rank hearted items higher
   useEffect(() => {
     const allImages = [...categorizedData.trending, ...Object.values(categorizedData.categories).flat()]
     const shufflingFactor = Math.floor(imageShuffleSeed * 100) % 100
-    const shuffledImages = allImages
-      .map((card, index) => ({ card, sortKey: (index + shufflingFactor) * Math.random() }))
-      .sort((a, b) => a.sortKey - b.sortKey)
+    
+    // Sort first by favorited status, then by shuffle
+    const prioritizedImages = allImages
+      .map((card, index) => ({
+        card, 
+        isFavorited: isFavorited(card.id),
+        sortKey: (index + shufflingFactor) * Math.random()
+      }))
+      .sort((a, b) => {
+        // Prioritize favorited items at top
+        if (a.isFavorited && !b.isFavorited) return -1
+        if (!a.isFavorited && b.isFavorited) return 1
+        // Within same group, use shuffle you can get the favorite item at top by shuffling
+        return a.sortKey - b.sortKey
+      })
       .map(item => item.card)
-    setShuffledData(shuffledImages)
-  }, [categorizedData, imageShuffleSeed]) // RESTORE: Shuffle images on login
+    setShuffledData(prioritizedImages)
+  }, [categorizedData, imageShuffleSeed, favorites]) // Include favorites for dependency
 
   // Helper function to format category names
   const formatCategoryName = (category) => {

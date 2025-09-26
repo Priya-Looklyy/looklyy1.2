@@ -102,19 +102,35 @@
   outline-offset: 2px;
 }
 
-.action-btn i {
+.action-btn i,
+.action-btn svg {
   font-size: 0.6rem;
-  color: #2d1b4e;
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.9);
   transition: all 0.3s ease;
 }
 
-.heart-btn.active i {
-  color: #db2777;
+.heart-icon {
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 2;
+}
+
+.heart-btn.active svg {
+  color: #db2777 !important;
+  fill: #db2777;
+  stroke: #db2777 !important;
   animation: heartBeat 0.6s ease;
 }
 
-.heart-btn.active i::before {
-  content: "\f004";
+.heart-btn:hover svg {
+  color: rgba(255, 255, 255, 0.95);
+  scale: 1.05;
+}
+
+.pin-icon {
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 2;
 }
 
 .pin-btn.active {
@@ -122,8 +138,15 @@
   animation: pinRotate 0.6s ease;
 }
 
-.pin-btn.active i {
-  color: white;
+.pin-btn.active svg {
+  color: white !important;
+  fill: #9333ea;
+  stroke: white !important;
+}
+
+.pin-btn:hover svg {
+  color: rgba(255, 255, 255, 0.95);
+  scale: 1.05;
 }
 
 @keyframes heartBeat {
