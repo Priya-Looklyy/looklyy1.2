@@ -104,49 +104,73 @@
 
 .action-btn i,
 .action-btn svg {
-  font-size: 0.6rem;
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
   color: rgba(255, 255, 255, 0.9);
   transition: all 0.3s ease;
 }
 
-.heart-icon {
-  stroke: rgba(255, 255, 255, 0.9);
-  stroke-width: 2;
+/* Circle background styles */
+.action-btn svg circle.circle-bg {
+  fill: transparent;
 }
 
-.heart-btn.active svg {
-  color: #db2777 !important;
-  fill: #db2777;
-  stroke: #db2777 !important;
+.action-btn svg [class$="-shape"] {
+  fill: transparent;
+}
+
+/* Heart icon styling */
+.heart-icon circle.circle-bg {
+  fill: rgba(0, 0, 0, 0.7);
+}
+
+.heart-icon .heart-shape {
+  fill: #ffffff;
+}
+
+.heart-btn:hover svg circle.circle-bg {
+  fill: rgba(0, 0, 0, 0.8);
+}
+
+.heart-btn:hover svg .heart-shape {
+  fill: #ffffff;
+  transform: scale(1.05);
+}
+
+.heart-btn.active svg circle.circle-bg {
+  fill: rgba(219, 39, 119, 0.9);
   animation: heartBeat 0.6s ease;
 }
 
-.heart-btn:hover svg {
-  color: rgba(255, 255, 255, 0.95);
-  scale: 1.05;
+.heart-btn.active svg .heart-shape {
+  fill: #ffffff !important;
 }
 
-.pin-icon {
-  stroke: rgba(255, 255, 255, 0.9);
-  stroke-width: 2;
+/* Pin icon styling */
+.pin-icon circle.circle-bg {
+  fill: rgba(0, 0, 0, 0.7);
 }
 
-.pin-btn.active {
-  background: rgba(147, 51, 234, 0.9);
+.pin-icon .pin-shape {
+  fill: #ffffff;
+}
+
+.pin-btn:hover svg circle.circle-bg {
+  fill: rgba(0, 0, 0, 0.8);
+}
+
+.pin-btn:hover svg .pin-shape {
+  fill: #ffffff;
+  transform: scale(1.05);
+}
+
+.pin-btn.active svg circle.circle-bg {
+  fill: rgba(147, 51, 234, 0.9);
   animation: pinRotate 0.6s ease;
 }
 
-.pin-btn.active svg {
-  color: white !important;
-  fill: #9333ea;
-  stroke: white !important;
-}
-
-.pin-btn:hover svg {
-  color: rgba(255, 255, 255, 0.95);
-  scale: 1.05;
+.pin-btn.active svg .pin-shape {
+  fill: #ffffff;
 }
 
 @keyframes heartBeat {
