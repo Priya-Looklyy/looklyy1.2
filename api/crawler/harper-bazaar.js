@@ -284,10 +284,7 @@ export default async function handler(req, res) {
             absoluteUrl.includes(keyword) || alt.includes(keyword)
           )
           
-          // Exclude face shots immediately
-          if (isFaceShot) {
-            return false
-          }
+          // Note: Face shot exclusion now handled at final comprehensive check
           
           const hasFashionKeyword = fashionKeywords.some(keyword => 
             absoluteUrl.includes(keyword) || alt.includes(keyword)
@@ -319,12 +316,7 @@ export default async function handler(req, res) {
                                 absoluteUrl.includes('square') ||
                                 absoluteUrl.includes('portrait-crop')
           
-          // Exclude face-focused crops
-          if (isFaceShotCrop) {
-            return false
-          }
-          
-          // Check for collage/montage indicators - detect multi-image compositions
+          // Define all exclusion checks for comprehensive final filtering
           const isCollagePattern = absoluteUrl.includes('collage') ||
                                   absoluteUrl.includes('montage') ||
                                   absoluteUrl.includes('grid') ||
@@ -355,12 +347,19 @@ export default async function handler(req, res) {
                                       alt.includes('style guide') ||
                                       alt.includes('multiple looks') ||
                                       alt.includes('various fashion') ||
-                                      alt.includes('different styles')
-          
-          // Exclude collage/montage images immediately
-          if (isCollagePattern || isCollageDescription) {
-            return false
-          }
+                                      alt.includes('different styles') ||
+                                      // Additional collage detection
+                                      alt.includes('several images') ||
+                                      alt.includes('group of') ||
+                                      alt.includes('assorted') ||
+                                      alt.includes('gallery') ||
+                                      alt.includes('moodboard') ||
+                                      alt.includes('lookbook') ||
+                                      alt.includes('overview') ||
+                                      alt.includes('highlights') ||
+                                      alt.includes('showcasing') ||
+                                      alt.includes('featuring multiple') ||
+                                      alt.includes('behind the scenes')
           
           // Be ULTRA permissive - include almost all images from Harper's Bazaar domains
           const isFromHarpersBazaar = absoluteUrl.includes('harpersbazaar') || 
@@ -369,6 +368,12 @@ export default async function handler(req, res) {
                                      absoluteUrl.includes('getty') ||
                                      absoluteUrl.includes('rex') ||
                                      absoluteUrl.includes('shutterstock')
+          
+          // CRITICAL: Re-check for exclusions AFTER all URL analysis to ensure they are NEVER overridden
+          const finalExcludeCheck = isCollagePattern || isCollageDescription || isFaceShotCrop || isFaceShot
+          if (finalExcludeCheck) {
+            return false // NEVER include these types regardless of domain
+          }
           
           // If it's from Harper's Bazaar or recognized fashion image domains, include it (ULTRA permissive)
           if (isFromHarpersBazaar) {
