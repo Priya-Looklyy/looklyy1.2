@@ -284,7 +284,36 @@ export default async function handler(req, res) {
             absoluteUrl.includes(keyword) || alt.includes(keyword)
           )
           
-          // Note: Face shot exclusion now handled at final comprehensive check
+          // ULTRA-AGGRESSIVE Collage Detection based on visual patterns common in the screenshots
+          const isCompositeBusinessImage = alt.includes('shown here') ||
+                                          alt.includes('round-up') ||
+                                          alt.includes('header') ||
+                                          alt.includes('overview shot') ||
+                                          alt.includes('featured selection') ||
+                                          alt.includes('circle') ||
+                                          alt.includes('rings') ||
+                                          alt.includes('watch') &&
+                                          (alt.includes('jewelry') ||
+                                          alt.includes('fashion collection')) || 
+                                          /woman wearing.*diamond|ring|jewelry/i.test(alt) ||
+                                          /collection.*jewelry/i.test(alt) ||
+                                          /(multiple|crew|group)/.test(alt) ||
+                                          // Additional EXTREMELY SPECIFIC content blocking from the multi-part shots
+                                          alt.includes('overlay') ||
+                                          alt.includes('overlapping') ||
+                                          alt.includes('layered') ||  
+                                          alt.includes('combining') || 
+                                          alt.includes('together') || 
+                                          alt.includes('featuring') && (alt.includes('elements')) ||
+                                          /composed.*model|model.*posed/i.test(alt) || 
+                                          /woven.*fabric|mounted.*jewelry|full.*length.*run/i.test(alt) ||       
+                                          absoluteUrl.includes('frameworks') ||
+                                          absoluteUrl.includes('blends') ||
+                                          absoluteUrl.includes('bundled') ||
+                                          absoluteUrl.includes('faceted-multi') ||
+                                          /complex layout image|multi-striated|framed collection/i.test(alt) ||
+                                          (absoluteUrl.toLowerCase().includes('archive') && 
+                                           absoluteUrl.toLowerCase().includes('.jpg'))
           
           const hasFashionKeyword = fashionKeywords.some(keyword => 
             absoluteUrl.includes(keyword) || alt.includes(keyword)
@@ -380,7 +409,7 @@ export default async function handler(req, res) {
                                      absoluteUrl.includes('shutterstock')
           
           // CRITICAL: Re-check for exclusions AFTER all URL analysis to ensure they are NEVER overridden
-          const finalExcludeCheck = isCollagePattern || isCollageDescription || isFaceShotCrop || isFaceShot
+          const finalExcludeCheck = isCollagePattern || isCollageDescription || isFaceShotCrop || isFaceShot || isCompositeBusinessImage
           if (finalExcludeCheck) {
             return false // NEVER include these types regardless of domain
           }
@@ -395,12 +424,7 @@ export default async function handler(req, res) {
                                      /roundup/i.test(rootFilename) ||
                                      /editorial/i.test(rootFilename) && (rootFilename.includes('table') || rootFilename.includes('slideshow'))
           
-          if (looksLikeCollageFile) {
-            return false
-          }
-          
           // Strict exclusion for overlapping layout images- block if image has been used for complex editorials
-          // Very conservative safety to block collage images by design and layout context
           const hasDocumentaryStyleContent = alt.includes('display') || alt.includes('layout') || alt.includes('arrangement') ||
                                             alt.includes('showcase') || alt.includes('arranging') ||
                                             alt.includes('compilation') || alt.includes('editorial') ||
@@ -409,22 +433,19 @@ export default async function handler(req, res) {
                                             alt.includes('behind') || alt.includes('front') ||
                                             alt.includes('curated') // More comprehensive coverage  
           
-          if (hasDocumentaryStyleContent || looksLikeCollageFile) {
-            return false // BLOCK THESE PATTERNS
+          // MEGA-STRICT BLOCKER: Check EVERY possible exclusion FIRST
+          if (looksLikeCollageFile || hasDocumentaryStyleContent || isCompositeBusinessImage) {
+            return false // BLOCK WITHOUT EXCEPTION - REGARDLESS OF DOMAIN
           }
           
-          // If it's from Harper's Bazaar or recognized fashion image domains, include it (ULTRA permissive)
+          // If image passes ALL exclusion tests, then check if it's from preferred domains
           if (isFromHarpersBazaar) {
-            // But still prioritize full-body shots over face shots
-            if (hasFullBodyKeyword && isLargeImage) {
-              return true // High priority for full-body fashion shots
-            }
-            // Include other fashion images but with lower priority
-            return hasFashionKeyword || alt.length > 0
+            // Only allow BODY SHOTS (not faces)
+            return hasFullBodyKeyword && hasFashionKeyword && !isFaceShot
           }
           
-          // For other domains, check for extensive fashion keywords
-          return hasFashionKeyword || alt.length > 0 // Also include images with any alt text
+          // For non-Harper's domains, be VERY selective
+          return hasFashionKeyword && hasFullBodyKeyword && !isFaceShot
         }).map(img => {
           let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
                             img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
