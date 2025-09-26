@@ -525,7 +525,7 @@ export default async function handler(req, res) {
     
     console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
     
-    // CLEAR DATABASE FIRST - Remove old unfiltered images
+    // CLEAR DATABASE FIRST - Complete refresh ensures only new filtered content
     console.log('🗑️ Clearing old unfiltered images from database...')
     const { error: clearError } = await supabase
       .from('fashion_images_new')
@@ -540,7 +540,7 @@ export default async function handler(req, res) {
       })
     }
     
-    console.log('✅ Database cleared of old unfiltered images')
+    console.log('✅ Database cleared - fresh start guaranteed')
     
     // Store images in Supabase - FLOOD WITH CONTENT for amazing user experience
     for (const image of uniqueImages.slice(0, 500)) { // Store up to 500 images
