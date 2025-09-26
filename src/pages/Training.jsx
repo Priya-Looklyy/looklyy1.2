@@ -6,6 +6,13 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
 
+// Debug connection
+if (!supabase) {
+  console.warn('🔧 Supabase not configured for Training interface')
+  console.log('VITE_SUPABASE_URL:', supabaseUrl)
+  console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'SET' : 'MISSING')
+}
+
 const Training = () => {
   const [pendingImages, setPendingImages] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -19,25 +26,48 @@ const Training = () => {
 
   // Load pending images that need training feedback
   const loadPendingImages = async () => {
-    if (!supabase) return
+    if (!supabase) {
+      console.error('Supabase not configured')
+      return
+    }
 
     try {
       setIsLoading(true)
-      const { data: images, error } = await supabase
+      
+      // First try to find images that need training
+      let { data: images, error } = await supabase
         .from('fashion_images_new')
         .select('*')
-        .eq('needs_training', true)
+        .or('needs_training.is.true,training_status.is.null,training_status.eq.pending')
         .order('created_at', { ascending: false })
         .limit(20)
 
-      if (!error && images) {
-        setPendingImages(images)
-        if (images.length > 0) {
-          setCurrentIndex(0)
+      // If no training images found, try any recent images as backup
+      if ((!images || images.length === 0) && !error) {
+        console.log('No training-specific images found, fetching recent images...')
+        const recentResponse = await supabase
+          .from('fashion_images_new')
+          .select('*')
+          .order('id', { ascending: false })
+          .limit(10)
+        
+        if (!recentResponse.error && recentResponse.data) {
+          images = recentResponse.data
+          console.log(`Found ${images.length} recent images for training`)
         }
+      }
+
+      if (images && images.length > 0) {
+        setPendingImages(images)
+        setCurrentIndex(0)
+        console.log(`✅ Loaded ${images.length} images for training`)
+      } else {
+        console.log('⚠️ No images found for training')
+        setPendingImages([])
       }
     } catch (error) {
       console.error('Error loading training images:', error)
+      setPendingImages([])
     } finally {
       setIsLoading(false)
     }
@@ -136,6 +166,13 @@ const Training = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <h2 className="text-2xl font-bold text-gray-900">Loading Training Images...</h2>
+          <p className="text-gray-600 mt-2">Fetching images from database...</p>
+          {!supabase && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 max-w-md mx-auto">
+              ⚠️ Database connection issue detected.<br/>
+              Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.
+            </div>
+          )}
         </div>
       </div>
     )
@@ -145,15 +182,35 @@ const Training = () => {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">🎉 All Caught Up!</h1>
-          <p className="text-gray-600 mb-8">No images need training feedback at the moment.</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">📋 No Images Found</h1>
+          <p className="text-gray-600 mb-4">No images found for training feedback.</p>
+          <p className="text-sm text-gray-500 mb-8">
+            {!supabase ? 'Check database configuration.' : 'Try running the crawler first to get images.'}
+          </p>
           
-          <button 
-            onClick={loadPendingImages}
-            className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition"
-          >
-            🔄 Refresh Training Queue
-          </button>
+          <div className="space-x-4">
+            <button 
+              onClick={loadPendingImages}
+              className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition"
+            >
+              🔄 Refresh Training Queue
+            </button>
+            <button 
+              onClick={loadPendingImages}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+            >
+              📋 Load Recent Images
+            </button>
+          </div>
+          
+          {!supabase && (
+            <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-800 max-w-md mx-auto">
+              <strong>Database Issue:</strong><br/>
+              VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY required for training.
+              <br/><br/>
+              <a href="/admin" className="text-blue-600 underline">Go to Admin to run crawler</a>
+            </div>
+          )}
         </div>
       </div>
     )
