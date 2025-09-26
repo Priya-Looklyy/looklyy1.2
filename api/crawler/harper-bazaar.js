@@ -167,17 +167,19 @@ export default async function handler(req, res) {
             'close', 'checkmark', 'magnifying', '_assets', 'design-tokens',
             'facebook', 'twitter', 'instagram', 'pinterest', 'youtube',
             
-            // AGGRESSIVE face/collage filtering
+            // ULTRA-AGGRESSIVE face filtering - block all face-related content
             'beauty', 'makeup', 'skincare', 'portrait', 'headshot', 'close-up', 'closeup',
             'face', 'facial', 'beauty-shot', 'beauty-shoot', 'beauty-campaign',
             'makeup-look', 'skincare-routine', 'beauty-tips', 'beauty-trends',
-            'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign',
+            'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign', 'beauty-image',
             'head-and-shoulders', 'headshot', 'portrait-photo', 'portrait-shot',
             'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article',
             'model-face', 'celebrity-face', 'star-face', 'cropped-face', 'face-crop',
             'facial-beauty', 'selfie', 'mugshot', 'beauty-photo', 'makeup-model',
             'red-carpet-model', 'closeup-model', 'facial-shot', 'beauty-closeup',
-            'closeup', 'upper-body', 'head-and', 'model-portrait',
+            'closeup', 'upper-body', 'head-and', 'model-portrait', 'face-shape',
+            'cheek', 'lip', 'eye', 'hair', 'blush', 'foundation', 'beauty-product',
+            'facial-exercise', 'face-mask', 'skincare-shelf', 'beauty-fluids',
             
             // Collage, montage, poster content - BLOCK ALL
             'collage', 'montage', 'grid', 'compilation', 'collection', 'mosaic',
@@ -190,14 +192,15 @@ export default async function handler(req, res) {
             // MOVIE POSTER & BRAND CAMPAIGNS - BLOCK STRICTLY
             'poster', 'movie', 'film', 'trailer', 'promotional', 'brand-campaign',
             'marc-jacobs', 'heaven', 'vanna', 'gabbriette', 'iris-law',
-            'brand-collection', 'fashion-campaign', 'model-portfolio',
-            'editorial-spread', 'magazine-layout', 'design-spread',
+            'brand-collection', 'fashion-campaign', 'model-portfolio', 'poster-campaign',
+            'editorial-spread', 'magazine-layout', 'design-spread', 'movie-poster',
             'brand-artwork', 'creative-director', 'artwork', 'creative-campaign',
             'music-video', 'video-stills', 'album-cover', 'artistic-portrait',
             'artwork-gallery', 'creative-shoot', 'fashion-social', 'brand-content',
-            'cinematic', 'stills', 'scene', 'director', 'photoshoot',
+            'cinematic', 'stills', 'scene', 'director', 'photoshoot', 'cover-image',
             'showcase', 'highlight', 'feature', 'spread', 'layout', 'editorial',
-            'stage', 'performance', 'music', 'album', 'record', 'single'
+            'stage', 'performance', 'music', 'album', 'record', 'single',
+            'campaign-image', 'advertisement', 'brand-print', 'commercial-header'
           ]
           
           if (excludeKeywords.some(keyword => absoluteUrl.includes(keyword) || alt.includes(keyword))) {
@@ -305,20 +308,30 @@ export default async function handler(req, res) {
             'style', 'clothes', 'clothing', 'apparel'
           ]
           
-          // Face shot detection - exclude images that are clearly face-focused
+          // ENHANCED face shot detection - block ALL face-related images
           const faceShotKeywords = [
             'beauty', 'makeup', 'skincare', 'portrait', 'headshot', 'close-up',
             'face', 'facial', 'beauty-shot', 'beauty-shoot', 'beauty-campaign',
             'makeup-look', 'skincare-routine', 'beauty-tips', 'beauty-trends',
-            'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign',
+            'beauty-editorial', 'beauty-photoshoot', 'beauty-campaign', 'beauty-image',
             'head-and-shoulders', 'headshot', 'portrait-photo', 'portrait-shot',
             'beauty-feature', 'beauty-spread', 'beauty-story', 'beauty-article',
-            'closeup', 'headshot', 'portrait', 'beauty', 'makeup', 'skincare'
+            'closeup', 'headshot', 'portrait', 'beauty', 'makeup', 'skincare',
+            'model-face', 'celebrity-face', 'star-face', 'cropped-face', 'face-crop',
+            'facial-beauty', 'selfie', 'mugshot', 'beauty-photo', 'makeup-model',
+            'beauty-editorial', 'beauty-product', 'beauty-grooming', 'facial-shot',
+            'model-portrait', 'beauty-closeup', 'upper-body', 'head-and'
           ]
           
           const isFaceShot = faceShotKeywords.some(keyword => 
-            absoluteUrl.includes(keyword) || alt.includes(keyword)
+            absoluteUrl.includes(keyword) || alt.includes(keyword) ||
+            alt.toLowerCase().match(new RegExp(`\\b${keyword}\\b`, 'i'))
           )
+          
+          // Additional poster/cinema detection  
+          const isPosterCampaign = alt.includes('poster') || alt.includes('campaign') ||
+            alt.includes('movie') || alt.includes('film') || alt.includes('trailer') ||
+            absoluteUrl.includes('poster') || absoluteUrl.includes('campaign')
           
           // ULTRA-AGGRESSIVE Collage Detection based on visual patterns common in the screenshots
           const isCompositeBusinessImage = alt.includes('shown here') ||
@@ -445,7 +458,7 @@ export default async function handler(req, res) {
                                      absoluteUrl.includes('shutterstock')
           
           // CRITICAL: Re-check for exclusions AFTER all URL analysis to ensure they are NEVER overridden
-          const finalExcludeCheck = isCollagePattern || isCollageDescription || isFaceShotCrop || isFaceShot || isCompositeBusinessImage
+          const finalExcludeCheck = isCollagePattern || isCollageDescription || isFaceShotCrop || isFaceShot || isCompositeBusinessImage || isPosterCampaign
           if (finalExcludeCheck) {
             return false // NEVER include these types regardless of domain
           }
@@ -514,13 +527,24 @@ export default async function handler(req, res) {
       }
     }
     
-    // Remove duplicates and store unique images - more robust deduplication
+    // Remove duplicates and store unique images - ENHANCED deduplication
     const seenUrls = new Set()
+    const seenAltTexts = new Set() // Also deduplicate based on alt text
     const uniqueImages = allFashionImages.filter(img => {
+      // Check for pure URL duplicates
       if (seenUrls.has(img.src)) {
         return false
       }
+      
+      // Check for alt text duplicates that are similar
+      const altKey = img.alt && img.alt.length > 10 ? img.alt.toLowerCase().substring(0, 50) : ''
+      if (altKey && seenAltTexts.has(altKey)) {
+        return false
+      }
+      
+      // Mark this image as seen for both URL and alt text checks
       seenUrls.add(img.src)
+      if (altKey) seenAltTexts.add(altKey)
       return true
     })
     
