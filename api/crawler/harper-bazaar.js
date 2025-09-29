@@ -244,8 +244,12 @@ export default async function handler(req, res) {
     }
     
     // Store images in Supabase - FLOOD WITH CONTENT for amazing user experience
+    console.log(`🔍 DEBUG: About to store ${uniqueImages.length} images, first image:`, uniqueImages[0])
+    
     for (const image of uniqueImages.slice(0, 500)) { // Store up to 500 images
       try {
+        console.log(`🔍 DEBUG: Attempting to store image ${storedImages + 1}:`, image.src)
+        
         // REVERT TO BASIC INSERT FORMAT (what was working)
         const { data, error } = await supabase
           .from('fashion_images_new')
@@ -255,6 +259,8 @@ export default async function handler(req, res) {
             description: image.alt || `Latest ${image.category} trend from Harper's Bazaar`,
             category: image.category
           }])
+        
+        console.log(`🔍 DEBUG: Insert result - data:`, data, 'error:', error)
         
         if (!error && data) {
           storedImages++
