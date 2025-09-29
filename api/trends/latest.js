@@ -19,23 +19,30 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('🔍 TRENDING API: Starting to fetch latest trends...')
+    console.log('🔍 TRENDING API: Supabase configured:', !!supabase)
+    
     let trendingLooks = []
 
     // Try to get real data from Supabase
     if (supabase) {
       try {
+        console.log('🔍 TRENDING API: Querying fashion_images_new table...')
         const { data: realData, error } = await supabase
           .from('fashion_images_new')
           .select('*')
           .order('id', { ascending: false }) // Order by id (newest first)
           .limit(300) // Increased from 100 to 300 to get more images
         
+        console.log('🔍 TRENDING API: Query result - data length:', realData?.length, 'error:', error)
+        
         // Remove duplicates from database results (same original_url)
         const uniqueResults = realData ? [...new Set(realData.map(item => item.original_url))]
           .map(url => realData.find(item => item.original_url === url)) : []
 
         if (!error && uniqueResults && uniqueResults.length > 0) {
-          console.log(`Found ${uniqueResults.length} unique crawled images (${realData ? realData.length : 0} total)`)
+          console.log(`🔍 TRENDING API: Found ${uniqueResults.length} unique crawled images (${realData ? realData.length : 0} total)`)
+          console.log(`🔍 TRENDING API: Sample data:`, uniqueResults.slice(0, 2))
           
           // Organize data by categories
           const categorizedData = {
@@ -91,15 +98,19 @@ export default async function handler(req, res) {
               designers: categorizedData.designers.slice(0, 30)
             }
           }
+        } else {
+          console.log(`🔍 TRENDING API: No data found - error:`, error, 'uniqueResults length:', uniqueResults.length)
         }
       } catch (dbError) {
-        console.log('Database query failed:', dbError.message)
+        console.log('🔍 TRENDING API: Database query failed:', dbError.message)
       }
+    } else {
+      console.log('🔍 TRENDING API: Supabase not configured')
     }
 
     // Check if we have categorized data
     if (!trendingLooks || (typeof trendingLooks === 'object' && !trendingLooks.trending)) {
-      console.log('No crawled data available - crawler may not be working')
+      console.log('🔍 TRENDING API: No crawled data available - returning empty data')
       return res.status(200).json({
         success: true,
         data: {
