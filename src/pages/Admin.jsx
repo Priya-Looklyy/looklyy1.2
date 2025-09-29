@@ -29,23 +29,38 @@ const Admin = () => {
     if (!supabase) return
 
     try {
-      // Get latest crawl logs
-      const { data: logs, error } = await supabase
-        .from('crawl_logs')
+      // Get latest crawl results from fashion_images_new table instead
+      const { data: images, error } = await supabase
+        .from('fashion_images_new')
         .select('*')
-        .order('crawl_date', { ascending: false })
+        .order('id', { ascending: false })
         .limit(10)
 
       if (error) {
-        console.error('Error fetching crawl logs:', error)
+        console.error('Error fetching recent images:', error)
         return
       }
 
-      setCrawlHistory(logs || [])
+      // Convert images to crawl history format
+      const crawlHistory = images && images.length > 0 ? [{
+        id: 'latest',
+        crawl_date: new Date().toISOString(),
+        images_found: images.length,
+        images_stored: images.length,
+        status: 'completed'
+      }] : []
       
-      // Set current status from latest log
-      if (logs && logs.length > 0) {
-        setCrawlStatus(logs[0])
+      setCrawlHistory(crawlHistory)
+      
+      // Set current status from latest data
+      if (images && images.length > 0) {
+        setCrawlStatus({
+          id: 'latest',
+          crawl_date: new Date().toISOString(),
+          images_found: images.length,
+          images_stored: images.length,
+          status: 'completed'
+        })
       }
     } catch (error) {
       console.error('Error fetching crawl data:', error)
