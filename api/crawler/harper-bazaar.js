@@ -140,49 +140,35 @@ export default async function handler(req, res) {
         console.log(`📸 Found ${images.length} images on ${urlData.url}`)
         totalImages += images.length
         
-        // SIMPLIFIED FILTER - Much more permissive approach to get images back
-        const fashionImages = images.filter(img => {
-          const src = img.src.toLowerCase()
-          const alt = img.alt.toLowerCase()
-          
-          // Must be a valid image URL
-          if (!src || !src.includes('http')) return false
-          
-          // ONLY check for image format requirements
-          if (!src.match(/\.(jpg|jpeg|png|webp)/i)) return false
-          
-          // ONLY block obvious absolute no's
-          if (src.includes('facebook') || src.includes('twitter') || 
-              src.includes('instagram') || src.includes('youtube') ||
-              src.includes('icon.svg') || src.includes('avatar.png') ||
-              alt.includes('facebook') || alt.includes('instagram')) {
-            return false
-          }
-          
-          // Allow it then - MINIMAL filtering is key!
-          return true
-        }).map(img => {
-          let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
-                            img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
-                            img.src.startsWith('http') ? img.src :
-                            'https://www.harpersbazaar.com/' + img.src
-          
-          // Remove resize parameters to get original larger images
-          processedSrc = processedSrc.replace(/&resize=\d+:\*/g, '')
-          processedSrc = processedSrc.replace(/&resize=\d+:\d+/g, '')
-          processedSrc = processedSrc.replace(/resize=\d+:\*/g, '')
-          processedSrc = processedSrc.replace(/resize=\d+:\d+/g, '')
-          
-          return {
-            src: processedSrc,
-            alt: img.alt,
-            category: urlData.category,
-            subcategory: urlData.subcategory,
-            trendScore: urlData.trendScore,
-            sourceUrl: urlData.url,
-            crawledAt: new Date().toISOString()
-          }
-        })
+        // EMERGENCY: Accept ALL images to debug storage issue
+        const fashionImages = images
+          .filter(img => {
+            const src = img.src || ''
+            // Only basic URL validation  
+            return src && src.includes('http') && src.match(/\.(jpg|jpeg|png|webp|jpeg)/i)
+          })
+          .map(img => {
+            let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
+                              img.src.startsWith('/') ? 'https://www.harpersbazaar.com' + img.src :
+                              img.src.startsWith('http') ? img.src :
+                              'https://www.harpersbazaar.com/' + img.src
+            
+            // Remove resize parameters to get original larger images
+            processedSrc = processedSrc.replace(/&resize=\d+:\*/g, '')
+            processedSrc = processedSrc.replace(/&resize=\d+:\d+/g, '')
+            processedSrc = processedSrc.replace(/resize=\d+:\*/g, '')
+            processedSrc = processedSrc.replace(/resize=\d+:\d+/g, '')
+            
+            return {
+              src: processedSrc,
+              alt: img.alt,
+              category: urlData.category,
+              subcategory: urlData.subcategory,
+              trendScore: urlData.trendScore,
+              sourceUrl: urlData.url,
+              crawledAt: new Date().toISOString()
+            }
+          })
         
         console.log(`✨ Found ${fashionImages.length} fashion images on ${urlData.url}`)
         if (fashionImages.length === 0) {
@@ -238,6 +224,24 @@ export default async function handler(req, res) {
     
     console.log('✅ Database cleared - fresh start guaranteed')
     console.log(`📥 About to store ${Math.min(uniqueImages.length, 500)} images to database`)
+    
+    // CRITICAL CHECK: If no uniqueImages, something is wrong with filtering
+    if (uniqueImages.length === 0) {
+      console.log(`❌ CRITICAL: No unique images to store - filtering is too restrictive or broken`)
+      console.log(`Debug - totalImages: ${totalImages}, allFashionImages.length: ${allFashionImages.length}`)
+      return res.status(200).json({
+        success: true,
+        message: 'Crawler found images but none passed filtering',
+        results: {
+          pages_crawled: pagesCrawled,
+          total_images_found: totalImages,
+          unique_fashion_images: 0,
+          images_stored: 0,
+          errors: errors.length,
+          status: 'no_images_passed_filter'
+        }
+      })
+    }
     
     // Store images in Supabase - FLOOD WITH CONTENT for amazing user experience
     for (const image of uniqueImages.slice(0, 500)) { // Store up to 500 images
