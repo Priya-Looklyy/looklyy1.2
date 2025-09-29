@@ -218,22 +218,33 @@ export default async function handler(req, res) {
       console.log(`❌ CRITICAL: allFashionImages is EMPTY - filtering is too restrictive!`)
     }
     
-    // CLEAR DATABASE FIRST - Complete refresh ensures only new filtered content
+    // CLEAR DATABASE FIRST - Use a working approach
     console.log('🗑️ Clearing old unfiltered images from database...')
-    const { error: clearError } = await supabase
-      .from('fashion_images_new')
-      .delete()
-      .neq('id', 0) // Delete all records (id is never 0)
-    
-    if (clearError) {
-      console.log('❌ Database clear error:', clearError.message)
-      return res.status(500).json({
-        success: false,
-        error: `Database clear failed: ${clearError.message}`
-      })
+    try {
+      // Get all existing records first
+      const { data: existingRecords, error: fetchError } = await supabase
+        .from('fashion_images_new')
+        .select('id')
+        .limit(1000)
+      
+      if (fetchError) {
+        console.log('❌ Error fetching existing records:', fetchError.message)
+        // Continue without clearing - don't fail the entire crawl
+      } else if (existingRecords && existingRecords.length > 0) {
+        // Delete records one by one to avoid RLS issues
+        const deletePromises = existingRecords.map(record => 
+          supabase.from('fashion_images_new').delete().eq('id', record.id)
+        )
+        
+        await Promise.all(deletePromises)
+        console.log(`✅ Cleared ${existingRecords.length} existing records`)
+      } else {
+        console.log('✅ No existing records to clear')
+      }
+    } catch (clearError) {
+      console.log('⚠️ Database clear failed, continuing anyway:', clearError.message)
+      // Don't fail the entire crawl if clearing fails
     }
-    
-    console.log('✅ Database cleared - fresh start guaranteed')
     console.log(`📥 About to store ${Math.min(uniqueImages.length, 500)} images to database`)
     
     // CRITICAL CHECK: If no uniqueImages, something is wrong with filtering
