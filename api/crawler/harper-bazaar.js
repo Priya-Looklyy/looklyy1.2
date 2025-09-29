@@ -145,11 +145,12 @@ export default async function handler(req, res) {
           console.log(`🔍 DEBUG: Sample raw images:`, images.slice(0, 2).map(img => ({ src: img.src, alt: img.alt })))
         }
         
-        // EMERGENCY: Accept ALL images to debug storage issue
+        // ULTRA PERMISSIVE: Accept ALL images to get all 448 stored
         const fashionImages = images
           .filter(img => {
             const src = img.src || ''
-            const isValid = src && src.includes('http') && src.match(/\.(jpg|jpeg|png|webp|jpeg)/i)
+            // Accept ANY image with a valid URL - no format restrictions
+            const isValid = src && (src.includes('http') || src.includes('//') || src.startsWith('/'))
             if (!isValid) {
               console.log(`🔍 DEBUG: Filtered out image:`, src)
             }
@@ -191,24 +192,17 @@ export default async function handler(req, res) {
       }
     }
     
-    // Remove duplicates and store unique images - ENHANCED deduplication
+    // Remove duplicates and store unique images - MINIMAL deduplication to keep more images
     const seenUrls = new Set()
-    const seenAltTexts = new Set() // Also deduplicate based on alt text
     const uniqueImages = allFashionImages.filter(img => {
-      // Check for pure URL duplicates
+      // Only check for exact URL duplicates - no alt text deduplication
       if (seenUrls.has(img.src)) {
+        console.log(`🔍 DEBUG: Duplicate URL filtered out:`, img.src)
         return false
       }
       
-      // Check for alt text duplicates that are similar
-      const altKey = img.alt && img.alt.length > 10 ? img.alt.toLowerCase().substring(0, 50) : ''
-      if (altKey && seenAltTexts.has(altKey)) {
-        return false
-      }
-      
-      // Mark this image as seen for both URL and alt text checks
+      // Mark this image as seen
       seenUrls.add(img.src)
-      if (altKey) seenAltTexts.add(altKey)
       return true
     })
     
