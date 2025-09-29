@@ -26,38 +26,35 @@ export default async function handler(req, res) {
   try {
     console.log('🔧 Setting up database tables for crawler...')
     
-    // Create fashion_images table
+    // Create fashion_images_new table (the one the crawler actually uses)
     const { data: fashionImagesTable, error: fashionImagesError } = await supabase
-      .from('fashion_images')
+      .from('fashion_images_new')
       .select('*')
       .limit(1)
     
     if (fashionImagesError && fashionImagesError.code === 'PGRST116') {
-      console.log('📋 Creating fashion_images table...')
+      console.log('📋 Creating fashion_images_new table...')
       // Table doesn't exist, we need to create it via SQL
       const { data: createTable, error: createError } = await supabase.rpc('exec_sql', {
         sql: `
-          CREATE TABLE IF NOT EXISTS fashion_images (
+          CREATE TABLE IF NOT EXISTS fashion_images_new (
             id SERIAL PRIMARY KEY,
             original_url TEXT NOT NULL,
-            stored_url TEXT NOT NULL,
-            alt_text TEXT,
             title TEXT,
-            source_url TEXT NOT NULL,
-            crawled_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-            platform TEXT DEFAULT 'harper-bazaar',
+            description TEXT,
+            category TEXT,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
           );
         `
       })
       
       if (createError) {
-        console.error('❌ Error creating fashion_images table:', createError)
+        console.error('❌ Error creating fashion_images_new table:', createError)
       } else {
-        console.log('✅ fashion_images table created')
+        console.log('✅ fashion_images_new table created')
       }
     } else {
-      console.log('✅ fashion_images table already exists')
+      console.log('✅ fashion_images_new table already exists')
     }
     
     // Create crawl_logs table
@@ -122,7 +119,7 @@ export default async function handler(req, res) {
       success: true,
       message: 'Database setup completed',
       tables: {
-        fashion_images: 'created/exists',
+        fashion_images_new: 'created/exists',
         crawl_logs: 'created/exists'
       },
       storage: {
