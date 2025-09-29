@@ -140,12 +140,20 @@ export default async function handler(req, res) {
         console.log(`📸 Found ${images.length} images on ${urlData.url}`)
         totalImages += images.length
         
+        // DEBUG: Show sample of raw images
+        if (images.length > 0) {
+          console.log(`🔍 DEBUG: Sample raw images:`, images.slice(0, 2).map(img => ({ src: img.src, alt: img.alt })))
+        }
+        
         // EMERGENCY: Accept ALL images to debug storage issue
         const fashionImages = images
           .filter(img => {
             const src = img.src || ''
-            // Only basic URL validation  
-            return src && src.includes('http') && src.match(/\.(jpg|jpeg|png|webp|jpeg)/i)
+            const isValid = src && src.includes('http') && src.match(/\.(jpg|jpeg|png|webp|jpeg)/i)
+            if (!isValid) {
+              console.log(`🔍 DEBUG: Filtered out image:`, src)
+            }
+            return isValid
           })
           .map(img => {
             let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
@@ -206,6 +214,15 @@ export default async function handler(req, res) {
     
     console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
     console.log(`🔍 First 3 images for debugging:`, uniqueImages.slice(0, 3))
+    
+    // CRITICAL DEBUG: Check what we have before deduplication
+    console.log(`🔍 DEBUG: allFashionImages.length = ${allFashionImages.length}`)
+    if (allFashionImages.length > 0) {
+      console.log(`🔍 DEBUG: First allFashionImage:`, allFashionImages[0])
+      console.log(`🔍 DEBUG: Sample URLs:`, allFashionImages.slice(0, 3).map(img => img.src))
+    } else {
+      console.log(`❌ CRITICAL: allFashionImages is EMPTY - filtering is too restrictive!`)
+    }
     
     // CLEAR DATABASE FIRST - Complete refresh ensures only new filtered content
     console.log('🗑️ Clearing old unfiltered images from database...')
