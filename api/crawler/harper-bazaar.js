@@ -102,6 +102,26 @@ export default async function handler(req, res) {
     const allFashionImages = []
     
     // Crawl each URL with proper error handling
+    // Simple scoring rules in shadow mode
+    const keywordWeight = (text, patterns, weight) => {
+      if (!text) return 0
+      const lower = text.toLowerCase()
+      return patterns.some(p => lower.includes(p)) ? weight : 0
+    }
+    const computeScore = (img) => {
+      const urlText = `${img.src} ${img.sourceUrl || ''}`
+      const altText = `${img.alt || ''}`
+      let score = 0
+      // Positive cues
+      score += keywordWeight(urlText, ['runway','street-style','designer','trends','fashion-week'], 0.25)
+      score += keywordWeight(altText, ['full look','head-to-toe','runway look','outfit'], 0.2)
+      // Negative cues
+      score -= keywordWeight(urlText + ' ' + altText, ['poster','trailer','teaser','netflix','disney','primevideo','movie','cinema'], 0.4)
+      score -= keywordWeight(urlText + ' ' + altText, ['face','headshot','portrait','selfie'], 0.3)
+      score -= keywordWeight(urlText, ['icon','sprite','logo','collage'], 0.4)
+      return Math.max(-1, Math.min(1, score))
+    }
+
     for (const urlData of urlsToCrawl) {
       try {
         console.log(`🎯 Crawling: ${urlData.url} (${urlData.category})`)
@@ -180,7 +200,9 @@ export default async function handler(req, res) {
           console.log(`⚠️ No fashion images passed filter on ${urlData.url}`)
           console.log(`Debug - Sample image:`, images[0]) 
         }
-        allFashionImages.push(...fashionImages)
+        // Compute shadow-mode score for each image
+        const scored = fashionImages.map(img => ({ ...img, score: computeScore(img), ruleVersion: 1 }))
+        allFashionImages.push(...scored)
         
       } catch (error) {
         console.log(`❌ Error crawling ${urlData.url}:`, error.message)
@@ -291,12 +313,28 @@ export default async function handler(req, res) {
             description: image.alt || `Latest ${image.category} trend from Harper's Bazaar`,
             category: image.category
           }])
+          .select()
         
         console.log(`🔍 DEBUG: Insert result - data:`, data, 'error:', error)
         
-        if (!error && data) {
+        if (!error) {
           storedImages++
           console.log(`✅ Stored image ${storedImages}: ${image.src}`)
+          // Shadow-mode: try to write score/flags if columns exist (ignore errors)
+          try {
+            const needsTraining = image.score >= 0.15 && image.score < 0.35
+            await supabase
+              .from('fashion_images_new')
+              .update({
+                score: image.score,
+                rule_version: image.ruleVersion,
+                needs_training: needsTraining,
+                training_status: 'pending'
+              })
+              .eq('original_url', image.src)
+          } catch (e) {
+            console.log('ℹ️ Shadow score update skipped (likely missing columns):', e?.message)
+          }
         } else {
           console.log(`❌ Database error:`, error?.message || 'Unknown error', error)
           errors.push(`Database error: ${error?.message || 'Unknown error'}`)
