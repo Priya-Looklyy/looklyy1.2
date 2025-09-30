@@ -145,16 +145,12 @@ export default async function handler(req, res) {
           console.log(`🔍 DEBUG: Sample raw images:`, images.slice(0, 2).map(img => ({ src: img.src, alt: img.alt })))
         }
         
-        // ULTRA PERMISSIVE: Accept ALL images to get all 448 stored
+        // RESTORE WORKING FILTER: Basic image format validation (what was working before)
         const fashionImages = images
           .filter(img => {
             const src = img.src || ''
-            // Accept ANY image with ANY URL - absolutely minimal filtering
-            const isValid = src && src.length > 0
-            if (!isValid) {
-              console.log(`🔍 DEBUG: Filtered out image:`, src)
-            }
-            return isValid
+            // Only basic URL validation - what was working before
+            return src && src.includes('http') && src.match(/\.(jpg|jpeg|png|webp|jpeg)/i)
           })
           .map(img => {
             let processedSrc = img.src.startsWith('//') ? 'https:' + img.src :
@@ -192,9 +188,26 @@ export default async function handler(req, res) {
       }
     }
     
-    // NO DEDUPLICATION - Store ALL images to get maximum content
-    console.log(`🔍 DEBUG: Skipping deduplication - storing ALL ${allFashionImages.length} images`)
-    const uniqueImages = allFashionImages // No filtering at all
+    // RESTORE WORKING DEDUPLICATION: Enhanced deduplication (what was working before)
+    const seenUrls = new Set()
+    const seenAltTexts = new Set() // Also deduplicate based on alt text
+    const uniqueImages = allFashionImages.filter(img => {
+      // Check for pure URL duplicates
+      if (seenUrls.has(img.src)) {
+        return false
+      }
+      
+      // Check for alt text duplicates that are similar
+      const altKey = img.alt && img.alt.length > 10 ? img.alt.toLowerCase().substring(0, 50) : ''
+      if (altKey && seenAltTexts.has(altKey)) {
+        return false
+      }
+      
+      // Mark this image as seen for both URL and alt text checks
+      seenUrls.add(img.src)
+      if (altKey) seenAltTexts.add(altKey)
+      return true
+    })
     
     console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
     console.log(`🔍 First 3 images for debugging:`, uniqueImages.slice(0, 3))
