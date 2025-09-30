@@ -149,8 +149,8 @@ export default async function handler(req, res) {
         const fashionImages = images
           .filter(img => {
             const src = img.src || ''
-            // Accept ANY image with a valid URL - no format restrictions
-            const isValid = src && (src.includes('http') || src.includes('//') || src.startsWith('/'))
+            // Accept ANY image with ANY URL - absolutely minimal filtering
+            const isValid = src && src.length > 0
             if (!isValid) {
               console.log(`🔍 DEBUG: Filtered out image:`, src)
             }
@@ -192,19 +192,9 @@ export default async function handler(req, res) {
       }
     }
     
-    // Remove duplicates and store unique images - MINIMAL deduplication to keep more images
-    const seenUrls = new Set()
-    const uniqueImages = allFashionImages.filter(img => {
-      // Only check for exact URL duplicates - no alt text deduplication
-      if (seenUrls.has(img.src)) {
-        console.log(`🔍 DEBUG: Duplicate URL filtered out:`, img.src)
-        return false
-      }
-      
-      // Mark this image as seen
-      seenUrls.add(img.src)
-      return true
-    })
+    // NO DEDUPLICATION - Store ALL images to get maximum content
+    console.log(`🔍 DEBUG: Skipping deduplication - storing ALL ${allFashionImages.length} images`)
+    const uniqueImages = allFashionImages // No filtering at all
     
     console.log(`🎨 Total unique fashion images found: ${uniqueImages.length}`)
     console.log(`🔍 First 3 images for debugging:`, uniqueImages.slice(0, 3))
