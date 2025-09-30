@@ -259,20 +259,35 @@ const Training = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-4 block">
             Current Image - <kbd className="bg-gray-100 px-2 py-1 rounded">A</kbd>pprove / <kbd className="bg-gray-100 px-2 py-1 rounded">R</kbd>eject
           </h2>
+          
+          {/* Debug Info */}
+          <div className="mb-4 p-3 bg-blue-50 rounded-lg text-sm">
+            <strong>Debug:</strong> Images loaded: {pendingImages.length}, Current index: {currentImageIndex}, 
+            Current image: {currentImage ? 'Yes' : 'No'}
+            {currentImage && (
+              <div className="mt-1">
+                <strong>Image URL:</strong> {currentImage.original_url}
+              </div>
+            )}
+          </div>
 
           {currentImage && (
             <>
               {/* Current Image */}
               <div className="flex gap-6">
                 <div className="flex-1">
-                  <img 
-                    src={currentImage.original_url} 
-                    alt={currentImage.description || 'Training image'}
-                    className="w-full h-auto max-h-96 object-contain rounded-lg shadow-lg"
-                    onError={(e) => {
-                      e.target.src = '/placeholder-image.jpg'
-                    }}
-                  />
+                  <div className="bg-gray-100 rounded-lg p-4 mb-4">
+                    <img 
+                      src={currentImage.original_url} 
+                      alt={currentImage.description || 'Training image'}
+                      className="w-full h-auto max-h-96 object-contain rounded-lg shadow-lg mx-auto block"
+                      onError={(e) => {
+                        console.log('Image failed to load:', currentImage.original_url)
+                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzY2NjY2NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+PC9zdmc+'
+                      }}
+                      onLoad={() => console.log('Image loaded successfully:', currentImage.original_url)}
+                    />
+                  </div>
                   <div className="mt-4 space-y-2">
                     <p><strong>URL:</strong> <span className="text-gray-600 text-sm break-all">{currentImage.original_url}</span></p>
                     <p><strong>Description:</strong> {currentImage.description || 'No description'}</p>
