@@ -57,15 +57,18 @@ export default async function handler(req, res) {
             description: image.alt || 'Test description',
             category: image.category
           }])
+          .select()
         
         console.log(`🔍 DEBUG: Insert result - data:`, data, 'error:', error)
+        console.log(`🔍 DEBUG: Full error object:`, JSON.stringify(error, null, 2))
         
         if (!error && data) {
           storedImages++
           console.log(`✅ Stored image ${storedImages}: ${image.src}`)
         } else {
-          console.log(`❌ Database error:`, error?.message || 'Unknown error', error)
-          errors.push(`Database error: ${error?.message || 'Unknown error'}`)
+          const errorMsg = error?.message || error?.details || error?.hint || 'Unknown error'
+          console.log(`❌ Database error:`, errorMsg, 'Full error:', error)
+          errors.push(`Database error: ${errorMsg} (Code: ${error?.code || 'N/A'})`)
         }
       } catch (error) {
         console.log(`❌ Storage error:`, error.message)
