@@ -251,18 +251,25 @@ export default async function handler(req, res) {
     if (uniqueImages.length === 0) {
       console.log(`❌ CRITICAL: No unique images to store - filtering is too restrictive or broken`)
       console.log(`Debug - totalImages: ${totalImages}, allFashionImages.length: ${allFashionImages.length}`)
-      return res.status(200).json({
-        success: true,
-        message: 'Crawler found images but none passed filtering',
-        results: {
-          pages_crawled: pagesCrawled,
-          total_images_found: totalImages,
-          unique_fashion_images: 0,
-          images_stored: 0,
-          errors: errors.length,
-          status: 'no_images_passed_filter'
-        }
-      })
+      
+      // EMERGENCY BYPASS: Use allFashionImages directly if uniqueImages is empty
+      if (allFashionImages.length > 0) {
+        console.log(`🚨 EMERGENCY BYPASS: Using allFashionImages directly (${allFashionImages.length} images)`)
+        uniqueImages.push(...allFashionImages.slice(0, 500)) // Use first 500 images
+      } else {
+        return res.status(200).json({
+          success: true,
+          message: 'Crawler found images but none passed filtering',
+          results: {
+            pages_crawled: pagesCrawled,
+            total_images_found: totalImages,
+            unique_fashion_images: 0,
+            images_stored: 0,
+            errors: errors.length,
+            status: 'no_images_passed_filter'
+          }
+        })
+      }
     }
     
     // Store images in Supabase - FLOOD WITH CONTENT for amazing user experience
