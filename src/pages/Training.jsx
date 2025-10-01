@@ -166,7 +166,7 @@ const Training = () => {
         <div className="training-header-content">
           <div className="training-title-section">
             <h1>🎯 Crawler Training Center</h1>
-            <p>Refine the model by approving, rejecting, or marking duplicates</p>
+            <p>Refine the model by approving, rejecting, or marking duplicates - v2.0</p>
           </div>
           
           {/* Stats */}
