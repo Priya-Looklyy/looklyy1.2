@@ -16,7 +16,7 @@ const Training = () => {
   const [page, setPage] = useState(0)
   const observerTarget = useRef(null)
   
-  const IMAGES_PER_PAGE = 20
+  const IMAGES_PER_PAGE = 50
 
   // Load all images from the database
   const loadImages = async () => {
@@ -198,6 +198,12 @@ const Training = () => {
 
       {/* Image Grid */}
       <div className="training-container">
+        {/* Debug Info */}
+        <div style={{padding: '10px', background: '#f0f0f0', marginBottom: '20px', borderRadius: '8px'}}>
+          <strong>Debug:</strong> Showing {displayedImages.length} of {images.length} images | 
+          Has more: {hasMore ? 'Yes' : 'No'} | Page: {page + 1}
+        </div>
+        
         {displayedImages.length === 0 ? (
           <div className="training-empty">
             <div className="empty-icon">📭</div>
@@ -276,6 +282,13 @@ const Training = () => {
                 <div className="loading-more">
                   <div className="loading-spinner-small"></div>
                   <p>Loading more images...</p>
+                  <button 
+                    onClick={loadMoreImages}
+                    className="btn-primary"
+                    style={{marginTop: '20px'}}
+                  >
+                    Load More Images
+                  </button>
                 </div>
               )}
               {!hasMore && displayedImages.length > 0 && (

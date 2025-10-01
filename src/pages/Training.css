@@ -320,6 +320,10 @@
 .scroll-trigger {
   padding: 40px 0;
   text-align: center;
+  min-height: 100px;
+  background: rgba(124, 58, 237, 0.05);
+  border-radius: 12px;
+  margin-top: 20px;
 }
 
 .loading-more {
