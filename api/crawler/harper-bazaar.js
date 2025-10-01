@@ -252,64 +252,49 @@ export default async function handler(req, res) {
       console.log(`❌ CRITICAL: allFashionImages is EMPTY - filtering is too restrictive!`)
     }
     
-    // CLEAR DATABASE FIRST - Use a working approach
-    console.log('🗑️ Clearing old unfiltered images from database...')
+    // ADAPTIVE DEDUPLICATION: Check against existing DB images (don't clear database!)
+    console.log('🔍 Checking for duplicates against existing database...')
+    let existingUrls = new Set()
     try {
-      // Get all existing records first
-      const { data: existingRecords, error: fetchError } = await supabase
+      const { data: existingImages, error: fetchError } = await supabase
         .from('fashion_images_new')
-        .select('id')
-        .limit(1000)
+        .select('original_url')
       
-      if (fetchError) {
-        console.log('❌ Error fetching existing records:', fetchError.message)
-        // Continue without clearing - don't fail the entire crawl
-      } else if (existingRecords && existingRecords.length > 0) {
-        // Delete records one by one to avoid RLS issues
-        const deletePromises = existingRecords.map(record => 
-          supabase.from('fashion_images_new').delete().eq('id', record.id)
-        )
-        
-        await Promise.all(deletePromises)
-        console.log(`✅ Cleared ${existingRecords.length} existing records`)
-      } else {
-        console.log('✅ No existing records to clear')
+      if (!fetchError && existingImages) {
+        existingUrls = new Set(existingImages.map(img => img.original_url))
+        console.log(`📊 Found ${existingUrls.size} existing images in database`)
       }
-    } catch (clearError) {
-      console.log('⚠️ Database clear failed, continuing anyway:', clearError.message)
-      // Don't fail the entire crawl if clearing fails
-    }
-    console.log(`📥 About to store ${Math.min(uniqueImages.length, 500)} images to database`)
-    
-    // CRITICAL CHECK: If no uniqueImages, something is wrong with filtering
-    if (uniqueImages.length === 0) {
-      console.log(`❌ CRITICAL: No unique images to store - filtering is too restrictive or broken`)
-      console.log(`Debug - totalImages: ${totalImages}, allFashionImages.length: ${allFashionImages.length}`)
-      
-      // EMERGENCY BYPASS: Use allFashionImages directly if uniqueImages is empty
-      if (allFashionImages.length > 0) {
-        console.log(`🚨 EMERGENCY BYPASS: Using allFashionImages directly (${allFashionImages.length} images)`)
-        uniqueImages.push(...allFashionImages.slice(0, 500)) // Use first 500 images
-      } else {
-        return res.status(200).json({
-          success: true,
-          message: 'Crawler found images but none passed filtering',
-          results: {
-            pages_crawled: pagesCrawled,
-            total_images_found: totalImages,
-            unique_fashion_images: 0,
-            images_stored: 0,
-            errors: errors.length,
-            status: 'no_images_passed_filter'
-          }
-        })
-      }
+    } catch (error) {
+      console.log('⚠️ Could not fetch existing images, proceeding without DB deduplication')
     }
     
-    // Store images in Supabase - FLOOD WITH CONTENT for amazing user experience
-    console.log(`🔍 DEBUG: About to store ${uniqueImages.length} images, first image:`, uniqueImages[0])
+    // Filter out images that already exist in database
+    const newImages = uniqueImages.filter(img => !existingUrls.has(img.src))
+    console.log(`✨ Found ${newImages.length} NEW images to add (${uniqueImages.length} total - ${existingUrls.size} already in DB)`)
+    console.log(`📥 About to store ${Math.min(newImages.length, 500)} new images to database`)
     
-    for (const image of uniqueImages.slice(0, 500)) { // Store up to 500 images
+    // CRITICAL CHECK: If no new images, inform user
+    if (newImages.length === 0) {
+      console.log(`✅ No new images to add - all ${uniqueImages.length} images already exist in database`)
+      return res.status(200).json({
+        success: true,
+        message: 'No new images found - all images already in database',
+        results: {
+          pages_crawled: pagesCrawled,
+          total_images_found: totalImages,
+          unique_fashion_images: uniqueImages.length,
+          images_stored: 0,
+          existing_in_db: existingUrls.size,
+          errors: errors.length,
+          status: 'no_new_images'
+        }
+      })
+    }
+    
+    // Store NEW images in Supabase - only add what's not already there
+    console.log(`🔍 DEBUG: About to store ${newImages.length} NEW images, first image:`, newImages[0])
+    
+    for (const image of newImages.slice(0, 500)) { // Store up to 500 NEW images
       try {
         console.log(`🔍 DEBUG: Attempting to store image ${storedImages + 1}:`, image.src)
         
