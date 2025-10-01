@@ -97,15 +97,14 @@ const Training = () => {
         imageElement.style.transform = 'scale(0.9)'
       }
 
-      // Step 2: Update image status in database
+      // Step 2: Update image status in database (using only existing columns)
+      const updateData = {
+        category: `${image.category}_${feedback}` // Mark as approved/rejected/duplicate
+      }
+      
       const { data, error } = await supabase
         .from('fashion_images_new')
-        .update({
-          training_status: status,
-          training_feedback: feedback,
-          training_timestamp: new Date().toISOString(),
-          needs_training: false
-        })
+        .update(updateData)
         .eq('id', image.id)
         .select()
 
