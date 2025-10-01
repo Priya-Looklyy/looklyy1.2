@@ -270,10 +270,16 @@ export default async function handler(req, res) {
     
     // Filter out images that already exist in database
     const newImages = uniqueImages.filter(img => !existingUrls.has(img.src))
-    console.log(`✨ Found ${newImages.length} NEW images to add (${uniqueImages.length} total - ${existingUrls.size} already in DB)`)
-    console.log(`📥 About to store ${Math.min(newImages.length, 500)} new images to database`)
+    const currentDbCount = existingUrls.size
+    const maxTotalImages = 500
+    const availableSlots = Math.max(0, maxTotalImages - currentDbCount)
+    const imagesToAdd = Math.min(newImages.length, availableSlots)
     
-    // CRITICAL CHECK: If no new images, inform user
+    console.log(`✨ Found ${newImages.length} NEW images to add (${uniqueImages.length} total - ${currentDbCount} already in DB)`)
+    console.log(`📊 Database: ${currentDbCount}/500 images, ${availableSlots} slots available`)
+    console.log(`📥 Will add ${imagesToAdd} new images to stay within 500 limit`)
+    
+    // CRITICAL CHECK: If no new images or no space, inform user
     if (newImages.length === 0) {
       console.log(`✅ No new images to add - all ${uniqueImages.length} images already exist in database`)
       return res.status(200).json({
@@ -284,17 +290,35 @@ export default async function handler(req, res) {
           total_images_found: totalImages,
           unique_fashion_images: uniqueImages.length,
           images_stored: 0,
-          existing_in_db: existingUrls.size,
+          existing_in_db: currentDbCount,
           errors: errors.length,
           status: 'no_new_images'
         }
       })
     }
     
-    // Store NEW images in Supabase - only add what's not already there
-    console.log(`🔍 DEBUG: About to store ${newImages.length} NEW images, first image:`, newImages[0])
+    if (availableSlots === 0) {
+      console.log(`✅ Database at capacity (${currentDbCount}/500) - no space for new images`)
+      return res.status(200).json({
+        success: true,
+        message: 'Database at capacity - no space for new images',
+        results: {
+          pages_crawled: pagesCrawled,
+          total_images_found: totalImages,
+          unique_fashion_images: uniqueImages.length,
+          images_stored: 0,
+          existing_in_db: currentDbCount,
+          available_slots: 0,
+          errors: errors.length,
+          status: 'database_full'
+        }
+      })
+    }
     
-    for (const image of newImages.slice(0, 500)) { // Store up to 500 NEW images
+    // Store NEW images in Supabase - respect 500 total limit
+    console.log(`🔍 DEBUG: About to store ${imagesToAdd} NEW images (${availableSlots} slots available), first image:`, newImages[0])
+    
+    for (const image of newImages.slice(0, imagesToAdd)) { // Store only what fits within 500 limit
       try {
         console.log(`🔍 DEBUG: Attempting to store image ${storedImages + 1}:`, image.src)
         

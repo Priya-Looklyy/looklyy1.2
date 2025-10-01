@@ -1,0 +1,40 @@
+# Airflow core dependencies
+apache-airflow==2.7.3
+
+# Additional packages for Looklyy pipeline
+requests==2.31.0
+psycopg2-binary==2.9.7
+celery==5.3.4
+redis==5.0.1
+
+# Data processing
+pandas==2.1.4
+numpy==1.24.3
+
+# HTTP and API
+httpx==0.25.2
+urllib3==2.1.0
+
+# Logging and monitoring
+structlog==23.2.0
+
+# Environment and configuration
+python-dotenv==1.0.0
+
+# Email notifications
+sendgrid==6.10.0
+
+# Database connections
+sqlalchemy==2.0.23
+alembic==1.13.1
+
+# Time and date handling
+python-dateutil==2.8.2
+pytz==2023.3
+
+# JSON handling
+jsonschema==4.20.0
+
+# Testing (optional)
+pytest==7.4.3
+pytest-cov==4.1.0
