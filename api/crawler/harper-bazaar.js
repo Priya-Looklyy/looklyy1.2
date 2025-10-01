@@ -31,31 +31,27 @@ export default async function handler(req, res) {
       })
     }
 
-    // STEP 1: Load learning patterns from previous training cycles
-    let excludedUrls = []
+    // STEP 1: Load learning patterns from previous training cycles (NO URL exclusion)
     let preferredCategories = {}
     
     try {
-      // Get all existing images to check what was rejected/approved
+      // Get existing images to learn category preferences only
       const { data: existingImages } = await supabase
         .from('fashion_images_new')
-        .select('original_url, category')
+        .select('category')
       
       if (existingImages) {
-        // Build exclusion list from previously seen images
-        excludedUrls = existingImages.map(img => img.original_url)
-        
-        // Count approved categories to prioritize them
+        // Count approved categories to prioritize them in URL ordering
         existingImages.forEach(img => {
           if (img.category && !img.category.includes('_rejected') && !img.category.includes('_duplicate')) {
             preferredCategories[img.category] = (preferredCategories[img.category] || 0) + 1
           }
         })
         
-        console.log(`📊 Learning from history: ${excludedUrls.length} URLs to exclude, preferred categories:`, Object.keys(preferredCategories).slice(0, 5))
+        console.log(`📊 Learning from history - Preferred categories:`, Object.keys(preferredCategories).slice(0, 5))
       }
     } catch (error) {
-      console.log('⚠️ Could not load training history, proceeding with fresh crawl')
+      console.log('⚠️ Could not load training history, proceeding with default priorities')
     }
 
     // URLs to crawl - PRIORITIZED for fashion-forward full-body images (Runway, Trends, Street-Style first)
@@ -315,16 +311,7 @@ export default async function handler(req, res) {
     
     for (const image of uniqueImages.slice(0, 500)) { // Store up to 500 images
       try {
-        // ADAPTIVE LEARNING: Skip images that were previously rejected or are duplicates
-        if (excludedUrls.includes(image.src)) {
-          console.log(`⏭️ Skipping excluded URL (previously rejected/duplicate):`, image.src.substring(0, 50))
-          continue
-        }
-        
-        console.log(`🔍 DEBUG: Attempting to store NEW image ${storedImages + 1}:`, image.src)
-        
-        // ADAPTIVE INSERT: Prioritize approved categories
-        const categoryBoost = preferredCategories[image.category] || 0
+        console.log(`🔍 DEBUG: Attempting to store image ${storedImages + 1}:`, image.src)
         
         const { data, error } = await supabase
           .from('fashion_images_new')
