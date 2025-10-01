@@ -364,13 +364,38 @@ const Admin = () => {
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Crawler Control</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <button
               onClick={triggerCrawl}
               disabled={isLoading}
               className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Running...' : '🚀 Run Crawler Now'}
+            </button>
+            
+            <button
+              onClick={async () => {
+                setIsLoading(true)
+                setMessage('🧠 Applying training learnings...')
+                try {
+                  const response = await fetch('/api/training/apply-learning', { method: 'POST' })
+                  const data = await response.json()
+                  if (data.success) {
+                    setMessage(`✅ Training applied! Removed ${data.stats.excluded} rejected images, kept ${data.stats.remaining} approved images. Ready for fresh crawl!`)
+                  } else {
+                    setMessage(`❌ Error: ${data.error}`)
+                  }
+                } catch (error) {
+                  setMessage(`❌ Error applying training: ${error.message}`)
+                } finally {
+                  setIsLoading(false)
+                  fetchCrawlData()
+                }
+              }}
+              disabled={isLoading}
+              className="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? 'Applying...' : '🧠 Apply Training'}
             </button>
             
             <button
@@ -383,7 +408,7 @@ const Admin = () => {
             
             <button
               onClick={fetchCrawlData}
-              className="bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-purple-700"
+              className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700"
             >
               🔄 Refresh Data
             </button>
