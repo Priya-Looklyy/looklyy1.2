@@ -238,8 +238,9 @@ const Training = () => {
       <div className="training-container">
         {/* Debug Info */}
         <div style={{padding: '10px', background: '#f0f0f0', marginBottom: '20px', borderRadius: '8px'}}>
-          <strong>Debug:</strong> Showing {displayedImages.length} of {images.length} images | 
-          Has more: {hasMore ? 'Yes' : 'No'} | Page: {page + 1}
+          <strong>Debug v3.0:</strong> Showing {displayedImages.length} of {images.length} images | 
+          Has more: {hasMore ? 'Yes' : 'No'} | Page: {page + 1} | 
+          Training: {trainingStats.approved}✅ {trainingStats.rejected}❌ {trainingStats.duplicates}🔁
         </div>
         
         {displayedImages.length === 0 ? (
