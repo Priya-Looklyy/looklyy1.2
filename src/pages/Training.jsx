@@ -87,8 +87,18 @@ const Training = () => {
 
       const { status, feedback, stat } = actionMap[action]
 
-      // Update image status in database
-      const { error } = await supabase
+      console.log(`🎯 Recording training action: ${action} for image ${image.id}`)
+
+      // Step 1: Add fade-out animation
+      const imageElement = document.getElementById(`training-image-${image.id}`)
+      if (imageElement) {
+        imageElement.style.transition = 'all 0.5s ease-out'
+        imageElement.style.opacity = '0'
+        imageElement.style.transform = 'scale(0.9)'
+      }
+
+      // Step 2: Update image status in database
+      const { data, error } = await supabase
         .from('fashion_images_new')
         .update({
           training_status: status,
@@ -97,27 +107,55 @@ const Training = () => {
           needs_training: false
         })
         .eq('id', image.id)
+        .select()
 
       if (!error) {
-        // Update stats
+        console.log(`✅ Database updated successfully:`, data)
+        
+        // Step 3: Update stats immediately
         setTrainingStats(prev => ({
           ...prev,
           [stat]: prev[stat] + 1
         }))
 
-        // Add visual feedback
-        const imageElement = document.getElementById(`training-image-${image.id}`)
-        if (imageElement) {
-          imageElement.style.opacity = '0.3'
-          imageElement.style.transform = 'scale(0.95)'
+        // Step 4: Remove image from displayed list after fade-out
+        setTimeout(() => {
+          setDisplayedImages(prev => prev.filter(img => img.id !== image.id))
+          console.log(`🗑️ Image ${image.id} removed from display after ${action}`)
+        }, 500)
+
+        // Step 5: Send feedback to training API for model learning
+        try {
+          const feedbackResponse = await fetch('/api/training/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageId: image.id,
+              approved: action === 'approve',
+              reason: feedback,
+              category: image.category,
+              notes: `User marked as ${action} via training dashboard`
+            })
+          })
+          
+          const feedbackResult = await feedbackResponse.json()
+          if (feedbackResult.success) {
+            console.log(`📊 Training feedback recorded in learning system`)
+          }
+        } catch (feedbackError) {
+          console.log('⚠️ Training API not available, feedback stored in database only')
         }
 
-        console.log(`✅ Image ${image.id} marked as ${action}`)
       } else {
-        console.error('Error updating image:', error)
+        console.error('❌ Database update failed:', error)
+        // Revert visual feedback on error
+        if (imageElement) {
+          imageElement.style.opacity = '1'
+          imageElement.style.transform = 'scale(1)'
+        }
       }
     } catch (error) {
-      console.error('Error handling training action:', error)
+      console.error('❌ Error handling training action:', error)
     }
   }
 
@@ -235,7 +273,11 @@ const Training = () => {
                     <div className="training-overlay">
                       <button 
                         className="training-action training-action-approve"
-                        onClick={() => handleTrainingAction(image, 'approve')}
+                        onClick={(e) => {
+                          e.currentTarget.classList.add('clicked')
+                          setTimeout(() => e.currentTarget.classList.remove('clicked'), 300)
+                          handleTrainingAction(image, 'approve')
+                        }}
                         title="Approve this image"
                       >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -245,7 +287,11 @@ const Training = () => {
                       
                       <button 
                         className="training-action training-action-reject"
-                        onClick={() => handleTrainingAction(image, 'reject')}
+                        onClick={(e) => {
+                          e.currentTarget.classList.add('clicked')
+                          setTimeout(() => e.currentTarget.classList.remove('clicked'), 300)
+                          handleTrainingAction(image, 'reject')
+                        }}
                         title="Reject this image"
                       >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -256,7 +302,11 @@ const Training = () => {
                       
                       <button 
                         className="training-action training-action-duplicate"
-                        onClick={() => handleTrainingAction(image, 'duplicate')}
+                        onClick={(e) => {
+                          e.currentTarget.classList.add('clicked')
+                          setTimeout(() => e.currentTarget.classList.remove('clicked'), 300)
+                          handleTrainingAction(image, 'duplicate')
+                        }}
                         title="Mark as duplicate"
                       >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
