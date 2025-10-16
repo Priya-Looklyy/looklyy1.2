@@ -75,14 +75,22 @@ function AppContent() {
   const [isDemoMode, setIsDemoMode] = useState(false)
 
   useEffect(() => {
-    // Check for demo mode in URL params or localStorage
+    // Check for demo mode in multiple ways:
+    // 1. URL path: /demo
+    // 2. URL param: ?demo=true
+    // 3. localStorage: looklyy_demo_mode
+    const currentPath = window.location.pathname
     const urlParams = new URLSearchParams(window.location.search)
     const demoParam = urlParams.get('demo')
     const storedDemoMode = localStorage.getItem('looklyy_demo_mode')
     
-    if (demoParam === 'true' || storedDemoMode === 'true') {
+    if (currentPath === '/demo' || demoParam === 'true' || storedDemoMode === 'true') {
       setIsDemoMode(true)
       localStorage.setItem('looklyy_demo_mode', 'true')
+      // Update URL to clean /demo path if not already there
+      if (currentPath !== '/demo') {
+        window.history.replaceState({}, '', '/demo')
+      }
     }
   }, [])
 

@@ -66,7 +66,8 @@ const DemoNavigation: React.FC<{ currentPage: DemoPage; onNavigate: (page: DemoP
               onClick={() => {
                 setDemoMode(false)
                 localStorage.removeItem('looklyy_demo_authenticated')
-                window.location.reload()
+                localStorage.removeItem('looklyy_demo_mode')
+                window.location.href = '/'
               }}
               className="text-sm text-gray-600 hover:text-gray-900"
             >

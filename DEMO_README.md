@@ -4,17 +4,22 @@ A complete demonstration version of Looklyy that runs entirely on static data wi
 
 ## 🎭 Accessing Demo Mode
 
-### Method 1: URL Parameter
+### Method 1: Simple URL (Recommended) 🚀
+Just visit:
+```
+https://looklyy04.vercel.app/demo
+```
+
+### Method 2: URL Parameter
 Add `?demo=true` to any Looklyy URL:
 ```
 https://looklyy04.vercel.app/?demo=true
 ```
 
-### Method 2: Direct Link
-Visit the deployed demo directly at the demo URL.
-
 ### Method 3: localStorage
 Set `looklyy_demo_mode` to `'true'` in browser localStorage and reload the page.
+
+**All methods will automatically redirect to the clean `/demo` URL.**
 
 ## ✨ Features
 
@@ -76,7 +81,7 @@ Images are sourced from Unsplash with high-quality fashion photography.
 
 ## 🔄 Demo Flow
 
-1. **Start**: Visit URL with `?demo=true`
+1. **Start**: Visit `/demo`
 2. **Login**: Enter any email/password or click Google sign-in
 3. **Explore**: Browse trending fashion images
 4. **Save**: Heart your favorite looks
@@ -141,9 +146,15 @@ src/demo/
 ## 🚀 Deployment
 
 The demo is automatically deployed with the main application:
-- **Production**: `https://looklyy04.vercel.app/?demo=true`
+- **Demo URL**: `https://looklyy04.vercel.app/demo` ⭐ **Share this!**
 - **Branch**: `demo-looklyy` (separate from main)
 - **No Conflicts**: Demo code is isolated and doesn't affect production
+
+### Easy Share Link
+```
+looklyy04.vercel.app/demo
+```
+Simple, clean, and memorable! Perfect for sharing with stakeholders, investors, or users.
 
 ## 🔧 Customization
 
