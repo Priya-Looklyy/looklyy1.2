@@ -33,15 +33,7 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
       
       <div className="nav-right">
         <div className="profile-info">
-          <img 
-            src={user?.avatar || '/default-avatar.png'} 
-            alt={user?.name || 'User'}
-            className="profile-avatar"
-            onError={(e) => {
-              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTIiIGZpbGw9IiNENUQxRUIiLz4KPHN2Zz4=';
-            }}
-          />
-          <span className="profile-name">Hi, {user?.name || 'User'}</span>
+          <div className="user-initials">PS</div>
         </div>
         <div className="logout-icon" onClick={onLogout} title="Logout">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
