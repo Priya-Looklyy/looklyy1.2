@@ -7,7 +7,7 @@
   box-shadow: 0 4px 20px rgba(147, 51, 234, 0.1);
   transition: all 0.4s ease;
   cursor: pointer;
-  flex: 1;
+  width: 20%;
   height: 100%;
   position: relative;
 }

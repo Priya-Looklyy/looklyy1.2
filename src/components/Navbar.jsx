@@ -15,7 +15,7 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
       <div className="nav-left">
         <div className="logo" onClick={onLogoClick}>
           <h1>LOOKLYY</h1>
-          <p className="tagline">Simplifying Fashion For You!</p>
+          <p className="tagline">Simplifying fashion for you</p>
         </div>
       </div>
       
