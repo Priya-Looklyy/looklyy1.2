@@ -3,7 +3,7 @@ import { useLook } from '../context/LookContext'
 import './ImageSlider.css'
 
 const ImageSlider = ({ slider, onPinLook }) => {
-  const { toggleFavorite, togglePin, isFavorited, isPinned, showNotification } = useLook()
+  const { toggleFavorite, togglePin, isFavorited, isPinned } = useLook()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
@@ -38,7 +38,6 @@ const ImageSlider = ({ slider, onPinLook }) => {
   }
 
   const handleSliderClick = () => {
-    showNotification(`Opening details for: ${slider.title}`)
     console.log('Slider Details:', slider)
   }
 

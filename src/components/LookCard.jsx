@@ -3,7 +3,7 @@ import { useLook } from '../context/LookContext'
 import './LookCard.css'
 
 const LookCard = ({ look }) => {
-  const { toggleFavorite, togglePin, isFavorited, isPinned, showNotification } = useLook()
+  const { toggleFavorite, togglePin, isFavorited, isPinned } = useLook()
   const [imageLoaded, setImageLoaded] = useState(false)
 
   const handleFavoriteClick = (e) => {
@@ -17,7 +17,6 @@ const LookCard = ({ look }) => {
   }
 
   const handleCardClick = () => {
-    showNotification(`Opening details for: ${look.title}`)
     // In a real app, this would navigate to a detailed view
     console.log('Look Details:', look)
   }

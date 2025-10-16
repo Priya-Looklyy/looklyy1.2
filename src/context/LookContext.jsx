@@ -63,14 +63,10 @@ export function LookProvider({ children }) {
 
   const toggleFavorite = (lookId) => {
     dispatch({ type: TOGGLE_FAVORITE, payload: lookId })
-    const isFavorited = state.favorites.includes(lookId)
-    showNotification(isFavorited ? 'Removed from favorites' : 'Added to favorites ❤️')
   }
 
   const togglePin = (lookId) => {
     dispatch({ type: TOGGLE_PIN, payload: lookId })
-    const isPinned = state.pins.includes(lookId)
-    showNotification(isPinned ? 'Look unpinned' : 'Look pinned! 📌')
   }
 
   const showNotification = (message) => {
