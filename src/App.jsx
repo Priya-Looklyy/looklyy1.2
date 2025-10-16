@@ -84,19 +84,35 @@ function AppContent() {
     const demoParam = urlParams.get('demo')
     const storedDemoMode = localStorage.getItem('looklyy_demo_mode')
     
+    console.log('🔍 Demo mode check:', { currentPath, demoParam, storedDemoMode })
+    
     if (currentPath === '/demo' || demoParam === 'true' || storedDemoMode === 'true') {
+      console.log('✅ Demo mode activated!')
       setIsDemoMode(true)
       localStorage.setItem('looklyy_demo_mode', 'true')
       // Update URL to clean /demo path if not already there
       if (currentPath !== '/demo') {
         window.history.replaceState({}, '', '/demo')
       }
+    } else {
+      console.log('❌ Demo mode not activated')
     }
   }, [])
 
   // If demo mode is enabled, render demo app
   if (isDemoMode) {
-    return <DemoApp />
+    try {
+      return <DemoApp />
+    } catch (error) {
+      console.error('❌ Demo app error:', error)
+      return (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h1>Demo Mode Error</h1>
+          <p>There was an error loading the demo. Please try refreshing the page.</p>
+          <button onClick={() => window.location.reload()}>Refresh</button>
+        </div>
+      )
+    }
   }
 
   if (isLoading) {
