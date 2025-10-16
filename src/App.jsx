@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import HomePage from './components/HomePage'
@@ -8,6 +8,7 @@ import Closet from './components/Closet'
 import AuthFlow from './components/AuthFlow'
 import Admin from './pages/Admin'
 import Training from './pages/Training'
+import { DemoApp } from './demo/DemoApp'
 import { LookProvider } from './context/LookContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import './App.css'
@@ -71,6 +72,24 @@ function LoadingScreen() {
 // Main App Component with Auth Logic  
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth()
+  const [isDemoMode, setIsDemoMode] = useState(false)
+
+  useEffect(() => {
+    // Check for demo mode in URL params or localStorage
+    const urlParams = new URLSearchParams(window.location.search)
+    const demoParam = urlParams.get('demo')
+    const storedDemoMode = localStorage.getItem('looklyy_demo_mode')
+    
+    if (demoParam === 'true' || storedDemoMode === 'true') {
+      setIsDemoMode(true)
+      localStorage.setItem('looklyy_demo_mode', 'true')
+    }
+  }, [])
+
+  // If demo mode is enabled, render demo app
+  if (isDemoMode) {
+    return <DemoApp />
+  }
 
   if (isLoading) {
     return <LoadingScreen />
