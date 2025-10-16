@@ -23,9 +23,18 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const checkAuthStatus = async () => {
       const token = getToken()
-      console.log('🔍 Check auth on refresh - token exists:', !!token)
+      const isDemoMode = localStorage.getItem('looklyy_demo_mode') === 'true'
+      const isDemoAuthenticated = localStorage.getItem('looklyy_demo_authenticated') === 'true'
       
-      if (token && token.trim() !== '' && token !== 'null' && token !== 'undefined') {
+      console.log('🔍 Check auth on refresh - token exists:', !!token, 'demo mode:', isDemoMode, 'demo auth:', isDemoAuthenticated)
+      
+      if (isDemoMode && isDemoAuthenticated) {
+        // Demo mode authentication
+        setIsAuthenticated(true)
+        setUser({ name: 'Demo User', email: 'demo@looklyy.com' })
+        setIsLoading(false)
+        console.log('✅ Demo user authenticated')
+      } else if (token && token.trim() !== '' && token !== 'null' && token !== 'undefined') {
         // If token exists, assume the user is authenticated and keep them on the app
         setIsAuthenticated(true)
         setUser({ name: 'User', email: 'user@looklyy.com' }) // Mock user data for now

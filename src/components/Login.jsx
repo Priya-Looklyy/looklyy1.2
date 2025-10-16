@@ -10,6 +10,20 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Check if we're in demo mode
+    const isDemoMode = localStorage.getItem('looklyy_demo_mode') === 'true'
+    
+    if (isDemoMode) {
+      // Demo mode - simulate successful login
+      console.log('🎭 Demo login successful')
+      localStorage.setItem('looklyy_demo_authenticated', 'true')
+      // Trigger a page reload to activate demo mode
+      window.location.reload()
+      return
+    }
+    
+    // Regular login
     const result = await login(formData.email, formData.password)
     
     if (result.success) {

@@ -86,7 +86,8 @@ function AppContent() {
     
     console.log('🔍 Demo mode check:', { currentPath, demoParam, storedDemoMode })
     
-    if (currentPath === '/demo' || demoParam === 'true' || storedDemoMode === 'true') {
+    // FORCE DEMO MODE FOR TESTING
+    if (currentPath === '/demo' || demoParam === 'true' || storedDemoMode === 'true' || currentPath.includes('demo')) {
       console.log('✅ Demo mode activated!')
       setIsDemoMode(true)
       localStorage.setItem('looklyy_demo_mode', 'true')
@@ -99,23 +100,14 @@ function AppContent() {
     }
   }, [])
 
-  // If demo mode is enabled, render demo app
+  // If demo mode is enabled, render regular app with demo data
   if (isDemoMode) {
-    console.log('🎭 Rendering DemoApp component')
-    try {
-      return <DemoApp />
-    } catch (error) {
-      console.error('❌ Demo app error:', error)
-      return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h1>Demo Mode Error</h1>
-          <p>There was an error loading the demo. Please try refreshing the page.</p>
-          <button onClick={() => window.location.reload()}>Refresh</button>
-        </div>
-      )
-    }
+    console.log('🎭 Demo mode enabled - using regular app with mock data')
+    // Set demo flag in localStorage for components to use
+    localStorage.setItem('looklyy_demo_mode', 'true')
   } else {
     console.log('🔴 Demo mode is FALSE, rendering regular app')
+    localStorage.removeItem('looklyy_demo_mode')
   }
 
   if (isLoading) {
