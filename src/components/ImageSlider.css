@@ -69,72 +69,11 @@
   flex-direction: row;
 }
 
-.action-btn {
-  background: rgba(0, 0, 0, 0.7);
-  border: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%; /* Perfect circle - NO OVALS */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  padding: 0;
-}
+/* Removed old action-btn styles */
 
-.action-btn:hover {
-  background: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1);
-}
+/* Removed old action-btn hover and focus styles */
 
-.action-btn:focus {
-  outline: 2px solid #9333ea;
-  outline-offset: 2px;
-}
-
-.action-btn i,
-.action-btn svg {
-  width: 20px;
-  height: 20px;
-  color: rgba(255, 255, 255, 0.9);
-  transition: all 0.3s ease;
-}
-
-/* SIMPLE Instagram/Pinterest style icons */
-.action-btn svg {
-  fill: #ffffff; /* Simple white icons */
-  color: currentColor; /* Use text color */
-}
-
-.heart-btn svg {
-  fill: #ffffff;
-}
-
-.heart-btn:hover svg {
-  fill: #ffffff;
-  opacity: 0.8;
-}
-
-.heart-btn.active svg {
-  fill: #e91e63 !important; /* Pink when active */
-  animation: heartBeat 0.6s ease;
-}
-
-.pin-btn svg {
-  fill: #9333ea; /* Purple by default */
-}
-
-.pin-btn:hover svg {
-  fill: #8b5cf6; /* Lighter purple on hover */
-  opacity: 1;
-}
-
-.pin-btn.active svg {
-  fill: #7c3aed !important; /* Darker purple when active */
-  animation: pinRotate 0.6s ease;
-}
+/* Removed all old action-btn, heart-btn, and pin-btn styles */
 
 @keyframes heartBeat {
   0%, 100% { transform: scale(1); }
