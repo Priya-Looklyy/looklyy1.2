@@ -124,6 +124,18 @@ const HomePage = () => {
       setLoading(true)
       setError(null)
       
+      // Check if we're in demo mode
+      const isDemoMode = localStorage.getItem('looklyy_demo_mode') === 'true'
+      
+      if (isDemoMode) {
+        console.log('🎭 Demo mode detected - using mock data for homepage')
+        // Use mock data for demo mode
+        const fallbackSliders = getAllSliders()
+        setSliderData(fallbackSliders)
+        setLoading(false)
+        return
+      }
+      
       try {
         console.log('🔄 Loading trending data for homepage...')
         const response = await trendingAPI.getLatestTrends({ limit: 100 })
