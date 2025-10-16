@@ -93,7 +93,7 @@
 .profile-info {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   padding: 0.3rem 0.6rem;
   border-radius: 18px;
   background: rgba(0, 0, 0, 0.05);
@@ -104,20 +104,13 @@
   background: rgba(0, 0, 0, 0.08);
 }
 
-.profile-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid #f0f0f0;
-}
-
-.profile-name {
-  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 300;
-  color: #1a1a1a;
-  white-space: nowrap;
+.user-initials {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 560;
+  color: #7c3aed;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .logout-icon {
