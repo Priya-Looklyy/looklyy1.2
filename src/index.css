@@ -58,7 +58,7 @@ h1, h2, h3 {
   padding: 0.4rem;
   border-radius: 50%;
   transition: all 0.3s ease;
-  background: transparent;
+  background: transparent !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,6 +66,7 @@ h1, h2, h3 {
 
 .icon-container:hover {
   transform: scale(1.1);
+  background: transparent !important;
 }
 
 .icon-container:focus {
