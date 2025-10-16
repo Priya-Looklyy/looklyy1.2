@@ -12,9 +12,6 @@
   position: relative;
 }
 
-.image-slider:hover {
-  /* Removed purple hover effects */
-}
 
 .slider-image-container {
   position: relative;
@@ -30,9 +27,6 @@
   transition: all 0.4s ease;
 }
 
-.image-slider:hover .slider-image {
-  /* Removed image scale effect */
-}
 
 .image-loading {
   position: absolute;
