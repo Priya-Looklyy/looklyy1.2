@@ -24,7 +24,7 @@
 }
 
 .nav-left h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Nord', sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
   background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
@@ -36,12 +36,13 @@
 }
 
 .nav-left .tagline {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
   font-size: 0.75rem;
   margin: -5px 0 0 0;
   color: #9ca3af;
   letter-spacing: 0.3px;
   text-transform: none;
+  font-weight: 300;
 }
 
 .nav-center {
@@ -53,9 +54,9 @@
 .nav-btn {
   background: none;
   border: none;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
   font-size: 0.8rem;
-  font-weight: 400;
+  font-weight: 300;
   color: #6b46c1;
   cursor: pointer;
   padding: 0.5rem 1rem;
@@ -74,7 +75,7 @@
 .nav-btn.active {
   color: #ffffff;
   background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-  font-weight: 500;
+  font-weight: 400;
   box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);
 }
 
@@ -112,8 +113,9 @@
 }
 
 .profile-name {
+  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 300;
   color: #1a1a1a;
   white-space: nowrap;
 }
