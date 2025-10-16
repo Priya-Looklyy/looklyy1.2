@@ -45,7 +45,7 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
         </div>
         <div className="logout-icon" onClick={onLogout} title="Logout">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-            <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0 1 18 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.46 1.27-4.64 3.19-5.9L6.96 4.96A8.967 8.967 0 0 0 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
           </svg>
         </div>
       </div>

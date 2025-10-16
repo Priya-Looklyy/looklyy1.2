@@ -123,16 +123,19 @@
   padding: 0.4rem;
   border-radius: 50%;
   transition: all 0.3s ease;
-  color: #666;
+  color: #9333ea;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(126, 34, 206, 0.05) 100%);
 }
 
 .logout-icon:hover {
-  background-color: #f8f8f8;
-  color: #1a1a1a;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.2) 0%, rgba(126, 34, 206, 0.15) 100%);
+  color: #7c3aed;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.2);
 }
 
 .logout-icon:focus {
-  outline: 2px solid #3498db;
+  outline: 2px solid #9333ea;
   outline-offset: 2px;
 }
 
