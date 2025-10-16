@@ -90,30 +90,12 @@
 
 /* Responsive Design - Keep all 5 sliders visible */
 @media (max-width: 768px) {
-  .action-btn {
-    width: 18px;
-    height: 18px;
-  }
-  
-  .action-btn i {
-    font-size: 0.5rem;
-  }
-  
   .slider-actions {
     gap: 0.25rem;
   }
 }
 
 @media (max-width: 480px) {
-  .action-btn {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .action-btn i {
-    font-size: 0.45rem;
-  }
-  
   .slider-overlay {
     padding: 0.5rem;
   }
@@ -124,7 +106,7 @@
 }
 
 /* Smooth transitions */
-.image-slider, .action-btn {
+.image-slider {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
