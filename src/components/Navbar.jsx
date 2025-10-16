@@ -19,7 +19,7 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
         </div>
       </div>
       
-      <div className="nav-center">
+      <div className="nav-right">
         {navItems.map(item => (
           <button
             key={item.id}
@@ -29,9 +29,6 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
             <span>{item.label}</span>
           </button>
         ))}
-      </div>
-      
-      <div className="nav-right">
         <div className="profile-info">
           <div className="user-initials">PS</div>
         </div>

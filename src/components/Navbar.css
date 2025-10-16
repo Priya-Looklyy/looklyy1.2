@@ -45,11 +45,6 @@
   font-weight: 300;
 }
 
-.nav-center {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
 
 .nav-btn {
   background: none;
@@ -86,7 +81,7 @@
 
 .nav-right {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   align-items: center;
 }
 
