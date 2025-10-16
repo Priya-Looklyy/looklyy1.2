@@ -101,6 +101,7 @@ function AppContent() {
 
   // If demo mode is enabled, render demo app
   if (isDemoMode) {
+    console.log('🎭 Rendering DemoApp component')
     try {
       return <DemoApp />
     } catch (error) {
@@ -113,6 +114,8 @@ function AppContent() {
         </div>
       )
     }
+  } else {
+    console.log('🔴 Demo mode is FALSE, rendering regular app')
   }
 
   if (isLoading) {

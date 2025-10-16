@@ -42,6 +42,7 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           <p className="text-purple-800 font-semibold text-sm">
             🎭 DEMO MODE - Enter any credentials to continue
           </p>
+          <p className="text-xs text-purple-600 mt-1">DEBUG: DemoAuthFlow component loaded</p>
         </div>
 
         {/* Logo */}
