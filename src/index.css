@@ -59,6 +59,7 @@ h1, h2, h3 {
   border-radius: 50%;
   transition: all 0.3s ease;
   background: transparent !important;
+  background-color: transparent !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,11 +68,19 @@ h1, h2, h3 {
 .icon-container:hover {
   transform: scale(1.1);
   background: transparent !important;
+  background-color: transparent !important;
 }
 
 .icon-container:focus {
   outline: 2px solid #9333ea;
   outline-offset: 2px;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.icon-container:active {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* Icon States */

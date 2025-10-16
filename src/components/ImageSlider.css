@@ -50,7 +50,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: transparent;
+  background: transparent !important;
+  background-color: transparent !important;
   opacity: 1;
   transition: all 0.3s ease;
   display: flex;
@@ -67,6 +68,8 @@
   display: flex;
   gap: 0.3rem;
   flex-direction: row;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* Removed old action-btn styles */
