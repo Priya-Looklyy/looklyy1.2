@@ -118,7 +118,7 @@ const DemoAppContent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 25%, #e9d5ff 50%, #ddd6fe 75%, #c4b5fd 100%)' }}>
       <DemoNavigation currentPage={currentPage} onNavigate={handleNavigate} />
       
       {currentPage === 'trending' && <DemoTrending />}
