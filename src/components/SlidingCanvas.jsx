@@ -154,7 +154,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
             {/* Thumbnail Reorder Section */}
             <div className="thumbnail-section">
               <button 
-                className="scroll-btn" 
+                className="scroll-btn up-arrow" 
                 onClick={scrollThumbnailsUp}
                 disabled={thumbnailScrollOffset === 0}
                 title="Scroll Up"
@@ -173,25 +173,25 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                     onDragStart={(e) => handleThumbnailDragStart(e, index)}
                     onDragOver={handleThumbnailDragOver}
                     onDrop={(e) => handleThumbnailDrop(e, index)}
-                    title={`Layer ${thumbnailScrollOffset + index + 1}`}
+                    title={`Item ${thumbnailScrollOffset + index + 1}`}
                   >
                     <img src={item.image} alt={item.name} />
-                    <span className="layer-number">{thumbnailScrollOffset + index + 1}</span>
                   </div>
                 ))}
               </div>
-              
-              <button 
-                className="scroll-btn" 
-                onClick={scrollThumbnailsDown}
-                disabled={thumbnailScrollOffset >= canvasItems.length - maxVisibleThumbnails}
-                title="Scroll Down"
-              >
-                <svg viewBox="0 0 24 24">
-                  <path d="M7 10l5 5 5-5z"/>
-                </svg>
-              </button>
             </div>
+            
+            {/* Down Arrow at Bottom */}
+            <button 
+              className="scroll-btn down-arrow" 
+              onClick={scrollThumbnailsDown}
+              disabled={thumbnailScrollOffset >= canvasItems.length - maxVisibleThumbnails}
+              title="Scroll Down"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M7 10l5 5 5-5z"/>
+              </svg>
+            </button>
           </div>
 
           {/* Canvas Workspace (95% right) */}
