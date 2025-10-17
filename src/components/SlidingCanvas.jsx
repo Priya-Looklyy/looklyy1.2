@@ -84,67 +84,17 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     setCanvasItems(prev => prev.filter(item => item.canvasId !== canvasId))
   }
 
-  // Background removal function for paper cutout effect
+  // Background removal function using the existing API
   const applyBackgroundRemoval = async (imageUrl, itemName) => {
     try {
-      // Create a canvas to process the image
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      const img = new Image()
+      // Import the background removal utility
+      const { removeBackgroundFromUrl } = await import('../utils/backgroundRemoval')
       
-      return new Promise((resolve) => {
-        img.crossOrigin = 'anonymous'
-        img.onload = () => {
-          canvas.width = img.width
-          canvas.height = img.height
-          
-          // Draw the original image
-          ctx.drawImage(img, 0, 0)
-          
-          // Get image data
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-          const data = imageData.data
-          
-          // Process each pixel for background removal
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i]
-            const g = data[i + 1]
-            const b = data[i + 2]
-            const alpha = data[i + 3]
-            
-            // Remove white/light backgrounds (common in product photos)
-            const brightness = (r + g + b) / 3
-            const isLightBackground = brightness > 200 && alpha > 0
-            
-            // Remove very light colors (white, cream, light gray)
-            const isVeryLight = r > 220 && g > 220 && b > 220
-            
-            if (isLightBackground || isVeryLight) {
-              data[i + 3] = 0 // Make transparent
-            } else {
-              // Enhance the remaining colors for better cutout effect
-              data[i] = Math.min(255, r * 1.1)     // Slightly brighter red
-              data[i + 1] = Math.min(255, g * 1.1) // Slightly brighter green
-              data[i + 2] = Math.min(255, b * 1.1) // Slightly brighter blue
-            }
-          }
-          
-          // Put the processed image data back
-          ctx.putImageData(imageData, 0, 0)
-          
-          // Convert to data URL
-          const processedImageUrl = canvas.toDataURL('image/png')
-          console.log('🎨 Background removed for:', itemName)
-          resolve(processedImageUrl)
-        }
-        
-        img.onerror = () => {
-          console.log('⚠️ Could not process image, using original:', itemName)
-          resolve(imageUrl) // Fallback to original
-        }
-        
-        img.src = imageUrl
-      })
+      console.log('🔄 Processing background removal for:', itemName)
+      const processedImageUrl = await removeBackgroundFromUrl(imageUrl)
+      console.log('✅ Background removed for:', itemName)
+      
+      return processedImageUrl
     } catch (error) {
       console.log('❌ Background removal failed:', error)
       return imageUrl // Fallback to original
