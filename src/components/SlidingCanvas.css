@@ -100,15 +100,16 @@
 .control-btn::before {
   content: attr(data-tooltip);
   position: absolute;
-  left: 50%;
-  top: -40px;
-  transform: translateX(-50%);
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
   background: rgba(55, 65, 81, 0.95);
   color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 500;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-weight: 400;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
