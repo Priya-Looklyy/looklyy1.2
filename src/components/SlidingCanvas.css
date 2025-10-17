@@ -126,46 +126,56 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
   max-height: 200px;
-  overflow-y: auto;
 }
 
 .scroll-btn {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border: none;
   background: transparent;
-  color: rgba(156, 163, 175, 0.6);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  padding: 0;
+  transition: all 0.3s ease;
+  padding: 0.4rem;
+  border-radius: 50%;
 }
 
 .scroll-btn:hover {
-  color: rgba(156, 163, 175, 1);
   transform: scale(1.1);
 }
 
 .scroll-btn svg {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
+  color: #ffffff;
+  stroke: #ffffff;
+  fill: none;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+}
+
+.scroll-btn:hover svg {
+  color: #9333ea;
+  stroke: #9333ea;
+  fill: #9333ea;
+  stroke-width: 0;
 }
 
 .thumbnails-container {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.4rem;
   padding: 0.2rem 0;
 }
 
 .thumbnail-item {
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(156, 163, 175, 0.3);
   cursor: grab;
