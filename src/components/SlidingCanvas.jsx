@@ -61,6 +61,38 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     setCanvasItems([])
   }
 
+  // Thumbnail reorder functionality
+  const handleThumbnailDragStart = (e, draggedIndex) => {
+    e.dataTransfer.setData('text/plain', draggedIndex)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleThumbnailDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
+  const handleThumbnailDrop = (e, dropIndex) => {
+    e.preventDefault()
+    const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'))
+    
+    if (draggedIndex === dropIndex) return
+
+    // Reorder items array
+    const newItems = [...canvasItems]
+    const draggedItem = newItems[draggedIndex]
+    newItems.splice(draggedIndex, 1)
+    newItems.splice(dropIndex, 0, draggedItem)
+
+    // Update z-index based on new order
+    const updatedItems = newItems.map((item, index) => ({
+      ...item,
+      zIndex: index + 1
+    }))
+
+    setCanvasItems(updatedItems)
+  }
+
   return (
     <div className="sliding-canvas-container">
       {/* Working Canvas (40% width - 1.5x image size) */}
@@ -95,37 +127,42 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                 <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/>
               </svg>
             </button>
-            <button 
-              className="control-btn" 
-              data-tooltip="Reorder"
-            >
-              <svg viewBox="0 0 24 24">
-                <path d="M3 6h18M3 12h18M3 18h18"/>
-              </svg>
-            </button>
-            
-            {/* Items List */}
-            <div className="items-list">
-              {canvasItems.slice(0, 3).map((item, index) => (
-                <div
-                  key={item.canvasId}
-                  className="item-mini"
-                  title={`Item ${index + 1}`}
-                >
-                  {index + 1}
-                </div>
-              ))}
-              {canvasItems.length > 3 && (
-                <div className="scroll-indicator">
-                  +{canvasItems.length - 3} more
-                </div>
-              )}
+            {/* Thumbnail Reorder Section */}
+            <div className="thumbnail-section">
+              <button className="scroll-btn" title="Scroll Up">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 14l5-5 5 5z"/>
+                </svg>
+              </button>
+              
+              <div className="thumbnails-container">
+                {canvasItems.map((item, index) => (
+                  <div
+                    key={item.canvasId}
+                    className="thumbnail-item"
+                    draggable
+                    onDragStart={(e) => handleThumbnailDragStart(e, index)}
+                    onDragOver={handleThumbnailDragOver}
+                    onDrop={(e) => handleThumbnailDrop(e, index)}
+                    title={`Layer ${index + 1}`}
+                  >
+                    <img src={item.image} alt={item.name} />
+                    <span className="layer-number">{index + 1}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <button className="scroll-btn" title="Scroll Down">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 10l5 5 5-5z"/>
+                </svg>
+              </button>
             </div>
           </div>
 
           {/* Canvas Workspace (95% right) */}
           <div className="canvas-workspace">
-            {canvasItems.map(item => (
+            {canvasItems.map((item, index) => (
               <div
                 key={item.canvasId}
                 className="canvas-item"
@@ -133,7 +170,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                   left: item.x,
                   top: item.y,
                   width: item.width,
-                  height: item.height
+                  height: item.height,
+                  zIndex: index + 1
                 }}
               >
                 <img src={item.image} alt={item.name} />
