@@ -93,7 +93,6 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
           ))}
           {canvasItems.length === 0 && (
             <div className="canvas-placeholder">
-              <i className="fas fa-palette"></i>
               <p>Drag items here to recreate the look</p>
             </div>
           )}
