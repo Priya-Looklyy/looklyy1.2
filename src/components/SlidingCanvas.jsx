@@ -103,12 +103,23 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
 
   const handleThumbnailDrop = (e, dropIndex) => {
     e.preventDefault()
+    e.stopPropagation()
+    
     const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'))
     const actualDropIndex = thumbnailScrollOffset + dropIndex
     
     console.log('🎯 Drop - From:', draggedIndex, 'To:', actualDropIndex)
+    console.log('🎯 Canvas Items Length:', canvasItems.length)
     
     if (draggedIndex === actualDropIndex) {
+      console.log('⚠️ Same position, no reorder needed')
+      setDraggedThumbnailIndex(null)
+      return
+    }
+
+    if (draggedIndex < 0 || draggedIndex >= canvasItems.length || 
+        actualDropIndex < 0 || actualDropIndex >= canvasItems.length) {
+      console.log('❌ Invalid indices')
       setDraggedThumbnailIndex(null)
       return
     }
@@ -116,7 +127,12 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     // Reorder items array
     const newItems = [...canvasItems]
     const draggedItem = newItems[draggedIndex]
+    
+    console.log('🎯 Dragged Item:', draggedItem)
+    
+    // Remove from original position
     newItems.splice(draggedIndex, 1)
+    // Insert at new position
     newItems.splice(actualDropIndex, 0, draggedItem)
 
     // Update z-index based on new order
@@ -125,6 +141,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
       zIndex: index + 1
     }))
 
+    console.log('🎯 New Order:', updatedItems.map(item => item.name))
     setCanvasItems(updatedItems)
     setDraggedThumbnailIndex(null)
     console.log('✅ Reorder complete')
@@ -191,8 +208,16 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                       className={`thumbnail-item ${isDragging ? 'dragging' : ''}`}
                       draggable
                       onDragStart={(e) => handleThumbnailDragStart(e, index)}
-                      onDragOver={handleThumbnailDragOver}
-                      onDrop={(e) => handleThumbnailDrop(e, index)}
+                      onDragOver={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        e.dataTransfer.dropEffect = 'move'
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleThumbnailDrop(e, index)
+                      }}
                       onDragEnd={handleThumbnailDragEnd}
                       title={`Item ${actualIndex + 1}`}
                     >
