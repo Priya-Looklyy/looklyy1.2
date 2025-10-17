@@ -233,15 +233,15 @@ const HomePage = () => {
               />
               <div className="pinned-overlay">
                 <div className="pinned-actions">
-                  <button
-                    className="action-btn unpin-btn"
+                  <div
+                    className="icon-container"
                     onClick={closeFrame2}
                     aria-label="Unpin look"
                   >
-                    <svg viewBox="0 0 24 24" className="bookmark-icon icon-filled" style={{width: '16px', height: '16px'}}>
+                    <svg viewBox="0 0 24 24" className="bookmark-icon icon-filled">
                       <path d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/>
                     </svg>
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>

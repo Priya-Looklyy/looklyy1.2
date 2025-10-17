@@ -84,30 +84,9 @@
   display: flex;
 }
 
-.unpin-btn {
-  background: rgba(147, 51, 234, 0.9);
-  border: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
+/* Removed old unpin-btn styles - now using global icon-container */
 
-.unpin-btn:hover {
-  background: rgba(147, 51, 234, 1);
-  transform: scale(1.1);
-}
-
-.unpin-btn i {
-  font-size: 0.6rem;
-  color: white;
-  transform: rotate(45deg); /* Rotated pin to indicate "unpin" */
-}
+/* Removed old unpin-btn icon styles */
 
 /* Responsive Design */
 @media (max-width: 1200px) {
