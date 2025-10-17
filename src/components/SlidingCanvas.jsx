@@ -119,15 +119,25 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    // 2. Get PNG blob from response
+    // 2. Check if it's a fallback response (JSON)
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      const fallbackData = await response.json();
+      if (fallbackData.fallback) {
+        console.log('⚠️ Using fallback - no API key configured');
+        return fallbackData.originalUrl;
+      }
+    }
+
+    // 3. Get PNG blob from response
     const pngBlob = await response.blob();
     
-    // 3. Verify it's PNG
+    // 4. Verify it's PNG
     if (pngBlob.type !== 'image/png') {
       console.warn('⚠️ Response is not PNG:', pngBlob.type);
     }
 
-    // 4. Convert to data URL for canvas use
+    // 5. Convert to data URL for canvas use
     const dataUrl = await blobToDataUrl(pngBlob);
     
     return dataUrl; // Returns: data:image/png;base64,...
