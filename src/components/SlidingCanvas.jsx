@@ -40,15 +40,20 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     const x = e.clientX - canvasRect.left
     const y = e.clientY - canvasRect.top
 
+    // Paper cutout size - larger for better visibility
+    const itemWidth = 100
+    const itemHeight = 100
+
     const newItem = {
       ...draggedItem,
       canvasId: Date.now(),
-      x: Math.max(0, Math.min(x - 25, canvasRect.width - 50)),
-      y: Math.max(0, Math.min(y - 25, canvasRect.height - 50)),
-      width: 50,
-      height: 50
+      x: Math.max(0, Math.min(x - itemWidth/2, canvasRect.width - itemWidth)),
+      y: Math.max(0, Math.min(y - itemHeight/2, canvasRect.height - itemHeight)),
+      width: itemWidth,
+      height: itemHeight
     }
 
+    console.log('🎨 Paper cutout added:', newItem.name, 'at position:', x, y)
     setCanvasItems(prev => [...prev, newItem])
     setDraggedItem(null)
   }

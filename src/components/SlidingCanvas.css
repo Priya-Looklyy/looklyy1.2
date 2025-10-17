@@ -40,6 +40,7 @@
   border-radius: 12px;
   position: relative;
   overflow: visible;
+  cursor: crosshair; /* Indicates creative workspace */
 }
 
 .canvas-controls {
@@ -222,6 +223,67 @@
   height: 100%;
   object-fit: cover;
   border-radius: 3px;
+}
+
+/* Paper Cutout Styling for Canvas Items */
+.canvas-item {
+  position: absolute;
+  border-radius: 8px; /* Natural paper cutout look */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Floating shadow */
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: move;
+  transition: all 0.2s ease;
+  user-select: none;
+  width: 100px;
+  height: 100px;
+}
+
+.canvas-item:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+}
+
+.canvas-item:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.canvas-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 7px; /* Slightly smaller than container */
+}
+
+.remove-canvas-item {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  opacity: 0;
+}
+
+.canvas-item:hover .remove-canvas-item {
+  opacity: 1;
+}
+
+.remove-canvas-item:hover {
+  background: #dc2626;
+  transform: scale(1.1);
 }
 
 /* Layer numbers removed - clean thumbnail display */
