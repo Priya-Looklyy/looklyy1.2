@@ -84,20 +84,100 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     setCanvasItems(prev => prev.filter(item => item.canvasId !== canvasId))
   }
 
-  // Background removal function using the existing API
+  // Background removal function with improved fallback
   const applyBackgroundRemoval = async (imageUrl, itemName) => {
     try {
-      // Import the background removal utility
+      // Try the API first
       const { removeBackgroundFromUrl } = await import('../utils/backgroundRemoval')
       
-      console.log('🔄 Processing background removal for:', itemName)
+      console.log('🔄 Trying API background removal for:', itemName)
       const processedImageUrl = await removeBackgroundFromUrl(imageUrl)
-      console.log('✅ Background removed for:', itemName)
       
-      return processedImageUrl
+      // Check if API actually processed the image (not just returned original)
+      if (processedImageUrl !== imageUrl) {
+        console.log('✅ API background removal successful for:', itemName)
+        return processedImageUrl
+      } else {
+        console.log('⚠️ API returned original image, using fallback for:', itemName)
+        return await fallbackBackgroundRemoval(imageUrl, itemName)
+      }
     } catch (error) {
-      console.log('❌ Background removal failed:', error)
-      return imageUrl // Fallback to original
+      console.log('❌ API failed, using fallback for:', itemName, error)
+      return await fallbackBackgroundRemoval(imageUrl, itemName)
+    }
+  }
+
+  // Improved fallback background removal
+  const fallbackBackgroundRemoval = async (imageUrl, itemName) => {
+    try {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      const img = new Image()
+      
+      return new Promise((resolve) => {
+        img.crossOrigin = 'anonymous'
+        img.onload = () => {
+          canvas.width = img.width
+          canvas.height = img.height
+          
+          // Draw the original image
+          ctx.drawImage(img, 0, 0)
+          
+          // Get image data
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+          const data = imageData.data
+          
+          // More aggressive background removal
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i]
+            const g = data[i + 1]
+            const b = data[i + 2]
+            const alpha = data[i + 3]
+            
+            // Calculate brightness and color ratios
+            const brightness = (r + g + b) / 3
+            const maxColor = Math.max(r, g, b)
+            const minColor = Math.min(r, g, b)
+            const colorRange = maxColor - minColor
+            
+            // Remove very light backgrounds (white, cream, light gray)
+            const isVeryLight = brightness > 180 && colorRange < 30
+            
+            // Remove uniform backgrounds (low color variation)
+            const isUniform = colorRange < 20 && brightness > 150
+            
+            // Remove near-white backgrounds
+            const isNearWhite = r > 200 && g > 200 && b > 200
+            
+            if (isVeryLight || isUniform || isNearWhite) {
+              data[i + 3] = 0 // Make transparent
+            } else {
+              // Enhance remaining colors slightly
+              data[i] = Math.min(255, r * 1.05)
+              data[i + 1] = Math.min(255, g * 1.05)
+              data[i + 2] = Math.min(255, b * 1.05)
+            }
+          }
+          
+          // Put the processed image data back
+          ctx.putImageData(imageData, 0, 0)
+          
+          // Convert to data URL
+          const processedImageUrl = canvas.toDataURL('image/png')
+          console.log('✅ Fallback background removal completed for:', itemName)
+          resolve(processedImageUrl)
+        }
+        
+        img.onerror = () => {
+          console.log('⚠️ Could not process image, using original:', itemName)
+          resolve(imageUrl)
+        }
+        
+        img.src = imageUrl
+      })
+    } catch (error) {
+      console.log('❌ Fallback background removal failed:', error)
+      return imageUrl
     }
   }
 
@@ -316,7 +396,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
             {isProcessing && (
               <div className="processing-indicator">
                 <div className="processing-spinner"></div>
-                <p>Creating paper cutout...</p>
+                <p>Removing background & creating paper cutout...</p>
               </div>
             )}
           </div>

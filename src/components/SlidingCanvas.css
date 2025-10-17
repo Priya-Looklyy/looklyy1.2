@@ -269,15 +269,18 @@
 .canvas-item img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Changed from cover to contain for better cutout display */
+  object-fit: contain; /* Better for cutouts */
   border-radius: 7px; /* Slightly smaller than container */
-  /* Paper cutout effect - API already removes background */
+  /* Paper cutout effect */
   filter: 
-    contrast(1.1) 
-    brightness(1.05) 
-    saturate(1.1)
-    drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+    contrast(1.2) 
+    brightness(1.1) 
+    saturate(1.15)
+    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   background: transparent;
+  /* Ensure proper display of transparent backgrounds */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .remove-canvas-item {
