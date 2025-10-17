@@ -30,16 +30,16 @@
 
 .working-canvas {
   flex: 1;
-  background: #ffffff;
-  border: 2px solid #9333ea;
+  background: rgba(248, 250, 252, 0.8);
+  border: 2px solid rgba(168, 85, 247, 0.4);
   border-radius: 12px;
   position: relative;
   overflow: hidden;
 }
 
 .working-canvas.drag-over {
-  border-color: #7c3aed;
-  background-color: rgba(147, 51, 234, 0.05);
+  border-color: rgba(168, 85, 247, 0.6);
+  background-color: rgba(248, 250, 252, 0.9);
 }
 
 .canvas-placeholder {
