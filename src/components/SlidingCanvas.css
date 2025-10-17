@@ -230,18 +230,35 @@
   position: absolute;
   border-radius: 8px; /* Natural paper cutout look */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Floating shadow */
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: transparent; /* No background for true cutout effect */
+  border: none; /* No border for clean cutout */
   cursor: move;
   transition: all 0.2s ease;
   user-select: none;
   width: 100px;
   height: 100px;
+  overflow: hidden; /* Ensure clean edges */
 }
 
 .canvas-item:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   transform: scale(1.02);
+}
+
+/* Enhanced paper cutout effect */
+.canvas-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.05) 0%, transparent 50%);
+  border-radius: 7px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .canvas-item:active {
@@ -254,6 +271,15 @@
   height: 100%;
   object-fit: cover;
   border-radius: 7px; /* Slightly smaller than container */
+  /* Paper cutout effect - remove background */
+  filter: 
+    contrast(1.3) 
+    brightness(1.1) 
+    saturate(1.2)
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  background: transparent;
+  /* Remove white backgrounds */
+  mix-blend-mode: multiply;
 }
 
 .remove-canvas-item {
