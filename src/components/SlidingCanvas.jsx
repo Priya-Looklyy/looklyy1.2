@@ -86,9 +86,14 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
   )
 
   // Thumbnail reorder functionality
+  const [draggedThumbnailIndex, setDraggedThumbnailIndex] = useState(null)
+
   const handleThumbnailDragStart = (e, draggedIndex) => {
-    e.dataTransfer.setData('text/plain', thumbnailScrollOffset + draggedIndex)
+    const actualIndex = thumbnailScrollOffset + draggedIndex
+    e.dataTransfer.setData('text/plain', actualIndex.toString())
     e.dataTransfer.effectAllowed = 'move'
+    setDraggedThumbnailIndex(actualIndex)
+    console.log('🎯 Drag Start - Index:', actualIndex)
   }
 
   const handleThumbnailDragOver = (e) => {
@@ -101,7 +106,12 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'))
     const actualDropIndex = thumbnailScrollOffset + dropIndex
     
-    if (draggedIndex === actualDropIndex) return
+    console.log('🎯 Drop - From:', draggedIndex, 'To:', actualDropIndex)
+    
+    if (draggedIndex === actualDropIndex) {
+      setDraggedThumbnailIndex(null)
+      return
+    }
 
     // Reorder items array
     const newItems = [...canvasItems]
@@ -116,6 +126,12 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     }))
 
     setCanvasItems(updatedItems)
+    setDraggedThumbnailIndex(null)
+    console.log('✅ Reorder complete')
+  }
+
+  const handleThumbnailDragEnd = () => {
+    setDraggedThumbnailIndex(null)
   }
 
   return (
@@ -166,19 +182,24 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
               </button>
               
               <div className="thumbnails-container">
-                {visibleThumbnails.map((item, index) => (
-                  <div
-                    key={item.canvasId}
-                    className="thumbnail-item"
-                    draggable
-                    onDragStart={(e) => handleThumbnailDragStart(e, index)}
-                    onDragOver={handleThumbnailDragOver}
-                    onDrop={(e) => handleThumbnailDrop(e, index)}
-                    title={`Item ${thumbnailScrollOffset + index + 1}`}
-                  >
-                    <img src={item.image} alt={item.name} />
-                  </div>
-                ))}
+                {visibleThumbnails.map((item, index) => {
+                  const actualIndex = thumbnailScrollOffset + index
+                  const isDragging = draggedThumbnailIndex === actualIndex
+                  return (
+                    <div
+                      key={item.canvasId}
+                      className={`thumbnail-item ${isDragging ? 'dragging' : ''}`}
+                      draggable
+                      onDragStart={(e) => handleThumbnailDragStart(e, index)}
+                      onDragOver={handleThumbnailDragOver}
+                      onDrop={(e) => handleThumbnailDrop(e, index)}
+                      onDragEnd={handleThumbnailDragEnd}
+                      title={`Item ${actualIndex + 1}`}
+                    >
+                      <img src={item.image} alt={item.name} />
+                    </div>
+                  )
+                })}
               </div>
             </div>
             
