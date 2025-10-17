@@ -73,14 +73,35 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
         >
           {/* Canvas Controls (5% left) */}
           <div className="canvas-controls">
-            <button className="control-btn" title="Save Look">
-              💾
+            <button 
+              className="control-btn" 
+              data-tooltip="Save"
+              onClick={() => {
+                // Save board to Looklyy Boards
+                console.log('Saving board to Looklyy Boards');
+                // TODO: Implement save functionality
+              }}
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M19 12v7H5v-7M12 3v9m-4-4l4 4 4-4"/>
+              </svg>
             </button>
-            <button className="control-btn" title="Delete All">
-              🗑️
+            <button 
+              className="control-btn" 
+              data-tooltip="Delete"
+              onClick={clearCanvas}
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/>
+              </svg>
             </button>
-            <button className="control-btn" title="Reorder Items">
-              ↕️
+            <button 
+              className="control-btn" 
+              data-tooltip="Reorder"
+            >
+              <svg viewBox="0 0 24 24">
+                <path d="M3 6h18M3 12h18M3 18h18"/>
+              </svg>
             </button>
             
             {/* Items List */}
