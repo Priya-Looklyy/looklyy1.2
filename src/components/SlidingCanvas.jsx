@@ -71,31 +71,65 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          {canvasItems.map(item => (
-            <div
-              key={item.canvasId}
-              className="canvas-item"
-              style={{
-                left: item.x,
-                top: item.y,
-                width: item.width,
-                height: item.height
-              }}
-            >
-              <img src={item.image} alt={item.name} />
-              <button 
-                className="remove-canvas-item"
-                onClick={() => removeCanvasItem(item.canvasId)}
+          {/* Canvas Controls (5% left) */}
+          <div className="canvas-controls">
+            <button className="control-btn" title="Save Look">
+              💾
+            </button>
+            <button className="control-btn" title="Delete All">
+              🗑️
+            </button>
+            <button className="control-btn" title="Reorder Items">
+              ↕️
+            </button>
+            
+            {/* Items List */}
+            <div className="items-list">
+              {canvasItems.slice(0, 3).map((item, index) => (
+                <div
+                  key={item.canvasId}
+                  className="item-mini"
+                  title={`Item ${index + 1}`}
+                >
+                  {index + 1}
+                </div>
+              ))}
+              {canvasItems.length > 3 && (
+                <div className="scroll-indicator">
+                  +{canvasItems.length - 3} more
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Canvas Workspace (95% right) */}
+          <div className="canvas-workspace">
+            {canvasItems.map(item => (
+              <div
+                key={item.canvasId}
+                className="canvas-item"
+                style={{
+                  left: item.x,
+                  top: item.y,
+                  width: item.width,
+                  height: item.height
+                }}
               >
-                ×
-              </button>
-            </div>
-          ))}
-          {canvasItems.length === 0 && (
-            <div className="canvas-placeholder">
-              <p>Drag & drop items from your closet or Marketplace to recreate this look</p>
-            </div>
-          )}
+                <img src={item.image} alt={item.name} />
+                <button 
+                  className="remove-canvas-item"
+                  onClick={() => removeCanvasItem(item.canvasId)}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            {canvasItems.length === 0 && (
+              <div className="canvas-placeholder">
+                <p>Drag & Drop from closet or partner brands to recreate bookmarked look</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
