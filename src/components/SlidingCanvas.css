@@ -160,17 +160,14 @@
   width: 16px;
   height: 16px;
   color: #ffffff;
-  stroke: #ffffff;
-  fill: none;
-  stroke-width: 2;
+  fill: #ffffff;
+  stroke: none;
   transition: all 0.3s ease;
 }
 
 .scroll-btn:hover:not(:disabled) svg {
   color: #9333ea;
-  stroke: #9333ea;
   fill: #9333ea;
-  stroke-width: 0;
 }
 
 .thumbnails-container {

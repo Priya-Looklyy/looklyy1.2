@@ -193,8 +193,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                 disabled={thumbnailScrollOffset === 0}
                 title="Scroll Up"
               >
-                <svg viewBox="0 0 24 24">
-                  <path d="M7 14l5-5 5 5z"/>
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M15 18l-6-6 6-6"/>
                 </svg>
               </button>
               
@@ -235,8 +235,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
               disabled={thumbnailScrollOffset >= canvasItems.length - maxVisibleThumbnails}
               title="Scroll Down"
             >
-              <svg viewBox="0 0 24 24">
-                <path d="M7 10l5 5 5-5z"/>
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 6l6 6-6 6"/>
               </svg>
             </button>
           </div>
