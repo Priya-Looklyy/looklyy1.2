@@ -30,16 +30,19 @@
 
 .working-canvas {
   flex: 1;
-  background: rgba(248, 250, 252, 0.8);
-  border: 2px solid rgba(168, 85, 247, 0.4);
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(156, 163, 175, 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(156, 163, 175, 0.15) 1px, transparent 1px),
+    rgba(248, 250, 252, 0.8);
+  background-size: 24px 24px;
+  border: none;
   border-radius: 12px;
   position: relative;
   overflow: hidden;
 }
 
 .working-canvas.drag-over {
-  border-color: rgba(168, 85, 247, 0.6);
-  background-color: rgba(248, 250, 252, 0.9);
+  background-color: rgba(248, 250, 252, 0.95);
 }
 
 .canvas-placeholder {
@@ -58,8 +61,13 @@
 }
 
 .canvas-placeholder p {
-  font-size: 1rem;
-  font-weight: 500;
+  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #6b7280;
+  line-height: 1.4;
+  text-align: center;
+  max-width: 280px;
 }
 
 .canvas-item {

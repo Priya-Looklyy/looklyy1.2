@@ -93,7 +93,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
           ))}
           {canvasItems.length === 0 && (
             <div className="canvas-placeholder">
-              <p>Drag items here to recreate the look</p>
+              <p>Drag & drop items from your closet or Marketplace to recreate this look</p>
             </div>
           )}
         </div>
