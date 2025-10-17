@@ -271,15 +271,21 @@
   height: 100%;
   object-fit: cover;
   border-radius: 7px; /* Slightly smaller than container */
-  /* Paper cutout effect - remove background */
+  /* Enhanced paper cutout effect */
   filter: 
-    contrast(1.3) 
-    brightness(1.1) 
-    saturate(1.2)
-    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    contrast(1.4) 
+    brightness(1.2) 
+    saturate(1.3)
+    drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
   background: transparent;
-  /* Remove white backgrounds */
+  /* Better background removal */
   mix-blend-mode: multiply;
+  /* Remove white/light backgrounds */
+  -webkit-filter: 
+    contrast(1.4) 
+    brightness(1.2) 
+    saturate(1.3)
+    drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
 }
 
 .remove-canvas-item {
@@ -316,6 +322,40 @@
 
 .working-canvas.drag-over {
   background-color: rgba(248, 250, 252, 0.95);
+}
+
+/* Processing Indicator */
+.processing-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.processing-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(168, 85, 247, 0.3);
+  border-top: 3px solid #9333ea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.processing-indicator p {
+  color: #9333ea;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .canvas-placeholder {
@@ -410,6 +450,7 @@
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(147, 51, 234, 0.08);
   flex: 1;
+  border: 1px solid rgba(147, 51, 234, 0.1);
 }
 
 .library-subsection h4 {
@@ -440,6 +481,8 @@
   transition: all 0.3s ease;
   border: 2px solid transparent;
   background: #faf7ff;
+  position: relative;
+  overflow: hidden;
 }
 
 .library-item:hover {
@@ -447,6 +490,16 @@
   border-color: #9333ea;
   box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
   background: #ffffff;
+}
+
+.library-item:hover::after {
+  content: '✂️';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .library-item:active {
@@ -478,10 +531,25 @@
   font-weight: 600;
 }
 
+/* Partner Brand Items */
 .partner-item {
-  border-color: rgba(147, 51, 234, 0.1);
-  background: linear-gradient(135deg, #f8f4ff, #f3e8ff);
+  border: 2px solid rgba(147, 51, 234, 0.2);
+  background: linear-gradient(135deg, #faf7ff 0%, #f3e8ff 100%);
 }
+
+.partner-item:hover {
+  border-color: #9333ea;
+  background: linear-gradient(135deg, #ffffff 0%, #faf7ff 100%);
+}
+
+/* Drag State */
+.library-item.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+  z-index: 1000;
+}
+
+/* Remove duplicate - already defined above */
 
 .partner-item:hover {
   border-color: #9333ea;

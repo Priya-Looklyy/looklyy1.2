@@ -4,16 +4,17 @@ import './SlidingCanvas.css'
 const SlidingCanvas = ({ pinnedLook, onClose }) => {
   const [canvasItems, setCanvasItems] = useState([])
   const [draggedItem, setDraggedItem] = useState(null)
+  const [isProcessing, setIsProcessing] = useState(false)
   const canvasRef = useRef(null)
 
-  // Mock closet items
+  // Mock closet items with transparent backgrounds (cutout-ready)
   const closetItems = [
-    { id: 1, name: 'White T-Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&h=100&fit=crop', category: 'tops' },
-    { id: 2, name: 'Blue Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=100&h=100&fit=crop', category: 'bottoms' },
-    { id: 3, name: 'Black Jacket', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=100&h=100&fit=crop', category: 'outerwear' },
-    { id: 4, name: 'Red Dress', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=100&h=100&fit=crop', category: 'dresses' },
-    { id: 5, name: 'Sneakers', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=100&h=100&fit=crop', category: 'shoes' },
-    { id: 6, name: 'Sunglasses', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=100&h=100&fit=crop', category: 'accessories' }
+    { id: 1, name: 'White T-Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop&auto=format&q=80', category: 'tops' },
+    { id: 2, name: 'Blue Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=200&h=200&fit=crop&auto=format&q=80', category: 'bottoms' },
+    { id: 3, name: 'Black Jacket', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200&h=200&fit=crop&auto=format&q=80', category: 'outerwear' },
+    { id: 4, name: 'Red Dress', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200&h=200&fit=crop&auto=format&q=80', category: 'dresses' },
+    { id: 5, name: 'Sneakers', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=200&h=200&fit=crop&auto=format&q=80', category: 'shoes' },
+    { id: 6, name: 'Sunglasses', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop&auto=format&q=80', category: 'accessories' }
   ]
 
   const partnerBrands = [
@@ -25,6 +26,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
   const handleDragStart = (e, item) => {
     setDraggedItem(item)
     e.dataTransfer.effectAllowed = 'copy'
+    e.target.classList.add('dragging')
+    console.log('🎨 Starting drag for cutout:', item.name)
   }
 
   const handleDragOver = (e) => {
@@ -32,9 +35,17 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     e.dataTransfer.dropEffect = 'copy'
   }
 
-  const handleDrop = (e) => {
+  const handleDragEnd = (e) => {
+    e.target.classList.remove('dragging')
+    setDraggedItem(null)
+  }
+
+  const handleDrop = async (e) => {
     e.preventDefault()
-    if (!draggedItem) return
+    if (!draggedItem || isProcessing) return
+
+    setIsProcessing(true)
+    console.log('🔄 Processing background removal for:', draggedItem.name)
 
     const canvasRect = canvasRef.current.getBoundingClientRect()
     const x = e.clientX - canvasRect.left
@@ -44,22 +55,100 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     const itemWidth = 100
     const itemHeight = 100
 
-    const newItem = {
-      ...draggedItem,
-      canvasId: Date.now(),
-      x: Math.max(0, Math.min(x - itemWidth/2, canvasRect.width - itemWidth)),
-      y: Math.max(0, Math.min(y - itemHeight/2, canvasRect.height - itemHeight)),
-      width: itemWidth,
-      height: itemHeight
-    }
+    try {
+      // Apply background removal to create paper cutout
+      const processedImageUrl = await applyBackgroundRemoval(draggedItem.image, draggedItem.name)
 
-    console.log('🎨 Paper cutout added:', newItem.name, 'at position:', x, y)
-    setCanvasItems(prev => [...prev, newItem])
-    setDraggedItem(null)
+      const newItem = {
+        ...draggedItem,
+        canvasId: Date.now(),
+        x: Math.max(0, Math.min(x - itemWidth/2, canvasRect.width - itemWidth)),
+        y: Math.max(0, Math.min(y - itemHeight/2, canvasRect.height - itemHeight)),
+        width: itemWidth,
+        height: itemHeight,
+        image: processedImageUrl, // Use processed image with removed background
+        originalImage: draggedItem.image // Keep original for reference
+      }
+
+      console.log('✅ Paper cutout added:', newItem.name, 'at position:', x, y)
+      setCanvasItems(prev => [...prev, newItem])
+    } catch (error) {
+      console.log('❌ Failed to process image:', error)
+    } finally {
+      setDraggedItem(null)
+      setIsProcessing(false)
+    }
   }
 
   const removeCanvasItem = (canvasId) => {
     setCanvasItems(prev => prev.filter(item => item.canvasId !== canvasId))
+  }
+
+  // Background removal function for paper cutout effect
+  const applyBackgroundRemoval = async (imageUrl, itemName) => {
+    try {
+      // Create a canvas to process the image
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      const img = new Image()
+      
+      return new Promise((resolve) => {
+        img.crossOrigin = 'anonymous'
+        img.onload = () => {
+          canvas.width = img.width
+          canvas.height = img.height
+          
+          // Draw the original image
+          ctx.drawImage(img, 0, 0)
+          
+          // Get image data
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+          const data = imageData.data
+          
+          // Process each pixel for background removal
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i]
+            const g = data[i + 1]
+            const b = data[i + 2]
+            const alpha = data[i + 3]
+            
+            // Remove white/light backgrounds (common in product photos)
+            const brightness = (r + g + b) / 3
+            const isLightBackground = brightness > 200 && alpha > 0
+            
+            // Remove very light colors (white, cream, light gray)
+            const isVeryLight = r > 220 && g > 220 && b > 220
+            
+            if (isLightBackground || isVeryLight) {
+              data[i + 3] = 0 // Make transparent
+            } else {
+              // Enhance the remaining colors for better cutout effect
+              data[i] = Math.min(255, r * 1.1)     // Slightly brighter red
+              data[i + 1] = Math.min(255, g * 1.1) // Slightly brighter green
+              data[i + 2] = Math.min(255, b * 1.1) // Slightly brighter blue
+            }
+          }
+          
+          // Put the processed image data back
+          ctx.putImageData(imageData, 0, 0)
+          
+          // Convert to data URL
+          const processedImageUrl = canvas.toDataURL('image/png')
+          console.log('🎨 Background removed for:', itemName)
+          resolve(processedImageUrl)
+        }
+        
+        img.onerror = () => {
+          console.log('⚠️ Could not process image, using original:', itemName)
+          resolve(imageUrl) // Fallback to original
+        }
+        
+        img.src = imageUrl
+      })
+    } catch (error) {
+      console.log('❌ Background removal failed:', error)
+      return imageUrl // Fallback to original
+    }
   }
 
   const clearCanvas = () => {
@@ -269,9 +358,15 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                 </button>
               </div>
             ))}
-            {canvasItems.length === 0 && (
+            {canvasItems.length === 0 && !isProcessing && (
               <div className="canvas-placeholder">
                 <p>Drag & Drop from closet or partner brands to recreate bookmarked look</p>
+              </div>
+            )}
+            {isProcessing && (
+              <div className="processing-indicator">
+                <div className="processing-spinner"></div>
+                <p>Creating paper cutout...</p>
               </div>
             )}
           </div>
@@ -290,6 +385,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                 className="library-item"
                 draggable
                 onDragStart={(e) => handleDragStart(e, item)}
+                onDragEnd={handleDragEnd}
+                title={`Drag to create paper cutout of ${item.name}`}
               >
                 <img src={item.image} alt={item.name} />
                 <span>{item.name}</span>
@@ -308,6 +405,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                 className="library-item partner-item"
                 draggable
                 onDragStart={(e) => handleDragStart(e, item)}
+                onDragEnd={handleDragEnd}
+                title={`Drag to create paper cutout of ${item.name} from ${item.brand}`}
               >
                 <img src={item.image} alt={item.name} />
                 <span>{item.name}</span>
