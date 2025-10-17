@@ -127,12 +127,13 @@
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
-  max-height: 200px;
+  height: 180px;
+  overflow: hidden;
 }
 
 .scroll-btn {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -142,15 +143,21 @@
   transition: all 0.3s ease;
   padding: 0.4rem;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.scroll-btn:hover {
+.scroll-btn:hover:not(:disabled) {
   transform: scale(1.1);
 }
 
+.scroll-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .scroll-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   color: #ffffff;
   stroke: #ffffff;
   fill: none;
@@ -158,7 +165,7 @@
   transition: all 0.3s ease;
 }
 
-.scroll-btn:hover svg {
+.scroll-btn:hover:not(:disabled) svg {
   color: #9333ea;
   stroke: #9333ea;
   fill: #9333ea;
@@ -170,6 +177,8 @@
   flex-direction: column;
   gap: 0.4rem;
   padding: 0.2rem 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .thumbnail-item {
