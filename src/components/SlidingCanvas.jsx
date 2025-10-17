@@ -99,14 +99,15 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
   const handleThumbnailDrop = (e, dropIndex) => {
     e.preventDefault()
     const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'))
+    const actualDropIndex = thumbnailScrollOffset + dropIndex
     
-    if (draggedIndex === dropIndex) return
+    if (draggedIndex === actualDropIndex) return
 
     // Reorder items array
     const newItems = [...canvasItems]
     const draggedItem = newItems[draggedIndex]
     newItems.splice(draggedIndex, 1)
-    newItems.splice(dropIndex, 0, draggedItem)
+    newItems.splice(actualDropIndex, 0, draggedItem)
 
     // Update z-index based on new order
     const updatedItems = newItems.map((item, index) => ({
