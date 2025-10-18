@@ -187,7 +187,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
               const alpha = data[index + 3]; // Alpha channel
               totalPixels++;
               
-              if (alpha > 0) { // Non-transparent pixel
+              // Use higher threshold for better precision (ignore semi-transparent pixels)
+              if (alpha > 128) { // Only count pixels that are more than 50% opaque
                 hasContent = true;
                 nonTransparentPixels++;
                 minX = Math.min(minX, x);
@@ -213,8 +214,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
             return;
           }
           
-          // Add small padding (2px) around the object
-          const padding = 2;
+          // No padding for maximum precision - crop exactly to object boundaries
+          const padding = 0;
           minX = Math.max(0, minX - padding);
           maxX = Math.min(canvas.width - 1, maxX + padding);
           minY = Math.max(0, minY - padding);
