@@ -178,14 +178,18 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
           // Find the actual object boundaries (non-transparent pixels)
           let minX = canvas.width, maxX = 0, minY = canvas.height, maxY = 0;
           let hasContent = false;
+          let totalPixels = 0;
+          let nonTransparentPixels = 0;
           
           for (let y = 0; y < canvas.height; y++) {
             for (let x = 0; x < canvas.width; x++) {
               const index = (y * canvas.width + x) * 4;
               const alpha = data[index + 3]; // Alpha channel
+              totalPixels++;
               
               if (alpha > 0) { // Non-transparent pixel
                 hasContent = true;
+                nonTransparentPixels++;
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);
                 minY = Math.min(minY, y);
@@ -193,6 +197,15 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
               }
             }
           }
+          
+          console.log('🔍 Cropping Debug:', {
+            imageSize: `${canvas.width}x${canvas.height}`,
+            totalPixels,
+            nonTransparentPixels,
+            hasContent,
+            originalBounds: { minX, maxX, minY, maxY },
+            objectSize: hasContent ? `${maxX - minX + 1}x${maxY - minY + 1}` : 'none'
+          });
           
           if (!hasContent) {
             // No content found, return original
@@ -210,6 +223,14 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
           // Calculate crop dimensions
           const cropWidth = maxX - minX + 1;
           const cropHeight = maxY - minY + 1;
+          
+          console.log('✂️ Final Crop Dimensions:', {
+            cropWidth,
+            cropHeight,
+            cropArea: `${cropWidth}x${cropHeight}`,
+            originalArea: `${canvas.width}x${canvas.height}`,
+            reduction: `${Math.round((1 - (cropWidth * cropHeight) / (canvas.width * canvas.height)) * 100)}%`
+          });
           
           // Create new canvas for cropped image
           const cropCanvas = document.createElement('canvas');
