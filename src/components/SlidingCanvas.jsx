@@ -140,7 +140,12 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     // 5. Convert to data URL for canvas use
     const dataUrl = await blobToDataUrl(pngBlob);
     
-    return dataUrl; // Returns: data:image/png;base64,...
+    // 6. Crop to object boundaries (remove transparent padding)
+    console.log('✂️ Frontend: Cropping to object boundaries...');
+    const croppedDataUrl = await cropToObjectBoundaries(dataUrl);
+    console.log('✅ Frontend: Cropping complete - tightly cropped object');
+    
+    return croppedDataUrl; // Returns: data:image/png;base64,... (tightly cropped)
   }
 
   // Helper function to convert blob to data URL
@@ -150,6 +155,92 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
       reader.onload = () => resolve(reader.result);
       reader.onerror = reject;
       reader.readAsDataURL(blob);
+    });
+  }
+
+  // Helper function to crop image to actual object boundaries
+  const cropToObjectBoundaries = (dataUrl) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const img = new Image();
+        img.onload = () => {
+          // Create canvas to analyze the image
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          
+          // Get image data to analyze pixels
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+          
+          // Find the actual object boundaries (non-transparent pixels)
+          let minX = canvas.width, maxX = 0, minY = canvas.height, maxY = 0;
+          let hasContent = false;
+          
+          for (let y = 0; y < canvas.height; y++) {
+            for (let x = 0; x < canvas.width; x++) {
+              const index = (y * canvas.width + x) * 4;
+              const alpha = data[index + 3]; // Alpha channel
+              
+              if (alpha > 0) { // Non-transparent pixel
+                hasContent = true;
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+              }
+            }
+          }
+          
+          if (!hasContent) {
+            // No content found, return original
+            resolve(dataUrl);
+            return;
+          }
+          
+          // Add small padding (2px) around the object
+          const padding = 2;
+          minX = Math.max(0, minX - padding);
+          maxX = Math.min(canvas.width - 1, maxX + padding);
+          minY = Math.max(0, minY - padding);
+          maxY = Math.min(canvas.height - 1, maxY + padding);
+          
+          // Calculate crop dimensions
+          const cropWidth = maxX - minX + 1;
+          const cropHeight = maxY - minY + 1;
+          
+          // Create new canvas for cropped image
+          const cropCanvas = document.createElement('canvas');
+          const cropCtx = cropCanvas.getContext('2d');
+          cropCanvas.width = cropWidth;
+          cropCanvas.height = cropHeight;
+          
+          // Draw the cropped portion
+          cropCtx.drawImage(
+            img,
+            minX, minY, cropWidth, cropHeight,
+            0, 0, cropWidth, cropHeight
+          );
+          
+          // Convert back to data URL
+          const croppedDataUrl = cropCanvas.toDataURL('image/png');
+          console.log('✂️ Frontend: Image cropped to object boundaries');
+          resolve(croppedDataUrl);
+        };
+        
+        img.onerror = () => {
+          console.warn('⚠️ Could not load image for cropping, returning original');
+          resolve(dataUrl);
+        };
+        
+        img.src = dataUrl;
+        
+      } catch (error) {
+        console.warn('⚠️ Cropping failed, returning original:', error);
+        resolve(dataUrl);
+      }
     });
   }
 

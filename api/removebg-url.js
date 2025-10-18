@@ -1,3 +1,6 @@
+import { Buffer } from 'buffer';
+import FormData from 'form-data';
+
 export default async function handler(req, res) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -58,7 +61,7 @@ export default async function handler(req, res) {
 
     console.log('✅ Backend: Remove.bg processing complete - PNG with transparency');
 
-    // 4. Return PNG with correct headers
+    // 4. Return PNG with correct headers (frontend will handle cropping)
     res.setHeader('Content-Type', 'image/png');
     res.setHeader('Content-Length', pngBuffer.byteLength);
     res.setHeader('Access-Control-Allow-Origin', '*');
