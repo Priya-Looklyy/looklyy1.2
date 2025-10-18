@@ -1,5 +1,4 @@
 import { Buffer } from 'buffer';
-import FormData from 'form-data';
 
 export default async function handler(req, res) {
   // Handle CORS preflight
@@ -34,8 +33,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // 1. Prepare Remove.bg API request
-    const formData = new FormData();
+    // 1. Prepare Remove.bg API request using URLSearchParams (built-in)
+    const formData = new URLSearchParams();
     formData.append('image_url', imageUrl);
     formData.append('format', 'png');        // ✅ Force PNG output
     formData.append('channels', 'rgba');     // ✅ Force alpha channel
@@ -46,8 +45,9 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'X-Api-Key': process.env.REMOVEBG_API_KEY,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: formData
+      body: formData.toString()
     });
 
     if (!response.ok) {
