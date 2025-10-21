@@ -354,8 +354,8 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
               className="control-btn" 
               data-tooltip="Save"
               onClick={() => {
-                // Save board to Looklyy Boards
-                console.log('Saving board to Looklyy Boards');
+                // Save board to Boards
+                console.log('Saving board to Boards');
                 // TODO: Implement save functionality
               }}
             >

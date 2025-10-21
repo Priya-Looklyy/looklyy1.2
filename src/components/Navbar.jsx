@@ -6,7 +6,7 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
   const { user } = useAuth()
   const navItems = [
     { id: 'trending', label: 'Trending' },
-    { id: 'suggests', label: 'Looklyy Boards' },
+    { id: 'suggests', label: 'Boards' },
     { id: 'closet', label: 'Closet' }
   ]
 
