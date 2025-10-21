@@ -516,7 +516,7 @@
   flex: 0 0 10%; /* Fixed 10% height for heading */
   display: flex;
   align-items: center;
-  justify-content: center; /* Center the heading */
+  justify-content: flex-start; /* Left align the heading */
   margin-bottom: 0;
   padding: 0.5rem 1rem; /* Reduced vertical padding to fit 10% */
   height: 10%;
@@ -575,10 +575,10 @@
   grid-template-columns: 1fr 1fr; /* 2 columns */
   grid-template-rows: 1fr 1fr; /* 2 rows for 4 items */
   gap: 1rem;
-  padding: 3rem 1rem 3rem 1rem; /* Space for chevron buttons */
+  padding: 3rem 0 3rem 1rem; /* Space for chevron buttons, left padding to align with section */
   overflow: hidden; /* Invisible scroll - no scrollbars */
-  align-items: center;
-  justify-items: center;
+  align-items: start; /* Align items to top */
+  justify-items: start; /* Left align items */
 }
 
 .closet-items-container .library-item {
