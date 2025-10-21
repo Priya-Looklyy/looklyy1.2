@@ -6,6 +6,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
   const [canvasItems, setCanvasItems] = useState([])
   const [draggedItem, setDraggedItem] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [closetScrollIndex, setClosetScrollIndex] = useState(0)
   const canvasRef = useRef(null)
 
   // Mock closet items with transparent backgrounds (cutout-ready)
@@ -338,6 +339,20 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     setDraggedThumbnailIndex(null)
   }
 
+  // Closet scroll handlers
+  const handleClosetScrollUp = () => {
+    const maxIndex = Math.max(0, closetItems.length - 4)
+    setClosetScrollIndex(prev => Math.max(0, prev - 1))
+  }
+
+  const handleClosetScrollDown = () => {
+    const maxIndex = Math.max(0, closetItems.length - 4)
+    setClosetScrollIndex(prev => Math.min(maxIndex, prev + 1))
+  }
+
+  // Get visible closet items
+  const visibleClosetItems = closetItems.slice(closetScrollIndex, closetScrollIndex + 4)
+
   return (
     <div className="sliding-canvas-container">
       {/* Working Canvas (40% width - 1.5x image size) */}
@@ -469,22 +484,47 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
       {/* Closet & Brand Partners (50% width - 25% each) */}
       <div className="items-library-section">
         {/* Closet */}
-        <div className="library-subsection">
+        <div className="library-subsection closet-section">
           <h4>Closet</h4>
-          <div className="items-grid">
-            {closetItems.map(item => (
-              <div
-                key={item.id}
-                className="library-item"
-                draggable
-                onDragStart={(e) => handleDragStart(e, item)}
-                onDragEnd={handleDragEnd}
-                title={`Drag to create paper cutout of ${item.name}`}
-              >
-                <img src={item.image} alt={item.name} />
-                <span>{item.name}</span>
-              </div>
-            ))}
+          <div className="closet-scroll-container">
+            {/* Up Chevron */}
+            <button 
+              className="closet-scroll-btn scroll-up"
+              onClick={handleClosetScrollUp}
+              disabled={closetScrollIndex === 0}
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+              </svg>
+            </button>
+            
+            {/* Closet Items Container */}
+            <div className="closet-items-container">
+              {visibleClosetItems.map(item => (
+                <div
+                  key={item.id}
+                  className="library-item"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, item)}
+                  onDragEnd={handleDragEnd}
+                  title={`Drag to create paper cutout of ${item.name}`}
+                >
+                  <img src={item.image} alt={item.name} />
+                  <span>{item.name}</span>
+                </div>
+              ))}
+            </div>
+            
+            {/* Down Chevron */}
+            <button 
+              className="closet-scroll-btn scroll-down"
+              onClick={handleClosetScrollDown}
+              disabled={closetScrollIndex >= closetItems.length - 4}
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+              </svg>
+            </button>
           </div>
         </div>
 

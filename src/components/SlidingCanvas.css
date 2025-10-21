@@ -503,6 +503,69 @@
   font-weight: 600;
 }
 
+/* Closet Doomscroll Interface */
+.closet-section {
+  position: relative;
+}
+
+.closet-scroll-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 3rem); /* Account for heading space */
+  position: relative;
+}
+
+.closet-scroll-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #9ca3af; /* Grey color */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.closet-scroll-btn:hover:not(:disabled) {
+  color: #9333ea; /* Purple on hover */
+  background: rgba(147, 51, 234, 0.1);
+  transform: translateX(-50%) scale(1.1);
+}
+
+.closet-scroll-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.scroll-up {
+  top: 0.5rem;
+}
+
+.scroll-down {
+  bottom: 0.5rem;
+}
+
+.closet-items-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 1rem 3rem 1rem; /* Space for chevron buttons */
+  gap: 1rem;
+}
+
+.closet-items-container .library-item {
+  margin: 0 auto;
+  max-width: 80px;
+}
+
 /* Partner Brand Items */
 .partner-item {
   border: 2px solid rgba(147, 51, 234, 0.2);
