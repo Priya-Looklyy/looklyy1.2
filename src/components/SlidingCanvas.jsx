@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { removeBackgroundFromUrl } from '../utils/backgroundRemoval'
+import { useClosetImages } from '../hooks/useClosetImages'
 import './SlidingCanvas.css'
 
 const SlidingCanvas = ({ pinnedLook, onClose }) => {
@@ -7,10 +8,15 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
   const [draggedItem, setDraggedItem] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [closetScrollIndex, setClosetScrollIndex] = useState(0)
+  const [partnerBrandsExpanded, setPartnerBrandsExpanded] = useState(false)
   const canvasRef = useRef(null)
+  const partnerBrandsRef = useRef(null)
 
-  // Mock closet items with transparent backgrounds (cutout-ready) - Increased to 12 items
-  const closetItems = [
+  // Load closet items from folder-based system
+  const { closetImages, loading: closetLoading, error: closetError } = useClosetImages()
+
+  // Fallback closet items for when no folder images are available
+  const fallbackClosetItems = [
     { id: 1, name: 'White T-Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop&auto=format&q=80', category: 'tops' },
     { id: 2, name: 'Blue Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=200&h=200&fit=crop&auto=format&q=80', category: 'bottoms' },
     { id: 3, name: 'Black Jacket', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200&h=200&fit=crop&auto=format&q=80', category: 'outerwear' },
@@ -24,6 +30,10 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     { id: 11, name: 'Leather Boots', image: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&auto=format&q=80', category: 'shoes' },
     { id: 12, name: 'Silk Scarf', image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=200&h=200&fit=crop&auto=format&q=80', category: 'accessories' }
   ]
+
+  // Use folder-based images if available, otherwise show fallback message
+  const hasFolderImages = closetImages && closetImages.length > 0
+  const closetItems = hasFolderImages ? closetImages : []
 
   const partnerBrands = [
     { id: 100, name: 'Designer Bag', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=100&h=100&fit=crop', category: 'accessories', brand: 'LuxeBrand' },
@@ -253,6 +263,16 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
 
   const clearCanvas = () => {
     setCanvasItems([])
+  }
+
+  const handleShopFromPartnerBrands = () => {
+    // Expand partner brands to fill the entire closet space
+    setPartnerBrandsExpanded(true)
+  }
+
+  const handleCollapsePartnerBrands = () => {
+    // Collapse partner brands back to normal size
+    setPartnerBrandsExpanded(false)
   }
 
   // Thumbnail scroll state
@@ -524,37 +544,68 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
 
       {/* Closet & Brand Partners (50% width - 25% each) */}
       <div className="items-library-section">
-        {/* Closet */}
-        <div className="library-subsection closet-section">
-          <h4>Closet</h4>
-          <div 
-            className="closet-scroll-container"
-            onWheel={handleClosetWheelScroll}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            {/* Closet Items Container */}
-            <div className="closet-items-container">
-              {visibleClosetItems.map(item => (
-                <div
-                  key={item.id}
-                  className="library-item"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, item)}
-                  onDragEnd={handleDragEnd}
-                  title={`Drag to create paper cutout of ${item.name}`}
-                >
-                  <img src={item.image} alt={item.name} />
-                  <span>{item.name}</span>
+        {!partnerBrandsExpanded && (
+          /* Closet */
+          <div className="library-subsection closet-section">
+            <h4>Closet</h4>
+            <div 
+              className="closet-scroll-container"
+              onWheel={handleClosetWheelScroll}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              {/* Closet Items Container or Fallback Message */}
+              {!closetLoading && !hasFolderImages ? (
+                /* Fallback Message */
+                <div className="closet-fallback-message">
+                  <p className="closet-fallback-text">
+                    There are no items in your closet that can help recreate this look for you
+                  </p>
+                  <button 
+                    className="closet-fallback-button"
+                    onClick={handleShopFromPartnerBrands}
+                  >
+                    Shop from Partner brands
+                  </button>
                 </div>
-              ))}
+              ) : (
+                /* Closet Items Grid */
+                <div className="closet-items-container">
+                  {visibleClosetItems.map(item => (
+                    <div
+                      key={item.id}
+                      className="library-item"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, item)}
+                      onDragEnd={handleDragEnd}
+                      title={`Drag to create paper cutout of ${item.name}`}
+                    >
+                      <img src={item.image} alt={item.name} />
+                      <span>{item.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        </div>
+        )}
 
         {/* Partner Brands */}
-        <div className="library-subsection">
-          <h4>Partner Brands</h4>
+        <div className={`library-subsection ${partnerBrandsExpanded ? 'partner-brands-expanded' : ''}`} ref={partnerBrandsRef}>
+          <div className="partner-brands-header">
+            <h4>Partner Brands</h4>
+            {partnerBrandsExpanded && (
+              <button 
+                className="collapse-partner-brands-btn"
+                onClick={handleCollapsePartnerBrands}
+                title="Back to normal view"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+              </button>
+            )}
+          </div>
           <div className="items-grid">
             {partnerBrands.map(item => (
               <div

@@ -542,33 +542,33 @@
   display: grid;
   grid-template-columns: 1fr 1fr; /* 2 columns */
   grid-template-rows: auto; /* Let rows size to content */
-  gap: 0; /* No gap between rows and columns */
-  row-gap: 0; /* Specifically no gap between rows */
+  gap: 12px; /* Consistent gap between all items */
   padding: 1rem 0 1rem 1rem; /* Reduced padding without arrow buttons, left padding for alignment */
   overflow: hidden; /* Invisible scroll - no scrollbars */
   align-items: start; /* Align items to top */
-  justify-items: start; /* Left align items */
+  justify-items: stretch; /* Fill available space for consistent squares */
   transition: all 0.3s ease; /* Smooth transitions for scroll changes */
 }
 
 .closet-items-container .library-item {
   width: 100%;
-  max-width: 120px; /* Increased size for better garment visibility */
-  margin: 0;
+  aspect-ratio: 1; /* Make items square like in the reference image */
+  margin: 0 !important;
   position: relative;
   overflow: hidden;
   transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 0; /* Clean sharp edges - no rounded corners */
-  background: transparent !important; /* Remove background to let image show through */
-  border: none !important; /* No outlines/borders */
-  padding: 0 !important; /* Remove default padding to let image fill space */
+  border-radius: 0 !important; /* Clean sharp edges - no rounded corners */
+  background: #ffffff !important; /* White background like placeholder squares */
+  border: 1px solid #d1d5db !important; /* Light grey border */
+  padding: 0 !important; /* Remove default padding to let content fill space */
   text-align: left !important; /* Override center alignment */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for visual enhancement */
+  box-shadow: none !important; /* Remove shadow for clean grid look */
 }
 
 .closet-items-container .library-item img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover; /* Fill the square container properly */
   display: block;
   border-radius: 0; /* Clean sharp edges to match container */
   border: none; /* No image borders */
@@ -599,9 +599,9 @@
 
 .closet-items-container .library-item:hover {
   transform: translateY(-2px);
-  border: none !important; /* No borders on hover */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-  background: transparent !important; /* Keep transparent background on hover */
+  border: 1px solid #9333ea !important; /* Purple border on hover while maintaining square shape */
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2) !important; /* Purple shadow on hover */
+  background: #ffffff !important; /* Keep white background on hover */
 }
 
 /* Partner Brand Items */
@@ -725,4 +725,83 @@
     border-color: #9333ea;
     background-color: rgba(147, 51, 234, 0.08);
   }
+}
+
+/* Closet Fallback Message */
+.closet-fallback-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.closet-fallback-text {
+  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  text-transform: none;
+  color: #9ca3af;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.closet-fallback-button {
+  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);
+}
+
+.closet-fallback-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
+}
+
+/* Partner Brands Expanded State */
+.partner-brands-expanded {
+  flex: 1 !important; /* Take full width when expanded */
+}
+
+.partner-brands-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.partner-brands-header h4 {
+  margin: 0; /* Remove default margin since we're handling spacing */
+}
+
+.collapse-partner-brands-btn {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapse-partner-brands-btn:hover {
+  border-color: #9333ea;
+  color: #9333ea;
+  background: rgba(147, 51, 234, 0.05);
 }
