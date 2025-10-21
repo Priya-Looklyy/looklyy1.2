@@ -542,7 +542,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr; /* 2 columns */
   grid-template-rows: 1fr 1fr; /* 2 rows for 4 items */
-  gap: 1rem;
+  gap: 12px; /* Reduced gap for better space utilization */
   padding: 1rem 0 1rem 1rem; /* Reduced padding without arrow buttons, left padding for alignment */
   overflow: hidden; /* Invisible scroll - no scrollbars */
   align-items: start; /* Align items to top */
@@ -552,9 +552,55 @@
 
 .closet-items-container .library-item {
   width: 100%;
-  max-width: 80px;
-  margin: 0; /* Remove auto margin since grid handles centering */
-  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth item transitions */
+  max-width: 120px; /* Increased size for better garment visibility */
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0; /* Clean sharp edges - no rounded corners */
+  background: transparent !important; /* Remove background to let image show through */
+  border: none !important; /* No outlines/borders */
+  padding: 0 !important; /* Remove default padding to let image fill space */
+  text-align: left !important; /* Override center alignment */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for visual enhancement */
+}
+
+.closet-items-container .library-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0; /* Clean sharp edges to match container */
+  border: none; /* No image borders */
+}
+
+.closet-items-container .library-item span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.6); /* Transparent grey overlay */
+  color: white;
+  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300; /* Match tagline weight */
+  letter-spacing: 0.3px; /* Match tagline spacing */
+  text-align: left; /* Left aligned text */
+  text-transform: none; /* Match tagline transform */
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease;
+  border-radius: 0; /* Sharp edges to match clean design */
+}
+
+.closet-items-container .library-item:hover span {
+  opacity: 1; /* Show text on hover */
+}
+
+.closet-items-container .library-item:hover {
+  transform: translateY(-2px);
+  border: none !important; /* No borders on hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+  background: transparent !important; /* Keep transparent background on hover */
 }
 
 /* Partner Brand Items */
