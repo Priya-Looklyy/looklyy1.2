@@ -3,6 +3,7 @@ import ImageSlider from './ImageSlider'
 import NotificationCenter from './NotificationCenter'
 import SlidingCanvas from './SlidingCanvas'
 import { getAllSliders } from '../data/fashionDatabase'
+import { useDemoImages } from '../hooks/useDemoImages'
 import trendingAPI from '../services/trendingAPI'
 import { useLook } from '../context/LookContext'
 import { useAuth } from '../context/AuthContext'
@@ -16,6 +17,9 @@ const HomePage = () => {
   const [error, setError] = useState(null)
   const { favorites } = useLook()
   const { imageShuffleSeed } = useAuth()
+  
+  // Load demo images from folder
+  const { demoImages, loading: demoLoading, error: demoError } = useDemoImages()
   
   // Convert trending API data to HomePage slider format - simplified
   const transformTrendingDataToSliders = (trendingData, shuffleSeed = 0) => {
@@ -128,10 +132,26 @@ const HomePage = () => {
       const isDemoMode = localStorage.getItem('looklyy_demo_mode') === 'true'
       
       if (isDemoMode) {
-        console.log('🎭 Demo mode detected - using mock data for homepage')
-        // Use mock data for demo mode
-        const fallbackSliders = getAllSliders()
-        setSliderData(fallbackSliders)
+        console.log('🎭 Demo mode detected - checking for folder-based images')
+        
+        // Wait for demo images to load
+        if (demoLoading) {
+          console.log('⏳ Waiting for demo images to load...')
+          return
+        }
+        
+        if (demoImages && demoImages.hasImages && demoImages.sliders) {
+          console.log('📁 Using folder-based demo images:', demoImages.totalImages, 'images')
+          // Convert folder-based images to slider format
+          const folderSliders = Object.values(demoImages.sliders)
+          setSliderData(folderSliders)
+        } else {
+          console.log('📁 No folder images found - using static mock data')
+          // Fallback to static mock data
+          const fallbackSliders = getAllSliders()
+          setSliderData(fallbackSliders)
+        }
+        
         setLoading(false)
         return
       }
@@ -168,7 +188,7 @@ const HomePage = () => {
     }
 
     loadTrendingData()
-  }, [imageShuffleSeed]) // RE-ENABLE: Reloads with fresh images when users login
+  }, [imageShuffleSeed, demoImages, demoLoading]) // Include demo images dependencies
   
   // Sort sliders: favorited ones first, then others
   const sortedSliders = [...sliderData].sort((a, b) => {

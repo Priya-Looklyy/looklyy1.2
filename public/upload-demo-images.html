@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Demo Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .upload-section {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .image-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .url-input {
+            width: 70%;
+            padding: 8px;
+        }
+        .name-input {
+            width: 25%;
+            padding: 8px;
+        }
+        button {
+            background: #9333ea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #7c3aed;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .preview-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+        .preview-item img {
+            max-width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Upload Demo Images</h1>
+    <p>Upload up to 25 images for your homepage demo sliders (5 images per slider)</p>
+
+    <div class="upload-section">
+        <h3>Add Image URLs</h3>
+        <div>
+            <input type="url" class="image-input url-input" placeholder="Image URL (e.g., https://example.com/image.jpg)" id="imageUrl">
+            <input type="text" class="image-input name-input" placeholder="Image Name" id="imageName">
+            <button onclick="addImage()">Add Image</button>
+        </div>
+        <p><small>Add 25 images total - they'll be distributed across 5 sliders automatically</small></p>
+    </div>
+
+    <div id="previewContainer" class="preview"></div>
+
+    <div style="text-align: center;">
+        <button onclick="uploadImages()" id="uploadBtn">Upload 25 Demo Images</button>
+        <button onclick="clearAll()" style="background: #6c757d; margin-left: 10px;">Clear All</button>
+    </div>
+
+    <div id="status"></div>
+
+    <script>
+        let images = [];
+        let imageCounter = 1;
+
+        function addImage() {
+            const url = document.getElementById('imageUrl').value.trim();
+            const name = document.getElementById('imageName').value.trim() || `Image ${imageCounter}`;
+
+            if (!url) {
+                alert('Please enter an image URL');
+                return;
+            }
+
+            if (images.length >= 25) {
+                alert('Maximum 25 images allowed');
+                return;
+            }
+
+            const imageData = {
+                url: url,
+                name: name,
+                alt: name
+            };
+
+            images.push(imageData);
+            updatePreview();
+            
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('imageName').value = '';
+            imageCounter++;
+        }
+
+        function removeImage(index) {
+            images.splice(index, 1);
+            updatePreview();
+        }
+
+        function clearAll() {
+            images = [];
+            imageCounter = 1;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const container = document.getElementById('previewContainer');
+            container.innerHTML = '';
+
+            images.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `
+                    <img src="${img.url}" alt="${img.alt}" onerror="this.src='https://via.placeholder.com/150x100?text=Invalid+URL'">
+                    <div><strong>${img.name}</strong></div>
+                    <button class="remove-btn" onclick="removeImage(${index})">Remove</button>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('uploadBtn').disabled = images.length === 0;
+        }
+
+        async function uploadImages() {
+            if (images.length === 0) {
+                alert('Please add some images first');
+                return;
+            }
+
+            const uploadBtn = document.getElementById('uploadBtn');
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+
+            try {
+                const response = await fetch('/api/homepage-demo-images/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        images: images
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    showStatus(`✅ Success! Uploaded ${result.totalImages} images`, 'success');
+                    
+                    // Show slider distribution
+                    const sliderInfo = Object.keys(result.sliders).map(sliderKey => {
+                        const slider = result.sliders[sliderKey];
+                        return `${sliderKey}: ${slider.images.length} images - ${slider.title}`;
+                    }).join('\n');
+                    
+                    console.log('Slider distribution:', sliderInfo);
+                    
+                } else {
+                    showStatus(`❌ Upload failed: ${result.error || result.message}`, 'error');
+                }
+
+            } catch (error) {
+                showStatus(`💥 Error: ${error.message}`, 'error');
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Upload 25 Demo Images';
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            
+            setTimeout(() => {
+                statusDiv.textContent = '';
+                statusDiv.className = '';
+            }, 5000);
+        }
+
+        // Initialize
+        updatePreview();
+    </script>
+</body>
+</html>
