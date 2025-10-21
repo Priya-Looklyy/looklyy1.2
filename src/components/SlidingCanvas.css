@@ -434,18 +434,18 @@
 }
 
 .library-subsection h4 {
-  color: #2d1b4e;
-  margin-bottom: 1rem;
+  font-family: 'Nord', sans-serif;
   font-size: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: 'Playfair Display', serif;
+  font-weight: 500; /* 60% of logo weight (800) */
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
 }
 
-.library-subsection h4 i {
-  color: #9333ea;
-}
 
 .items-grid {
   display: grid;

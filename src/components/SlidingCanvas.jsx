@@ -468,9 +468,9 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
 
       {/* Closet & Brand Partners (50% width - 25% each) */}
       <div className="items-library-section">
-        {/* Your Closet */}
+        {/* Closet */}
         <div className="library-subsection">
-          <h4><i className="fas fa-tshirt"></i> Your Closet</h4>
+          <h4>Closet</h4>
           <div className="items-grid">
             {closetItems.map(item => (
               <div
@@ -490,7 +490,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
 
         {/* Partner Brands */}
         <div className="library-subsection">
-          <h4><i className="fas fa-store"></i> Partner Brands</h4>
+          <h4>Partner Brands</h4>
           <div className="items-grid">
             {partnerBrands.map(item => (
               <div
