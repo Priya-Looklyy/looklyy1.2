@@ -33,14 +33,18 @@ export default async function handler(req, res) {
       });
     }
 
-    // 1. Prepare Remove.bg API request using URLSearchParams (built-in)
+    // 1. Prepare URLSearchParams with CRITICAL parameters for better accuracy
     const formData = new URLSearchParams();
     formData.append('image_url', imageUrl);
-    formData.append('format', 'png');        // ✅ Force PNG output
-    formData.append('channels', 'rgba');     // ✅ Force alpha channel
-    formData.append('size', 'auto');         // Best quality
+    
+    // ✅ CRITICAL PARAMETERS FOR BETTER ACCURACY (same as working project)
+    formData.append('format', 'png');
+    formData.append('channels', 'rgba');
+    formData.append('size', 'auto');
 
-    // 2. Call Remove.bg API
+    console.log('🚀 Calling Remove.bg API with enhanced parameters...');
+
+    // 2. Call Remove.bg API with proper headers
     const response = await fetch('https://api.remove.bg/v1.0/removebg', {
       method: 'POST',
       headers: {
@@ -50,23 +54,37 @@ export default async function handler(req, res) {
       body: formData.toString()
     });
 
+    // Handle API errors with detailed logging (like working project)
     if (!response.ok) {
       const errorText = await response.text();
       console.error('❌ Remove.bg API error:', response.status, errorText);
-      throw new Error(`Remove.bg API error: ${response.status} ${response.statusText}`);
+      
+      let errorMessage = 'Background removal failed';
+      if (response.status === 402) {
+        errorMessage = 'Remove.bg API quota exceeded';
+      } else if (response.status === 403) {
+        errorMessage = 'Invalid Remove.bg API key';
+      } else if (response.status === 400) {
+        errorMessage = 'Invalid image format or size';
+      }
+
+      return res.status(response.status).json({
+        error: errorMessage,
+        details: errorText
+      });
     }
 
     // 3. Get PNG buffer from Remove.bg
     const pngBuffer = await response.arrayBuffer();
+    console.log(`✅ Remove.bg success: ${pngBuffer.byteLength} bytes PNG received`);
 
-    console.log('✅ Backend: Remove.bg processing complete - PNG with transparency');
-
-    // 4. Return PNG with correct headers (frontend will handle cropping)
-    res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Content-Length', pngBuffer.byteLength);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    // 4. Return PNG with correct headers (like working project)
+    res.set({
+      'Content-Type': 'image/png',
+      'Content-Length': pngBuffer.byteLength,
+      'Cache-Control': 'public, max-age=3600',
+      'Access-Control-Allow-Origin': '*'
+    });
     
     res.send(Buffer.from(pngBuffer));  // ✅ Pure PNG with transparency
 

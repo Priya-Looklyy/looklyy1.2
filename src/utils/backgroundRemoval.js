@@ -33,28 +33,61 @@ export const removeBackground = async (imageFile) => {
 
 export const removeBackgroundFromUrl = async (imageUrl) => {
   try {
-    const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+    console.log('🚀 Sending image to Remove.bg API:', imageUrl);
+
+    // Use our backend API endpoint for better handling
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
+    const response = await fetch(`${API_BASE_URL}/api/removebg-url`, {
       method: 'POST',
       headers: {
-        'X-Api-Key': API_KEY,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        image_url: imageUrl,
-        size: 'auto'
-      }),
-    })
-    
-    if (response.ok) {
-      const blob = await response.blob()
-      return URL.createObjectURL(blob)
-    } else {
-      throw new Error('Background removal failed')
+      body: JSON.stringify({ imageUrl })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `API error: ${response.status}`);
     }
+
+    // Get PNG blob from response
+    const pngBlob = await response.blob();
+    
+    // Verify it's actually a PNG
+    if (pngBlob.type !== 'image/png') {
+      console.warn('⚠️ Response is not PNG:', pngBlob.type);
+    }
+
+    // Convert to data URL for immediate use
+    const dataUrl = await blobToDataUrl(pngBlob);
+    
+    console.log('✅ Background removal successful, PNG size:', pngBlob.size);
+    return dataUrl;
+
   } catch (error) {
-    console.error('Background removal error:', error)
-    return imageUrl // Return original if fails
+    console.error('❌ Remove.bg API error:', error);
+    // Fallback: return original if fails
+    return imageUrl;
   }
+}
+
+/**
+ * Convert Blob to Data URL
+ */
+const blobToDataUrl = (blob) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      // Verify it's a PNG data URL
+      if (!result.startsWith('data:image/png')) {
+        console.warn('⚠️ Data URL is not PNG:', result.substring(0, 50));
+      }
+      resolve(result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
 // Alternative: Client-side background removal using AI models

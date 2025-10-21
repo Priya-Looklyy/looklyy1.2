@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { removeBackgroundFromUrl } from '../utils/backgroundRemoval'
 import './SlidingCanvas.css'
 
 const SlidingCanvas = ({ pinnedLook, onClose }) => {
@@ -90,10 +91,17 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     console.log('🎯 Starting background removal for:', imageUrl);
 
     try {
-      // Use backend service for background removal
-      console.log('🚀 Processing image with backend service...');
+      // Use improved backend service for background removal (with better accuracy)
+      console.log('🚀 Processing image with enhanced backend service...');
       processedImageUrl = await removeBackgroundFromUrl(imageUrl);
-      console.log('✅ Backend processing complete - PNG with transparency');
+      console.log('✅ Enhanced backend processing complete - PNG with transparency');
+      
+      // 6. Crop to object boundaries (remove transparent padding) for precision
+      console.log('✂️ Frontend: Applying precision cropping...');
+      const croppedDataUrl = await cropToObjectBoundaries(processedImageUrl);
+      console.log('✅ Frontend: Precision cropping complete - tightly cropped object');
+      
+      return croppedDataUrl;
     } catch (error) {
       console.error('❌ Background removal failed:', error);
       // Use original image as fallback
@@ -104,59 +112,6 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     return processedImageUrl;
   }
 
-  // Backend service for background removal (from proven implementation)
-  const removeBackgroundFromUrl = async (imageUrl) => {
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
-    
-    // 1. Send POST request to backend
-    const response = await fetch(`${API_BASE_URL}/removebg-url`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imageUrl })
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    // 2. Check if it's a fallback response (JSON)
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      const fallbackData = await response.json();
-      if (fallbackData.fallback) {
-        console.log('⚠️ Using fallback - no API key configured');
-        return fallbackData.originalUrl;
-      }
-    }
-
-    // 3. Get PNG blob from response
-    const pngBlob = await response.blob();
-    
-    // 4. Verify it's PNG
-    if (pngBlob.type !== 'image/png') {
-      console.warn('⚠️ Response is not PNG:', pngBlob.type);
-    }
-
-    // 5. Convert to data URL for canvas use
-    const dataUrl = await blobToDataUrl(pngBlob);
-    
-    // 6. Crop to object boundaries (remove transparent padding)
-    console.log('✂️ Frontend: Cropping to object boundaries...');
-    const croppedDataUrl = await cropToObjectBoundaries(dataUrl);
-    console.log('✅ Frontend: Cropping complete - tightly cropped object');
-    
-    return croppedDataUrl; // Returns: data:image/png;base64,... (tightly cropped)
-  }
-
-  // Helper function to convert blob to data URL
-  const blobToDataUrl = (blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
 
   // Helper function to crop image to actual object boundaries
   const cropToObjectBoundaries = (dataUrl) => {
