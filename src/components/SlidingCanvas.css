@@ -530,43 +530,11 @@
   position: relative;
   min-height: 0;
   overflow: hidden; /* Invisible scroll system */
+  cursor: grab; /* Indicate scrollable area */
 }
 
-.closet-scroll-btn {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  color: #9ca3af; /* Grey color */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 10;
-}
-
-.closet-scroll-btn:hover:not(:disabled) {
-  color: #9333ea; /* Purple on hover */
-  background: rgba(147, 51, 234, 0.1);
-  transform: translateX(-50%) scale(1.1);
-}
-
-.closet-scroll-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.scroll-up {
-  top: 0.5rem;
-}
-
-.scroll-down {
-  bottom: 0.5rem;
+.closet-scroll-container:active {
+  cursor: grabbing; /* Show grabbing cursor when scrolling */
 }
 
 .closet-items-container {
@@ -575,16 +543,18 @@
   grid-template-columns: 1fr 1fr; /* 2 columns */
   grid-template-rows: 1fr 1fr; /* 2 rows for 4 items */
   gap: 1rem;
-  padding: 3rem 0 3rem 1rem; /* Space for chevron buttons, left padding to align with section */
+  padding: 1rem 0 1rem 1rem; /* Reduced padding without arrow buttons, left padding for alignment */
   overflow: hidden; /* Invisible scroll - no scrollbars */
   align-items: start; /* Align items to top */
   justify-items: start; /* Left align items */
+  transition: all 0.3s ease; /* Smooth transitions for scroll changes */
 }
 
 .closet-items-container .library-item {
   width: 100%;
   max-width: 80px;
   margin: 0; /* Remove auto margin since grid handles centering */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth item transitions */
 }
 
 /* Partner Brand Items */

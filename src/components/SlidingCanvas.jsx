@@ -344,14 +344,45 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
   const visibleRows = 2 // Show 2 rows = 4 items total
   const visibleItemsCount = itemsPerRow * visibleRows // 4 items in 2x2 grid
 
-  const handleClosetScrollUp = () => {
+  // Smooth scroll handler for mouse wheel and touch
+  const handleClosetWheelScroll = (e) => {
+    e.preventDefault()
     const maxIndex = Math.max(0, closetItems.length - visibleItemsCount)
-    setClosetScrollIndex(prev => Math.max(0, prev - itemsPerRow)) // Scroll by row (2 items)
+    
+    if (e.deltaY > 0) {
+      // Scroll down
+      setClosetScrollIndex(prev => Math.min(maxIndex, prev + itemsPerRow))
+    } else {
+      // Scroll up
+      setClosetScrollIndex(prev => Math.max(0, prev - itemsPerRow))
+    }
   }
 
-  const handleClosetScrollDown = () => {
+  // Touch scroll handler for mobile devices
+  const [touchStart, setTouchStart] = useState(0)
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientY)
+  }
+
+  const handleTouchEnd = (e) => {
+    if (!touchStart) return
+    
+    const touchEnd = e.changedTouches[0].clientY
+    const diff = touchStart - touchEnd
     const maxIndex = Math.max(0, closetItems.length - visibleItemsCount)
-    setClosetScrollIndex(prev => Math.min(maxIndex, prev + itemsPerRow)) // Scroll by row (2 items)
+    
+    // Threshold for swipe detection
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        // Swipe up - scroll down
+        setClosetScrollIndex(prev => Math.min(maxIndex, prev + itemsPerRow))
+      } else {
+        // Swipe down - scroll up
+        setClosetScrollIndex(prev => Math.max(0, prev - itemsPerRow))
+      }
+    }
+    
+    setTouchStart(0)
   }
 
   // Get visible closet items for 2-column layout
@@ -490,18 +521,12 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
         {/* Closet */}
         <div className="library-subsection closet-section">
           <h4>Closet</h4>
-          <div className="closet-scroll-container">
-            {/* Up Chevron */}
-            <button 
-              className="closet-scroll-btn scroll-up"
-              onClick={handleClosetScrollUp}
-              disabled={closetScrollIndex === 0}
-            >
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
-              </svg>
-            </button>
-            
+          <div 
+            className="closet-scroll-container"
+            onWheel={handleClosetWheelScroll}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             {/* Closet Items Container */}
             <div className="closet-items-container">
               {visibleClosetItems.map(item => (
@@ -518,17 +543,6 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                 </div>
               ))}
             </div>
-            
-            {/* Down Chevron */}
-            <button 
-              className="closet-scroll-btn scroll-down"
-              onClick={handleClosetScrollDown}
-              disabled={closetScrollIndex >= closetItems.length - visibleItemsCount}
-            >
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
-              </svg>
-            </button>
           </div>
         </div>
 
