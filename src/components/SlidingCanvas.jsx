@@ -339,19 +339,23 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     setDraggedThumbnailIndex(null)
   }
 
-  // Closet scroll handlers
+  // Closet scroll handlers - 2 items per row
+  const itemsPerRow = 2
+  const visibleRows = 2 // Show 2 rows = 4 items total
+  const visibleItemsCount = itemsPerRow * visibleRows // 4 items in 2x2 grid
+
   const handleClosetScrollUp = () => {
-    const maxIndex = Math.max(0, closetItems.length - 4)
-    setClosetScrollIndex(prev => Math.max(0, prev - 1))
+    const maxIndex = Math.max(0, closetItems.length - visibleItemsCount)
+    setClosetScrollIndex(prev => Math.max(0, prev - itemsPerRow)) // Scroll by row (2 items)
   }
 
   const handleClosetScrollDown = () => {
-    const maxIndex = Math.max(0, closetItems.length - 4)
-    setClosetScrollIndex(prev => Math.min(maxIndex, prev + 1))
+    const maxIndex = Math.max(0, closetItems.length - visibleItemsCount)
+    setClosetScrollIndex(prev => Math.min(maxIndex, prev + itemsPerRow)) // Scroll by row (2 items)
   }
 
-  // Get visible closet items
-  const visibleClosetItems = closetItems.slice(closetScrollIndex, closetScrollIndex + 4)
+  // Get visible closet items for 2-column layout
+  const visibleClosetItems = closetItems.slice(closetScrollIndex, closetScrollIndex + visibleItemsCount)
 
   return (
     <div className="sliding-canvas-container">
@@ -519,7 +523,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
             <button 
               className="closet-scroll-btn scroll-down"
               onClick={handleClosetScrollDown}
-              disabled={closetScrollIndex >= closetItems.length - 4}
+              disabled={closetScrollIndex >= closetItems.length - visibleItemsCount}
             >
               <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                 <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>

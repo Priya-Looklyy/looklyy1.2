@@ -506,13 +506,30 @@
 /* Closet Doomscroll Interface */
 .closet-section {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
+/* Closet heading container - exactly 10% */
+.closet-section h4 {
+  flex: 0 0 10%; /* Fixed 10% height for heading */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the heading */
+  margin-bottom: 0;
+  padding: 0.5rem 1rem; /* Reduced vertical padding to fit 10% */
+  height: 10%;
+}
+
+/* Closet scroll container takes remaining 90% space */
 .closet-scroll-container {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 3rem); /* Account for heading space */
+  flex: 0 0 90%; /* Fixed 90% height */
   position: relative;
+  min-height: 0;
+  overflow: hidden; /* Invisible scroll system */
 }
 
 .closet-scroll-btn {
@@ -554,16 +571,20 @@
 
 .closet-items-container {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 3rem 1rem 3rem 1rem; /* Space for chevron buttons */
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 columns */
+  grid-template-rows: 1fr 1fr; /* 2 rows for 4 items */
   gap: 1rem;
+  padding: 3rem 1rem 3rem 1rem; /* Space for chevron buttons */
+  overflow: hidden; /* Invisible scroll - no scrollbars */
+  align-items: center;
+  justify-items: center;
 }
 
 .closet-items-container .library-item {
-  margin: 0 auto;
+  width: 100%;
   max-width: 80px;
+  margin: 0; /* Remove auto margin since grid handles centering */
 }
 
 /* Partner Brand Items */
