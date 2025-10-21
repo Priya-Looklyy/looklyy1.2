@@ -1,4 +1,4 @@
-/* Sliding Canvas - Inline Layout (Not Modal) */
+/* Sliding Canvas - Inline Layout (Not Modal) - Updated 2024-01-15 */
 
 .sliding-canvas-container {
   display: flex;
@@ -751,21 +751,22 @@
 }
 
 .closet-fallback-button {
-  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.65rem; /* Reduced from 0.8rem - 2 sizes smaller */
-  font-weight: 400;
-  letter-spacing: 0.3px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);
-  width: 90%; /* Nearly fill horizontal space */
-  text-transform: none; /* Sentence case, not uppercase */
-  margin: 0 auto; /* Center the button */
+  font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif !important;
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-size: 0.65rem !important; /* Reduced from 0.8rem - 2 sizes smaller */
+  font-weight: 400 !important;
+  letter-spacing: 0.3px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3) !important;
+  width: 90% !important; /* Nearly fill horizontal space */
+  text-transform: none !important; /* Sentence case, not uppercase */
+  margin: 0 auto !important; /* Center the button */
+  display: block !important; /* Ensure it's a block element */
 }
 
 .closet-fallback-button:hover {
