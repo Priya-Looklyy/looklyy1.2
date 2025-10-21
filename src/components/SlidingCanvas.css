@@ -541,8 +541,9 @@
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr; /* 2 columns */
-  grid-template-rows: 1fr 1fr; /* 2 rows for 4 items */
-  gap: 12px; /* Reduced gap for better space utilization */
+  grid-template-rows: auto; /* Let rows size to content */
+  gap: 0; /* No gap between rows and columns */
+  row-gap: 0; /* Specifically no gap between rows */
   padding: 1rem 0 1rem 1rem; /* Reduced padding without arrow buttons, left padding for alignment */
   overflow: hidden; /* Invisible scroll - no scrollbars */
   align-items: start; /* Align items to top */

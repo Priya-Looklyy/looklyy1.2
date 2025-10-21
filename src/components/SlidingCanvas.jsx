@@ -9,20 +9,26 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
   const [closetScrollIndex, setClosetScrollIndex] = useState(0)
   const canvasRef = useRef(null)
 
-  // Mock closet items with transparent backgrounds (cutout-ready)
+  // Mock closet items with transparent backgrounds (cutout-ready) - Increased to 12 items
   const closetItems = [
     { id: 1, name: 'White T-Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop&auto=format&q=80', category: 'tops' },
     { id: 2, name: 'Blue Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=200&h=200&fit=crop&auto=format&q=80', category: 'bottoms' },
     { id: 3, name: 'Black Jacket', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200&h=200&fit=crop&auto=format&q=80', category: 'outerwear' },
     { id: 4, name: 'Red Dress', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200&h=200&fit=crop&auto=format&q=80', category: 'dresses' },
     { id: 5, name: 'Sneakers', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=200&h=200&fit=crop&auto=format&q=80', category: 'shoes' },
-    { id: 6, name: 'Sunglasses', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop&auto=format&q=80', category: 'accessories' }
+    { id: 6, name: 'Sunglasses', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop&auto=format&q=80', category: 'accessories' },
+    { id: 7, name: 'Gray Sweater', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=200&h=200&fit=crop&auto=format&q=80', category: 'tops' },
+    { id: 8, name: 'Black Pants', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop&auto=format&q=80', category: 'bottoms' },
+    { id: 9, name: 'Denim Jacket', image: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&auto=format&q=80', category: 'outerwear' },
+    { id: 10, name: 'Floral Blouse', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop&auto=format&q=80', category: 'tops' },
+    { id: 11, name: 'Leather Boots', image: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=200&h=200&fit=crop&auto=format&q=80', category: 'shoes' },
+    { id: 12, name: 'Silk Scarf', image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=200&h=200&fit=crop&auto=format&q=80', category: 'accessories' }
   ]
 
   const partnerBrands = [
-    { id: 7, name: 'Designer Bag', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=100&h=100&fit=crop', category: 'accessories', brand: 'LuxeBrand' },
-    { id: 8, name: 'Gold Watch', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop', category: 'accessories', brand: 'TimeKeeper' },
-    { id: 9, name: 'Silk Scarf', image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=100&h=100&fit=crop', category: 'accessories', brand: 'SilkCo' }
+    { id: 100, name: 'Designer Bag', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=100&h=100&fit=crop', category: 'accessories', brand: 'LuxeBrand' },
+    { id: 101, name: 'Gold Watch', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop', category: 'accessories', brand: 'TimeKeeper' },
+    { id: 102, name: 'Silk Scarf', image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=100&h=100&fit=crop', category: 'accessories', brand: 'SilkCo' }
   ]
 
   const handleDragStart = (e, item) => {
