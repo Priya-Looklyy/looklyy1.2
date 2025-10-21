@@ -13,10 +13,10 @@
 .closet-images-container {
   display: flex;
   gap: 1rem;
-  width: 100%;
+  width: 90%; /* Leave 10% space on the right */
   height: 100%;
   overflow: hidden;
-  justify-content: space-between;
+  justify-content: flex-start; /* Left align */
   padding: 1rem;
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -24,7 +24,7 @@
 .closet-image-item {
   flex: 1;
   height: 100%;
-  border-radius: 0; /* No curved edges */
+  border-radius: 12px; /* Reintroduce curved edges */
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(147, 51, 234, 0.15);
   transition: all 0.3s ease;
@@ -32,35 +32,32 @@
   background: #ffffff;
 }
 
-.closet-image-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(147, 51, 234, 0.25);
-}
-
+/* Remove all hover effects from images */
 .closet-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.3s ease;
 }
 
-.closet-image-item:hover .closet-image {
-  transform: scale(1.05);
-}
-
-/* Day Label - Transparent band at top */
+/* Day Label - Transparent band on hover only, positioned like a tag */
 .day-label {
   position: absolute;
-  top: 0;
+  top: 15px; /* Positioned slightly below top like a tag */
   left: 0;
   right: 0;
-  height: 42px; /* Reduced by 30% from 60px */
+  height: 36px; /* Reduced by 15% from 42px */
   display: flex;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(10px);
   z-index: 2;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease;
+}
+
+.closet-image-item:hover .day-label {
+  opacity: 1; /* Show on hover */
 }
 
 .day-label.weekday {
@@ -73,7 +70,7 @@
 
 .day-text {
   font-family: 'Nord', sans-serif;
-  font-size: 1.1rem;
+  font-size: 0.77rem; /* Reduced by 30% from 1.1rem */
   font-weight: 400; /* Not bold - normal weight */
   letter-spacing: 0.2em; /* Increased spacing for clean look */
   color: white;
@@ -81,24 +78,30 @@
   text-transform: uppercase; /* All caps */
 }
 
-/* Change Button - Bottom of image */
+/* Change Button - Bottom of image, on hover only */
 .change-button-container {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 50px;
+  height: 43px; /* Reduced by 15% from 50px */
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   z-index: 2;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease;
+}
+
+.closet-image-item:hover .change-button-container {
+  opacity: 1; /* Show on hover */
 }
 
 .change-button {
   font-family: 'Nord', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.63rem; /* Reduced by 30% from 0.9rem */
   font-weight: 400; /* Not bold - normal weight */
   letter-spacing: 0.2em; /* Increased spacing for clean look */
   color: white;
@@ -122,14 +125,24 @@
   .closet-images-container {
     gap: 0.8rem;
     padding: 0.8rem;
+    width: 90%; /* Maintain 10% right space */
+  }
+  
+  .day-label {
+    height: 30px; /* Reduced proportionally */
+    top: 12px; /* Adjusted tag position */
   }
   
   .day-text {
-    font-size: 1rem;
+    font-size: 0.7rem; /* Reduced proportionally */
+  }
+  
+  .change-button-container {
+    height: 36px; /* Reduced proportionally */
   }
   
   .change-button {
-    font-size: 0.8rem;
+    font-size: 0.56rem; /* Reduced proportionally */
     padding: 0.4rem 0.8rem;
   }
 }
@@ -139,6 +152,7 @@
     flex-direction: column;
     gap: 0.6rem;
     padding: 0.6rem;
+    width: 90%; /* Maintain 10% right space */
   }
   
   .closet-image-item {
@@ -146,20 +160,21 @@
   }
   
   .day-label {
-    height: 35px; /* Reduced proportionally */
+    height: 30px; /* Reduced proportionally */
+    top: 10px; /* Adjusted tag position */
   }
   
   .day-text {
-    font-size: 0.9rem;
+    font-size: 0.63rem; /* Reduced proportionally */
     letter-spacing: 0.15em; /* Slightly reduced for smaller screens */
   }
   
   .change-button-container {
-    height: 45px;
+    height: 38px; /* Reduced proportionally */
   }
   
   .change-button {
-    font-size: 0.75rem;
+    font-size: 0.53rem; /* Reduced proportionally */
     padding: 0.3rem 0.6rem;
     letter-spacing: 0.15em; /* Slightly reduced for smaller screens */
   }
@@ -169,6 +184,7 @@
   .closet-images-container {
     gap: 0.4rem;
     padding: 0.4rem;
+    width: 90%; /* Maintain 10% right space */
   }
   
   .closet-image-item {
@@ -176,20 +192,21 @@
   }
   
   .day-label {
-    height: 30px; /* Reduced proportionally */
+    height: 26px; /* Reduced proportionally */
+    top: 8px; /* Adjusted tag position */
   }
   
   .day-text {
-    font-size: 0.8rem;
+    font-size: 0.56rem; /* Reduced proportionally */
     letter-spacing: 0.1em; /* Further reduced for mobile */
   }
   
   .change-button-container {
-    height: 40px;
+    height: 34px; /* Reduced proportionally */
   }
   
   .change-button {
-    font-size: 0.7rem;
+    font-size: 0.49rem; /* Reduced proportionally */
     padding: 0.25rem 0.5rem;
     letter-spacing: 0.1em; /* Further reduced for mobile */
   }
