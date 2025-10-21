@@ -96,20 +96,22 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
       processedImageUrl = await removeBackgroundFromUrl(imageUrl);
       console.log('✅ Enhanced backend processing complete - PNG with transparency');
       
-      // 6. Crop to object boundaries (remove transparent padding) for precision
-      console.log('✂️ Frontend: Applying precision cropping...');
-      const croppedDataUrl = await cropToObjectBoundaries(processedImageUrl);
-      console.log('✅ Frontend: Precision cropping complete - tightly cropped object');
+      // Try to crop to object boundaries (handle CORS errors gracefully)
+      try {
+        console.log('✂️ Frontend: Applying precision cropping...');
+        const croppedDataUrl = await cropToObjectBoundaries(processedImageUrl);
+        console.log('✅ Frontend: Precision cropping complete - tightly cropped object');
+        return croppedDataUrl;
+      } catch (cropError) {
+        console.warn('⚠️ Cropping failed (likely CORS), using processed image:', cropError.message);
+        return processedImageUrl; // Return the processed image without cropping
+      }
       
-      return croppedDataUrl;
-    } catch (error) {
-      console.error('❌ Background removal failed:', error);
-      // Use original image as fallback
-      processedImageUrl = imageUrl;
+    } catch (apiError) {
+      console.error('❌ Background removal API failed:', apiError);
       console.log('⚠️ Using original image as fallback');
+      return imageUrl;
     }
-
-    return processedImageUrl;
   }
 
 
@@ -118,93 +120,112 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
     return new Promise((resolve, reject) => {
       try {
         const img = new Image();
+        
+        // Set crossOrigin to handle CORS issues
+        img.crossOrigin = 'anonymous';
+        
         img.onload = () => {
-          // Create canvas to analyze the image
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-          
-          // Get image data to analyze pixels
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const data = imageData.data;
-          
-          // Find the actual object boundaries (non-transparent pixels)
-          let minX = canvas.width, maxX = 0, minY = canvas.height, maxY = 0;
-          let hasContent = false;
-          let totalPixels = 0;
-          let nonTransparentPixels = 0;
-          
-          for (let y = 0; y < canvas.height; y++) {
-            for (let x = 0; x < canvas.width; x++) {
-              const index = (y * canvas.width + x) * 4;
-              const alpha = data[index + 3]; // Alpha channel
-              totalPixels++;
-              
-              // Use higher threshold for better precision (ignore semi-transparent pixels)
-              if (alpha > 128) { // Only count pixels that are more than 50% opaque
-                hasContent = true;
-                nonTransparentPixels++;
-                minX = Math.min(minX, x);
-                maxX = Math.max(maxX, x);
-                minY = Math.min(minY, y);
-                maxY = Math.max(maxY, y);
+          try {
+            // Create canvas to analyze the image
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            // Safely get image data with CORS handling
+            let imageData;
+            try {
+              imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            } catch (corsError) {
+              console.warn('⚠️ CORS issue detected, skipping cropping:', corsError.message);
+              // Return original data URL if we can't access pixel data
+              resolve(dataUrl);
+              return;
+            }
+            
+            const data = imageData.data;
+            
+            // Find the actual object boundaries (non-transparent pixels)
+            let minX = canvas.width, maxX = 0, minY = canvas.height, maxY = 0;
+            let hasContent = false;
+            let totalPixels = 0;
+            let nonTransparentPixels = 0;
+            
+            for (let y = 0; y < canvas.height; y++) {
+              for (let x = 0; x < canvas.width; x++) {
+                const index = (y * canvas.width + x) * 4;
+                const alpha = data[index + 3]; // Alpha channel
+                totalPixels++;
+                
+                // Use higher threshold for better precision (ignore semi-transparent pixels)
+                if (alpha > 128) { // Only count pixels that are more than 50% opaque
+                  hasContent = true;
+                  nonTransparentPixels++;
+                  minX = Math.min(minX, x);
+                  maxX = Math.max(maxX, x);
+                  minY = Math.min(minY, y);
+                  maxY = Math.max(maxY, y);
+                }
               }
             }
-          }
+            
+            console.log('🔍 Cropping Debug:', {
+              imageSize: `${canvas.width}x${canvas.height}`,
+              totalPixels,
+              nonTransparentPixels,
+              hasContent,
+              originalBounds: { minX, maxX, minY, maxY },
+              objectSize: hasContent ? `${maxX - minX + 1}x${maxY - minY + 1}` : 'none'
+            });
+            
+            if (!hasContent) {
+              // No content found, return original
+              resolve(dataUrl);
+              return;
+            }
+            
+            // No padding for maximum precision - crop exactly to object boundaries
+            const padding = 0;
+            minX = Math.max(0, minX - padding);
+            maxX = Math.min(canvas.width - 1, maxX + padding);
+            minY = Math.max(0, minY - padding);
+            maxY = Math.min(canvas.height - 1, maxY + padding);
+            
+            // Calculate crop dimensions
+            const cropWidth = maxX - minX + 1;
+            const cropHeight = maxY - minY + 1;
+            
+            console.log('✂️ Final Crop Dimensions:', {
+              cropWidth,
+              cropHeight,
+              cropArea: `${cropWidth}x${cropHeight}`,
+              originalArea: `${canvas.width}x${canvas.height}`,
+              reduction: `${Math.round((1 - (cropWidth * cropHeight) / (canvas.width * canvas.height)) * 100)}%`
+            });
+            
+            // Create new canvas for cropped image
+            const cropCanvas = document.createElement('canvas');
+            const cropCtx = cropCanvas.getContext('2d');
+            cropCanvas.width = cropWidth;
+            cropCanvas.height = cropHeight;
+            
+            // Draw the cropped portion
+            cropCtx.drawImage(
+              img,
+              minX, minY, cropWidth, cropHeight,
+              0, 0, cropWidth, cropHeight
+            );
           
-          console.log('🔍 Cropping Debug:', {
-            imageSize: `${canvas.width}x${canvas.height}`,
-            totalPixels,
-            nonTransparentPixels,
-            hasContent,
-            originalBounds: { minX, maxX, minY, maxY },
-            objectSize: hasContent ? `${maxX - minX + 1}x${maxY - minY + 1}` : 'none'
-          });
-          
-          if (!hasContent) {
-            // No content found, return original
+            // Convert back to data URL
+            const croppedDataUrl = cropCanvas.toDataURL('image/png');
+            console.log('✂️ Frontend: Image cropped to object boundaries');
+            resolve(croppedDataUrl);
+            
+          } catch (innerError) {
+            console.warn('⚠️ Error during cropping process:', innerError);
             resolve(dataUrl);
-            return;
           }
-          
-          // No padding for maximum precision - crop exactly to object boundaries
-          const padding = 0;
-          minX = Math.max(0, minX - padding);
-          maxX = Math.min(canvas.width - 1, maxX + padding);
-          minY = Math.max(0, minY - padding);
-          maxY = Math.min(canvas.height - 1, maxY + padding);
-          
-          // Calculate crop dimensions
-          const cropWidth = maxX - minX + 1;
-          const cropHeight = maxY - minY + 1;
-          
-          console.log('✂️ Final Crop Dimensions:', {
-            cropWidth,
-            cropHeight,
-            cropArea: `${cropWidth}x${cropHeight}`,
-            originalArea: `${canvas.width}x${canvas.height}`,
-            reduction: `${Math.round((1 - (cropWidth * cropHeight) / (canvas.width * canvas.height)) * 100)}%`
-          });
-          
-          // Create new canvas for cropped image
-          const cropCanvas = document.createElement('canvas');
-          const cropCtx = cropCanvas.getContext('2d');
-          cropCanvas.width = cropWidth;
-          cropCanvas.height = cropHeight;
-          
-          // Draw the cropped portion
-          cropCtx.drawImage(
-            img,
-            minX, minY, cropWidth, cropHeight,
-            0, 0, cropWidth, cropHeight
-          );
-          
-          // Convert back to data URL
-          const croppedDataUrl = cropCanvas.toDataURL('image/png');
-          console.log('✂️ Frontend: Image cropped to object boundaries');
-          resolve(croppedDataUrl);
         };
         
         img.onerror = () => {

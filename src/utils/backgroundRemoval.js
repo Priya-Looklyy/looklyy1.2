@@ -46,8 +46,34 @@ export const removeBackgroundFromUrl = async (imageUrl) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `API error: ${response.status}`);
+      let errorMessage = `API error: ${response.status}`;
+      try {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } else {
+          const errorText = await response.text();
+          errorMessage = errorText || errorMessage;
+        }
+      } catch (parseError) {
+        console.warn('Could not parse error response:', parseError);
+      }
+      throw new Error(errorMessage);
+    }
+
+    // Check if it's a fallback response (JSON) vs PNG
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      try {
+        const fallbackData = await response.json();
+        if (fallbackData.fallback) {
+          console.log('⚠️ Using fallback - no API key configured');
+          return fallbackData.originalUrl;
+        }
+      } catch (parseError) {
+        console.warn('Could not parse JSON response:', parseError);
+      }
     }
 
     // Get PNG blob from response
