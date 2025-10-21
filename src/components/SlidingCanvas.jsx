@@ -466,7 +466,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
         </div>
       </div>
 
-      {/* Closet & Brand Partners (40% width) */}
+      {/* Closet & Brand Partners (50% width - 25% each) */}
       <div className="items-library-section">
         {/* Your Closet */}
         <div className="library-subsection">
