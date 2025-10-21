@@ -565,7 +565,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
                     className="closet-fallback-button"
                     onClick={handleShopFromPartnerBrands}
                   >
-                    Shop from Partner brands
+                    Recreate from partner brands
                   </button>
                 </div>
               ) : (

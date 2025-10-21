@@ -23,8 +23,13 @@ function ProtectedApp() {
   }
 
   const goHome = () => {
+    console.log('🏠 Logo clicked - navigating to home')
     setCurrentSection('home') // Go to home page with sliders
     window.scrollTo({ top: 0, behavior: 'smooth' })
+    // Ensure we're also clearing any hash that might interfere
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname)
+    }
   }
 
   const handleLogout = () => {

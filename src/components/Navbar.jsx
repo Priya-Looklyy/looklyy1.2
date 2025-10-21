@@ -13,7 +13,17 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
   return (
     <nav className="navbar">
       <div className="nav-left">
-        <div className="logo" onClick={onLogoClick}>
+        <div 
+          className="logo" 
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            if (onLogoClick) {
+              onLogoClick()
+            }
+          }}
+          style={{ cursor: 'pointer' }}
+        >
           <h1>LOOKLYY</h1>
           <p className="tagline">Simplifying fashion for you</p>
         </div>
