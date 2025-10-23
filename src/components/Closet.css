@@ -12,12 +12,12 @@
 
 .closet-images-container {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem; /* Reduced gap for better fit */
   width: 100%; /* Fill entire screen width */
   height: 100%;
   overflow: hidden;
   justify-content: space-between; /* Distribute evenly across full width */
-  padding: 1rem;
+  padding: 0.5rem; /* Reduced padding for better fit */
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -123,8 +123,8 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
   .closet-images-container {
-    gap: 0.8rem;
-    padding: 0.8rem;
+    gap: 0.4rem; /* Reduced gap for better fit */
+    padding: 0.4rem; /* Reduced padding for better fit */
     width: 100%; /* Fill entire screen width */
   }
   
@@ -150,8 +150,8 @@
 @media (max-width: 768px) {
   .closet-images-container {
     flex-direction: column;
-    gap: 0.6rem;
-    padding: 0.6rem;
+    gap: 0.3rem; /* Reduced gap for better fit */
+    padding: 0.3rem; /* Reduced padding for better fit */
     width: 100%; /* Fill entire screen width */
   }
   
@@ -182,8 +182,8 @@
 
 @media (max-width: 480px) {
   .closet-images-container {
-    gap: 0.4rem;
-    padding: 0.4rem;
+    gap: 0.2rem; /* Reduced gap for better fit */
+    padding: 0.2rem; /* Reduced padding for better fit */
     width: 100%; /* Fill entire screen width */
   }
   
