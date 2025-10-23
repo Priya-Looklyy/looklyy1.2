@@ -40,20 +40,22 @@
   display: block;
 }
 
-/* Day Label - Transparent band on hover only, positioned like a tag */
+/* Day Label - Getty Images tab style, positioned at top */
 .day-label {
   position: absolute;
-  top: 15px; /* Positioned slightly below top like a tag */
-  left: 0;
-  right: 0;
-  height: 36px; /* Reduced by 15% from 42px */
+  top: 0; /* Positioned at the very top */
+  right: 0; /* Right-aligned like Getty tab */
+  height: 32px; /* Compact height like Getty tab */
+  min-width: 80px; /* Minimum width for readability */
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
   z-index: 2;
   opacity: 0; /* Hidden by default */
   transition: opacity 0.3s ease;
+  border-radius: 0 0 0 8px; /* Rounded bottom-left corner like Getty tab */
+  padding: 0 12px; /* Horizontal padding */
 }
 
 .closet-image-item:hover .day-label {
@@ -61,21 +63,21 @@
 }
 
 .day-label.weekday {
-  background: rgba(107, 114, 128, 0.4); /* 30% lighter transparency for weekdays */
+  background: rgba(107, 114, 128, 0.7); /* Semi-transparent grey like Getty tab */
 }
 
 .day-label.weekend {
-  background: rgba(147, 51, 234, 0.4); /* 30% lighter transparency for weekends */
+  background: rgba(147, 51, 234, 0.7); /* Semi-transparent purple for weekends */
 }
 
 .day-text {
   font-family: 'Nord', sans-serif;
-  font-size: 0.77rem; /* Reduced by 30% from 1.1rem */
-  font-weight: 400; /* Not bold - normal weight */
-  letter-spacing: 0.2em; /* Increased spacing for clean look */
+  font-size: 0.75rem; /* Slightly smaller for tab style */
+  font-weight: 400; /* Normal weight */
+  letter-spacing: 0.1em; /* Subtle spacing */
   color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  text-transform: uppercase; /* All caps */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  text-transform: none; /* No all caps - sentence case */
 }
 
 /* Change Button - Bottom of image, on hover only */
@@ -129,12 +131,13 @@
   }
   
   .day-label {
-    height: 30px; /* Reduced proportionally */
-    top: 12px; /* Adjusted tag position */
+    height: 28px; /* Reduced proportionally */
+    min-width: 70px; /* Adjusted for smaller screens */
+    padding: 0 10px; /* Adjusted padding */
   }
   
   .day-text {
-    font-size: 0.7rem; /* Reduced proportionally */
+    font-size: 0.68rem; /* Reduced proportionally */
   }
   
   .change-button-container {
@@ -160,13 +163,14 @@
   }
   
   .day-label {
-    height: 30px; /* Reduced proportionally */
-    top: 10px; /* Adjusted tag position */
+    height: 26px; /* Reduced proportionally */
+    min-width: 65px; /* Adjusted for mobile */
+    padding: 0 8px; /* Adjusted padding */
   }
   
   .day-text {
-    font-size: 0.63rem; /* Reduced proportionally */
-    letter-spacing: 0.15em; /* Slightly reduced for smaller screens */
+    font-size: 0.62rem; /* Reduced proportionally */
+    letter-spacing: 0.08em; /* Slightly reduced for smaller screens */
   }
   
   .change-button-container {
@@ -192,13 +196,14 @@
   }
   
   .day-label {
-    height: 26px; /* Reduced proportionally */
-    top: 8px; /* Adjusted tag position */
+    height: 24px; /* Reduced proportionally */
+    min-width: 60px; /* Adjusted for small mobile */
+    padding: 0 6px; /* Adjusted padding */
   }
   
   .day-text {
-    font-size: 0.56rem; /* Reduced proportionally */
-    letter-spacing: 0.1em; /* Further reduced for mobile */
+    font-size: 0.58rem; /* Reduced proportionally */
+    letter-spacing: 0.05em; /* Further reduced for mobile */
   }
   
   .change-button-container {

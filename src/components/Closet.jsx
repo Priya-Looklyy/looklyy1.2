@@ -48,7 +48,7 @@ const Closet = () => {
     },
     {
       id: 7,
-      url: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?w=400&h=600&fit=crop&auto=format&q=80',
+      url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Sunday Look',
       day: 'Sunday',
       isWeekend: true
