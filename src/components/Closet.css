@@ -80,21 +80,22 @@
   text-transform: none; /* No all caps - sentence case */
 }
 
-/* Change Button - Bottom of image, on hover only */
+/* Intelligent Curation Button - Bottom of image, on hover only */
 .change-button-container {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 43px; /* Reduced by 15% from 50px */
+  height: 50px; /* Increased height for longer text */
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7); /* Slightly darker for better text readability */
   backdrop-filter: blur(10px);
   z-index: 2;
   opacity: 0; /* Hidden by default */
   transition: opacity 0.3s ease;
+  padding: 0 1rem; /* Add horizontal padding for text spacing */
 }
 
 .closet-image-item:hover .change-button-container {
@@ -103,17 +104,20 @@
 
 .change-button {
   font-family: 'Nord', sans-serif;
-  font-size: 0.63rem; /* Reduced by 30% from 0.9rem */
-  font-weight: 400; /* Not bold - normal weight */
-  letter-spacing: 0.2em; /* Increased spacing for clean look */
+  font-size: 0.7rem; /* Slightly larger for readability */
+  font-weight: 400; /* Normal weight */
+  letter-spacing: 0.05em; /* Reduced spacing for longer text */
   color: white;
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
+  border-radius: 8px; /* Slightly more rounded */
+  padding: 0.6rem 1.2rem; /* Increased padding for longer text */
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase; /* All caps */
+  text-transform: none; /* No all caps - sentence case */
+  text-align: center;
+  line-height: 1.2; /* Better line height for readability */
+  max-width: 100%; /* Ensure text fits within container */
 }
 
 .change-button:hover {
@@ -141,12 +145,14 @@
   }
   
   .change-button-container {
-    height: 36px; /* Reduced proportionally */
+    height: 42px; /* Reduced proportionally */
+    padding: 0 0.8rem; /* Adjusted padding */
   }
   
   .change-button {
-    font-size: 0.56rem; /* Reduced proportionally */
-    padding: 0.4rem 0.8rem;
+    font-size: 0.62rem; /* Reduced proportionally */
+    letter-spacing: 0.03em; /* Slightly reduced for smaller screens */
+    padding: 0.5rem 1rem; /* Adjusted padding */
   }
 }
 
@@ -174,13 +180,14 @@
   }
   
   .change-button-container {
-    height: 38px; /* Reduced proportionally */
+    height: 40px; /* Reduced proportionally */
+    padding: 0 0.6rem; /* Adjusted padding */
   }
   
   .change-button {
-    font-size: 0.53rem; /* Reduced proportionally */
-    padding: 0.3rem 0.6rem;
-    letter-spacing: 0.15em; /* Slightly reduced for smaller screens */
+    font-size: 0.58rem; /* Reduced proportionally */
+    padding: 0.4rem 0.8rem; /* Adjusted padding */
+    letter-spacing: 0.02em; /* Slightly reduced for smaller screens */
   }
 }
 
@@ -207,12 +214,13 @@
   }
   
   .change-button-container {
-    height: 34px; /* Reduced proportionally */
+    height: 36px; /* Reduced proportionally */
+    padding: 0 0.4rem; /* Adjusted padding */
   }
   
   .change-button {
-    font-size: 0.49rem; /* Reduced proportionally */
-    padding: 0.25rem 0.5rem;
-    letter-spacing: 0.1em; /* Further reduced for mobile */
+    font-size: 0.52rem; /* Reduced proportionally */
+    padding: 0.3rem 0.6rem; /* Adjusted padding */
+    letter-spacing: 0.01em; /* Further reduced for mobile */
   }
 }

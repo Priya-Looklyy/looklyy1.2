@@ -74,13 +74,13 @@ const Closet = () => {
             <div className={`day-label ${image.isWeekend ? 'weekend' : 'weekday'}`}>
               <span className="day-text">{image.day}</span>
             </div>
-            {/* Change button at bottom */}
+            {/* Intelligent curation button at bottom */}
             <div className="change-button-container">
               <button 
                 className="change-button"
                 onClick={() => handleChangeLook(image.day)}
               >
-                Change
+                Love this look? Change if not
               </button>
             </div>
           </div>
