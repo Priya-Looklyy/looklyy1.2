@@ -91,34 +91,10 @@
   z-index: 2;
 }
 
-/* Action Icons - Clean white outline style like homepage */
-.action-icon {
-  background: transparent;
-  border: none;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: white;
-  opacity: 0.8;
-}
-
-.action-icon:hover {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-/* Love Icon - Heart shape */
-.love-icon:hover {
-  color: #ef4444; /* Red on hover */
-}
-
-/* Change Icon - Refresh/change symbol */
-.change-icon:hover {
-  color: #7c3aed; /* Purple on hover */
+/* Change Icon - Custom styling for refresh icon */
+.change-icon {
+  width: 18px;
+  height: 18px;
 }
 
 /* Responsive Design */
@@ -143,11 +119,6 @@
     bottom: 12px; /* Adjusted position */
     right: 12px;
     gap: 0.4rem; /* Reduced gap between icons */
-  }
-  
-  .action-icon {
-    width: 22px; /* Reduced proportionally */
-    height: 22px;
   }
 }
 
@@ -179,11 +150,6 @@
     right: 10px;
     gap: 0.3rem; /* Reduced gap between icons */
   }
-  
-  .action-icon {
-    width: 20px; /* Reduced proportionally */
-    height: 20px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -212,10 +178,5 @@
     bottom: 8px; /* Adjusted position */
     right: 8px;
     gap: 0.25rem; /* Reduced gap between icons */
-  }
-  
-  .action-icon {
-    width: 18px; /* Reduced proportionally */
-    height: 18px;
   }
 }
