@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Closet.css'
 
 const Closet = () => {
+  // Frame 2 state management
+  const [closetFrame2Active, setClosetFrame2Active] = useState(false)
+  const [selectedClosetImage, setSelectedClosetImage] = useState(null)
+  const [closetCanvasItems, setClosetCanvasItems] = useState([])
   // 7 closet images with weekdays - similar to homepage layout
   const closetImages = [
     {
@@ -63,10 +67,83 @@ const Closet = () => {
 
   const handleChangeLook = (day) => {
     console.log(`Changing look for ${day}`)
-    // TODO: Implement Frame 2 integration - show closet items
-    // This will trigger the closet-specific Frame 2 view
+    // Find the image for this day
+    const imageToChange = closetImages.find(img => img.day === day)
+    if (imageToChange) {
+      setSelectedClosetImage(imageToChange)
+      setClosetFrame2Active(true)
+      setClosetCanvasItems([]) // Reset canvas items
+    }
   }
 
+  const handleSaveChanges = () => {
+    console.log(`Saving changes for ${selectedClosetImage.day}`)
+    // TODO: Implement save functionality
+    // 1. Update the specific day's image with new look
+    // 2. Feed change data into learning system
+    // 3. Return to normal closet view
+    setClosetFrame2Active(false)
+    setSelectedClosetImage(null)
+    setClosetCanvasItems([])
+  }
+
+  // Frame 2 Layout - Similar to homepage
+  if (closetFrame2Active && selectedClosetImage) {
+    return (
+      <div className="closet-page frame2-layout">
+        <div className="closet-frame2-container">
+          {/* Selected Image - Left (20%) */}
+          <div className="selected-closet-image">
+            <div className="selected-image-container">
+              <img 
+                src={selectedClosetImage.url} 
+                alt={selectedClosetImage.alt}
+                className="selected-image"
+              />
+              <div className={`day-label ${selectedClosetImage.isWeekend ? 'weekend' : 'weekday'}`}>
+                <span className="day-text">{selectedClosetImage.day}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Working Canvas - Center (30%) */}
+          <div className="closet-working-canvas">
+            <div className="canvas-header">
+              <h3>Working Canvas</h3>
+            </div>
+            <div className="canvas-area">
+              {closetCanvasItems.map(item => (
+                <div key={item.id} className="canvas-item">
+                  <img src={item.image} alt={item.name} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Closet Items - Right (50%) */}
+          <div className="closet-items-panel">
+            <div className="closet-items-header">
+              <h3>Closet Items</h3>
+              <button 
+                className="save-changes-btn"
+                onClick={() => handleSaveChanges()}
+              >
+                Save Changes
+              </button>
+            </div>
+            <div className="closet-items-grid">
+              {/* TODO: Load closet items from useClosetImages hook */}
+              <div className="closet-item-placeholder">
+                <p>Closet items will load here</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Normal Closet Layout
   return (
     <div className="closet-page">
       <div className="closet-images-container">
