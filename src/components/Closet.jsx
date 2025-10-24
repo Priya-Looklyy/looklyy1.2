@@ -192,7 +192,7 @@ const Closet = () => {
   console.log('Rendering normal closet layout. Frame2Active:', closetFrame2Active, 'SelectedImage:', selectedClosetImage)
   return (
     <div className="closet-page">
-      {/* 7 Looks Section - Unchanged */}
+      {/* 7 Looks Section - Full Screen */}
       <div className="closet-images-container">
         {closetLooks.map(image => (
           <div key={image.id} className="closet-image-item">
@@ -230,6 +230,12 @@ const Closet = () => {
             </div>
           </div>
         ))}
+        
+        {/* Scroll Indicator */}
+        <div className="scroll-indicator">
+          <span className="scroll-text">Browse Categories</span>
+          <div className="scroll-arrow"></div>
+        </div>
       </div>
       
       {/* Categorized Closet Items Tabs Section */}
