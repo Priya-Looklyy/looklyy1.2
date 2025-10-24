@@ -7,223 +7,96 @@ const Closet = () => {
   const [selectedClosetImage, setSelectedClosetImage] = useState(null)
   const [closetCanvasItems, setClosetCanvasItems] = useState([])
   
-  // Pagination state management
-  const [currentPage, setCurrentPage] = useState(0)
-  const [totalPages] = useState(4) // 4 different wardrobe sets to browse through
-  // Multiple wardrobe sets for pagination
-  const wardrobeSets = [
-    // Week 1 - Current Week
-    [
-      {
-        id: 1,
-        url: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Monday Look',
-        day: 'Monday',
-        isWeekend: false
-      },
-      {
-        id: 2,
-        url: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Tuesday Look',
-        day: 'Tuesday',
-        isWeekend: false
-      },
-      {
-        id: 3,
-        url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Wednesday Look',
-        day: 'Wednesday',
-        isWeekend: false
-      },
-      {
-        id: 4,
-        url: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Thursday Look',
-        day: 'Thursday',
-        isWeekend: false
-      },
-      {
-        id: 5,
-        url: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Friday Look',
-        day: 'Friday',
-        isWeekend: false
-      },
-      {
-        id: 6,
-        url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Saturday Look',
-        day: 'Saturday',
-        isWeekend: true
-      },
-      {
-        id: 7,
-        url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Sunday Look',
-        day: 'Sunday',
-        isWeekend: true
-      }
-    ],
-    // Week 2 - Casual Week
-    [
-      {
-        id: 8,
-        url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Monday Casual',
-        day: 'Monday',
-        isWeekend: false
-      },
-      {
-        id: 9,
-        url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Tuesday Casual',
-        day: 'Tuesday',
-        isWeekend: false
-      },
-      {
-        id: 10,
-        url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Wednesday Casual',
-        day: 'Wednesday',
-        isWeekend: false
-      },
-      {
-        id: 11,
-        url: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Thursday Casual',
-        day: 'Thursday',
-        isWeekend: false
-      },
-      {
-        id: 12,
-        url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Friday Casual',
-        day: 'Friday',
-        isWeekend: false
-      },
-      {
-        id: 13,
-        url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Saturday Casual',
-        day: 'Saturday',
-        isWeekend: true
-      },
-      {
-        id: 14,
-        url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Sunday Casual',
-        day: 'Sunday',
-        isWeekend: true
-      }
-    ],
-    // Week 3 - Formal Week
-    [
-      {
-        id: 15,
-        url: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Monday Formal',
-        day: 'Monday',
-        isWeekend: false
-      },
-      {
-        id: 16,
-        url: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Tuesday Formal',
-        day: 'Tuesday',
-        isWeekend: false
-      },
-      {
-        id: 17,
-        url: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Wednesday Formal',
-        day: 'Wednesday',
-        isWeekend: false
-      },
-      {
-        id: 18,
-        url: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Thursday Formal',
-        day: 'Thursday',
-        isWeekend: false
-      },
-      {
-        id: 19,
-        url: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Friday Formal',
-        day: 'Friday',
-        isWeekend: false
-      },
-      {
-        id: 20,
-        url: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Saturday Formal',
-        day: 'Saturday',
-        isWeekend: true
-      },
-      {
-        id: 21,
-        url: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Sunday Formal',
-        day: 'Sunday',
-        isWeekend: true
-      }
-    ],
-    // Week 4 - Weekend Vibes
-    [
-      {
-        id: 22,
-        url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Monday Relaxed',
-        day: 'Monday',
-        isWeekend: false
-      },
-      {
-        id: 23,
-        url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Tuesday Relaxed',
-        day: 'Tuesday',
-        isWeekend: false
-      },
-      {
-        id: 24,
-        url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Wednesday Relaxed',
-        day: 'Wednesday',
-        isWeekend: false
-      },
-      {
-        id: 25,
-        url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Thursday Relaxed',
-        day: 'Thursday',
-        isWeekend: false
-      },
-      {
-        id: 26,
-        url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Friday Relaxed',
-        day: 'Friday',
-        isWeekend: false
-      },
-      {
-        id: 27,
-        url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Saturday Relaxed',
-        day: 'Saturday',
-        isWeekend: true
-      },
-      {
-        id: 28,
-        url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&auto=format&q=80',
-        alt: 'Sunday Relaxed',
-        day: 'Sunday',
-        isWeekend: true
-      }
-    ]
+  // Tabs state management
+  const [activeTab, setActiveTab] = useState('All Tops')
+  // 7 closet looks - main display (unchanged)
+  const closetLooks = [
+    {
+      id: 1,
+      url: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&auto=format&q=80',
+      alt: 'Monday Look',
+      day: 'Monday',
+      isWeekend: false
+    },
+    {
+      id: 2,
+      url: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&h=600&fit=crop&auto=format&q=80',
+      alt: 'Tuesday Look',
+      day: 'Tuesday',
+      isWeekend: false
+    },
+    {
+      id: 3,
+      url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop&auto=format&q=80',
+      alt: 'Wednesday Look',
+      day: 'Wednesday',
+      isWeekend: false
+    },
+    {
+      id: 4,
+      url: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop&auto=format&q=80',
+      alt: 'Thursday Look',
+      day: 'Thursday',
+      isWeekend: false
+    },
+    {
+      id: 5,
+      url: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=600&fit=crop&auto=format&q=80',
+      alt: 'Friday Look',
+      day: 'Friday',
+      isWeekend: false
+    },
+    {
+      id: 6,
+      url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=600&fit=crop&auto=format&q=80',
+      alt: 'Saturday Look',
+      day: 'Saturday',
+      isWeekend: true
+    },
+    {
+      id: 7,
+      url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop&auto=format&q=80',
+      alt: 'Sunday Look',
+      day: 'Sunday',
+      isWeekend: true
+    }
   ]
 
-  // Get current wardrobe set based on pagination
-  const currentWardrobeSet = wardrobeSets[currentPage] || wardrobeSets[0]
+  // Categorized closet items for tabs
+  const closetCategories = {
+    'All Tops': [
+      { id: 1, name: 'White Blouse', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 2, name: 'Black Shirt', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 3, name: 'Blue Top', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 4, name: 'Red Blouse', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 5, name: 'Green Top', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 6, name: 'Pink Shirt', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200&h=200&fit=crop&auto=format&q=80' }
+    ],
+    'All Tee Shirts': [
+      { id: 7, name: 'White T-Shirt', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 8, name: 'Black T-Shirt', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 9, name: 'Blue T-Shirt', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 10, name: 'Red T-Shirt', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 11, name: 'Green T-Shirt', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 12, name: 'Pink T-Shirt', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=200&h=200&fit=crop&auto=format&q=80' }
+    ],
+    'All Bottoms': [
+      { id: 13, name: 'Black Jeans', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 14, name: 'Blue Jeans', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 15, name: 'Black Pants', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 16, name: 'White Pants', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 17, name: 'Gray Pants', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 18, name: 'Brown Pants', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200&h=200&fit=crop&auto=format&q=80' }
+    ],
+    'All Dresses': [
+      { id: 19, name: 'Black Dress', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 20, name: 'Red Dress', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 21, name: 'Blue Dress', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 22, name: 'White Dress', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 23, name: 'Green Dress', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=200&h=200&fit=crop&auto=format&q=80' },
+      { id: 24, name: 'Pink Dress', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=200&h=200&fit=crop&auto=format&q=80' }
+    ]
+  }
 
   const handleLoveLook = (day) => {
     console.log(`Loved look for ${day}`)
@@ -233,8 +106,8 @@ const Closet = () => {
 
   const handleChangeLook = (day) => {
     console.log(`Changing look for ${day}`)
-    // Find the image for this day in current wardrobe set
-    const imageToChange = currentWardrobeSet.find(img => img.day === day)
+    // Find the image for this day
+    const imageToChange = closetLooks.find(img => img.day === day)
     if (imageToChange) {
       setSelectedClosetImage(imageToChange)
       setClosetFrame2Active(true)
@@ -242,17 +115,9 @@ const Closet = () => {
     }
   }
 
-  // Pagination functions
-  const handlePageChange = (pageIndex) => {
-    setCurrentPage(pageIndex)
-  }
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev + 1) % totalPages)
-  }
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages)
+  // Tab functions
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName)
   }
 
   const handleSaveChanges = () => {
@@ -327,8 +192,9 @@ const Closet = () => {
   console.log('Rendering normal closet layout. Frame2Active:', closetFrame2Active, 'SelectedImage:', selectedClosetImage)
   return (
     <div className="closet-page">
+      {/* 7 Looks Section - Unchanged */}
       <div className="closet-images-container">
-        {currentWardrobeSet.map(image => (
+        {closetLooks.map(image => (
           <div key={image.id} className="closet-image-item">
             <img 
               src={image.url} 
@@ -366,25 +232,31 @@ const Closet = () => {
         ))}
       </div>
       
-      {/* Pagination Dots */}
-      <div className="pagination-container">
-        <div className="pagination-dots">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index}
-              className={`pagination-dot ${index === currentPage ? 'active' : ''}`}
-              onClick={() => handlePageChange(index)}
-              aria-label={`Go to wardrobe set ${index + 1}`}
-            />
-          ))}
+      {/* Categorized Closet Items Tabs Section */}
+      <div className="closet-tabs-section">
+        <div className="tabs-header">
+          <div className="tabs-container">
+            {Object.keys(closetCategories).map(tabName => (
+              <button
+                key={tabName}
+                className={`tab-button ${activeTab === tabName ? 'active' : ''}`}
+                onClick={() => handleTabChange(tabName)}
+              >
+                {tabName}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="pagination-labels">
-          <span className="current-set-label">
-            {currentPage === 0 && 'Current Week'}
-            {currentPage === 1 && 'Casual Week'}
-            {currentPage === 2 && 'Formal Week'}
-            {currentPage === 3 && 'Weekend Vibes'}
-          </span>
+        
+        <div className="tabs-content">
+          <div className="closet-items-grid">
+            {closetCategories[activeTab]?.map(item => (
+              <div key={item.id} className="closet-item">
+                <img src={item.image} alt={item.name} />
+                <span className="item-name">{item.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
