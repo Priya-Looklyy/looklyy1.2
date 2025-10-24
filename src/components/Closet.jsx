@@ -87,8 +87,9 @@ const Closet = () => {
     setClosetCanvasItems([])
   }
 
-  // Frame 2 Layout - Similar to homepage
+  // Frame 2 Layout - Only show when explicitly triggered
   if (closetFrame2Active && selectedClosetImage) {
+    console.log('Showing Frame 2 for:', selectedClosetImage.day)
     return (
       <div className="closet-page frame2-layout">
         <div className="closet-frame2-container">
@@ -144,6 +145,7 @@ const Closet = () => {
   }
 
   // Normal Closet Layout
+  console.log('Rendering normal closet layout. Frame2Active:', closetFrame2Active, 'SelectedImage:', selectedClosetImage)
   return (
     <div className="closet-page">
       <div className="closet-images-container">
