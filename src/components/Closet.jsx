@@ -77,11 +77,7 @@ const Closet = () => {
               alt={image.alt}
               className="closet-image"
             />
-            {/* Transparent band with weekday */}
-            <div className={`day-label ${image.isWeekend ? 'weekend' : 'weekday'}`}>
-              <span className="day-text">{image.day}</span>
-            </div>
-            {/* Action icons at bottom - Love and Change */}
+            {/* Action icons at top - Love and Change */}
             <div className="action-icons-container">
               <button 
                 className="action-icon love-icon"
@@ -103,6 +99,10 @@ const Closet = () => {
                   <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
                 </svg>
               </button>
+            </div>
+            {/* Transparent band with weekday */}
+            <div className={`day-label ${image.isWeekend ? 'weekend' : 'weekday'}`}>
+              <span className="day-text">{image.day}</span>
             </div>
           </div>
         ))}

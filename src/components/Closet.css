@@ -80,59 +80,45 @@
   text-transform: none; /* No all caps - sentence case */
 }
 
-/* Action Icons Container - Bottom of image, on hover only */
+/* Action Icons Container - Bottom of image, always visible */
 .action-icons-container {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50px;
+  bottom: 15px;
+  right: 15px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
+  gap: 0.5rem; /* Space between icons */
   z-index: 2;
-  opacity: 0; /* Hidden by default */
-  transition: opacity 0.3s ease;
-  gap: 1rem; /* Space between icons */
 }
 
-.closet-image-item:hover .action-icons-container {
-  opacity: 1; /* Show on hover */
-}
-
-/* Action Icons - White outline style like homepage */
+/* Action Icons - Clean white outline style like homepage */
 .action-icon {
   background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  border: none;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
   color: white;
+  opacity: 0.8;
 }
 
 .action-icon:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: white;
-  transform: translateY(-2px);
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 /* Love Icon - Heart shape */
 .love-icon:hover {
-  border-color: #ef4444; /* Red border on hover */
-  color: #ef4444;
+  color: #ef4444; /* Red on hover */
 }
 
 /* Change Icon - Refresh/change symbol */
 .change-icon:hover {
-  border-color: #7c3aed; /* Purple border on hover */
-  color: #7c3aed;
+  color: #7c3aed; /* Purple on hover */
 }
 
 /* Responsive Design */
@@ -154,13 +140,14 @@
   }
   
   .action-icons-container {
-    height: 42px; /* Reduced proportionally */
-    gap: 0.8rem; /* Reduced gap between icons */
+    bottom: 12px; /* Adjusted position */
+    right: 12px;
+    gap: 0.4rem; /* Reduced gap between icons */
   }
   
   .action-icon {
-    width: 36px; /* Reduced proportionally */
-    height: 36px;
+    width: 22px; /* Reduced proportionally */
+    height: 22px;
   }
 }
 
@@ -188,13 +175,14 @@
   }
   
   .action-icons-container {
-    height: 40px; /* Reduced proportionally */
-    gap: 0.6rem; /* Reduced gap between icons */
+    bottom: 10px; /* Adjusted position */
+    right: 10px;
+    gap: 0.3rem; /* Reduced gap between icons */
   }
   
   .action-icon {
-    width: 34px; /* Reduced proportionally */
-    height: 34px;
+    width: 20px; /* Reduced proportionally */
+    height: 20px;
   }
 }
 
@@ -221,12 +209,13 @@
   }
   
   .action-icons-container {
-    height: 36px; /* Reduced proportionally */
-    gap: 0.4rem; /* Reduced gap between icons */
+    bottom: 8px; /* Adjusted position */
+    right: 8px;
+    gap: 0.25rem; /* Reduced gap between icons */
   }
   
   .action-icon {
-    width: 32px; /* Reduced proportionally */
-    height: 32px;
+    width: 18px; /* Reduced proportionally */
+    height: 18px;
   }
 }
