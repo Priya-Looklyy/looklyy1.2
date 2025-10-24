@@ -80,50 +80,59 @@
   text-transform: none; /* No all caps - sentence case */
 }
 
-/* Intelligent Curation Button - Bottom of image, on hover only */
-.change-button-container {
+/* Action Icons Container - Bottom of image, on hover only */
+.action-icons-container {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 50px; /* Increased height for longer text */
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.7); /* Slightly darker for better text readability */
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
   z-index: 2;
   opacity: 0; /* Hidden by default */
   transition: opacity 0.3s ease;
-  padding: 0 1rem; /* Add horizontal padding for text spacing */
+  gap: 1rem; /* Space between icons */
 }
 
-.closet-image-item:hover .change-button-container {
+.closet-image-item:hover .action-icons-container {
   opacity: 1; /* Show on hover */
 }
 
-.change-button {
-  font-family: 'Nord', sans-serif;
-  font-size: 0.7rem; /* Slightly larger for readability */
-  font-weight: 400; /* Normal weight */
-  letter-spacing: 0.05em; /* Reduced spacing for longer text */
-  color: white;
+/* Action Icons - White outline style like homepage */
+.action-icon {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 8px; /* Slightly more rounded */
-  padding: 0.6rem 1.2rem; /* Increased padding for longer text */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: none; /* No all caps - sentence case */
-  text-align: center;
-  line-height: 1.2; /* Better line height for readability */
-  max-width: 100%; /* Ensure text fits within container */
+  color: white;
 }
 
-.change-button:hover {
+.action-icon:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: white;
   transform: translateY(-2px);
+}
+
+/* Love Icon - Heart shape */
+.love-icon:hover {
+  border-color: #ef4444; /* Red border on hover */
+  color: #ef4444;
+}
+
+/* Change Icon - Refresh/change symbol */
+.change-icon:hover {
+  border-color: #7c3aed; /* Purple border on hover */
+  color: #7c3aed;
 }
 
 /* Responsive Design */
@@ -144,15 +153,14 @@
     font-size: 0.68rem; /* Reduced proportionally */
   }
   
-  .change-button-container {
+  .action-icons-container {
     height: 42px; /* Reduced proportionally */
-    padding: 0 0.8rem; /* Adjusted padding */
+    gap: 0.8rem; /* Reduced gap between icons */
   }
   
-  .change-button {
-    font-size: 0.62rem; /* Reduced proportionally */
-    letter-spacing: 0.03em; /* Slightly reduced for smaller screens */
-    padding: 0.5rem 1rem; /* Adjusted padding */
+  .action-icon {
+    width: 36px; /* Reduced proportionally */
+    height: 36px;
   }
 }
 
@@ -179,15 +187,14 @@
     letter-spacing: 0.08em; /* Slightly reduced for smaller screens */
   }
   
-  .change-button-container {
+  .action-icons-container {
     height: 40px; /* Reduced proportionally */
-    padding: 0 0.6rem; /* Adjusted padding */
+    gap: 0.6rem; /* Reduced gap between icons */
   }
   
-  .change-button {
-    font-size: 0.58rem; /* Reduced proportionally */
-    padding: 0.4rem 0.8rem; /* Adjusted padding */
-    letter-spacing: 0.02em; /* Slightly reduced for smaller screens */
+  .action-icon {
+    width: 34px; /* Reduced proportionally */
+    height: 34px;
   }
 }
 
@@ -213,14 +220,13 @@
     letter-spacing: 0.05em; /* Further reduced for mobile */
   }
   
-  .change-button-container {
+  .action-icons-container {
     height: 36px; /* Reduced proportionally */
-    padding: 0 0.4rem; /* Adjusted padding */
+    gap: 0.4rem; /* Reduced gap between icons */
   }
   
-  .change-button {
-    font-size: 0.52rem; /* Reduced proportionally */
-    padding: 0.3rem 0.6rem; /* Adjusted padding */
-    letter-spacing: 0.01em; /* Further reduced for mobile */
+  .action-icon {
+    width: 32px; /* Reduced proportionally */
+    height: 32px;
   }
 }
