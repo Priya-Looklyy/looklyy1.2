@@ -270,13 +270,8 @@
 .tabs-container {
   display: flex;
   gap: 0.5rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.tabs-container::-webkit-scrollbar {
-  display: none;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .tab-button {
@@ -782,5 +777,70 @@
   }
   60% {
     transform: rotate(45deg) translateY(-5px);
+  }
+}
+
+/* Go to Top Button */
+.go-to-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: rgba(124, 58, 237, 0.9);
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+}
+
+.go-to-top-btn:hover {
+  background: rgba(124, 58, 237, 1);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(124, 58, 237, 0.4);
+}
+
+.go-to-top-icon {
+  width: 24px;
+  height: 24px;
+  fill: white;
+  stroke: white;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Go to Top Button Responsive */
+@media (max-width: 768px) {
+  .go-to-top-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+  }
+  
+  .go-to-top-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .go-to-top-btn {
+    bottom: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .go-to-top-icon {
+    width: 18px;
+    height: 18px;
   }
 }

@@ -11,6 +11,7 @@ const Closet = () => {
   const [activeTab, setActiveTab] = useState('Tops')
   const [visibleItems, setVisibleItems] = useState(8) // Start with 8 items, load more on scroll
   const [isLoading, setIsLoading] = useState(false)
+  const [showGoToTop, setShowGoToTop] = useState(false)
   // 7 closet looks - main display (unchanged)
   const closetLooks = [
     {
@@ -142,6 +143,21 @@ const Closet = () => {
       }, 500) // Simulate loading delay
     }
   }
+
+  // Go to top functionality
+  const handleGoToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Show/hide go to top button based on scroll position
+  React.useEffect(() => {
+    const handlePageScroll = () => {
+      setShowGoToTop(window.scrollY > 300)
+    }
+    
+    window.addEventListener('scroll', handlePageScroll)
+    return () => window.removeEventListener('scroll', handlePageScroll)
+  }, [])
 
   const handleSaveChanges = () => {
     console.log(`Saving changes for ${selectedClosetImage.day}`)
@@ -305,6 +321,19 @@ const Closet = () => {
           </div>
         </div>
       </div>
+      
+      {/* Go to Top Button */}
+      {showGoToTop && (
+        <button 
+          className="go-to-top-btn"
+          onClick={handleGoToTop}
+          aria-label="Go to top"
+        >
+          <svg viewBox="0 0 24 24" className="go-to-top-icon">
+            <path d="M12 2l8 8h-6v12h-4V10H4l8-8z"/>
+          </svg>
+        </button>
+      )}
     </div>
   )
 }
