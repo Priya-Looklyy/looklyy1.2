@@ -132,32 +132,34 @@ const Closet = () => {
     setVisibleItems(8) // Reset visible items when switching tabs
   }
 
-  // Infinite scroll functionality
-  const handleScroll = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.target
-    if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading) {
-      setIsLoading(true)
-      setTimeout(() => {
-        setVisibleItems(prev => prev + 4) // Load 4 more items
-        setIsLoading(false)
-      }, 500) // Simulate loading delay
-    }
-  }
-
   // Go to top functionality
   const handleGoToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Show/hide go to top button based on scroll position
+  // Show/hide go to top button and handle infinite scroll based on page scroll position
   React.useEffect(() => {
     const handlePageScroll = () => {
-      setShowGoToTop(window.scrollY > 300)
+      const scrollTop = window.scrollY
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      
+      // Show/hide go to top button
+      setShowGoToTop(scrollTop > 300)
+      
+      // Handle infinite scroll
+      if (scrollTop + windowHeight >= documentHeight - 100 && !isLoading) {
+        setIsLoading(true)
+        setTimeout(() => {
+          setVisibleItems(prev => prev + 4) // Load 4 more items
+          setIsLoading(false)
+        }, 500) // Simulate loading delay
+      }
     }
     
     window.addEventListener('scroll', handlePageScroll)
     return () => window.removeEventListener('scroll', handlePageScroll)
-  }, [])
+  }, [isLoading])
 
   const handleSaveChanges = () => {
     console.log(`Saving changes for ${selectedClosetImage.day}`)
@@ -293,7 +295,7 @@ const Closet = () => {
           </div>
         </div>
         
-        <div className="tabs-content" onScroll={handleScroll}>
+        <div className="tabs-content">
           <div className="closet-items-grid">
             {closetCategories[activeTab]?.slice(0, visibleItems).map(item => (
               <div key={item.id} className="closet-item">

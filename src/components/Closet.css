@@ -308,28 +308,6 @@
   padding: 2rem 1.5rem;
   background: #ffffff;
   min-height: 60vh;
-  max-height: 70vh;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #7c3aed #f3f4f6;
-}
-
-.tabs-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.tabs-content::-webkit-scrollbar-track {
-  background: #f3f4f6;
-  border-radius: 3px;
-}
-
-.tabs-content::-webkit-scrollbar-thumb {
-  background: #7c3aed;
-  border-radius: 3px;
-}
-
-.tabs-content::-webkit-scrollbar-thumb:hover {
-  background: #6d28d9;
 }
 
 .closet-items-grid {
@@ -391,6 +369,7 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   border-radius: 8px;
+  pointer-events: none;
 }
 
 .closet-item:hover .item-hover-overlay {
