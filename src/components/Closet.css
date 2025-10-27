@@ -269,7 +269,7 @@
 
 .tabs-container {
   display: flex;
-  gap: 0;
+  gap: 0.5rem;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
