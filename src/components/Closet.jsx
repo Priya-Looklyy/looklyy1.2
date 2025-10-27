@@ -9,7 +9,7 @@ const Closet = () => {
   
   // Tabs state management
   const [activeTab, setActiveTab] = useState('Tops')
-  const [visibleItems, setVisibleItems] = useState(8) // Start with 8 items, load more on scroll
+  const [visibleItems, setVisibleItems] = useState(10) // Start with 10 items (2 full rows), load more on scroll
   const [isLoading, setIsLoading] = useState(false)
   // 7 closet looks - main display (unchanged)
   const closetLooks = [
@@ -128,7 +128,7 @@ const Closet = () => {
   // Tab functions
   const handleTabChange = (tabName) => {
     setActiveTab(tabName)
-    setVisibleItems(8) // Reset visible items when switching tabs
+    setVisibleItems(10) // Reset visible items when switching tabs (2 full rows)
   }
 
   // Handle infinite scroll based on page scroll position
@@ -138,11 +138,14 @@ const Closet = () => {
       const windowHeight = window.innerHeight
       const documentHeight = document.documentElement.scrollHeight
 
-      // Handle infinite scroll
-      if (scrollTop + windowHeight >= documentHeight - 100 && !isLoading) {
+      // Handle infinite scroll - trigger when user is near bottom
+      const currentCategoryItems = closetCategories[activeTab] || []
+      const hasMoreItems = visibleItems < currentCategoryItems.length
+      
+      if (scrollTop + windowHeight >= documentHeight - 200 && !isLoading && hasMoreItems) {
         setIsLoading(true)
         setTimeout(() => {
-          setVisibleItems(prev => prev + 4) // Load 4 more items
+          setVisibleItems(prev => Math.min(prev + 5, currentCategoryItems.length)) // Load 5 more items (1 full row) or remaining items
           setIsLoading(false)
         }, 500) // Simulate loading delay
       }
@@ -150,7 +153,7 @@ const Closet = () => {
 
     window.addEventListener('scroll', handlePageScroll)
     return () => window.removeEventListener('scroll', handlePageScroll)
-  }, [isLoading])
+  }, [isLoading, activeTab, visibleItems])
 
   const handleSaveChanges = () => {
     console.log(`Saving changes for ${selectedClosetImage.day}`)
