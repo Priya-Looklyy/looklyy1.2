@@ -11,7 +11,6 @@ const Closet = () => {
   const [activeTab, setActiveTab] = useState('Tops')
   const [visibleItems, setVisibleItems] = useState(8) // Start with 8 items, load more on scroll
   const [isLoading, setIsLoading] = useState(false)
-  const [showGoToTop, setShowGoToTop] = useState(false)
   // 7 closet looks - main display (unchanged)
   const closetLooks = [
     {
@@ -132,21 +131,13 @@ const Closet = () => {
     setVisibleItems(8) // Reset visible items when switching tabs
   }
 
-  // Go to top functionality
-  const handleGoToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  // Show/hide go to top button and handle infinite scroll based on page scroll position
+  // Handle infinite scroll based on page scroll position
   React.useEffect(() => {
     const handlePageScroll = () => {
       const scrollTop = window.scrollY
       const windowHeight = window.innerHeight
       const documentHeight = document.documentElement.scrollHeight
-      
-      // Show/hide go to top button
-      setShowGoToTop(scrollTop > 300)
-      
+
       // Handle infinite scroll
       if (scrollTop + windowHeight >= documentHeight - 100 && !isLoading) {
         setIsLoading(true)
@@ -156,7 +147,7 @@ const Closet = () => {
         }, 500) // Simulate loading delay
       }
     }
-    
+
     window.addEventListener('scroll', handlePageScroll)
     return () => window.removeEventListener('scroll', handlePageScroll)
   }, [isLoading])
@@ -324,18 +315,7 @@ const Closet = () => {
         </div>
       </div>
       
-      {/* Go to Top Button */}
-      {showGoToTop && (
-        <button 
-          className="go-to-top-btn"
-          onClick={handleGoToTop}
-          aria-label="Go to top"
-        >
-          <svg viewBox="0 0 24 24" className="go-to-top-icon">
-            <path d="M12 2l8 8h-6v12h-4V10H4l8-8z"/>
-          </svg>
-        </button>
-      )}
+        {/* Go to Top Button - REMOVED */}
     </div>
   )
 }
