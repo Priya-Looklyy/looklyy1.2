@@ -1,0 +1,26 @@
+{
+  "name": "Looklyy - Fashion Trends",
+  "short_name": "Looklyy",
+  "description": "Discover trending fashion looks inspired by runway, celebrity, and street style. Your personalized fashion experience.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf5ff",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/favicon-16x16.svg",
+      "sizes": "16x16",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon-32x32.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml"
+    }
+  ]
+}
