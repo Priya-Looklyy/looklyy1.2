@@ -9,7 +9,7 @@ const Closet = () => {
   
   // Tabs state management
   const [activeTab, setActiveTab] = useState('Tops')
-  const [visibleItems, setVisibleItems] = useState(10) // Start with 10 items (2 full rows), load more on scroll
+  const [visibleItems, setVisibleItems] = useState(5) // Start with 5 items (1 full row), load more on scroll
   const [isLoading, setIsLoading] = useState(false)
   // 7 closet looks - main display (unchanged)
   const closetLooks = [
@@ -74,37 +74,57 @@ const Closet = () => {
       { id: 5, name: 'Green Top', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Nov 2023', wornCount: 9 },
       { id: 6, name: 'Pink Shirt', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Dec 2023', wornCount: 4 },
       { id: 7, name: 'Striped Blouse', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Feb 2024', wornCount: 7 },
-      { id: 8, name: 'Silk Top', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Apr 2024', wornCount: 11 }
+      { id: 8, name: 'Silk Top', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Apr 2024', wornCount: 11 },
+      { id: 9, name: 'Cotton Blouse', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2024', wornCount: 14 },
+      { id: 10, name: 'Linen Shirt', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jun 2024', wornCount: 9 },
+      { id: 11, name: 'Chiffon Top', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jul 2024', wornCount: 6 },
+      { id: 12, name: 'Knit Sweater', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Aug 2024', wornCount: 8 },
+      { id: 13, name: 'Tank Top', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Sep 2024', wornCount: 12 }
     ],
     'Tee Shirts': [
-      { id: 9, name: 'White T-Shirt', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2023', wornCount: 25 },
-      { id: 10, name: 'Black T-Shirt', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2023', wornCount: 18 },
-      { id: 11, name: 'Blue T-Shirt', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2023', wornCount: 22 },
-      { id: 12, name: 'Red T-Shirt', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jul 2023', wornCount: 14 },
-      { id: 13, name: 'Green T-Shirt', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Aug 2023', wornCount: 16 },
-      { id: 14, name: 'Pink T-Shirt', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Oct 2023', wornCount: 13 },
-      { id: 15, name: 'Graphic Tee', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Dec 2023', wornCount: 19 },
-      { id: 16, name: 'Vintage Tee', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2024', wornCount: 8 }
+      { id: 20, name: 'White T-Shirt', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2023', wornCount: 25 },
+      { id: 21, name: 'Black T-Shirt', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2023', wornCount: 18 },
+      { id: 22, name: 'Blue T-Shirt', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2023', wornCount: 22 },
+      { id: 23, name: 'Red T-Shirt', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jul 2023', wornCount: 14 },
+      { id: 24, name: 'Green T-Shirt', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Aug 2023', wornCount: 16 },
+      { id: 25, name: 'Pink T-Shirt', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Oct 2023', wornCount: 13 },
+      { id: 26, name: 'Graphic Tee', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Dec 2023', wornCount: 19 },
+      { id: 27, name: 'Vintage Tee', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2024', wornCount: 8 },
+      { id: 28, name: 'Band Tee', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Feb 2024', wornCount: 15 },
+      { id: 29, name: 'Oversized Tee', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2024', wornCount: 11 },
+      { id: 30, name: 'Crop Top', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Apr 2024', wornCount: 7 },
+      { id: 31, name: 'Long Sleeve Tee', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2024', wornCount: 9 },
+      { id: 32, name: 'Henley Shirt', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jun 2024', wornCount: 6 }
     ],
     'Bottoms': [
-      { id: 17, name: 'Black Jeans', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2023', wornCount: 20 },
-      { id: 18, name: 'Blue Jeans', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Feb 2023', wornCount: 17 },
-      { id: 19, name: 'Black Pants', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Apr 2023', wornCount: 12 },
-      { id: 20, name: 'White Pants', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jun 2023', wornCount: 9 },
-      { id: 21, name: 'Gray Pants', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Aug 2023', wornCount: 11 },
-      { id: 22, name: 'Brown Pants', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Sep 2023', wornCount: 7 },
-      { id: 23, name: 'Cargo Pants', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Nov 2023', wornCount: 5 },
-      { id: 24, name: 'Skinny Jeans', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Dec 2023', wornCount: 14 }
+      { id: 40, name: 'Black Jeans', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2023', wornCount: 20 },
+      { id: 41, name: 'Blue Jeans', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Feb 2023', wornCount: 17 },
+      { id: 42, name: 'Black Pants', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Apr 2023', wornCount: 12 },
+      { id: 43, name: 'White Pants', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jun 2023', wornCount: 9 },
+      { id: 44, name: 'Gray Pants', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Aug 2023', wornCount: 11 },
+      { id: 45, name: 'Brown Pants', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Sep 2023', wornCount: 7 },
+      { id: 46, name: 'Cargo Pants', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Nov 2023', wornCount: 5 },
+      { id: 47, name: 'Skinny Jeans', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Dec 2023', wornCount: 14 },
+      { id: 48, name: 'Wide Leg Pants', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2024', wornCount: 8 },
+      { id: 49, name: 'Cropped Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Feb 2024', wornCount: 12 },
+      { id: 50, name: 'High Waist Jeans', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2024', wornCount: 15 },
+      { id: 51, name: 'Straight Leg Jeans', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Apr 2024', wornCount: 10 },
+      { id: 52, name: 'Trouser Pants', image: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2024', wornCount: 6 }
     ],
     'Dresses': [
-      { id: 25, name: 'Black Dress', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2023', wornCount: 8 },
-      { id: 26, name: 'Red Dress', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2023', wornCount: 6 },
-      { id: 27, name: 'Blue Dress', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2023', wornCount: 10 },
-      { id: 28, name: 'White Dress', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jul 2023', wornCount: 7 },
-      { id: 29, name: 'Green Dress', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Aug 2023', wornCount: 4 },
-      { id: 30, name: 'Pink Dress', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Oct 2023', wornCount: 5 },
-      { id: 31, name: 'Maxi Dress', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Dec 2023', wornCount: 3 },
-      { id: 32, name: 'Cocktail Dress', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2024', wornCount: 2 }
+      { id: 60, name: 'Black Dress', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2023', wornCount: 8 },
+      { id: 61, name: 'Red Dress', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2023', wornCount: 6 },
+      { id: 62, name: 'Blue Dress', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2023', wornCount: 10 },
+      { id: 63, name: 'White Dress', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jul 2023', wornCount: 7 },
+      { id: 64, name: 'Green Dress', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Aug 2023', wornCount: 4 },
+      { id: 65, name: 'Pink Dress', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Oct 2023', wornCount: 5 },
+      { id: 66, name: 'Maxi Dress', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Dec 2023', wornCount: 3 },
+      { id: 67, name: 'Cocktail Dress', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2024', wornCount: 2 },
+      { id: 68, name: 'Midi Dress', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Feb 2024', wornCount: 9 },
+      { id: 69, name: 'Wrap Dress', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2024', wornCount: 7 },
+      { id: 70, name: 'Shift Dress', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Apr 2024', wornCount: 6 },
+      { id: 71, name: 'A-Line Dress', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2024', wornCount: 8 },
+      { id: 72, name: 'Bodycon Dress', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jun 2024', wornCount: 4 }
     ]
   }
 
@@ -128,7 +148,7 @@ const Closet = () => {
   // Tab functions
   const handleTabChange = (tabName) => {
     setActiveTab(tabName)
-    setVisibleItems(10) // Reset visible items when switching tabs (2 full rows)
+    setVisibleItems(5) // Reset visible items when switching tabs (1 full row)
   }
 
   // Handle infinite scroll based on page scroll position
