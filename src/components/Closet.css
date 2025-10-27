@@ -420,33 +420,39 @@
   width: 100%;
 }
 
-.hover-line {
+.hover-stats {
   display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  margin-bottom: 0.25rem !important;
+  align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  font-family: 'Nord', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 0.3px;
 }
 
-.hover-line:last-child {
-  margin-bottom: 0 !important;
+.hover-date {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 0.3px;
 }
 
-.hover-label {
-  font-family: 'Avenir Next', sans-serif !important;
-  font-size: 0.75rem !important;
-  font-weight: 400 !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-  letter-spacing: 0.3px !important;
+.hover-separator {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.3px;
 }
 
-.hover-value {
-  font-family: 'Nord', sans-serif !important;
-  font-size: 0.8rem !important;
-  font-weight: 400 !important;
-  color: white !important;
-  letter-spacing: 0.3px !important;
+.hover-count {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 0.3px;
 }
 
 .item-name {

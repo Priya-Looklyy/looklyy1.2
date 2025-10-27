@@ -285,14 +285,10 @@ const Closet = () => {
                   <img src={item.image} alt={item.name} />
                   <div className="item-hover-overlay">
                     <div className="hover-content">
-                      <div className="hover-line">
-                        <span className="hover-label">Owned Since:</span>
-                        <span className="hover-value">{item.ownedSince}</span>
-                      </div>
-                      <div className="hover-line">
-                        <span className="hover-label">Worn</span>
-                        <span className="hover-value">{item.wornCount} times</span>
-                        <span className="hover-label">in the past 3 months</span>
+                      <div className="hover-stats">
+                        <span className="hover-date">{item.ownedSince}</span>
+                        <span className="hover-separator">•</span>
+                        <span className="hover-count">{item.wornCount} wears</span>
                       </div>
                     </div>
                   </div>
