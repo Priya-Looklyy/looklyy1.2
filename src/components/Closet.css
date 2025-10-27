@@ -1,4 +1,4 @@
-/* Closet Page - 7 Images Layout */
+/* Closet Page - 7 Images Layout - Updated 2024-01-15 */
 
 .closet-page {
   position: relative;
@@ -424,29 +424,29 @@
   display: flex;
   flex-direction: row;
   align-items: baseline;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.25rem !important;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
 
 .hover-line:last-child {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 .hover-label {
-  font-family: 'Avenir Next', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.9);
-  letter-spacing: 0.3px;
+  font-family: 'Avenir Next', sans-serif !important;
+  font-size: 0.75rem !important;
+  font-weight: 400 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  letter-spacing: 0.3px !important;
 }
 
 .hover-value {
-  font-family: 'Nord', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: white;
-  letter-spacing: 0.3px;
+  font-family: 'Nord', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 400 !important;
+  color: white !important;
+  letter-spacing: 0.3px !important;
 }
 
 .item-name {
