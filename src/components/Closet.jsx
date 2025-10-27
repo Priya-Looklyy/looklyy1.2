@@ -286,11 +286,7 @@ const Closet = () => {
           </div>
         ))}
         
-        {/* Scroll Indicator */}
-        <div className="scroll-indicator">
-          <span className="scroll-text">Browse Categories</span>
-          <div className="scroll-arrow"></div>
-        </div>
+        {/* Scroll Indicator - REMOVED */}
       </div>
       
       {/* Categorized Closet Items Tabs Section */}
