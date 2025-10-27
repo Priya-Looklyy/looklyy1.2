@@ -424,7 +424,7 @@
   display: flex;
   flex-direction: row;
   align-items: baseline;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
@@ -444,7 +444,7 @@
 .hover-value {
   font-family: 'Nord', sans-serif;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 400;
   color: white;
   letter-spacing: 0.3px;
 }
