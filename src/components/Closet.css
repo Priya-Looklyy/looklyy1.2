@@ -275,6 +275,17 @@
   color: #8e45f1 !important;
 }
 
+/* Ensure hover color always applies (override any conflicting rules) */
+.closet-items-header .back-button:hover { 
+  border-color: #8e45f1 !important; 
+  color: #8e45f1 !important; 
+}
+.closet-items-header .back-button:hover svg { 
+  stroke: #8e45f1 !important; 
+  fill: #8e45f1 !important; 
+  color: #8e45f1 !important; 
+}
+
 .back-button svg {
   width: 16px;
   height: 16px;
