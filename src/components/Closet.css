@@ -271,8 +271,8 @@
 }
 
 .back-button:hover {
-  border-color: #7c3aed; /* brand purple */
-  color: #7c3aed;       /* brand purple */
+  border-color: #8e45f1;
+  color: #8e45f1;
 }
 
 .back-button svg {
@@ -553,9 +553,11 @@
   max-height: 400px; /* Allow more scrolling */
 }
 
-/* Ensure Frame 2 closet items show 3 per row */
+/* Ensure Frame 2 closet items show 3 per row with proper row height */
 .closet-page.frame2-layout .closet-items-grid {
   grid-template-columns: repeat(3, 1fr) !important;
+  grid-template-rows: repeat(auto-fit, minmax(60%, auto)) !important;
+  gap: 1rem !important;
 }
 
 .closet-item-placeholder {
