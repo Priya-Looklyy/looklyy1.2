@@ -96,41 +96,36 @@
 
 .welcome-modal-features {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  justify-content: center;
   margin-bottom: 2rem;
 }
 
-.feature-item {
+.feature-item-single {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   background: #f8fafc;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
 }
 
-.feature-icon {
-  width: 32px;
-  height: 32px;
+.feature-icons {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: 0.5rem;
 }
 
-.heart-icon, .change-icon {
-  width: 18px;
-  height: 18px;
+.feature-icons .heart-icon,
+.feature-icons .change-icon {
+  width: 16px;
+  height: 16px;
   stroke: #6b7280;
   stroke-width: 2;
   fill: none;
 }
 
-.feature-item span {
+.feature-item-single span {
   font-family: 'Nord', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
