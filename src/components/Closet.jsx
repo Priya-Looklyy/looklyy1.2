@@ -478,19 +478,6 @@ const Closet = () => {
     
     return (
       <div className="closet-page frame2-layout">
-        {/* Back Button */}
-        <div className="back-button-container">
-          <button 
-            className="back-button"
-            onClick={() => setClosetFrame2Active(false)}
-            title="Back to normal view"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-          </button>
-        </div>
-        
         <div className="closet-frame2-container">
           {/* Selected Image - Left (20%) */}
           <div className="selected-closet-image">
@@ -594,8 +581,8 @@ const Closet = () => {
                 onClick={() => setClosetFrame2Active(false)}
                 title="Back to normal view"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
                 </svg>
               </button>
             </div>

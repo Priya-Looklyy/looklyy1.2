@@ -252,12 +252,7 @@
 }
 
 /* Back Button */
-.back-button-container {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1000;
-}
+/* removed: container not used when button is in header */
 
 .back-button {
   background: transparent;
@@ -272,6 +267,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
+  margin-right: 0.5rem; /* breathing space from far right edge */
 }
 
 .back-button:hover {
@@ -527,7 +523,7 @@
   border-bottom: 1px solid rgba(147, 51, 234, 0.1);
   background: linear-gradient(135deg, rgba(147, 51, 234, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 
