@@ -175,6 +175,7 @@ const Closet = () => {
   const handleDragOver = (e) => {
     e.preventDefault()
     e.dataTransfer.dropEffect = 'copy'
+    console.log('🎯 Drag over canvas workspace')
   }
 
   const handleDragEnd = (e) => {

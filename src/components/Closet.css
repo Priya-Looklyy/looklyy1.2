@@ -513,9 +513,11 @@
   overflow-y: auto;
   background: #f8f4ff;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(auto-fit, minmax(120px, auto));
+  gap: 1rem;
   align-content: start;
+  max-height: 300px; /* Show 1 row + half row */
 }
 
 .closet-item-placeholder {
@@ -610,6 +612,8 @@
   position: relative;
   overflow: hidden;
   user-select: none;
+  height: 100px; /* Fixed height for consistent grid */
+  justify-content: space-between;
 }
 
 .closet-item:active {
@@ -624,10 +628,10 @@
 .item-image-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 3/4;
+  height: 60px; /* Fixed height for image */
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .closet-item img {
@@ -705,14 +709,17 @@
 
 .item-name {
   font-family: 'Nord', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 500;
   color: #374151;
-  text-align: left;
-  line-height: 1.3;
+  text-align: center;
+  line-height: 1.2;
   letter-spacing: 0.3px;
   width: 100%;
-  padding-left: 0.25rem;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .loading-indicator {
