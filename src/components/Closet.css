@@ -11,45 +11,212 @@
   background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 25%, #e9d5ff 50%, #ddd6fe 75%, #c4b5fd 100%);
 }
 
-/* Curated Weekly Looks Header */
-.closet-header {
-  padding: 1.5rem 2rem 1rem 2rem;
-  background: rgba(255, 255, 255, 0.1);
+/* Welcome Modal */
+.welcome-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(45, 27, 78, 0.8);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: modalFadeIn 0.3s ease-out;
 }
 
-.closet-header-content {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto;
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.closet-title {
+.welcome-modal {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(147, 51, 234, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.welcome-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2rem 1rem 2rem;
+  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+  color: white;
+}
+
+.welcome-modal-title {
   font-family: 'Nord', sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #2d1b4e;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   letter-spacing: 0.5px;
 }
 
-.closet-subtitle {
+.welcome-modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.welcome-modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.close-icon {
+  width: 18px;
+  height: 18px;
+  stroke: white;
+  stroke-width: 2;
+  fill: none;
+}
+
+.welcome-modal-content {
+  padding: 2rem;
+}
+
+.welcome-modal-text {
+  font-family: 'Nord', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+.welcome-modal-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.1);
+}
+
+.feature-item span {
   font-family: 'Nord', sans-serif;
   font-size: 0.9rem;
-  font-weight: 300;
-  color: #6b7280;
-  margin: 0;
-  letter-spacing: 0.3px;
-  line-height: 1.4;
+  font-weight: 500;
+  color: #374151;
+}
+
+.welcome-modal-footer {
+  padding: 0 2rem 2rem 2rem;
+  text-align: center;
+}
+
+.welcome-modal-button {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-family: 'Nord', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+  width: 100%;
+}
+
+.welcome-modal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4);
+  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+  .welcome-modal-overlay {
+    padding: 1rem;
+  }
+  
+  .welcome-modal {
+    max-width: 100%;
+  }
+  
+  .welcome-modal-header {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+  
+  .welcome-modal-title {
+    font-size: 1.3rem;
+  }
+  
+  .welcome-modal-content {
+    padding: 1.5rem;
+  }
+  
+  .welcome-modal-text {
+    font-size: 0.9rem;
+  }
+  
+  .welcome-modal-footer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
 }
 
 .closet-images-container {
   display: flex;
   gap: 0.5rem; /* Reduced gap for better fit */
   width: 100%; /* Fill entire screen width */
-  height: calc(80vh - 120px); /* Reduced by 20% and account for header */
+  height: 80vh; /* Reduced by 20% to fit icons within first scroll */
   overflow: hidden;
   justify-content: space-between; /* Distribute evenly across full width */
   padding: 0.5rem; /* Reduced padding for better fit */
@@ -135,7 +302,7 @@
 
 /* Frame 2 Layout - Similar to homepage */
 .closet-page.frame2-layout {
-  height: calc(80vh - 172px); /* Reduced by 20% and account for header + navbar */
+  height: calc(80vh - 52px); /* Reduced by 20% to match Frame 1 */
   overflow: hidden;
 }
 
@@ -581,18 +748,6 @@
 }
 
 @media (max-width: 768px) {
-  .closet-header {
-    padding: 1rem 1.5rem 0.75rem 1.5rem;
-  }
-  
-  .closet-title {
-    font-size: 1.5rem;
-  }
-  
-  .closet-subtitle {
-    font-size: 0.8rem;
-  }
-  
   .closet-images-container {
     flex-direction: column;
     gap: 0.3rem; /* Reduced gap for better fit */

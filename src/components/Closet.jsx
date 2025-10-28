@@ -11,6 +11,9 @@ const Closet = () => {
   const [activeTab, setActiveTab] = useState('Tops')
   const [visibleItems, setVisibleItems] = useState(5) // Start with 5 items (1 full row), load more on scroll
   const [isLoading, setIsLoading] = useState(false)
+  
+  // Modal state management
+  const [showWelcomeModal, setShowWelcomeModal] = useState(true)
   // 7 closet looks - main display (unchanged)
   const closetLooks = [
     {
@@ -151,6 +154,11 @@ const Closet = () => {
     setVisibleItems(5) // Reset visible items when switching tabs (1 full row)
   }
 
+  // Modal functions
+  const handleCloseWelcomeModal = () => {
+    setShowWelcomeModal(false)
+  }
+
   // Handle infinite scroll based on page scroll position
   React.useEffect(() => {
     const handlePageScroll = () => {
@@ -247,13 +255,49 @@ const Closet = () => {
   console.log('Rendering normal closet layout. Frame2Active:', closetFrame2Active, 'SelectedImage:', selectedClosetImage)
   return (
     <div className="closet-page">
-      {/* Curated Weekly Looks Header */}
-      <div className="closet-header">
-        <div className="closet-header-content">
-          <h2 className="closet-title">Your Weekly Curated Looks</h2>
-          <p className="closet-subtitle">AI-powered outfits from your closet, personalized just for you</p>
+      {/* Welcome Modal */}
+      {showWelcomeModal && (
+        <div className="welcome-modal-overlay">
+          <div className="welcome-modal">
+            <div className="welcome-modal-header">
+              <h2 className="welcome-modal-title">Your Weekly Curated Looks</h2>
+              <button 
+                className="welcome-modal-close"
+                onClick={handleCloseWelcomeModal}
+                aria-label="Close modal"
+              >
+                <svg viewBox="0 0 24 24" className="close-icon">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            <div className="welcome-modal-content">
+              <p className="welcome-modal-text">
+                AI-powered outfits from your closet, personalized just for you. 
+                Each look is carefully curated based on your style preferences and wardrobe.
+              </p>
+              <div className="welcome-modal-features">
+                <div className="feature-item">
+                  <div className="feature-icon">❤️</div>
+                  <span>Love looks to improve recommendations</span>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">🔄</div>
+                  <span>Change looks to explore alternatives</span>
+                </div>
+              </div>
+            </div>
+            <div className="welcome-modal-footer">
+              <button 
+                className="welcome-modal-button"
+                onClick={handleCloseWelcomeModal}
+              >
+                Start Exploring
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
       
       {/* 7 Looks Section - Full Screen */}
       <div className="closet-images-container">
