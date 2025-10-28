@@ -589,6 +589,15 @@ const Closet = () => {
           <div className="closet-items-panel">
             <div className="closet-items-header">
               <h3>Closet</h3>
+              <button 
+                className="back-button"
+                onClick={() => setClosetFrame2Active(false)}
+                title="Back to normal view"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+              </button>
             </div>
             <div className="closet-items-grid">
               {relevantClosetItems.map(item => (

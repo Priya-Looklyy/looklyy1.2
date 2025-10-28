@@ -260,31 +260,29 @@
 }
 
 .back-button {
-  width: 40px;
-  height: 40px;
-  background: white;
+  background: transparent;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 6px;
   color: #6b7280;
   cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 32px;
+  height: 32px;
 }
 
 .back-button:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: #9333ea;
+  color: #9333ea;
 }
 
 .back-button svg {
   width: 16px;
   height: 16px;
-  stroke: #6b7280;
+  stroke: currentColor;
   stroke-width: 2;
   fill: none;
 }
