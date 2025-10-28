@@ -257,6 +257,7 @@
   height: 100%;
   padding: 1rem;
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 /* Selected Closet Image - Left (20%) */
@@ -379,8 +380,11 @@
 .closet-items-grid {
   flex: 1;
   padding: 1rem;
-  overflow-y: auto;
+  overflow: hidden;
   background: #f8f4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .closet-item-placeholder {
