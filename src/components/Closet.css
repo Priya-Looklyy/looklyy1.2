@@ -41,12 +41,12 @@
 
 .welcome-modal {
   background: white;
-  border-radius: 20px;
+  border-radius: 16px;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(147, 51, 234, 0.3);
+  box-shadow: 0 25px 50px rgba(147, 51, 234, 0.25);
   animation: modalSlideIn 0.3s ease-out;
 }
 
@@ -63,11 +63,12 @@
 
 .welcome-modal-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 2rem 2rem 1rem 2rem;
+  padding: 2rem;
   background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
   color: white;
+  text-align: center;
 }
 
 .welcome-modal-title {
@@ -78,34 +79,8 @@
   letter-spacing: 0.5px;
 }
 
-.welcome-modal-close {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.welcome-modal-close:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-
-.close-icon {
-  width: 18px;
-  height: 18px;
-  stroke: white;
-  stroke-width: 2;
-  fill: none;
-}
-
 .welcome-modal-content {
-  padding: 2rem;
+  padding: 2.5rem 2rem;
 }
 
 .welcome-modal-text {

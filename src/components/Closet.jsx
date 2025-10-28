@@ -159,12 +159,17 @@ const Closet = () => {
     setShowWelcomeModal(false)
   }
 
-  // Handle infinite scroll based on page scroll position
+  // Handle infinite scroll and auto-dissolve modal based on page scroll position
   React.useEffect(() => {
     const handlePageScroll = () => {
       const scrollTop = window.scrollY
       const windowHeight = window.innerHeight
       const documentHeight = document.documentElement.scrollHeight
+
+      // Auto-dissolve modal on any scroll
+      if (showWelcomeModal && scrollTop > 50) {
+        setShowWelcomeModal(false)
+      }
 
       // Handle infinite scroll - trigger when user is near bottom
       const currentCategoryItems = closetCategories[activeTab] || []
@@ -181,7 +186,7 @@ const Closet = () => {
 
     window.addEventListener('scroll', handlePageScroll)
     return () => window.removeEventListener('scroll', handlePageScroll)
-  }, [isLoading, activeTab, visibleItems])
+  }, [isLoading, activeTab, visibleItems, showWelcomeModal])
 
   const handleSaveChanges = () => {
     console.log(`Saving changes for ${selectedClosetImage.day}`)
@@ -261,15 +266,6 @@ const Closet = () => {
           <div className="welcome-modal">
             <div className="welcome-modal-header">
               <h2 className="welcome-modal-title">Your Weekly Curated Looks</h2>
-              <button 
-                className="welcome-modal-close"
-                onClick={handleCloseWelcomeModal}
-                aria-label="Close modal"
-              >
-                <svg viewBox="0 0 24 24" className="close-icon">
-                  <path d="M18 6L6 18M6 6l12 12"/>
-                </svg>
-              </button>
             </div>
             <div className="welcome-modal-content">
               <p className="welcome-modal-text">
