@@ -589,7 +589,6 @@
 .tabs-content {
   padding: 2rem 1.5rem;
   background: #ffffff;
-  min-height: 60vh;
   overflow: visible;
 }
 
@@ -810,8 +809,6 @@
   
   .tabs-content {
     padding: 1.5rem 1rem;
-    min-height: 50vh;
-    max-height: 60vh;
   }
   
   .closet-items-grid {
@@ -907,8 +904,6 @@
   
   .tabs-content {
     padding: 1rem 0.8rem;
-    min-height: 40vh;
-    max-height: 50vh;
   }
   
   .closet-items-grid {
@@ -977,8 +972,6 @@
   
   .tabs-content {
     padding: 0.8rem 0.6rem;
-    min-height: 35vh;
-    max-height: 45vh;
   }
   
   .closet-items-grid {
