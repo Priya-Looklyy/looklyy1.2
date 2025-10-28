@@ -271,8 +271,8 @@
 }
 
 .back-button:hover {
-  border-color: #9333ea;
-  color: #9333ea;
+  border-color: #7c3aed; /* brand purple */
+  color: #7c3aed;       /* brand purple */
 }
 
 .back-button svg {
