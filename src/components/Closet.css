@@ -1,4 +1,4 @@
-/* Closet Page - 7 Images Layout - Updated 2024-01-15 */
+/* Closet Page - 7 Images Layout - Updated 2024-01-15 - Frame 2 Grid Fix v2 */
 
 .closet-page {
   position: relative;
@@ -554,15 +554,17 @@
 }
 
 /* Ensure Frame 2 closet items show 3 per row with proper row height */
-.closet-page.frame2-layout .closet-items-grid {
+.closet-page.frame2-layout .closet-items-panel .closet-items-grid {
   grid-template-columns: repeat(3, 1fr) !important;
   grid-template-rows: repeat(auto-fit, minmax(70%, auto)) !important;
   gap: 1rem !important;
   display: grid !important;
+  max-height: 500px !important;
+  overflow-y: auto !important;
 }
 
 /* Ensure all closet items in Frame 2 show as proper image cards, not text tabs */
-.closet-page.frame2-layout .closet-item {
+.closet-page.frame2-layout .closet-items-panel .closet-items-grid .closet-item {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -579,7 +581,7 @@
   justify-content: space-between !important;
 }
 
-.closet-page.frame2-layout .closet-item .item-image-container {
+.closet-page.frame2-layout .closet-items-panel .closet-items-grid .closet-item .item-image-container {
   position: relative !important;
   width: 100% !important;
   aspect-ratio: 3/4 !important;
@@ -588,14 +590,14 @@
   margin-bottom: 0.75rem !important;
 }
 
-.closet-page.frame2-layout .closet-item img {
+.closet-page.frame2-layout .closet-items-panel .closet-items-grid .closet-item img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
   transition: transform 0.3s ease !important;
 }
 
-.closet-page.frame2-layout .closet-item .item-name {
+.closet-page.frame2-layout .closet-items-panel .closet-items-grid .closet-item .item-name {
   font-family: 'Nord', sans-serif !important;
   font-size: 0.8rem !important;
   font-weight: 500 !important;
