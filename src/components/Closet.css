@@ -66,9 +66,10 @@
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
-  color: white;
+  background: white;
+  color: #2d1b4e;
   text-align: center;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .welcome-modal-title {
@@ -106,20 +107,27 @@
   gap: 1rem;
   padding: 1rem;
   background: #f8fafc;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid #e2e8f0;
 }
 
 .feature-icon {
-  font-size: 1.5rem;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.heart-icon, .change-icon {
+  width: 18px;
+  height: 18px;
+  stroke: #6b7280;
+  stroke-width: 2;
+  fill: none;
 }
 
 .feature-item span {
@@ -135,25 +143,24 @@
 }
 
 .welcome-modal-button {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 1rem 2rem;
+  background: #f8fafc;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
   font-family: 'Nord', sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
   width: 100%;
 }
 
 .welcome-modal-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4);
-  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
+  background: #f1f5f9;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
 }
 
 /* Responsive Modal */
