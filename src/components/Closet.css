@@ -272,18 +272,20 @@
 
 .back-button:hover {
   border-color: #8e45f1 !important;
-  color: #8e45f1 !important;
+  background: #8e45f1 !important; /* match logo colour on hover */
+  color: #ffffff !important;
 }
 
 /* Ensure hover color always applies (override any conflicting rules) */
 .closet-items-header .back-button:hover { 
   border-color: #8e45f1 !important; 
-  color: #8e45f1 !important; 
+  background: #8e45f1 !important; 
+  color: #ffffff !important; 
 }
 .closet-items-header .back-button:hover svg { 
-  stroke: #8e45f1 !important; 
-  fill: #8e45f1 !important; 
-  color: #8e45f1 !important; 
+  stroke: #ffffff !important; 
+  fill: #ffffff !important; 
+  color: #ffffff !important; 
 }
 
 .back-button svg {
