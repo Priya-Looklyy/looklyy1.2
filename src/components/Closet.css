@@ -248,6 +248,41 @@
 .closet-page.frame2-layout {
   height: calc(80vh - 52px); /* Reduced by 20% to match Frame 1 */
   overflow: hidden;
+  position: relative;
+}
+
+/* Back Button */
+.back-button-container {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+}
+
+.back-button {
+  width: 40px;
+  height: 40px;
+  background: #7c3aed;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.back-button:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+}
+
+.back-button svg {
+  width: 16px;
+  height: 16px;
 }
 
 .closet-frame2-container {
@@ -513,11 +548,11 @@
   overflow-y: auto;
   background: #f8f4ff;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(auto-fit, minmax(120px, auto));
   gap: 1rem;
   align-content: start;
-  max-height: 300px; /* Show 1 row + half row */
+  max-height: 400px; /* Allow more scrolling */
 }
 
 .closet-item-placeholder {

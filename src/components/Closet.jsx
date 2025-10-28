@@ -234,6 +234,31 @@ const Closet = () => {
     setClosetCanvasItems(prev => prev.filter(item => item.canvasId !== canvasId))
   }
 
+  const saveChanges = () => {
+    if (closetCanvasItems.length === 0) {
+      alert('No items on canvas to save')
+      return
+    }
+    
+    // Save the changes (in a real app, this would update the database)
+    console.log('💾 Saving changes for look:', selectedClosetImage?.day)
+    console.log('📦 Saved items:', closetCanvasItems)
+    
+    // Show success message
+    alert(`Changes saved for ${selectedClosetImage?.day}! The look has been updated.`)
+    
+    // In a real app, this would update the closet page data
+    // For now, we'll just log the success
+  }
+
+  const clearAllItems = () => {
+    setClosetCanvasItems([])
+  }
+
+  const undoLastItem = () => {
+    setClosetCanvasItems(prev => prev.slice(0, -1))
+  }
+
   // Canvas item repositioning handlers
   const handleCanvasItemDragStart = (e, item) => {
     e.preventDefault()
@@ -437,8 +462,35 @@ const Closet = () => {
   // Frame 2 Layout - Only show when explicitly triggered
   if (closetFrame2Active && selectedClosetImage) {
     console.log('Showing Frame 2 for:', selectedClosetImage.day)
+    
+    // Get relevant closet items for the selected look (demo data for now)
+    const relevantClosetItems = [
+      { id: 'frame2-1', name: 'White Blouse', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop', ownedSince: 'Nov 2023', wornCount: 5 },
+      { id: 'frame2-2', name: 'Black Shirt', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop', ownedSince: 'Oct 2023', wornCount: 8 },
+      { id: 'frame2-3', name: 'Blue Top', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop', ownedSince: 'Sep 2023', wornCount: 3 },
+      { id: 'frame2-4', name: 'Red Blouse', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop', ownedSince: 'Aug 2023', wornCount: 6 },
+      { id: 'frame2-5', name: 'Green Top', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop', ownedSince: 'Jul 2023', wornCount: 4 },
+      { id: 'frame2-6', name: 'Pink Pants', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop', ownedSince: 'Jun 2023', wornCount: 7 },
+      { id: 'frame2-7', name: 'Denim Jacket', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop', ownedSince: 'May 2023', wornCount: 9 },
+      { id: 'frame2-8', name: 'White Tee', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop', ownedSince: 'Apr 2023', wornCount: 12 },
+      { id: 'frame2-9', name: 'Black Pants', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop', ownedSince: 'Mar 2023', wornCount: 6 }
+    ]
+    
     return (
       <div className="closet-page frame2-layout">
+        {/* Back Button */}
+        <div className="back-button-container">
+          <button 
+            className="back-button"
+            onClick={() => setClosetFrame2Active(false)}
+            title="Back to normal view"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+        </div>
+        
         <div className="closet-frame2-container">
           {/* Selected Image - Left (20%) */}
           <div className="selected-closet-image">
@@ -463,11 +515,8 @@ const Closet = () => {
                    <div className="canvas-controls">
                      <button 
                        className="control-btn" 
-                       data-tooltip="Save"
-                       onClick={() => {
-                         console.log('Saving closet look');
-                         // TODO: Implement save functionality
-                       }}
+                       data-tooltip="Save Changes"
+                       onClick={saveChanges}
                      >
                        <svg viewBox="0 0 24 24">
                          <path d="M19 12v7H5v-7M12 3v9m-3-3l3 3 3-3"/>
@@ -476,10 +525,7 @@ const Closet = () => {
                      <button 
                        className="control-btn" 
                        data-tooltip="Clear All"
-                       onClick={() => {
-                         setClosetCanvasItems([]);
-                         console.log('Cleared all canvas items');
-                       }}
+                       onClick={clearAllItems}
                      >
                        <svg viewBox="0 0 24 24">
                          <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
@@ -488,10 +534,7 @@ const Closet = () => {
                      <button 
                        className="control-btn" 
                        data-tooltip="Undo"
-                       onClick={() => {
-                         console.log('Undo last action');
-                         // TODO: Implement undo functionality
-                       }}
+                       onClick={undoLastItem}
                      >
                        <svg viewBox="0 0 24 24">
                          <path d="M3 7v6h6M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
@@ -548,7 +591,7 @@ const Closet = () => {
               <h3>Closet</h3>
             </div>
             <div className="closet-items-grid">
-              {closetCategories[activeTab]?.slice(0, visibleItems).map(item => (
+              {relevantClosetItems.map(item => (
                 <div 
                   key={item.id} 
                   className="closet-item"
