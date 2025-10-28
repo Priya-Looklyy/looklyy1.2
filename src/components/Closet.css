@@ -512,9 +512,10 @@
   padding: 1rem;
   overflow: hidden;
   background: #f8f4ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+  gap: 1rem;
+  align-content: start;
 }
 
 .closet-item-placeholder {
@@ -605,9 +606,14 @@
   padding: 0.75rem;
   box-shadow: 0 2px 12px rgba(147, 51, 234, 0.08);
   transition: all 0.3s ease;
-  cursor: pointer;
+  cursor: grab;
   position: relative;
   overflow: hidden;
+  user-select: none;
+}
+
+.closet-item:active {
+  cursor: grabbing;
 }
 
 .closet-item:hover {
