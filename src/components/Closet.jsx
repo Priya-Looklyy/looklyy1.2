@@ -275,7 +275,7 @@ const Closet = () => {
           <div className="welcome-modal">
             <div className="welcome-modal-content">
               <p className="welcome-modal-text">
-                AI-powered outfits from your closet, personalized just for you.
+                Your smart personalised looks for the week
               </p>
               <div className="welcome-modal-features">
                 <div className="feature-item-single">
@@ -285,6 +285,7 @@ const Closet = () => {
                     </svg>
                     <span>Love looks</span>
                   </div>
+                  <span className="feature-separator">•</span>
                   <div className="feature-icons">
                     <svg viewBox="0 0 24 24" className="change-icon">
                       <path d="M1 4v6h6"/>

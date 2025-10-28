@@ -113,6 +113,14 @@
   color: #374151;
 }
 
+.feature-separator {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9ca3af;
+  margin: 0 0.5rem;
+}
+
 /* Responsive Modal */
 @media (max-width: 768px) {
   .welcome-modal-overlay {
