@@ -612,7 +612,7 @@
   position: relative;
   overflow: hidden;
   user-select: none;
-  height: 100px; /* Fixed height for consistent grid */
+  height: auto; /* Auto height to accommodate proper aspect ratio */
   justify-content: space-between;
 }
 
@@ -628,10 +628,10 @@
 .item-image-container {
   position: relative;
   width: 100%;
-  height: 60px; /* Fixed height for image */
+  aspect-ratio: 3/4;
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .closet-item img {
@@ -709,17 +709,14 @@
 
 .item-name {
   font-family: 'Nord', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #374151;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.4;
   letter-spacing: 0.3px;
   width: 100%;
   margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .loading-indicator {
