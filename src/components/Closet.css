@@ -255,36 +255,35 @@
 .back-button-container {
   position: absolute;
   top: 1rem;
-  left: 1rem;
+  right: 1rem;
   z-index: 1000;
 }
 
 .back-button {
-  width: 48px;
-  height: 48px;
-  background: #4c1d95;
+  width: 32px;
+  height: 32px;
+  background: transparent;
   border: none;
-  border-radius: 12px;
-  color: white;
+  border-radius: 50%;
+  color: #7c3aed;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border: 2px solid #ffffff;
 }
 
 .back-button:hover {
-  background: #3730a3;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  background: rgba(124, 58, 237, 0.1);
+  transform: scale(1.1);
 }
 
 .back-button svg {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2.5;
+  width: 18px;
+  height: 18px;
+  stroke: #7c3aed;
+  stroke-width: 2;
+  fill: none;
 }
 
 .closet-frame2-container {
