@@ -594,7 +594,7 @@
 
 .closet-items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 1.5rem;
   padding-bottom: 2rem;
 }
@@ -814,7 +814,7 @@
   }
   
   .closet-items-grid {
-    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: 1rem;
   }
   
@@ -911,7 +911,7 @@
   }
   
   .closet-items-grid {
-    grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: 0.8rem;
   }
   
@@ -981,7 +981,7 @@
   }
   
   .closet-items-grid {
-    grid-template-columns: repeat(auto-fill, minmax(40%, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: 0.6rem;
   }
   
@@ -1005,3 +1005,25 @@
 /* Scroll Indicator - REMOVED */
 
 /* Go to Top Button - REMOVED */
+
+/* Frame 2 Closet Items Grid - Responsive Rules */
+@media (max-width: 1200px) {
+  .closet-page.frame2-layout .closet-items-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .closet-page.frame2-layout .closet-items-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .closet-page.frame2-layout .closet-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+}
