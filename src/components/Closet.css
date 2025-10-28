@@ -271,8 +271,8 @@
 }
 
 .back-button:hover {
-  border-color: #8e45f1;
-  color: #8e45f1;
+  border-color: #8e45f1 !important;
+  color: #8e45f1 !important;
 }
 
 .back-button svg {
@@ -556,8 +556,55 @@
 /* Ensure Frame 2 closet items show 3 per row with proper row height */
 .closet-page.frame2-layout .closet-items-grid {
   grid-template-columns: repeat(3, 1fr) !important;
-  grid-template-rows: repeat(auto-fit, minmax(60%, auto)) !important;
+  grid-template-rows: repeat(auto-fit, minmax(70%, auto)) !important;
   gap: 1rem !important;
+  display: grid !important;
+}
+
+/* Ensure all closet items in Frame 2 show as proper image cards, not text tabs */
+.closet-page.frame2-layout .closet-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  background: white !important;
+  border-radius: 12px !important;
+  padding: 0.75rem !important;
+  box-shadow: 0 2px 12px rgba(147, 51, 234, 0.08) !important;
+  transition: all 0.3s ease !important;
+  cursor: grab !important;
+  position: relative !important;
+  overflow: hidden !important;
+  user-select: none !important;
+  height: auto !important;
+  justify-content: space-between !important;
+}
+
+.closet-page.frame2-layout .closet-item .item-image-container {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 3/4 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.closet-page.frame2-layout .closet-item img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.3s ease !important;
+}
+
+.closet-page.frame2-layout .closet-item .item-name {
+  font-family: 'Nord', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: #374151 !important;
+  text-align: center !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0.3px !important;
+  width: 100% !important;
+  margin: 0 !important;
 }
 
 .closet-item-placeholder {
