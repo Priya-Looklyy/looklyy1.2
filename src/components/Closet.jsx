@@ -169,6 +169,7 @@ const Closet = () => {
     e.dataTransfer.effectAllowed = 'copy'
     e.target.classList.add('dragging')
     console.log('🎨 Starting drag for cutout:', item.name)
+    console.log('📦 Dragged item data:', item)
   }
 
   const handleDragOver = (e) => {
@@ -183,7 +184,14 @@ const Closet = () => {
 
   const handleDrop = async (e) => {
     e.preventDefault()
-    if (!draggedItem || isProcessing) return
+    console.log('🎯 Drop event triggered')
+    console.log('📦 Dragged item:', draggedItem)
+    console.log('⚙️ Is processing:', isProcessing)
+    
+    if (!draggedItem || isProcessing) {
+      console.log('❌ Drop cancelled - no dragged item or processing')
+      return
+    }
 
     setIsProcessing(true)
     console.log('🔄 Processing background removal for:', draggedItem.name)
@@ -449,8 +457,6 @@ const Closet = () => {
                  <div 
                    className="closet-working-canvas"
                    ref={canvasRef}
-                   onDragOver={handleDragOver}
-                   onDrop={handleDrop}
                  >
                    {/* Canvas Controls (15% left) */}
                    <div className="canvas-controls">
@@ -495,6 +501,8 @@ const Closet = () => {
                    {/* Canvas Workspace (85% right) */}
                    <div 
                      className="canvas-workspace"
+                     onDragOver={handleDragOver}
+                     onDrop={handleDrop}
                      onMouseMove={handleCanvasItemDrag}
                      onMouseUp={handleCanvasItemDragEnd}
                    >
