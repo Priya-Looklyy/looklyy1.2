@@ -569,7 +569,7 @@
 /* Ensure Frame 2 closet items show 3 per row with proper row height */
 .closet-page.frame2-layout .closet-items-panel .closet-items-grid {
   grid-template-columns: repeat(3, 1fr) !important;
-  grid-template-rows: repeat(auto-fit, minmax(70%, auto)) !important;
+  grid-template-rows: auto !important;
   gap: 1rem !important;
   display: grid !important;
   max-height: 500px !important;
@@ -597,7 +597,7 @@
 .closet-page.frame2-layout .closet-items-panel .closet-items-grid .closet-item .item-image-container {
   position: relative !important;
   width: 100% !important;
-  aspect-ratio: 3/4 !important;
+  height: 200px !important;
   border-radius: 8px !important;
   overflow: hidden !important;
   margin-bottom: 0.75rem !important;
