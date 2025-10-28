@@ -9,6 +9,8 @@ const Closet = () => {
   const [closetCanvasItems, setClosetCanvasItems] = useState([])
   const [draggedItem, setDraggedItem] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [draggedCanvasItem, setDraggedCanvasItem] = useState(null)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const canvasRef = useRef(null)
   
   // Tabs state management
@@ -221,6 +223,55 @@ const Closet = () => {
 
   const removeCanvasItem = (canvasId) => {
     setClosetCanvasItems(prev => prev.filter(item => item.canvasId !== canvasId))
+  }
+
+  // Canvas item repositioning handlers
+  const handleCanvasItemDragStart = (e, item) => {
+    e.preventDefault()
+    setDraggedCanvasItem(item)
+    
+    const rect = e.currentTarget.getBoundingClientRect()
+    const canvasRect = canvasRef.current.getBoundingClientRect()
+    
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    })
+    
+    e.currentTarget.style.opacity = '0.7'
+    e.currentTarget.style.cursor = 'grabbing'
+    console.log('🎯 Starting reposition of canvas item:', item.name)
+  }
+
+  const handleCanvasItemDrag = (e) => {
+    if (!draggedCanvasItem) return
+    
+    e.preventDefault()
+    const canvasRect = canvasRef.current.getBoundingClientRect()
+    const workspaceRect = canvasRef.current.querySelector('.canvas-workspace').getBoundingClientRect()
+    
+    const newX = e.clientX - workspaceRect.left - dragOffset.x
+    const newY = e.clientY - workspaceRect.top - dragOffset.y
+    
+    // Constrain to canvas workspace boundaries
+    const constrainedX = Math.max(0, Math.min(newX, workspaceRect.width - draggedCanvasItem.width))
+    const constrainedY = Math.max(0, Math.min(newY, workspaceRect.height - draggedCanvasItem.height))
+    
+    setClosetCanvasItems(prev => prev.map(item => 
+      item.canvasId === draggedCanvasItem.canvasId 
+        ? { ...item, x: constrainedX, y: constrainedY }
+        : item
+    ))
+  }
+
+  const handleCanvasItemDragEnd = (e) => {
+    if (draggedCanvasItem) {
+      e.currentTarget.style.opacity = '1'
+      e.currentTarget.style.cursor = 'move'
+      console.log('✅ Finished repositioning canvas item:', draggedCanvasItem.name)
+    }
+    setDraggedCanvasItem(null)
+    setDragOffset({ x: 0, y: 0 })
   }
 
   // Process image through AI background removal (from proven implementation)
@@ -442,7 +493,11 @@ const Closet = () => {
                    </div>
                    
                    {/* Canvas Workspace (85% right) */}
-                   <div className="canvas-workspace">
+                   <div 
+                     className="canvas-workspace"
+                     onMouseMove={handleCanvasItemDrag}
+                     onMouseUp={handleCanvasItemDragEnd}
+                   >
                      {closetCanvasItems.map(item => (
                        <div 
                          key={item.canvasId} 
@@ -453,6 +508,7 @@ const Closet = () => {
                            width: `${item.width}px`,
                            height: `${item.height}px`
                          }}
+                         onMouseDown={(e) => handleCanvasItemDragStart(e, item)}
                        >
                          <img src={item.image} alt={item.name} />
                          <button 

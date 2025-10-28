@@ -385,6 +385,17 @@
   cursor: move;
   z-index: 10;
   transition: all 0.3s ease;
+  user-select: none;
+}
+
+.canvas-item:hover {
+  transform: scale(1.02);
+  z-index: 15;
+}
+
+.canvas-item:active {
+  cursor: grabbing;
+  z-index: 20;
 }
 
 .canvas-item img {
