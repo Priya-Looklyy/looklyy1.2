@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import './Closet.css'
+import { removeBackgroundFromUrl } from '../utils/backgroundRemoval'
 
 const Closet = () => {
   // Frame 2 state management
   const [closetFrame2Active, setClosetFrame2Active] = useState(false)
   const [selectedClosetImage, setSelectedClosetImage] = useState(null)
   const [closetCanvasItems, setClosetCanvasItems] = useState([])
+  const [draggedItem, setDraggedItem] = useState(null)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const canvasRef = useRef(null)
   
   // Tabs state management
   const [activeTab, setActiveTab] = useState('Tops')
@@ -157,6 +161,168 @@ const Closet = () => {
     }
   }
 
+  // Drag and Drop functionality for working canvas
+  const handleDragStart = (e, item) => {
+    setDraggedItem(item)
+    e.dataTransfer.effectAllowed = 'copy'
+    e.target.classList.add('dragging')
+    console.log('🎨 Starting drag for cutout:', item.name)
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'copy'
+  }
+
+  const handleDragEnd = (e) => {
+    e.target.classList.remove('dragging')
+    setDraggedItem(null)
+  }
+
+  const handleDrop = async (e) => {
+    e.preventDefault()
+    if (!draggedItem || isProcessing) return
+
+    setIsProcessing(true)
+    console.log('🔄 Processing background removal for:', draggedItem.name)
+
+    const canvasRect = canvasRef.current.getBoundingClientRect()
+    const x = e.clientX - canvasRect.left
+    const y = e.clientY - canvasRect.top
+
+    // Paper cutout size - larger for better visibility
+    const itemWidth = 100
+    const itemHeight = 100
+
+    try {
+      // Apply background removal to create paper cutout
+      const processedImageUrl = await applyBackgroundRemoval(draggedItem.image, draggedItem.name)
+
+      const newItem = {
+        ...draggedItem,
+        canvasId: Date.now(),
+        x: Math.max(0, Math.min(x - itemWidth/2, canvasRect.width - itemWidth)),
+        y: Math.max(0, Math.min(y - itemHeight/2, canvasRect.height - itemHeight)),
+        width: itemWidth,
+        height: itemHeight,
+        image: processedImageUrl, // Use processed image with removed background
+        originalImage: draggedItem.image // Keep original for reference
+      }
+
+      console.log('✅ Paper cutout added:', newItem.name, 'at position:', x, y)
+      setClosetCanvasItems(prev => [...prev, newItem])
+    } catch (error) {
+      console.log('❌ Failed to process image:', error)
+    } finally {
+      setDraggedItem(null)
+      setIsProcessing(false)
+    }
+  }
+
+  const removeCanvasItem = (canvasId) => {
+    setClosetCanvasItems(prev => prev.filter(item => item.canvasId !== canvasId))
+  }
+
+  // Process image through AI background removal (from proven implementation)
+  const applyBackgroundRemoval = async (imageUrl, itemName) => {
+    let processedImageUrl = imageUrl;
+    console.log('🎯 Starting background removal for:', imageUrl);
+
+    try {
+      // Use improved backend service for background removal (with better accuracy)
+      console.log('🚀 Processing image with enhanced backend service...');
+      processedImageUrl = await removeBackgroundFromUrl(imageUrl);
+      console.log('✅ Enhanced backend processing complete - PNG with transparency');
+      
+      // Try to crop to object boundaries (handle CORS errors gracefully)
+      try {
+        console.log('✂️ Frontend: Applying precision cropping...');
+        const croppedDataUrl = await cropToObjectBoundaries(processedImageUrl);
+        console.log('✅ Frontend: Precision cropping complete - tightly cropped object');
+        return croppedDataUrl;
+      } catch (cropError) {
+        console.warn('⚠️ Cropping failed (likely CORS), using processed image:', cropError.message);
+        return processedImageUrl; // Return the processed image without cropping
+      }
+      
+    } catch (apiError) {
+      console.error('❌ Background removal API failed:', apiError);
+      console.log('⚠️ Using original image as fallback');
+      return imageUrl;
+    }
+  }
+
+  // Helper function to crop image to actual object boundaries
+  const cropToObjectBoundaries = (dataUrl) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // Handle CORS
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const { data, width, height } = imageData;
+            
+            let minX = width, minY = height, maxX = 0, maxY = 0;
+            let hasContent = false;
+            
+            // Find object boundaries with higher alpha threshold for better precision
+            for (let y = 0; y < height; y++) {
+              for (let x = 0; x < width; x++) {
+                const alpha = data[(y * width + x) * 4 + 3];
+                if (alpha > 128) { // Higher threshold for better precision
+                  hasContent = true;
+                  minX = Math.min(minX, x);
+                  minY = Math.min(minY, y);
+                  maxX = Math.max(maxX, x);
+                  maxY = Math.max(maxY, y);
+                }
+              }
+            }
+            
+            if (!hasContent) {
+              reject(new Error('No content found in image'));
+              return;
+            }
+            
+            // Crop with zero padding for tighter cutouts
+            const padding = 0; // Zero padding for maximum precision
+            const cropX = Math.max(0, minX - padding);
+            const cropY = Math.max(0, minY - padding);
+            const cropWidth = Math.min(width - cropX, maxX - minX + 1 + padding * 2);
+            const cropHeight = Math.min(height - cropY, maxY - minY + 1 + padding * 2);
+            
+            const croppedCanvas = document.createElement('canvas');
+            const croppedCtx = croppedCanvas.getContext('2d');
+            croppedCanvas.width = cropWidth;
+            croppedCanvas.height = cropHeight;
+            
+            croppedCtx.drawImage(
+              canvas,
+              cropX, cropY, cropWidth, cropHeight,
+              0, 0, cropWidth, cropHeight
+            );
+            
+            resolve(croppedCanvas.toDataURL('image/png'));
+          } catch (error) {
+            reject(error);
+          }
+        };
+        img.onerror = () => reject(new Error('Failed to load image'));
+        img.src = dataUrl;
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   // Tab functions
   const handleTabChange = (tabName) => {
     setActiveTab(tabName)
@@ -229,13 +395,44 @@ const Closet = () => {
           </div>
 
                  {/* Working Canvas - Center (30%) */}
-                 <div className="closet-working-canvas">
+                 <div 
+                   className="closet-working-canvas"
+                   ref={canvasRef}
+                   onDragOver={handleDragOver}
+                   onDrop={handleDrop}
+                 >
                    <div className="canvas-area">
                      {closetCanvasItems.map(item => (
-                       <div key={item.id} className="canvas-item">
+                       <div 
+                         key={item.canvasId} 
+                         className="canvas-item"
+                         style={{
+                           left: `${item.x}px`,
+                           top: `${item.y}px`,
+                           width: `${item.width}px`,
+                           height: `${item.height}px`
+                         }}
+                       >
                          <img src={item.image} alt={item.name} />
+                         <button 
+                           className="remove-canvas-item"
+                           onClick={() => removeCanvasItem(item.canvasId)}
+                         >
+                           ×
+                         </button>
                        </div>
                      ))}
+                     {closetCanvasItems.length === 0 && !isProcessing && (
+                       <div className="canvas-placeholder">
+                         <p>Drag & Drop from closet items to recreate your look</p>
+                       </div>
+                     )}
+                     {isProcessing && (
+                       <div className="processing-indicator">
+                         <div className="processing-spinner"></div>
+                         <p>Processing background removal...</p>
+                       </div>
+                     )}
                    </div>
                  </div>
 
@@ -243,18 +440,37 @@ const Closet = () => {
           <div className="closet-items-panel">
             <div className="closet-items-header">
               <h3>Closet Items</h3>
-              <button 
-                className="save-changes-btn"
-                onClick={() => handleSaveChanges()}
-              >
-                Save Changes
-              </button>
             </div>
             <div className="closet-items-grid">
-              {/* TODO: Load closet items from useClosetImages hook */}
-              <div className="closet-item-placeholder">
-                <p>Closet items will load here</p>
-              </div>
+              {closetCategories[activeTab]?.slice(0, visibleItems).map(item => (
+                <div 
+                  key={item.id} 
+                  className="closet-item"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, item)}
+                  onDragEnd={handleDragEnd}
+                >
+                  <div className="item-image-container">
+                    <img src={item.image} alt={item.name} />
+                    <div className="item-hover-overlay">
+                      <div className="hover-content">
+                        <div className="hover-stats">
+                          <span className="hover-date">{item.ownedSince}</span>
+                          <span className="hover-separator">•</span>
+                          <span className="hover-count">{item.wornCount} wears</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="item-name">{item.name}</span>
+                </div>
+              ))}
+              {isLoading && (
+                <div className="loading-indicator">
+                  <div className="loading-spinner"></div>
+                  <span>Loading more items...</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
