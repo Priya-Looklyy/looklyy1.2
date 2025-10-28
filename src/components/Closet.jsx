@@ -165,8 +165,10 @@ const Closet = () => {
 
   // Drag and Drop functionality for working canvas
   const handleDragStart = (e, item) => {
+    console.log('🎨 DRAG START - Item:', item.name, 'Event:', e)
     setDraggedItem(item)
     e.dataTransfer.effectAllowed = 'copy'
+    e.dataTransfer.setData('text/plain', JSON.stringify(item))
     e.target.classList.add('dragging')
     console.log('🎨 Starting drag for cutout:', item.name)
     console.log('📦 Dragged item data:', item)
@@ -174,8 +176,9 @@ const Closet = () => {
 
   const handleDragOver = (e) => {
     e.preventDefault()
+    e.stopPropagation()
     e.dataTransfer.dropEffect = 'copy'
-    console.log('🎯 Drag over canvas workspace')
+    console.log('🎯 DRAG OVER - Canvas workspace')
   }
 
   const handleDragEnd = (e) => {
@@ -185,17 +188,30 @@ const Closet = () => {
 
   const handleDrop = async (e) => {
     e.preventDefault()
-    console.log('🎯 Drop event triggered')
+    e.stopPropagation()
+    console.log('🎯 DROP EVENT - Triggered')
     console.log('📦 Dragged item:', draggedItem)
     console.log('⚙️ Is processing:', isProcessing)
     
-    if (!draggedItem || isProcessing) {
-      console.log('❌ Drop cancelled - no dragged item or processing')
+    // Try to get data from dataTransfer as backup
+    let itemData = draggedItem
+    if (!itemData) {
+      try {
+        const data = e.dataTransfer.getData('text/plain')
+        itemData = JSON.parse(data)
+        console.log('📦 Retrieved from dataTransfer:', itemData)
+      } catch (err) {
+        console.log('❌ Failed to get data from dataTransfer:', err)
+      }
+    }
+    
+    if (!itemData || isProcessing) {
+      console.log('❌ Drop cancelled - no item data or processing')
       return
     }
 
     setIsProcessing(true)
-    console.log('🔄 Processing background removal for:', draggedItem.name)
+    console.log('🔄 Processing background removal for:', itemData.name)
 
     const canvasRect = canvasRef.current.getBoundingClientRect()
     const x = e.clientX - canvasRect.left
@@ -207,17 +223,17 @@ const Closet = () => {
 
     try {
       // Apply background removal to create paper cutout
-      const processedImageUrl = await applyBackgroundRemoval(draggedItem.image, draggedItem.name)
+      const processedImageUrl = await applyBackgroundRemoval(itemData.image, itemData.name)
 
       const newItem = {
-        ...draggedItem,
+        ...itemData,
         canvasId: Date.now(),
         x: Math.max(0, Math.min(x - itemWidth/2, canvasRect.width - itemWidth)),
         y: Math.max(0, Math.min(y - itemHeight/2, canvasRect.height - itemHeight)),
         width: itemWidth,
         height: itemHeight,
         image: processedImageUrl, // Use processed image with removed background
-        originalImage: draggedItem.image // Keep original for reference
+        originalImage: itemData.image // Keep original for reference
       }
 
       console.log('✅ Paper cutout added:', newItem.name, 'at position:', x, y)
