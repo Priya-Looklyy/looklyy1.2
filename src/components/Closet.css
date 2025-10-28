@@ -566,36 +566,31 @@
   max-height: 400px; /* Allow more scrolling */
 }
 
-/* Ensure Frame 2 closet items show 3 per row with proper row height */
+/* Frame 2 Closet Grid - Force proper 3-column layout */
 .closet-page.frame2-layout .closet-items-panel .closet-items-grid {
+  display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
   grid-template-rows: auto !important;
   gap: 1rem !important;
-  display: grid !important;
   max-height: 500px !important;
   overflow-y: auto !important;
+  padding: 1rem !important;
 }
 
-/* Ensure all closet items in Frame 2 show as proper image cards, not text tabs */
+/* Frame 2 Closet Items - Force proper card display */
 .closet-page.frame2-layout .closet-items-panel .closet-items-grid .closet-item {
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
   background: white !important;
   border-radius: 12px !important;
   padding: 0.75rem !important;
   box-shadow: 0 2px 12px rgba(147, 51, 234, 0.08) !important;
-  transition: all 0.3s ease !important;
   cursor: grab !important;
-  position: relative !important;
-  overflow: hidden !important;
-  user-select: none !important;
-  height: auto !important;
-  justify-content: space-between !important;
+  height: 280px !important;
+  min-height: 280px !important;
 }
 
 .closet-page.frame2-layout .closet-items-panel .closet-items-grid .closet-item .item-image-container {
-  position: relative !important;
   width: 100% !important;
   height: 200px !important;
   border-radius: 8px !important;
@@ -607,18 +602,12 @@
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
-  transition: transform 0.3s ease !important;
 }
 
 .closet-page.frame2-layout .closet-items-panel .closet-items-grid .closet-item .item-name {
-  font-family: 'Nord', sans-serif !important;
   font-size: 0.8rem !important;
-  font-weight: 500 !important;
   color: #374151 !important;
   text-align: center !important;
-  line-height: 1.4 !important;
-  letter-spacing: 0.3px !important;
-  width: 100% !important;
   margin: 0 !important;
 }
 
