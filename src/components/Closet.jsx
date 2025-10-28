@@ -473,8 +473,13 @@ const Closet = () => {
       { id: 'frame2-6', name: 'Pink Pants', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop', ownedSince: 'Jun 2023', wornCount: 7 },
       { id: 'frame2-7', name: 'Denim Jacket', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop', ownedSince: 'May 2023', wornCount: 9 },
       { id: 'frame2-8', name: 'White Tee', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop', ownedSince: 'Apr 2023', wornCount: 12 },
-      { id: 'frame2-9', name: 'Black Pants', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop', ownedSince: 'Mar 2023', wornCount: 6 }
+      { id: 'frame2-9', name: 'Black Pants', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop', ownedSince: 'Mar 2023', wornCount: 6 },
+      { id: 'frame2-10', name: 'Navy Dress', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=400&fit=crop', ownedSince: 'Feb 2023', wornCount: 8 },
+      { id: 'frame2-11', name: 'Grey Sweater', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop', ownedSince: 'Jan 2023', wornCount: 10 },
+      { id: 'frame2-12', name: 'Brown Jacket', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop', ownedSince: 'Dec 2022', wornCount: 4 }
     ]
+    
+    console.log('🎯 Frame 2 - Rendering with', relevantClosetItems.length, 'items')
     
     return (
       <div className="closet-page frame2-layout">
@@ -586,11 +591,35 @@ const Closet = () => {
                 </svg>
               </button>
             </div>
-            <div className="closet-items-grid">
+            <div 
+              className="closet-items-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '1rem',
+                maxHeight: '500px',
+                overflowY: 'auto'
+              }}
+            >
               {relevantClosetItems.map(item => (
                 <div 
                   key={item.id} 
                   className="closet-item"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    background: 'white',
+                    borderRadius: '12px',
+                    padding: '0.75rem',
+                    boxShadow: '0 2px 12px rgba(147, 51, 234, 0.08)',
+                    cursor: 'grab',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    userSelect: 'none',
+                    height: 'auto',
+                    justifyContent: 'space-between'
+                  }}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
                   onDragEnd={handleDragEnd}
