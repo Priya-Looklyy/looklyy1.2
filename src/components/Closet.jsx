@@ -401,7 +401,48 @@ const Closet = () => {
                    onDragOver={handleDragOver}
                    onDrop={handleDrop}
                  >
-                   <div className="canvas-area">
+                   {/* Canvas Controls (15% left) */}
+                   <div className="canvas-controls">
+                     <button 
+                       className="control-btn" 
+                       data-tooltip="Save"
+                       onClick={() => {
+                         console.log('Saving closet look');
+                         // TODO: Implement save functionality
+                       }}
+                     >
+                       <svg viewBox="0 0 24 24">
+                         <path d="M19 12v7H5v-7M12 3v9m-3-3l3 3 3-3"/>
+                       </svg>
+                     </button>
+                     <button 
+                       className="control-btn" 
+                       data-tooltip="Clear All"
+                       onClick={() => {
+                         setClosetCanvasItems([]);
+                         console.log('Cleared all canvas items');
+                       }}
+                     >
+                       <svg viewBox="0 0 24 24">
+                         <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                       </svg>
+                     </button>
+                     <button 
+                       className="control-btn" 
+                       data-tooltip="Undo"
+                       onClick={() => {
+                         console.log('Undo last action');
+                         // TODO: Implement undo functionality
+                       }}
+                     >
+                       <svg viewBox="0 0 24 24">
+                         <path d="M3 7v6h6M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+                       </svg>
+                     </button>
+                   </div>
+                   
+                   {/* Canvas Workspace (85% right) */}
+                   <div className="canvas-workspace">
                      {closetCanvasItems.map(item => (
                        <div 
                          key={item.canvasId} 
@@ -439,7 +480,7 @@ const Closet = () => {
           {/* Closet Items - Right (50%) */}
           <div className="closet-items-panel">
             <div className="closet-items-header">
-              <h3>Closet Items</h3>
+              <h3>Closet</h3>
             </div>
             <div className="closet-items-grid">
               {closetCategories[activeTab]?.slice(0, visibleItems).map(item => (
