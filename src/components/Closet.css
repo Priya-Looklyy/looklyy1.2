@@ -536,8 +536,8 @@
   background: #ffffff;
   border-radius: 12px 12px 0 0;
   box-shadow: 0 -4px 20px rgba(147, 51, 234, 0.1);
-  overflow: hidden;
-  min-height: 100vh;
+  overflow: visible;
+  min-height: auto;
   padding-top: 2rem;
   position: relative;
   z-index: 10;
