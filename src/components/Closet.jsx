@@ -228,19 +228,16 @@ const Closet = () => {
             </div>
           </div>
 
-          {/* Working Canvas - Center (30%) */}
-          <div className="closet-working-canvas">
-            <div className="canvas-header">
-              <h3>Working Canvas</h3>
-            </div>
-            <div className="canvas-area">
-              {closetCanvasItems.map(item => (
-                <div key={item.id} className="canvas-item">
-                  <img src={item.image} alt={item.name} />
-                </div>
-              ))}
-            </div>
-          </div>
+                 {/* Working Canvas - Center (30%) */}
+                 <div className="closet-working-canvas">
+                   <div className="canvas-area">
+                     {closetCanvasItems.map(item => (
+                       <div key={item.id} className="canvas-item">
+                         <img src={item.image} alt={item.name} />
+                       </div>
+                     ))}
+                   </div>
+                 </div>
 
           {/* Closet Items - Right (50%) */}
           <div className="closet-items-panel">
