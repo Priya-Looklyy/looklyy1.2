@@ -247,6 +247,14 @@ const Closet = () => {
   console.log('Rendering normal closet layout. Frame2Active:', closetFrame2Active, 'SelectedImage:', selectedClosetImage)
   return (
     <div className="closet-page">
+      {/* Curated Weekly Looks Header */}
+      <div className="closet-header">
+        <div className="closet-header-content">
+          <h2 className="closet-title">Your Weekly Curated Looks</h2>
+          <p className="closet-subtitle">AI-powered outfits from your closet, personalized just for you</p>
+        </div>
+      </div>
+      
       {/* 7 Looks Section - Full Screen */}
       <div className="closet-images-container">
         {closetLooks.map(image => (

@@ -11,11 +11,45 @@
   background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 25%, #e9d5ff 50%, #ddd6fe 75%, #c4b5fd 100%);
 }
 
+/* Curated Weekly Looks Header */
+.closet-header {
+  padding: 1.5rem 2rem 1rem 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.closet-header-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.closet-title {
+  font-family: 'Nord', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2d1b4e;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.5px;
+}
+
+.closet-subtitle {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #6b7280;
+  margin: 0;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
 .closet-images-container {
   display: flex;
   gap: 0.5rem; /* Reduced gap for better fit */
   width: 100%; /* Fill entire screen width */
-  height: 100vh; /* Full viewport height */
+  height: calc(80vh - 120px); /* Reduced by 20% and account for header */
   overflow: hidden;
   justify-content: space-between; /* Distribute evenly across full width */
   padding: 0.5rem; /* Reduced padding for better fit */
@@ -101,7 +135,7 @@
 
 /* Frame 2 Layout - Similar to homepage */
 .closet-page.frame2-layout {
-  height: calc(100vh - 52px);
+  height: calc(80vh - 172px); /* Reduced by 20% and account for header + navbar */
   overflow: hidden;
 }
 
@@ -547,6 +581,18 @@
 }
 
 @media (max-width: 768px) {
+  .closet-header {
+    padding: 1rem 1.5rem 0.75rem 1.5rem;
+  }
+  
+  .closet-title {
+    font-size: 1.5rem;
+  }
+  
+  .closet-subtitle {
+    font-size: 0.8rem;
+  }
+  
   .closet-images-container {
     flex-direction: column;
     gap: 0.3rem; /* Reduced gap for better fit */
