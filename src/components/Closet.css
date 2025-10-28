@@ -4,7 +4,7 @@
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: visible;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -590,8 +590,7 @@
   padding: 2rem 1.5rem;
   background: #ffffff;
   min-height: 60vh;
-  max-height: 80vh;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .closet-items-grid {
