@@ -235,7 +235,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem; /* Space between icons */
-  z-index: 2;
+  z-index: 10000; /* Higher than modal z-index */
 }
 
 /* Icon Container - Clickable area for each icon */
@@ -1200,6 +1200,7 @@
   justify-content: center;
   z-index: 9999;
   animation: modalFadeIn 0.3s ease-out;
+  pointer-events: auto; /* Allow clicks on modal */
 }
 
 .image-modal-content {

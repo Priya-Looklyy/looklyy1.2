@@ -814,7 +814,12 @@ const Closet = () => {
           <div 
             key={image.id} 
             className="closet-image-item"
-            onMouseEnter={() => handleImageHover(image)}
+            onMouseEnter={(e) => {
+              // Don't trigger hover if mouse is over action icons
+              if (!e.target.closest('.action-icons-container')) {
+                handleImageHover(image)
+              }
+            }}
             onMouseLeave={handleImageLeave}
           >
             <img 
@@ -828,7 +833,17 @@ const Closet = () => {
               }}
             />
             {/* Action icons at bottom - Love and Change */}
-            <div className="action-icons-container">
+            <div 
+              className="action-icons-container"
+              onMouseEnter={(e) => {
+                // Prevent hover modal when over action icons
+                e.stopPropagation()
+              }}
+              onMouseLeave={(e) => {
+                // Prevent hover modal when leaving action icons
+                e.stopPropagation()
+              }}
+            >
               <div 
                 className="icon-container"
                 onClick={() => handleLoveLook(image.day)}
