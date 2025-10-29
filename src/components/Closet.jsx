@@ -29,53 +29,60 @@ const Closet = () => {
     
     return () => clearTimeout(timer)
   }, [])
-  // 7 closet looks - main display (unchanged)
+  // 7 closet looks - main display with custom image support
   const closetLooks = [
     {
       id: 1,
-      url: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&auto=format&q=80',
+      url: '/closet-looks/monday/main.jpg',
+      fallbackUrl: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Monday Look',
       day: 'Monday',
       isWeekend: false
     },
     {
       id: 2,
-      url: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&h=600&fit=crop&auto=format&q=80',
+      url: '/closet-looks/tuesday/main.jpg',
+      fallbackUrl: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Tuesday Look',
       day: 'Tuesday',
       isWeekend: false
     },
     {
       id: 3,
-      url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop&auto=format&q=80',
+      url: '/closet-looks/wednesday/main.jpg',
+      fallbackUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Wednesday Look',
       day: 'Wednesday',
       isWeekend: false
     },
     {
       id: 4,
-      url: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop&auto=format&q=80',
+      url: '/closet-looks/thursday/main.jpg',
+      fallbackUrl: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Thursday Look',
       day: 'Thursday',
       isWeekend: false
     },
     {
       id: 5,
-      url: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=600&fit=crop&auto=format&q=80',
+      url: '/closet-looks/friday/main.jpg',
+      fallbackUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Friday Look',
       day: 'Friday',
       isWeekend: false
     },
     {
       id: 6,
-      url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=600&fit=crop&auto=format&q=80',
+      url: '/closet-looks/saturday/main.jpg',
+      fallbackUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Saturday Look',
       day: 'Saturday',
       isWeekend: true
     },
     {
       id: 7,
-      url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop&auto=format&q=80',
+      url: '/closet-looks/sunday/main.jpg',
+      fallbackUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Sunday Look',
       day: 'Sunday',
       isWeekend: true
@@ -712,6 +719,10 @@ const Closet = () => {
               src={image.url} 
               alt={image.alt}
               className="closet-image"
+              onError={(e) => {
+                console.log(`Failed to load custom image for ${image.day}, using fallback`)
+                e.target.src = image.fallbackUrl
+              }}
             />
             {/* Action icons at bottom - Love and Change */}
             <div className="action-icons-container">
