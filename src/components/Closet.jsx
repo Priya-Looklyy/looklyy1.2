@@ -74,7 +74,7 @@ const Closet = () => {
     },
     {
       id: 6,
-      url: '/closet-looks/saturday/3.jpg',
+      url: '/closet-looks/saturday/Saturday.jpg',
       fallbackUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Saturday Look',
       day: 'Saturday',
@@ -82,7 +82,7 @@ const Closet = () => {
     },
     {
       id: 7,
-      url: '/closet-looks/sunday/6.png',
+      url: '/closet-looks/sunday/Sunday.jpg',
       fallbackUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Sunday Look',
       day: 'Sunday',
@@ -754,7 +754,8 @@ const Closet = () => {
               alt={hoveredImage.alt}
               className="image-modal-image"
               onError={(e) => {
-                console.log(`Failed to load modal image for ${hoveredImage.day}, using fallback`)
+                console.log(`Failed to load modal image for ${hoveredImage.day}: ${hoveredImage.url}`)
+                console.log(`Using fallback image for ${hoveredImage.day}`)
                 e.target.src = hoveredImage.fallbackUrl
               }}
             />
@@ -783,21 +784,6 @@ const Closet = () => {
               className="closet-image"
               onError={(e) => {
                 console.log(`Failed to load custom image for ${image.day}: ${image.url}`)
-                
-                // Try alternative extensions for Saturday image
-                if (image.day === 'Saturday' && image.url.includes('/3')) {
-                  const alternatives = ['/3.png', '/3.jpeg', '/3.gif', '/3.webp']
-                  const currentUrl = e.target.src
-                  const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'))
-                  const currentIndex = alternatives.findIndex(alt => currentUrl.includes(alt))
-                  
-                  if (currentIndex < alternatives.length - 1) {
-                    console.log(`Trying alternative extension: ${alternatives[currentIndex + 1]}`)
-                    e.target.src = baseUrl + alternatives[currentIndex + 1]
-                    return
-                  }
-                }
-                
                 console.log(`Using fallback image for ${image.day}`)
                 e.target.src = image.fallbackUrl
               }}
