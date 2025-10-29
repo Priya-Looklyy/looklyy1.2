@@ -7,6 +7,11 @@ const Closet = () => {
   const [closetFrame2Active, setClosetFrame2Active] = useState(false)
   const [selectedClosetImage, setSelectedClosetImage] = useState(null)
   const [closetCanvasItems, setClosetCanvasItems] = useState([])
+  
+  // Debug state changes
+  React.useEffect(() => {
+    console.log('🔄 STATE CHANGE - Frame2Active:', closetFrame2Active, 'SelectedImage:', selectedClosetImage?.day)
+  }, [closetFrame2Active, selectedClosetImage])
   const [draggedItem, setDraggedItem] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [draggedCanvasItem, setDraggedCanvasItem] = useState(null)
@@ -835,7 +840,12 @@ const Closet = () => {
               </div>
               <div 
                 className="icon-container"
-                onClick={() => handleChangeLook(image.day)}
+                onClick={(e) => {
+                  console.log('🖱️ CHANGE ICON CLICKED!', image.day, e)
+                  e.preventDefault()
+                  e.stopPropagation()
+                  handleChangeLook(image.day)
+                }}
                 aria-label="Change this look"
               >
                 <svg viewBox="0 0 24 24" className="change-icon icon-outline">
