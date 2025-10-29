@@ -24,20 +24,9 @@ const Closet = () => {
   const [isLoading, setIsLoading] = useState(false)
   
   // Modal state management
-  const [showWelcomeModal, setShowWelcomeModal] = useState(() => {
-    // Only show welcome modal if it hasn't been shown before in this session
-    return !localStorage.getItem('closetWelcomeModalShown')
-  })
   const [hoveredImage, setHoveredImage] = useState(null)
   
-  // Auto-dissolve timer
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowWelcomeModal(false)
-    }, 5000) // 5 seconds
-    
-    return () => clearTimeout(timer)
-  }, [])
+  // Welcome modal disabled to prevent conflicts with image hover modal
   // 7 closet looks - main display with custom image support
   const closetLooks = [
     {
@@ -453,11 +442,7 @@ const Closet = () => {
     setVisibleItems(5) // Reset visible items when switching tabs (1 full row)
   }
 
-  // Modal functions
-  const handleCloseWelcomeModal = () => {
-    setShowWelcomeModal(false)
-    localStorage.setItem('closetWelcomeModalShown', 'true')
-  }
+  // Modal functions - welcome modal disabled
 
   const hoverTimeoutRef = useRef(null)
 
@@ -466,8 +451,6 @@ const Closet = () => {
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current)
     }
-    // Close welcome modal when showing image hover modal
-    setShowWelcomeModal(false)
     // Set hovered image immediately
     setHoveredImage(image)
   }
@@ -496,11 +479,7 @@ const Closet = () => {
       const windowHeight = window.innerHeight
       const documentHeight = document.documentElement.scrollHeight
 
-      // Auto-dissolve modal on any scroll
-      if (showWelcomeModal && scrollTop > 50) {
-        setShowWelcomeModal(false)
-        localStorage.setItem('closetWelcomeModalShown', 'true')
-      }
+      // Welcome modal disabled
 
       // Handle infinite scroll - trigger when user is near bottom
       const currentCategoryItems = closetCategories[activeTab] || []
@@ -517,7 +496,7 @@ const Closet = () => {
 
     window.addEventListener('scroll', handlePageScroll)
     return () => window.removeEventListener('scroll', handlePageScroll)
-  }, [isLoading, activeTab, visibleItems, showWelcomeModal])
+  }, [isLoading, activeTab, visibleItems])
 
   // Handle keyboard support for image modal
   React.useEffect(() => {
@@ -749,36 +728,7 @@ const Closet = () => {
   return (
     <div className="closet-page">
       {/* Welcome Modal */}
-      {showWelcomeModal && (
-        <div className="welcome-modal-overlay">
-          <div className="welcome-modal">
-            <div className="welcome-modal-content">
-              <p className="welcome-modal-text">
-                Your smart personalised looks for the week
-              </p>
-              <div className="welcome-modal-features">
-                <div className="feature-item-single">
-                  <div className="feature-icons">
-                    <svg viewBox="0 0 24 24" className="heart-icon">
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
-                    <span>Love looks</span>
-                  </div>
-                  <span className="feature-separator">•</span>
-                  <div className="feature-icons">
-                    <svg viewBox="0 0 24 24" className="change-icon">
-                      <path d="M1 4v6h6"/>
-                      <path d="M23 20v-6h-6"/>
-                      <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
-                    </svg>
-                    <span>Change looks</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Welcome modal disabled to prevent conflicts with image hover modal */}
 
       {/* Image Hover Modal */}
       {hoveredImage && (
