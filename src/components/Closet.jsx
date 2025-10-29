@@ -161,13 +161,20 @@ const Closet = () => {
   }
 
   const handleChangeLook = (day) => {
-    console.log(`Changing look for ${day}`)
+    console.log(`🔄 CHANGING LOOK for ${day}`)
+    console.log(`Available closetLooks:`, closetLooks.map(img => img.day))
+    
     // Find the image for this day
     const imageToChange = closetLooks.find(img => img.day === day)
+    console.log(`Found image:`, imageToChange)
+    
     if (imageToChange) {
+      console.log(`✅ Setting Frame 2 active for ${day}`)
       setSelectedClosetImage(imageToChange)
       setClosetFrame2Active(true)
       setClosetCanvasItems([]) // Reset canvas items
+    } else {
+      console.log(`❌ No image found for ${day}`)
     }
   }
 

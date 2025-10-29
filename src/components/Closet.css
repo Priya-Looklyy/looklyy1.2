@@ -238,10 +238,51 @@
   z-index: 2;
 }
 
+/* Icon Container - Clickable area for each icon */
+.icon-container {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.icon-container:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Change Icon - Custom styling for refresh icon */
 .change-icon {
   width: 18px;
   height: 18px;
+  stroke: #6b7280;
+  transition: stroke 0.3s ease;
+}
+
+.icon-container:hover .change-icon {
+  stroke: #7c3aed;
+}
+
+/* Heart Icon - Custom styling */
+.heart-icon {
+  width: 18px;
+  height: 18px;
+  stroke: #6b7280;
+  fill: none;
+  transition: all 0.3s ease;
+}
+
+.icon-container:hover .heart-icon {
+  stroke: #ef4444;
+  fill: #ef4444;
 }
 
 /* Frame 2 Layout - Similar to homepage */
