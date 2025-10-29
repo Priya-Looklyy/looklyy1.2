@@ -33,7 +33,7 @@ const Closet = () => {
   const closetLooks = [
     {
       id: 1,
-      url: '/closet-looks/monday/main.jpg',
+      url: '/closet-looks/monday/4.png',
       fallbackUrl: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Monday Look',
       day: 'Monday',
@@ -41,7 +41,7 @@ const Closet = () => {
     },
     {
       id: 2,
-      url: '/closet-looks/tuesday/main.jpg',
+      url: '/closet-looks/tuesday/2.jpg',
       fallbackUrl: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Tuesday Look',
       day: 'Tuesday',
@@ -49,7 +49,7 @@ const Closet = () => {
     },
     {
       id: 3,
-      url: '/closet-looks/wednesday/main.jpg',
+      url: '/closet-looks/wednesday/5.png',
       fallbackUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Wednesday Look',
       day: 'Wednesday',
@@ -57,7 +57,7 @@ const Closet = () => {
     },
     {
       id: 4,
-      url: '/closet-looks/thursday/main.jpg',
+      url: '/closet-looks/thursday/1.jpg',
       fallbackUrl: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Thursday Look',
       day: 'Thursday',
@@ -65,7 +65,7 @@ const Closet = () => {
     },
     {
       id: 5,
-      url: '/closet-looks/friday/main.jpg',
+      url: '/closet-looks/friday/7.jpg',
       fallbackUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Friday Look',
       day: 'Friday',
@@ -73,7 +73,7 @@ const Closet = () => {
     },
     {
       id: 6,
-      url: '/closet-looks/saturday/main.jpg',
+      url: '/closet-looks/saturday/3.jpg',
       fallbackUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Saturday Look',
       day: 'Saturday',
@@ -81,7 +81,7 @@ const Closet = () => {
     },
     {
       id: 7,
-      url: '/closet-looks/sunday/main.jpg',
+      url: '/closet-looks/sunday/6.png',
       fallbackUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Sunday Look',
       day: 'Sunday',
@@ -720,7 +720,23 @@ const Closet = () => {
               alt={image.alt}
               className="closet-image"
               onError={(e) => {
-                console.log(`Failed to load custom image for ${image.day}, using fallback`)
+                console.log(`Failed to load custom image for ${image.day}: ${image.url}`)
+                
+                // Try alternative extensions for Saturday image
+                if (image.day === 'Saturday' && image.url.includes('/3')) {
+                  const alternatives = ['/3.png', '/3.jpeg', '/3.gif', '/3.webp']
+                  const currentUrl = e.target.src
+                  const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'))
+                  const currentIndex = alternatives.findIndex(alt => currentUrl.includes(alt))
+                  
+                  if (currentIndex < alternatives.length - 1) {
+                    console.log(`Trying alternative extension: ${alternatives[currentIndex + 1]}`)
+                    e.target.src = baseUrl + alternatives[currentIndex + 1]
+                    return
+                  }
+                }
+                
+                console.log(`Using fallback image for ${image.day}`)
                 e.target.src = image.fallbackUrl
               }}
             />
