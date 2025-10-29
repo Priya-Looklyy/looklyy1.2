@@ -24,7 +24,10 @@ const Closet = () => {
   const [isLoading, setIsLoading] = useState(false)
   
   // Modal state management
-  const [showWelcomeModal, setShowWelcomeModal] = useState(true)
+  const [showWelcomeModal, setShowWelcomeModal] = useState(() => {
+    // Only show welcome modal if it hasn't been shown before in this session
+    return !localStorage.getItem('closetWelcomeModalShown')
+  })
   const [hoveredImage, setHoveredImage] = useState(null)
   
   // Auto-dissolve timer
@@ -453,6 +456,7 @@ const Closet = () => {
   // Modal functions
   const handleCloseWelcomeModal = () => {
     setShowWelcomeModal(false)
+    localStorage.setItem('closetWelcomeModalShown', 'true')
   }
 
   const hoverTimeoutRef = useRef(null)
@@ -462,6 +466,8 @@ const Closet = () => {
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current)
     }
+    // Close welcome modal when showing image hover modal
+    setShowWelcomeModal(false)
     // Set hovered image immediately
     setHoveredImage(image)
   }
@@ -474,11 +480,13 @@ const Closet = () => {
     // Add a small delay to prevent glitching when moving between image and modal
     hoverTimeoutRef.current = setTimeout(() => {
       setHoveredImage(null)
+      // Don't show welcome modal again after image hover
     }, 150)
   }
 
   const handleCloseImageModal = () => {
     setHoveredImage(null)
+    // Don't show welcome modal again after closing image modal
   }
 
   // Handle infinite scroll and auto-dissolve modal based on page scroll position
@@ -491,6 +499,7 @@ const Closet = () => {
       // Auto-dissolve modal on any scroll
       if (showWelcomeModal && scrollTop > 50) {
         setShowWelcomeModal(false)
+        localStorage.setItem('closetWelcomeModalShown', 'true')
       }
 
       // Handle infinite scroll - trigger when user is near bottom
