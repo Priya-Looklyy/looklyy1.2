@@ -1,5 +1,6 @@
 /* Closet Page - 7 Images Layout - Updated 2024-01-15 - Frame 2 Grid Fix v2 - Hover Modal v1 */
 
+/* Cache Bust: 2024-01-15 */
 .closet-page {
   position: relative;
   min-height: 100vh;
@@ -11,55 +12,7 @@
   background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 25%, #e9d5ff 50%, #ddd6fe 75%, #c4b5fd 100%);
 }
 
-/* Welcome Modal */
-.welcome-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(45, 27, 78, 0.8);
-  backdrop-filter: blur(10px);
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  animation: modalFadeIn 0.3s ease-out;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.welcome-modal {
-  background: white;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 400px;
-  max-height: 90vh;
-  overflow: hidden;
-  box-shadow: 0 25px 50px rgba(147, 51, 234, 0.25);
-  animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Welcome Modal - REMOVED */
 
 .welcome-modal-content {
   padding: 1.5rem;
