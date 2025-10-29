@@ -199,7 +199,7 @@
   justify-content: center;
   backdrop-filter: blur(8px);
   z-index: 2;
-  opacity: 0; /* Hidden by default */
+  opacity: 1; /* Always visible */
   transition: opacity 0.3s ease;
   border-radius: 0 0 0 8px; /* Rounded bottom-left corner like Getty tab */
   padding: 0 12px; /* Horizontal padding */

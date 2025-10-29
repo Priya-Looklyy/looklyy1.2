@@ -443,12 +443,26 @@ const Closet = () => {
     setShowWelcomeModal(false)
   }
 
+  const hoverTimeoutRef = useRef(null)
+
   const handleImageHover = (image) => {
+    // Clear any existing timeout
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current)
+    }
+    // Set hovered image immediately
     setHoveredImage(image)
   }
 
   const handleImageLeave = () => {
-    setHoveredImage(null)
+    // Clear any existing timeout
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current)
+    }
+    // Add a small delay to prevent glitching when moving between image and modal
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredImage(null)
+    }, 150)
   }
 
   const handleCloseImageModal = () => {
@@ -495,6 +509,15 @@ const Closet = () => {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [hoveredImage])
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current)
+      }
+    }
+  }, [])
 
   const handleSaveChanges = () => {
     console.log(`Saving changes for ${selectedClosetImage.day}`)
@@ -738,7 +761,20 @@ const Closet = () => {
 
       {/* Image Hover Modal */}
       {hoveredImage && (
-        <div className="image-modal-overlay" onClick={handleCloseImageModal}>
+        <div 
+          className="image-modal-overlay" 
+          onClick={handleCloseImageModal}
+          onMouseEnter={() => {
+            // Clear timeout when hovering over modal
+            if (hoverTimeoutRef.current) {
+              clearTimeout(hoverTimeoutRef.current)
+            }
+          }}
+          onMouseLeave={() => {
+            // Close modal when leaving modal area
+            setHoveredImage(null)
+          }}
+        >
           <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
             <button 
               className="image-modal-close"
