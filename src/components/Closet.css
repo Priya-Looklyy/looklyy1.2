@@ -1,4 +1,4 @@
-/* Closet Page - 7 Images Layout - Updated 2024-01-15 - Frame 2 Grid Fix v2 */
+/* Closet Page - 7 Images Layout - Updated 2024-01-15 - Frame 2 Grid Fix v2 - Hover Modal v1 */
 
 .closet-page {
   position: relative;
@@ -1142,5 +1142,191 @@
   .closet-page.frame2-layout .closet-items-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
+  }
+}
+
+/* Image Hover Modal Styles */
+.image-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.image-modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.image-modal-close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10000;
+}
+
+.image-modal-close:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.image-modal-close svg {
+  color: #374151;
+  width: 20px;
+  height: 20px;
+}
+
+.image-modal-image {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.image-modal-image:hover {
+  transform: scale(1.02);
+}
+
+.image-modal-info {
+  margin-top: 1rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.image-modal-title {
+  font-family: 'Nord', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.05em;
+}
+
+.image-modal-description {
+  font-family: 'Nord', sans-serif;
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Modal Animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .image-modal-content {
+    max-width: 95vw;
+    max-height: 95vh;
+    padding: 1rem;
+  }
+  
+  .image-modal-close {
+    top: -40px;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .image-modal-close svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .image-modal-image {
+    max-height: 70vh;
+  }
+  
+  .image-modal-info {
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .image-modal-title {
+    font-size: 1.25rem;
+  }
+  
+  .image-modal-description {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-modal-content {
+    max-width: 98vw;
+    max-height: 98vh;
+    padding: 0.5rem;
+  }
+  
+  .image-modal-close {
+    top: -35px;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .image-modal-close svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .image-modal-image {
+    max-height: 60vh;
+  }
+  
+  .image-modal-info {
+    padding: 0.5rem 1rem;
+  }
+  
+  .image-modal-title {
+    font-size: 1.1rem;
+  }
+  
+  .image-modal-description {
+    font-size: 0.85rem;
   }
 }

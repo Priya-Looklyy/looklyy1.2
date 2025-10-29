@@ -20,6 +20,7 @@ const Closet = () => {
   
   // Modal state management
   const [showWelcomeModal, setShowWelcomeModal] = useState(true)
+  const [hoveredImage, setHoveredImage] = useState(null)
   
   // Auto-dissolve timer
   React.useEffect(() => {
@@ -442,6 +443,18 @@ const Closet = () => {
     setShowWelcomeModal(false)
   }
 
+  const handleImageHover = (image) => {
+    setHoveredImage(image)
+  }
+
+  const handleImageLeave = () => {
+    setHoveredImage(null)
+  }
+
+  const handleCloseImageModal = () => {
+    setHoveredImage(null)
+  }
+
   // Handle infinite scroll and auto-dissolve modal based on page scroll position
   React.useEffect(() => {
     const handlePageScroll = () => {
@@ -470,6 +483,18 @@ const Closet = () => {
     window.addEventListener('scroll', handlePageScroll)
     return () => window.removeEventListener('scroll', handlePageScroll)
   }, [isLoading, activeTab, visibleItems, showWelcomeModal])
+
+  // Handle keyboard support for image modal
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && hoveredImage) {
+        setHoveredImage(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [hoveredImage])
 
   const handleSaveChanges = () => {
     console.log(`Saving changes for ${selectedClosetImage.day}`)
@@ -710,11 +735,48 @@ const Closet = () => {
           </div>
         </div>
       )}
+
+      {/* Image Hover Modal */}
+      {hoveredImage && (
+        <div className="image-modal-overlay" onClick={handleCloseImageModal}>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="image-modal-close"
+              onClick={handleCloseImageModal}
+              aria-label="Close image"
+            >
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
+            <img 
+              src={hoveredImage.url} 
+              alt={hoveredImage.alt}
+              className="image-modal-image"
+              onError={(e) => {
+                console.log(`Failed to load modal image for ${hoveredImage.day}, using fallback`)
+                e.target.src = hoveredImage.fallbackUrl
+              }}
+            />
+            <div className="image-modal-info">
+              <h3 className="image-modal-title">{hoveredImage.day} Look</h3>
+              <p className="image-modal-description">
+                {hoveredImage.isWeekend ? 'Weekend Style' : 'Weekday Style'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* 7 Looks Section - Full Screen */}
       <div className="closet-images-container">
         {closetLooks.map(image => (
-          <div key={image.id} className="closet-image-item">
+          <div 
+            key={image.id} 
+            className="closet-image-item"
+            onMouseEnter={() => handleImageHover(image)}
+            onMouseLeave={handleImageLeave}
+          >
             <img 
               src={image.url} 
               alt={image.alt}
