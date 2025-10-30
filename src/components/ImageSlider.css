@@ -77,53 +77,52 @@
 .corner-pill {
   position: absolute;
   bottom: 1rem;
-  left: 16%; /* increase length by ~20% (22% -> ~16%) */
-  right: 16%;
-  height: 48px; /* increase height by ~20% (40px -> 48px) */
-  background: rgba(255, 255, 255, 0.4); /* ~40% transparency */
-  border-radius: 20px; /* base rounded rect */
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  left: 15%; /* clean 20% extension vs earlier 22% */
+  right: 15%;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 999px; /* smooth pill */
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
   backdrop-filter: saturate(120%) blur(2px);
   pointer-events: none;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-color, rgba(17, 24, 39, 0.85));
-  font-weight: 600; /* follow tagline weight */
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  padding: 0 16px;
+  color: var(--text-color, #111827);
+  font: inherit; /* follow global/tagline typography */
+  font-weight: 600;
+  padding: 0 18px;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal; /* allow wrapping */
+  white-space: normal; /* allow wrap */
 }
 
-/* Create asymmetric pinches: left pinched upward, right pinched downward */
+/* Asymmetric pinches: subtle and aligned per end */
 .corner-pill::before,
 .corner-pill::after {
   content: "";
   position: absolute;
-  width: 72px; /* larger than height to exaggerate pinch */
-  height: 72px;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  width: 50px; /* match pill height for clean semicircle */
+  height: 50px;
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   pointer-events: none;
   backdrop-filter: saturate(120%) blur(2px);
 }
 
-/* Left end circle shifted up -> top pinch */
+/* Left end slightly above -> top pinch */
 .corner-pill::before {
-  left: -24px;
-  top: -28px;
+  left: -25px;
+  top: -12px;
 }
 
-/* Right end circle shifted down -> bottom pinch */
+/* Right end slightly below -> bottom pinch */
 .corner-pill::after {
-  right: -24px;
-  bottom: -28px;
+  right: -25px;
+  bottom: -12px;
 }
 
 /* Removed old action-btn styles */
