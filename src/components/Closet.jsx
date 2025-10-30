@@ -24,9 +24,17 @@ const Closet = () => {
   const [isLoading, setIsLoading] = useState(false)
   
   // Modal state management
+  const [showWelcomeModal, setShowWelcomeModal] = useState(true)
   const [hoveredImage, setHoveredImage] = useState(null)
   
-  // Welcome modal disabled to prevent conflicts with image hover modal
+  // Auto-dissolve timer
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWelcomeModal(false)
+    }, 5000) // 5 seconds
+    
+    return () => clearTimeout(timer)
+  }, [])
   // 7 closet looks - main display with custom image support
   const closetLooks = [
     {
@@ -442,29 +450,26 @@ const Closet = () => {
     setVisibleItems(5) // Reset visible items when switching tabs (1 full row)
   }
 
-  // Modal functions - welcome modal disabled
+  // Modal functions
+  const handleCloseWelcomeModal = () => {
+    setShowWelcomeModal(false)
+  }
 
   const hoverTimeoutRef = useRef(null)
 
-  const handleImageHover = (image) => {
-    // Clear any existing timeout
+  const handleImageHover = (_image) => {
+    // Disable everyday look hover modal
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current)
     }
-    // Set hovered image immediately
-    setHoveredImage(image)
+    return
   }
 
   const handleImageLeave = () => {
-    // Clear any existing timeout
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current)
     }
-    // Add a small delay to prevent glitching when moving between image and modal
-    hoverTimeoutRef.current = setTimeout(() => {
-      setHoveredImage(null)
-      // Don't show welcome modal again after image hover
-    }, 150)
+    setHoveredImage(null)
   }
 
   const handleCloseImageModal = () => {
@@ -479,7 +484,10 @@ const Closet = () => {
       const windowHeight = window.innerHeight
       const documentHeight = document.documentElement.scrollHeight
 
-      // Welcome modal disabled
+      // Auto-dissolve modal on any scroll
+      if (showWelcomeModal && scrollTop > 50) {
+        setShowWelcomeModal(false)
+      }
 
       // Handle infinite scroll - trigger when user is near bottom
       const currentCategoryItems = closetCategories[activeTab] || []
@@ -496,7 +504,7 @@ const Closet = () => {
 
     window.addEventListener('scroll', handlePageScroll)
     return () => window.removeEventListener('scroll', handlePageScroll)
-  }, [isLoading, activeTab, visibleItems])
+  }, [isLoading, activeTab, visibleItems, showWelcomeModal])
 
   // Handle keyboard support for image modal
   React.useEffect(() => {
@@ -728,44 +736,38 @@ const Closet = () => {
   return (
     <div className="closet-page">
       {/* Welcome Modal */}
-      {/* Welcome modal disabled to prevent conflicts with image hover modal */}
-
-      {/* Image Hover Modal */}
-      {hoveredImage && (
-        <div 
-          className="image-modal-overlay" 
-          onClick={handleCloseImageModal}
-          onMouseEnter={() => {
-            // Clear timeout when hovering over modal
-            if (hoverTimeoutRef.current) {
-              clearTimeout(hoverTimeoutRef.current)
-            }
-          }}
-          onMouseLeave={() => {
-            // Close modal when leaving modal area
-            setHoveredImage(null)
-          }}
-        >
-          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
-            <img 
-              src={hoveredImage.url} 
-              alt={hoveredImage.alt}
-              className="image-modal-image"
-              onError={(e) => {
-                console.log(`Failed to load modal image for ${hoveredImage.day}: ${hoveredImage.url}`)
-                console.log(`Using fallback image for ${hoveredImage.day}`)
-                e.target.src = hoveredImage.fallbackUrl
-              }}
-            />
-            <div className="image-modal-info">
-              <h3 className="image-modal-title">{hoveredImage.day} Look</h3>
-              <p className="image-modal-description">
-                {hoveredImage.isWeekend ? 'Weekend Style' : 'Weekday Style'}
+      {showWelcomeModal && (
+        <div className="welcome-modal-overlay">
+          <div className="welcome-modal">
+            <div className="welcome-modal-content">
+              <p className="welcome-modal-text">
+                Your smart personalised looks for the week
               </p>
+              <div className="welcome-modal-features">
+                <div className="feature-item-single">
+                  <div className="feature-icons">
+                    <svg viewBox="0 0 24 24" className="heart-icon">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span>Love looks</span>
+                  </div>
+                  <span className="feature-separator">•</span>
+                  <div className="feature-icons">
+                    <svg viewBox="0 0 24 24" className="change-icon">
+                      <path d="M1 4v6h6"/>
+                      <path d="M23 20v-6h-6"/>
+                      <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                    </svg>
+                    <span>Change looks</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* Image Hover Modal - disabled */}
       
       {/* 7 Looks Section - Full Screen */}
       <div className="closet-images-container">
