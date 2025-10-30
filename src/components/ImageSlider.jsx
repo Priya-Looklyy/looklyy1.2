@@ -8,7 +8,7 @@ const ImageSlider = ({ slider, onPinLook }) => {
   const [imageLoaded, setImageLoaded] = useState(false)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
-  // Auto-slide every 2 seconds
+  // Auto-slide every 5 seconds
   useEffect(() => {
     if (!isAutoPlaying || !slider.images.length) return
 
@@ -17,7 +17,7 @@ const ImageSlider = ({ slider, onPinLook }) => {
         (prevIndex + 1) % slider.images.length
       )
       setImageLoaded(false) // Reset loading state for new image
-    }, 2000)
+    }, 5000)
 
     return () => clearInterval(interval)
   }, [isAutoPlaying, slider.images.length])
