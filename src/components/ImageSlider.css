@@ -76,16 +76,22 @@
 /* Decorative semi-transparent pill spanning with 22% side margins */
 .corner-pill {
   position: absolute;
-  top: 1rem;
-  left: 22%;
-  right: 22%;
-  height: 40px;
+  bottom: 1rem;
+  left: 16%; /* increase length by ~20% (22% -> ~16%) */
+  right: 16%;
+  height: 48px; /* increase height by ~20% (40px -> 48px) */
   background: rgba(255, 255, 255, 0.4); /* ~40% transparency */
-  border-radius: 999px 16px 16px 999px; /* TL TR BR BL */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 16px 16px 999px 999px; /* emphasize bottom rounding */
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   backdrop-filter: saturate(120%) blur(2px);
   pointer-events: none;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(17, 24, 39, 0.85);
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 /* Removed old action-btn styles */
