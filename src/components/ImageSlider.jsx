@@ -69,6 +69,9 @@ const ImageSlider = ({ slider, onPinLook }) => {
           className="slider-image"
         />
         
+        {/* Decorative pill overlay (left side fully rounded) */}
+        <div className="corner-pill" aria-hidden="true"></div>
+
         {/* Slider Overlay */}
         <div className="slider-overlay">
           <div className="slider-actions">

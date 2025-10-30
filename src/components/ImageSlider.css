@@ -58,6 +58,7 @@
   align-items: flex-start;
   justify-content: flex-end;
   padding: 1rem;
+  z-index: 2; /* keep icons above decorative pill */
 }
 
 .image-slider:hover .slider-overlay {
@@ -70,6 +71,21 @@
   flex-direction: row;
   background: transparent !important;
   background-color: transparent !important;
+}
+
+/* Decorative semi-transparent pill spanning with 22% side margins */
+.corner-pill {
+  position: absolute;
+  top: 1rem;
+  left: 22%;
+  right: 22%;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.4); /* ~40% transparency */
+  border-radius: 999px 16px 16px 999px; /* TL TR BR BL */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: saturate(120%) blur(2px);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Removed old action-btn styles */
