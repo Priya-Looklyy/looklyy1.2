@@ -81,7 +81,7 @@
   right: 16%;
   height: 48px; /* increase height by ~20% (40px -> 48px) */
   background: rgba(255, 255, 255, 0.4); /* ~40% transparency */
-  border-radius: 16px 16px 999px 999px; /* emphasize bottom rounding */
+  border-radius: 20px; /* base rounded rect */
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   backdrop-filter: saturate(120%) blur(2px);
   pointer-events: none;
@@ -89,9 +89,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(17, 24, 39, 0.85);
-  font-weight: 600;
+  color: var(--text-color, rgba(17, 24, 39, 0.85));
+  font-weight: 600; /* follow tagline weight */
   letter-spacing: 0.02em;
+  line-height: 1.2;
+  padding: 0 16px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* allow wrapping */
+}
+
+/* Create asymmetric pinches: left pinched upward, right pinched downward */
+.corner-pill::before,
+.corner-pill::after {
+  content: "";
+  position: absolute;
+  width: 72px; /* larger than height to exaggerate pinch */
+  height: 72px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  backdrop-filter: saturate(120%) blur(2px);
+}
+
+/* Left end circle shifted up -> top pinch */
+.corner-pill::before {
+  left: -24px;
+  top: -28px;
+}
+
+/* Right end circle shifted down -> bottom pinch */
+.corner-pill::after {
+  right: -24px;
+  bottom: -28px;
 }
 
 /* Removed old action-btn styles */
