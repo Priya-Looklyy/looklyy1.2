@@ -267,8 +267,8 @@ const HomePage = () => {
             </div>
           </div>
         ) : (
-          // Frame 1: Original 5 sliders - now using live trending data
-          sortedSliders.map(slider => (
+          // Frame 1: Show 4 sliders (25% each)
+          sortedSliders.slice(0, 4).map(slider => (
             <ImageSlider 
               key={slider.id} 
               slider={slider}
