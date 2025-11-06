@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLook } from '../context/LookContext'
 import './ImageSlider.css'
 
-const ImageSlider = ({ slider, onPinLook, pillText }) => {
+const ImageSlider = ({ slider, onPinLook }) => {
   const { toggleFavorite, togglePin, isFavorited, isPinned } = useLook()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [imageLoaded, setImageLoaded] = useState(false)
@@ -69,11 +69,6 @@ const ImageSlider = ({ slider, onPinLook, pillText }) => {
           className="slider-image"
         />
         
-        {/* Decorative pill overlay with text (bottom-aligned) */}
-        <div className="corner-pill">
-          {pillText || null}
-        </div>
-
         {/* Slider Overlay */}
         <div className="slider-overlay">
           <div className="slider-actions">

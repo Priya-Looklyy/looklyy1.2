@@ -268,12 +268,11 @@ const HomePage = () => {
           </div>
         ) : (
           // Frame 1: Show 4 sliders (25% each)
-          sortedSliders.slice(0, 4).map((slider, index) => (
+          sortedSliders.slice(0, 4).map((slider) => (
             <ImageSlider 
               key={slider.id} 
               slider={slider}
               onPinLook={handlePinLook}
-              pillText={index === 2 ? 'Priya Stephen recreated this look' : 'Trending Now'}
             />
           ))
         )}

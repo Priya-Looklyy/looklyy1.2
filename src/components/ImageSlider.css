@@ -73,57 +73,7 @@
   background-color: transparent !important;
 }
 
-/* Decorative semi-transparent pill spanning with 22% side margins */
-.corner-pill {
-  position: absolute;
-  bottom: 1rem;
-  left: 15%; /* clean 20% extension vs earlier 22% */
-  right: 15%;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.42);
-  border-radius: 999px; /* smooth pill */
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
-  backdrop-filter: saturate(120%) blur(2px);
-  pointer-events: none;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-color, #111827);
-  font: inherit; /* follow global/tagline typography */
-  font-weight: 600;
-  padding: 0 18px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal; /* allow wrap */
-}
-
-/* Asymmetric pinches: subtle and aligned per end */
-.corner-pill::before,
-.corner-pill::after {
-  content: "";
-  position: absolute;
-  width: 50px; /* match pill height for clean semicircle */
-  height: 50px;
-  background: rgba(255, 255, 255, 0.42);
-  border-radius: 50%;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  pointer-events: none;
-  backdrop-filter: saturate(120%) blur(2px);
-}
-
-/* Left end slightly above -> top pinch */
-.corner-pill::before {
-  left: -25px;
-  top: -12px;
-}
-
-/* Right end slightly below -> bottom pinch */
-.corner-pill::after {
-  right: -25px;
-  bottom: -12px;
-}
+/* Pill overlay removed */
 
 /* Removed old action-btn styles */
 
