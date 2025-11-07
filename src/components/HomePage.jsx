@@ -267,14 +267,23 @@ const HomePage = () => {
             </div>
           </div>
         ) : (
-          // Frame 1: Show 4 sliders (25% each)
-          sortedSliders.slice(0, 4).map((slider) => (
-            <ImageSlider 
-              key={slider.id} 
-              slider={slider}
-              onPinLook={handlePinLook}
-            />
-          ))
+          // Frame 1: Show 4 sliders (25% each) with unique metrics
+          sortedSliders.slice(0, 4).map((slider, index) => {
+            const metricsData = [
+              { likes: '3.2k', saves: '1.1k', shopped: '234' },
+              { likes: '1.8k', saves: '567', shopped: '89' },
+              { likes: '5.1k', saves: '2.3k', shopped: '412' },
+              { likes: '2.9k', saves: '743', shopped: '176' }
+            ]
+            return (
+              <ImageSlider 
+                key={slider.id} 
+                slider={slider}
+                onPinLook={handlePinLook}
+                metrics={metricsData[index]}
+              />
+            )
+          })
         )}
         
         {/* Frame 2: Canvas and Closet sections */}
