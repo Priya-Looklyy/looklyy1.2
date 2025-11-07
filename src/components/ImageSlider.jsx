@@ -90,7 +90,11 @@ const ImageSlider = ({ slider, onPinLook, metricsPerImage }) => {
               </div>
               <div className="metric-item">
                 <svg viewBox="0 0 24 24" className="metric-icon">
-                  <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                  <path
+                    d="M3 3 L3 16 C3 16.5 3.5 17 4 17 L9 17 L12 22 L15 17 L20 17 C20.5 17 21 16.5 21 16 L21 3 L3 3 Z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 <span className="metric-number">{currentMetrics.shopped}</span>
               </div>
