@@ -267,20 +267,23 @@ const HomePage = () => {
             </div>
           </div>
         ) : (
-          // Frame 1: Show 4 sliders (25% each) with unique metrics
-          sortedSliders.slice(0, 4).map((slider, index) => {
-            const metricsData = [
-              { likes: '3.2k', saves: '1.1k', shopped: '234' },
-              { likes: '1.8k', saves: '567', shopped: '89' },
-              { likes: '5.1k', saves: '2.3k', shopped: '412' },
-              { likes: '2.9k', saves: '743', shopped: '176' }
-            ]
+          // Frame 1: Show 4 sliders (25% each) with unique metrics per image
+          sortedSliders.slice(0, 4).map((slider, sliderIndex) => {
+            // Generate unique metrics for each image in each slider
+            const metricsPerImage = slider.images.map((_, imageIndex) => {
+              const seed = sliderIndex * 100 + imageIndex
+              return {
+                likes: `${(1.5 + seed * 0.3).toFixed(1)}k`,
+                saves: `${Math.floor(400 + seed * 50)}`,
+                shopped: `${Math.floor(80 + seed * 20)}`
+              }
+            })
             return (
               <ImageSlider 
                 key={slider.id} 
                 slider={slider}
                 onPinLook={handlePinLook}
-                metrics={metricsData[index]}
+                metricsPerImage={metricsPerImage}
               />
             )
           })
