@@ -92,12 +92,21 @@
 
 .metrics-container {
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 0 1.25rem;
+}
+
+/* Left side: metrics stacked vertically and centered */
+.metrics-left {
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  width: 100%;
   gap: 0.4rem;
-  padding: 0.5rem 0;
 }
 
 .metric-item {
@@ -123,19 +132,22 @@
   letter-spacing: 0.015em;
 }
 
+/* Right side: "Why this look works" centered vertically with right padding */
 .metric-why {
-  margin-top: 0.2rem;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 1rem;
 }
 
 .why-label {
   font-family: 'Nord', sans-serif;
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 400;
   font-style: italic;
   color: rgba(17, 24, 39, 0.70);
-  letter-spacing: 0.02em;
-  text-align: left;
+  letter-spacing: 0.025em;
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
