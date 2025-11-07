@@ -117,19 +117,21 @@
 }
 
 .metric-icon {
-  width: 14px;
-  height: 14px;
-  stroke: rgba(17, 24, 39, 0.75);
-  stroke-width: 2;
+  width: 16px;
+  height: 16px;
+  stroke: rgba(17, 24, 39, 0.95);
+  stroke-width: 2.2;
   fill: none;
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
 }
 
 .metric-number {
   font-family: 'Nord', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: rgba(17, 24, 39, 0.85);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(17, 24, 39, 0.95);
   letter-spacing: 0.015em;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 /* Right side: "Why this look works" centered vertically with right padding */
@@ -142,15 +144,16 @@
 
 .why-label {
   font-family: 'Nord', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 400;
+  font-size: 0.75rem;
+  font-weight: 500;
   font-style: italic;
-  color: rgba(17, 24, 39, 0.70);
+  color: rgba(17, 24, 39, 0.90);
   letter-spacing: 0.025em;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 /* Removed old action-btn styles */
