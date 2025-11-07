@@ -73,7 +73,71 @@
   background-color: transparent !important;
 }
 
-/* Pill overlay removed */
+/* Bottom Overlay - Magazine Editorial Style */
+.bottom-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20%;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.22));
+  backdrop-filter: blur(6px) saturate(110%);
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: 0 1rem;
+}
+
+.metrics-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.metric-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.metric-icon {
+  width: 14px;
+  height: 14px;
+  stroke: rgba(17, 24, 39, 0.75);
+  stroke-width: 2;
+  fill: none;
+}
+
+.metric-number {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(17, 24, 39, 0.85);
+  letter-spacing: 0.015em;
+}
+
+.metric-why {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.why-label {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(17, 24, 39, 0.70);
+  letter-spacing: 0.02em;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* Removed old action-btn styles */
 
