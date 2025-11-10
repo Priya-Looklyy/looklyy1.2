@@ -83,8 +83,10 @@
   background: linear-gradient(
     to top,
     rgba(88, 28, 135, 0.85) 0%,
-    rgba(109, 40, 217, 0.70) 50%,
-    rgba(147, 51, 234, 0.30) 100%
+    rgba(109, 40, 217, 0.70) 40%,
+    rgba(147, 51, 234, 0.20) 70%,
+    rgba(147, 51, 234, 0.05) 90%,
+    transparent 100%
   );
   backdrop-filter: blur(10px) saturate(120%);
   border-radius: 0 0 12px 12px;
