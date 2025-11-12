@@ -98,9 +98,6 @@ const ImageSlider = ({ slider, onPinLook, metricsPerImage }) => {
                 <span className="metric-label">shopped using Looklyy</span>
               </div>
             </div>
-            <div className="metric-why">
-              <span className="why-label">Why this look works</span>
-            </div>
           </div>
         </div>
 
