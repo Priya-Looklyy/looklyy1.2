@@ -25,7 +25,7 @@ const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
           style={{ cursor: 'pointer' }}
         >
           <h1>LOOKLYY</h1>
-          <p className="tagline">Simplifying fashion for you</p>
+          <p className="tagline">Simplifying Fashion</p>
         </div>
       </div>
       

@@ -50,7 +50,7 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             Looklyy
           </h1>
-          <p className="text-gray-600 mt-2">Simplifying fashion for you</p>
+          <p className="text-gray-600 mt-2">Simplifying Fashion</p>
         </div>
 
         {/* Auth Form */}
