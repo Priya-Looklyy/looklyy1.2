@@ -68,7 +68,7 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
 
       {/* Login Panel - Perfectly Centered, Responsive */}
       <div 
-        className="flex flex-col items-center justify-center login-panel"
+        className="flex flex-col items-center login-panel"
         style={{
           width: '20%',
           height: '90vh',
@@ -83,7 +83,7 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between'
+          justifyContent: 'center'
         }}
       >
         {/* LOOKLYY Logo - Centered Above Button */}
@@ -91,7 +91,11 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           style={{
             width: '100%',
             textAlign: 'center',
-            marginBottom: '50px'
+            marginBottom: '50px',
+            position: 'absolute',
+            top: '3rem',
+            left: '50%',
+            transform: 'translateX(-50%)'
           }}
         >
           <h1 
@@ -104,7 +108,7 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               letterSpacing: '0.15em',
-              margin: '0 auto',
+              margin: 0,
               lineHeight: '1.1',
               whiteSpace: 'nowrap',
               textAlign: 'center'
@@ -114,7 +118,7 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           </h1>
         </div>
 
-        {/* Login with Instagram Button - Instagram Standard Pill, Fixed Size */}
+        {/* Login with Instagram Button - Centered Horizontal and Vertical */}
         <button
           onClick={handleInstagramAuth}
           disabled={loading}
@@ -144,7 +148,11 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
             justifyContent: 'center',
             margin: '0 auto',
             flexShrink: 0,
-            flexGrow: 0
+            flexGrow: 0,
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
           }}
           onMouseEnter={(e) => {
             if (!loading) {
@@ -196,10 +204,12 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
             fontWeight: 300,
             fontSize: '12px',
             lineHeight: '1.5',
-            marginTop: 'auto',
-            marginBottom: '1rem',
+            position: 'absolute',
+            bottom: '1rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
             textAlign: 'center',
-            width: '100%'
+            width: 'calc(100% - 5rem)'
           }}
         >
           By continuing, you agree to our{' '}
