@@ -36,44 +36,47 @@ const AuthFlow = () => {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center"
+      className="min-h-screen flex"
       style={{
         background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 25%, #e9d5ff 50%, #ddd6fe 75%, #c4b5fd 100%)',
         fontFamily: "'Avenir Next', sans-serif",
         height: '100vh',
         width: '100vw',
-        padding: '2rem',
+        padding: 0,
+        margin: 0,
         position: 'relative',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: 'stretch'
       }}
     >
-      {/* Login Box Container - Perfectly Centered */}
+      {/* Login Box Container - Full Screen Vertical on Desktop */}
       <div 
         className="flex flex-col items-center justify-center"
         style={{
           width: '20%',
           minWidth: '320px',
           maxWidth: '400px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.4)',
-          borderRadius: '12px',
+          height: '100vh',
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          border: 'none',
+          borderRadius: '0',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
           padding: '3rem 2.5rem',
           position: 'relative',
-          margin: '0 auto'
+          margin: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
         }}
       >
-        {/* LOOKLYY Logo - Centered, No Tagline, Fixed Width */}
+        {/* LOOKLYY Logo - Center Aligned, No Tagline */}
         <div 
-          className="text-center"
           style={{
             marginBottom: '50px',
             width: '100%',
-            overflow: 'hidden'
+            textAlign: 'center'
           }}
         >
           <h1 
@@ -86,31 +89,32 @@ const AuthFlow = () => {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               letterSpacing: '0.15em',
-              margin: 0,
+              margin: '0 auto',
               lineHeight: '1.1',
               whiteSpace: 'nowrap',
               overflow: 'visible',
-              width: '100%'
+              textAlign: 'center'
             }}
           >
             LOOKLYY
           </h1>
         </div>
 
-        {/* Simple Pill Button - No Icon, Just Text */}
+        {/* Simple Pill Button - Center Aligned, Typography Matches Tagline */}
         <button
           onClick={handleInstagramAuth}
           disabled={loading}
-          className="w-full"
           style={{
             background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%)',
             border: 'none',
             borderRadius: '50px',
             padding: '1rem 1.5rem',
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            fontFamily: "'Avenir Next', sans-serif",
-            fontWeight: 600,
-            fontSize: '1rem',
+            fontFamily: "'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif",
+            fontWeight: 400,
+            fontSize: '0.875rem',
+            letterSpacing: '0.3px',
+            textTransform: 'none',
             color: '#ffffff',
             cursor: loading ? 'not-allowed' : 'pointer',
             boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)',
@@ -118,7 +122,9 @@ const AuthFlow = () => {
             outline: 'none',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            width: '100%',
+            margin: '0 auto'
           }}
           onMouseEnter={(e) => {
             if (!loading) {
@@ -166,9 +172,8 @@ const AuthFlow = () => {
           )}
         </button>
 
-        {/* Fine Print */}
+        {/* Fine Print - Center Aligned */}
         <p 
-          className="text-center"
           style={{
             fontFamily: "'Avenir Next', sans-serif",
             color: '#B5B5B5',
@@ -176,7 +181,9 @@ const AuthFlow = () => {
             fontSize: '12px',
             lineHeight: '1.5',
             marginTop: '2rem',
-            marginBottom: 0
+            marginBottom: 0,
+            textAlign: 'center',
+            width: '100%'
           }}
         >
           By continuing, you agree to our{' '}
