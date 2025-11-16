@@ -74,7 +74,7 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           height: '90vh',
           minWidth: '280px',
           maxWidth: '450px',
-          background: 'transparent',
+          background: 'rgba(255, 255, 255, 0.9)',
           border: '1px solid rgba(255, 255, 255, 0.4)',
           borderRadius: '22px',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
