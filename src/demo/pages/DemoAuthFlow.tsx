@@ -37,17 +37,18 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
 
   return (
     <div 
-      className="min-h-screen flex"
+      className="min-h-screen flex items-center justify-center"
       style={{
         background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 25%, #e9d5ff 50%, #ddd6fe 75%, #c4b5fd 100%)',
         fontFamily: "'Avenir Next', sans-serif",
         height: '100vh',
         width: '100vw',
-        padding: 0,
+        padding: '2rem',
         margin: 0,
         position: 'relative',
         display: 'flex',
-        alignItems: 'stretch'
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
     >
       {/* Demo Banner - Subtle at Top */}
@@ -65,34 +66,32 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
         </p>
       </div>
 
-      {/* Login Box Container - Full Screen Vertical on Desktop */}
+      {/* Login Panel - Perfectly Centered, Responsive */}
       <div 
-        className="flex flex-col items-center justify-center"
+        className="flex flex-col items-center justify-center login-panel"
         style={{
           width: '20%',
-          minWidth: '320px',
-          maxWidth: '400px',
-          height: '100vh',
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          border: 'none',
-          borderRadius: '0',
+          height: '90vh',
+          minWidth: '280px',
+          maxWidth: '450px',
+          background: 'transparent',
+          border: '1px solid rgba(255, 255, 255, 0.4)',
+          borderRadius: '22px',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
           padding: '3rem 2.5rem',
           position: 'relative',
-          margin: 0,
+          margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center'
+          justifyContent: 'space-between'
         }}
       >
-        {/* LOOKLYY Logo - Center Aligned, No Tagline */}
+        {/* LOOKLYY Logo - Centered Above Button */}
         <div 
           style={{
-            marginBottom: '50px',
             width: '100%',
-            textAlign: 'center'
+            textAlign: 'center',
+            marginBottom: '50px'
           }}
         >
           <h1 
@@ -108,7 +107,6 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
               margin: '0 auto',
               lineHeight: '1.1',
               whiteSpace: 'nowrap',
-              overflow: 'visible',
               textAlign: 'center'
             }}
           >
@@ -116,52 +114,46 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           </h1>
         </div>
 
-        {/* Simple Pill Button - Center Aligned, Typography Matches Tagline */}
+        {/* Login with Instagram Button - Instagram Standard Pill, Fixed Size */}
         <button
           onClick={handleInstagramAuth}
           disabled={loading}
           style={{
             background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%)',
             border: 'none',
-            borderRadius: '50px',
-            padding: '1rem 1.5rem',
+            borderRadius: '9999px',
+            height: '44px',
+            paddingLeft: '22px',
+            paddingRight: '22px',
+            paddingTop: 0,
+            paddingBottom: 0,
+            minWidth: '200px',
+            maxWidth: '200px',
+            width: '200px',
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            fontFamily: "'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif",
-            fontWeight: 400,
-            fontSize: '0.875rem',
-            letterSpacing: '0.3px',
-            textTransform: 'none',
+            fontFamily: "'Avenir Next', sans-serif",
+            fontWeight: 600,
+            fontSize: '16px',
             color: '#ffffff',
             cursor: loading ? 'not-allowed' : 'pointer',
             boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)',
-            opacity: loading ? 0.7 : 1,
+            opacity: loading ? 0.8 : 1,
             outline: 'none',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '100%',
-            margin: '0 auto'
+            margin: '0 auto',
+            flexShrink: 0,
+            flexGrow: 0
           }}
           onMouseEnter={(e) => {
             if (!loading) {
-              e.currentTarget.style.transform = 'translateY(-2px)'
               e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.4)'
             }
           }}
           onMouseLeave={(e) => {
             if (!loading) {
-              e.currentTarget.style.transform = 'translateY(0)'
               e.currentTarget.style.boxShadow = '0 2px 8px rgba(124, 58, 237, 0.3)'
-            }
-          }}
-          onMouseDown={(e) => {
-            if (!loading) {
-              e.currentTarget.style.transform = 'translateY(0) scale(0.98)'
-            }
-          }}
-          onMouseUp={(e) => {
-            if (!loading) {
-              e.currentTarget.style.transform = 'translateY(-2px)'
             }
           }}
           onFocus={(e) => {
@@ -176,19 +168,27 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           }}
         >
           {loading && authProvider === 'instagram' ? (
-            <>
-              <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style={{ color: '#ffffff' }}>
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span>Connecting...</span>
-            </>
+            <svg 
+              className="animate-spin" 
+              xmlns="http://www.w3.org/2000/svg" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              style={{ 
+                color: '#ffffff',
+                width: '18px',
+                height: '18px',
+                margin: '0 auto'
+              }}
+            >
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
           ) : (
-            <span>Login with Instagram</span>
+            <span style={{ whiteSpace: 'nowrap' }}>Login with Instagram</span>
           )}
         </button>
 
-        {/* Fine Print - Center Aligned */}
+        {/* Fine Print - Bottom of Panel */}
         <p 
           style={{
             fontFamily: "'Avenir Next', sans-serif",
@@ -196,8 +196,8 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
             fontWeight: 300,
             fontSize: '12px',
             lineHeight: '1.5',
-            marginTop: '2rem',
-            marginBottom: 0,
+            marginTop: 'auto',
+            marginBottom: '1rem',
             textAlign: 'center',
             width: '100%'
           }}
@@ -233,6 +233,22 @@ export const DemoAuthFlow: React.FC<DemoAuthFlowProps> = ({ onAuthComplete }) =>
           .
         </p>
       </div>
+
+      <style>{`
+        .login-panel {
+          width: 20%;
+        }
+        @media (max-width: 768px) {
+          .login-panel {
+            width: 40% !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .login-panel {
+            width: 85% !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }
