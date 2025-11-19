@@ -77,7 +77,7 @@ const AuthFlow = () => {
             textAlign: 'center',
             marginBottom: '50px',
             position: 'absolute',
-            top: '3rem',
+            top: '2rem',
             left: '50%',
             transform: 'translateX(-50%)'
           }}
@@ -91,7 +91,7 @@ const AuthFlow = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
-              letterSpacing: '0.15em',
+              letterSpacing: '0.1em',
               margin: 0,
               lineHeight: '1.1',
               whiteSpace: 'nowrap',
@@ -107,8 +107,8 @@ const AuthFlow = () => {
           onClick={handleInstagramAuth}
           disabled={loading}
           style={{
-            background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%)',
-            border: 'none',
+            background: '#ffffff',
+            border: '1px solid rgba(0, 0, 0, 0.1)',
             borderRadius: '9999px',
             height: '44px',
             paddingLeft: '22px',
@@ -122,9 +122,9 @@ const AuthFlow = () => {
             fontFamily: "'Avenir Next', sans-serif",
             fontWeight: 600,
             fontSize: '16px',
-            color: '#ffffff',
+            color: '#000000',
             cursor: loading ? 'not-allowed' : 'pointer',
-            boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
             opacity: loading ? 0.8 : 1,
             outline: 'none',
             display: 'flex',
@@ -140,22 +140,24 @@ const AuthFlow = () => {
           }}
           onMouseEnter={(e) => {
             if (!loading) {
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.4)'
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)'
+              e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.2)'
             }
           }}
           onMouseLeave={(e) => {
             if (!loading) {
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(124, 58, 237, 0.3)'
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)'
+              e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)'
             }
           }}
           onFocus={(e) => {
             if (!loading) {
-              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.3), 0 4px 12px rgba(124, 58, 237, 0.4)'
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.15)'
             }
           }}
           onBlur={(e) => {
             if (!loading) {
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(124, 58, 237, 0.3)'
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)'
             }
           }}
         >
