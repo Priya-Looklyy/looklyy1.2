@@ -38,7 +38,14 @@ const AuthFlow = () => {
     <div 
       className="min-h-screen flex items-center justify-center"
       style={{
-        background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 25%, #e9d5ff 50%, #ddd6fe 75%, #c4b5fd 100%)',
+        background: `
+          linear-gradient(100deg, #1f86ff 0%, #1f86ff 18%, transparent 18%, transparent 100%),
+          linear-gradient(110deg, transparent 0%, transparent 18%, #764bff 18%, #764bff 36%, transparent 36%, transparent 100%),
+          linear-gradient(115deg, transparent 0%, transparent 36%, #9c3dff 36%, #9c3dff 54%, transparent 54%, transparent 100%),
+          linear-gradient(120deg, transparent 0%, transparent 54%, #ff267a 54%, #ff267a 72%, transparent 72%, transparent 100%),
+          linear-gradient(125deg, transparent 0%, transparent 72%, #ff6f91 72%, #ff6f91 90%, transparent 90%, transparent 100%),
+          #f7d6ff
+        `,
         fontFamily: "'Avenir Next', sans-serif",
         height: '100vh',
         width: '100vw',
@@ -47,7 +54,8 @@ const AuthFlow = () => {
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundSize: 'cover'
       }}
     >
       {/* Login Panel - Perfectly Centered, Responsive */}
