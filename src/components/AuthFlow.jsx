@@ -70,38 +70,6 @@ const AuthFlow = () => {
           justifyContent: 'center'
         }}
       >
-        {/* LOOKLYY Logo - Centered Above Button */}
-        <div 
-          style={{
-            width: '100%',
-            textAlign: 'center',
-            marginBottom: '50px',
-            position: 'absolute',
-            top: '2rem',
-            left: '50%',
-            transform: 'translateX(-50%)'
-          }}
-        >
-          <h1 
-            style={{
-              fontFamily: "'Nord', sans-serif",
-              fontSize: '2rem',
-              fontWeight: 800,
-              background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              letterSpacing: '0.1em',
-              margin: 0,
-              lineHeight: '1.1',
-              whiteSpace: 'nowrap',
-              textAlign: 'center'
-            }}
-          >
-            LOOKLYY
-          </h1>
-        </div>
-
         {/* Login with Instagram Button - Centered Horizontal and Vertical */}
         <button
           onClick={handleInstagramAuth}
@@ -120,8 +88,8 @@ const AuthFlow = () => {
             width: '200px',
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             fontFamily: "'Avenir Next', sans-serif",
-            fontWeight: 600,
-            fontSize: '16px',
+            fontWeight: 400,
+            fontSize: '14px',
             color: '#000000',
             cursor: loading ? 'not-allowed' : 'pointer',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
@@ -181,6 +149,38 @@ const AuthFlow = () => {
             <span style={{ whiteSpace: 'nowrap' }}>Login with Instagram</span>
           )}
         </button>
+
+        {/* LOOKLYY Logo - Centered between Button and Bottom */}
+        <div 
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            position: 'absolute',
+            top: 'calc(50% + 60px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            bottom: 'auto'
+          }}
+        >
+          <h1 
+            style={{
+              fontFamily: "'Nord', sans-serif",
+              fontSize: '2rem',
+              fontWeight: 800,
+              background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              letterSpacing: '0.1em',
+              margin: 0,
+              lineHeight: '1.1',
+              whiteSpace: 'nowrap',
+              textAlign: 'center'
+            }}
+          >
+            LOOKLYY
+          </h1>
+        </div>
 
         {/* Fine Print - Bottom of Panel */}
         <p 
