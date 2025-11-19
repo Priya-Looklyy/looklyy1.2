@@ -1,4 +1,4 @@
-image.pngimport React, { useState } from 'react'
+import React, { useState } from 'react'
 
 const AuthFlow = () => {
   const [loading, setLoading] = useState(false)
