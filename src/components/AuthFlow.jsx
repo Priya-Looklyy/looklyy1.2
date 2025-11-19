@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+image.pngimport React, { useState } from 'react'
 
 const AuthFlow = () => {
   const [loading, setLoading] = useState(false)
@@ -39,7 +39,7 @@ const AuthFlow = () => {
       className="min-h-screen flex items-center justify-center"
       style={{
         background: `
-          linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
+          linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
           linear-gradient(100deg, #1f86ff 0%, #1f86ff 18%, transparent 18%, transparent 100%),
           linear-gradient(110deg, transparent 0%, transparent 18%, #764bff 18%, #764bff 36%, transparent 36%, transparent 100%),
           linear-gradient(115deg, transparent 0%, transparent 36%, #9c3dff 36%, #9c3dff 54%, transparent 54%, transparent 100%),
