@@ -39,13 +39,9 @@ const AuthFlow = () => {
       className="min-h-screen flex items-center justify-center"
       style={{
         background: `
-          linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
-          linear-gradient(100deg, #1f86ff 0%, #1f86ff 18%, transparent 18%, transparent 100%),
-          linear-gradient(110deg, transparent 0%, transparent 18%, #764bff 18%, #764bff 36%, transparent 36%, transparent 100%),
-          linear-gradient(115deg, transparent 0%, transparent 36%, #9c3dff 36%, #9c3dff 54%, transparent 54%, transparent 100%),
-          linear-gradient(120deg, transparent 0%, transparent 54%, #ff267a 54%, #ff267a 72%, transparent 72%, transparent 100%),
-          linear-gradient(125deg, transparent 0%, transparent 72%, #ff6f91 72%, #ff6f91 90%, transparent 90%, transparent 100%),
-          #f7d6ff
+          radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.15), transparent 60%),
+          radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.08), transparent 55%),
+          linear-gradient(135deg, #1f0a5c 0%, #3b0c83 35%, #5d14b8 65%, #7c3aed 100%)
         `,
         fontFamily: "'Avenir Next', sans-serif",
         height: '100vh',
