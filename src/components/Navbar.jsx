@@ -5,9 +5,9 @@ import './Navbar.css'
 const Navbar = ({ currentSection, onSectionChange, onLogoClick, onLogout }) => {
   const { user } = useAuth()
   const navItems = [
-    { id: 'trending', label: 'Trending' },
-    { id: 'suggests', label: 'Boards' },
-    { id: 'closet', label: 'Closet' }
+    { id: 'suggests', label: 'Stylist' },
+    { id: 'closet', label: 'Closet' },
+    { id: 'trending', label: 'Circle' }
   ]
 
   return (
