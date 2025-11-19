@@ -70,7 +70,38 @@ const AuthFlow = () => {
           justifyContent: 'center'
         }}
       >
-        {/* Login with Instagram Button - Centered Horizontal and Vertical */}
+        {/* LOOKLYY Logo - Top section */}
+        <div
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            position: 'absolute',
+            top: '2.5rem',
+            left: '50%',
+            transform: 'translateX(-50%)'
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: "'Nord', sans-serif",
+              fontSize: '2rem',
+              fontWeight: 800,
+              background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              letterSpacing: '0.1em',
+              margin: 0,
+              lineHeight: '1.1',
+              whiteSpace: 'nowrap',
+              textAlign: 'center'
+            }}
+          >
+            LOOKLYY
+          </h1>
+        </div>
+
+        {/* Login with Instagram Button */}
         <button
           onClick={handleInstagramAuth}
           disabled={loading}
@@ -102,7 +133,7 @@ const AuthFlow = () => {
             flexShrink: 0,
             flexGrow: 0,
             position: 'absolute',
-            top: '50%',
+            top: '45%',
             left: '50%',
             transform: 'translate(-50%, -50%)'
           }}
@@ -150,45 +181,13 @@ const AuthFlow = () => {
           )}
         </button>
 
-        {/* LOOKLYY Logo - Centered between Button and Bottom */}
-        <div 
-          style={{
-            width: '100%',
-            textAlign: 'center',
-            position: 'absolute',
-            top: 'calc(50% + 60px)',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            bottom: 'auto'
-          }}
-        >
-          <h1 
-            style={{
-              fontFamily: "'Nord', sans-serif",
-              fontSize: '2rem',
-              fontWeight: 800,
-              background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              letterSpacing: '0.1em',
-              margin: 0,
-              lineHeight: '1.1',
-              whiteSpace: 'nowrap',
-              textAlign: 'center'
-            }}
-          >
-            LOOKLYY
-          </h1>
-        </div>
-
         {/* Fine Print - Bottom of Panel */}
         <p 
           style={{
             fontFamily: "'Avenir Next', sans-serif",
             color: '#B5B5B5',
             fontWeight: 300,
-            fontSize: '12px',
+            fontSize: '9px',
             lineHeight: '1.5',
             position: 'absolute',
             bottom: '1rem',
