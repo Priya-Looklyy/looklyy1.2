@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.35rem 2rem;
+  padding: 0.3rem 2rem;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 244, 255, 0.97) 100%);
   border-bottom: 1px solid rgba(147, 51, 234, 0.12);
   position: sticky;
@@ -10,7 +10,7 @@
   z-index: 100;
   backdrop-filter: blur(15px);
   box-shadow: 0 2px 20px rgba(147, 51, 234, 0.08);
-  min-height: 48px;
+  min-height: 41px;
 }
 
 .nav-left .logo {
@@ -41,9 +41,9 @@
 .nav-left .tagline {
   font-family: 'Avenir Next', 'Avenir Next Regular', 'Avenir Next Light', sans-serif;
   font-size: 0.72rem;
-  margin: 0.1rem 0 0 0;
+  margin: 0.02rem 0 0 0;
   color: #9ca3af;
-  letter-spacing: 0.45px;
+  letter-spacing: 0.8px;
   text-transform: none;
   font-weight: 300;
   text-align: center;
@@ -139,8 +139,8 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
   .navbar {
-    padding: 0.6rem 1.5rem;
-    min-height: 55px;
+    padding: 0.5rem 1.5rem;
+    min-height: 47px;
   }
   
   .nav-center {
@@ -161,8 +161,8 @@
   .navbar {
     flex-direction: column;
     gap: 1rem;
-    padding: 0.8rem;
-    min-height: 50px;
+    padding: 0.7rem;
+    min-height: 43px;
   }
   
   .nav-center {
@@ -205,8 +205,8 @@
 
 @media (max-width: 480px) {
   .navbar {
-    padding: 0.6rem;
-    min-height: 45px;
+    padding: 0.5rem;
+    min-height: 38px;
   }
   
   .nav-left h1 {
