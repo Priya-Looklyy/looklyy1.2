@@ -4,12 +4,12 @@
    ============================================ */
 
 .navbar {
-  /* Mobile Base Styles */
+  /* Mobile Base Styles - Compact header with logo only */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
-  align-items: stretch;
-  padding: 0.75rem 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 244, 255, 0.97) 100%);
   border-bottom: 1px solid rgba(147, 51, 234, 0.12);
   position: sticky;
@@ -18,7 +18,7 @@
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px); /* Android Chrome support */
   box-shadow: 0 2px 20px rgba(147, 51, 234, 0.08);
-  min-height: 56px; /* Android Material Design minimum */
+  min-height: 48px; /* Compact on mobile */
   width: 100%;
   box-sizing: border-box;
 }
@@ -72,11 +72,16 @@
 .nav-right {
   order: 2;
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
-  justify-content: center;
-  width: 100%;
+  justify-content: flex-end;
+  width: auto;
+  flex-shrink: 0;
+}
+
+/* Hide nav buttons on mobile - use bottom nav instead */
+.nav-right .nav-btn {
+  display: none;
 }
 
 .nav-btn {
@@ -213,6 +218,11 @@
     justify-content: flex-end;
     gap: 1rem;
     width: auto;
+  }
+
+  /* Show nav buttons on tablet and up */
+  .nav-right .nav-btn {
+    display: flex;
   }
 
   .nav-btn {

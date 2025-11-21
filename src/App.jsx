@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import BottomNav from './components/BottomNav'
 import HomePage from './components/HomePage'
 import TrendingSection from './components/TrendingSection'
 import LooklyySuggests from './components/LooklyySuggests'
@@ -54,6 +55,12 @@ function ProtectedApp() {
           {currentSection === 'suggests' && <LooklyySuggests />}
           {currentSection === 'closet' && <Closet />}
         </main>
+        
+        {/* Bottom Navigation - Mobile Only */}
+        <BottomNav
+          currentSection={currentSection}
+          onSectionChange={handleSectionChange}
+        />
       </div>
     </LookProvider>
   )

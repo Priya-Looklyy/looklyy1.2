@@ -44,6 +44,15 @@
   flex: 1;
   padding: 0;
   overflow: hidden;
+  /* Add bottom padding on mobile for bottom navigation */
+  padding-bottom: 64px; /* Match bottom nav height */
+}
+
+/* Remove bottom padding on tablet/desktop where bottom nav is hidden */
+@media (min-width: 768px) {
+  .main-content {
+    padding-bottom: 0;
+  }
 }
 
 /* Loading Screen */

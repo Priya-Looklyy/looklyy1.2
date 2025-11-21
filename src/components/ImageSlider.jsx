@@ -25,9 +25,14 @@ const ImageSlider = ({ slider, onPinLook, metricsPerImage }) => {
     return () => clearInterval(interval)
   }, [isAutoPlaying, slider.images.length])
 
-  // Pause auto-play on hover
+  // Pause auto-play on hover (desktop) or touch (mobile)
   const handleMouseEnter = () => setIsAutoPlaying(false)
   const handleMouseLeave = () => setIsAutoPlaying(true)
+  const handleTouchStart = () => setIsAutoPlaying(false)
+  const handleTouchEnd = () => {
+    // Resume after a delay on mobile
+    setTimeout(() => setIsAutoPlaying(true), 3000)
+  }
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation()
@@ -61,6 +66,8 @@ const ImageSlider = ({ slider, onPinLook, metricsPerImage }) => {
       onClick={handleSliderClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div className="slider-image-container">
         {!imageLoaded && <div className="image-loading"></div>}

@@ -267,8 +267,8 @@ const HomePage = () => {
             </div>
           </div>
         ) : (
-          // Frame 1: Show 4 sliders (25% each) with unique metrics per image
-          sortedSliders.slice(0, 4).map((slider, sliderIndex) => {
+          // Frame 1: Show all sliders in vertical feed (mobile-first)
+          sortedSliders.map((slider, sliderIndex) => {
             // Generate unique metrics for each image in each slider
             const metricsPerImage = slider.images.map((_, imageIndex) => {
               const seed = sliderIndex * 100 + imageIndex
