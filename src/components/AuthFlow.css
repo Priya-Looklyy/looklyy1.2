@@ -26,13 +26,14 @@
 
 .login-panel {
   width: 100%;
-  max-width: 100%;
-  min-height: 70vh;
+  max-width: 75%; /* Mobile: max 75% of screen width */
+  aspect-ratio: 3 / 4; /* Maintain aspect ratio */
+  max-height: 85vh; /* Prevent overflow on small screens */
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  padding: 2.5rem 1.5rem;
+  padding: 2rem 1.5rem;
   position: relative;
   margin: 0 auto;
   display: flex;
@@ -156,10 +157,11 @@
   }
 
   .login-panel {
-    width: 85%;
+    width: 75%;
     max-width: 420px;
-    min-height: 75vh;
-    padding: 3rem 2.5rem;
+    aspect-ratio: 3 / 4;
+    max-height: 80vh;
+    padding: 2.5rem 2rem;
   }
 
   .logo-text {
@@ -189,7 +191,8 @@
     width: 20%;
     max-width: 450px;
     min-width: 320px;
-    min-height: 90vh;
+    aspect-ratio: 3 / 4;
+    max-height: 90vh;
     padding: 3rem 2.5rem;
   }
 

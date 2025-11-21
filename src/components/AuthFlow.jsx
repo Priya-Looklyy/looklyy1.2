@@ -13,10 +13,14 @@ const AuthFlow = () => {
     // For now, simulate authentication by storing a token
     setTimeout(() => {
       console.log('📸 Instagram authentication initiated')
-      // Store a mock token to simulate successful auth
-      localStorage.setItem('looklyy_auth_token', 'instagram_mock_token_' + Date.now())
-      // Reload to trigger auth check
-      window.location.reload()
+      // Store a mock token using the correct key that AuthContext expects
+      const mockToken = 'instagram_mock_token_' + Date.now()
+      localStorage.setItem('looklyy_token', mockToken)
+      console.log('✅ Token stored:', mockToken)
+      // Small delay to ensure token is stored, then reload to trigger auth check
+      setTimeout(() => {
+        window.location.reload()
+      }, 100)
     }, 1000)
   }
 
