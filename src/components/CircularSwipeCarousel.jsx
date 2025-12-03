@@ -180,8 +180,11 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   }
 
   // Calculate transform for smooth swipe
+  // With new layout: 10% left + 75% center + 10% right = 95% total visible
+  // Each slide is 100% width, but we show 3 at a time
   const dragOffset = isDragging ? currentX - startX : 0
-  const transform = `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`
+  // Center the current image: move left by (currentIndex * 100%) then right by 10% to show left preview
+  const transform = `translateX(calc(-${currentIndex * 100}% + 10% + ${dragOffset}px))`
 
   // Debug: Log when component renders
   useEffect(() => {
@@ -239,11 +242,16 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
           const isCurrent = index === currentIndex
           const isNext = index === (currentIndex + 1) % displayImages.length
           const isPrev = index === (currentIndex - 1 + displayImages.length) % displayImages.length
+          // Show current (75%), previous (10% left), and next (10% right)
+          const shouldShow = isCurrent || isNext || isPrev
           // Preload current, next, and previous images for crisp display
           const shouldPreload = isCurrent || isNext || isPrev
           
           return (
-            <div key={`${image.id || image.url}-${index}`} className="carousel-slide">
+            <div 
+              key={`${image.id || image.url}-${index}`} 
+              className={`carousel-slide ${isCurrent ? 'slide-current' : isNext ? 'slide-next' : isPrev ? 'slide-prev' : 'slide-hidden'}`}
+            >
               {!imageLoaded && isCurrent && (
                 <div className="image-loading"></div>
               )}
@@ -269,10 +277,10 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
                   e.target.style.filter = 'grayscale(100%)'
                 }}
                 style={{ 
-                  opacity: isCurrent 
+                  opacity: shouldShow 
                     ? (imageErrors.includes(image.url) ? 0.5 : 1)
                     : 0,
-                  display: isCurrent ? 'block' : 'none',
+                  display: shouldShow ? 'block' : 'none',
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
