@@ -15,17 +15,32 @@ body {
   color: #2d1b4e;
   line-height: 1.6;
   overflow-x: hidden;
-  overflow-y: auto; /* Allow scroll for other pages */
+  overflow-y: hidden; /* No scrollbar - app handles its own scrolling */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+  height: 100vh; /* Fixed height */
+  /* Hide scrollbar completely */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 #root {
-  min-height: 100vh;
+  height: 100vh; /* Fixed height */
   overflow-x: hidden;
-  overflow-y: auto; /* Allow scroll for other pages */
+  overflow-y: hidden; /* No scrollbar - app handles its own scrolling */
+  /* Hide scrollbar completely */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+#root::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 

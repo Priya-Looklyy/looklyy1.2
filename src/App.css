@@ -1,5 +1,5 @@
 .app {
-  min-height: 100vh; /* Allow content to grow */
+  height: 100vh; /* Fixed height - no scroll */
   display: flex;
   flex-direction: column;
   background: linear-gradient(
@@ -11,6 +11,7 @@
     #c4b5fd 100%
   );
   position: relative;
+  overflow: hidden; /* Prevent app-level scrolling */
 }
 
 .app::before {
@@ -48,6 +49,13 @@
   flex-direction: column;
   height: 100%;
   /* No bottom padding - footer is fixed and doesn't affect content */
+  /* Hide scrollbar completely */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.main-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 /* Remove bottom padding on tablet/desktop where bottom nav is hidden */
