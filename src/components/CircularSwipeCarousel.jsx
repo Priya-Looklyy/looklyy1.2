@@ -9,7 +9,7 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   const [startX, setStartX] = useState(0)
   const [currentX, setCurrentX] = useState(0)
   const [imageLoaded, setImageLoaded] = useState(false)
-  const [imageErrors, setImageErrors] = useState(new Set())
+  const [imageErrors, setImageErrors] = useState([])
   const carouselRef = useRef(null)
   const touchStartTime = useRef(0)
   
@@ -247,14 +247,14 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
                     isCurrent,
                     image
                   })
-                  setImageErrors(prev => new Set([...prev, image.url]))
+                  setImageErrors(prev => [...prev, image.url])
                   // Keep image visible but show error state
                   e.target.style.opacity = '0.5'
                   e.target.style.filter = 'grayscale(100%)'
                 }}
                 style={{ 
                   opacity: isCurrent 
-                    ? (imageErrors.has(image.url) ? 0.5 : (imageLoaded ? 1 : 0.3))
+                    ? (imageErrors.includes(image.url) ? 0.5 : (imageLoaded ? 1 : 0.3))
                     : 0,
                   display: isCurrent ? 'block' : 'none',
                   width: '100%',

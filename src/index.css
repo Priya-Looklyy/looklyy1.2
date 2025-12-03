@@ -15,16 +15,17 @@ body {
   color: #2d1b4e;
   line-height: 1.6;
   overflow-x: hidden;
-  overflow-y: hidden; /* Prevent body scroll - app handles its own scrolling */
+  overflow-y: auto; /* Allow scroll for other pages */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh; /* Fixed height */
+  margin: 0;
+  padding: 0;
 }
 
 #root {
-  height: 100vh; /* Fixed height */
+  min-height: 100vh;
   overflow-x: hidden;
-  overflow-y: hidden; /* Prevent root scroll - app handles its own scrolling */
+  overflow-y: auto; /* Allow scroll for other pages */
 }
 
 
