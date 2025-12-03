@@ -293,10 +293,6 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
         </div>
       </div>
 
-      {/* Image Counter */}
-      <div className="carousel-counter">
-        {currentIndex + 1} / {displayImages.length}
-      </div>
     </div>
   )
 }
