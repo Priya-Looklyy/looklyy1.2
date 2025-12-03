@@ -28,27 +28,12 @@
   font-size: 1rem;
 }
 
-/* Viewport container: clips to show 10% left + 75% center + 10% right */
-.carousel-viewport {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  /* Show 95% total: 10% left preview + 75% center + 10% right preview */
-  /* Padding: 2.5% hidden left + 10% visible left + 75% center + 10% visible right + 2.5% hidden right */
-  padding: 0 2.5%;
-  box-sizing: border-box;
-  /* The track will be positioned to show the right portions */
-}
-
 .carousel-track {
   display: flex;
   width: 100%;
   height: 100%;
   will-change: transform; /* Optimize for animations */
   align-items: center; /* Vertically center slides */
-  /* Track is wider than viewport to show side previews */
-  position: relative;
 }
 
 .carousel-slide {
@@ -69,25 +54,6 @@
   display: none !important; /* Remove any pseudo-elements */
 }
 
-/* Slide visibility - all slides are full width, but we clip the viewport */
-.slide-current {
-  z-index: 2; /* On top */
-}
-
-.slide-prev {
-  z-index: 1;
-  opacity: 0.85; /* Slightly faded for depth */
-}
-
-.slide-next {
-  z-index: 1;
-  opacity: 0.85; /* Slightly faded for depth */
-}
-
-.slide-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
 
 .carousel-image {
   width: 100%;
