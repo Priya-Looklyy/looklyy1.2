@@ -7,11 +7,14 @@
   position: relative;
   width: 100%;
   height: 100%; /* Use 100% of parent container */
+  min-height: 400px; /* Ensure minimum height */
   overflow: hidden;
   touch-action: pan-x; /* Only allow horizontal pan for swipe */
   -webkit-overflow-scrolling: touch;
-  background: #ffffff;
+  background: #f9fafb; /* Light gray background so we can see the container */
   user-select: none; /* Prevent text selection during drag */
+  display: flex;
+  flex-direction: column;
 }
 
 .circular-carousel-empty {
@@ -45,6 +48,8 @@
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3s ease;
+  display: block; /* Ensure image displays */
+  background: #e5e7eb; /* Fallback background while loading */
 }
 
 .image-loading {

@@ -164,15 +164,41 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   const dragOffset = isDragging ? currentX - startX : 0
   const transform = `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`
 
+  // Debug: Log when component renders
+  useEffect(() => {
+    console.log('🔄 CircularSwipeCarousel render:', {
+      imagesProp: images.length,
+      displayImages: displayImages.length,
+      currentIndex,
+      currentImageUrl: displayImages[currentIndex]?.url
+    })
+  }, [images, displayImages, currentIndex])
+
   if (displayImages.length === 0) {
+    console.warn('⚠️ CircularSwipeCarousel: No images to display', {
+      imagesProp: images,
+      displayImages
+    })
     return (
       <div className="circular-carousel-empty">
         <p>No images available</p>
+        <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: '#9ca3af' }}>
+          Received {images.length} images
+        </p>
       </div>
     )
   }
 
   const currentImage = displayImages[currentIndex]
+  
+  if (!currentImage) {
+    console.error('❌ Current image is undefined:', { currentIndex, displayImages })
+    return (
+      <div className="circular-carousel-empty">
+        <p>Error: Current image not found</p>
+      </div>
+    )
+  }
 
   return (
     <div 
@@ -192,10 +218,9 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
       >
         {displayImages.map((image, index) => {
           const isCurrent = index === currentIndex
-          const isAdjacent = Math.abs(index - currentIndex) === 1
           
           return (
-            <div key={`${image.id}-${index}`} className="carousel-slide">
+            <div key={`${image.id || image.url}-${index}`} className="carousel-slide">
               {!imageLoaded && isCurrent && (
                 <div className="image-loading"></div>
               )}
@@ -204,12 +229,21 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
                 alt={image.alt || `Fashion look ${index + 1}`}
                 onLoad={isCurrent ? handleImageLoad : undefined}
                 onError={(e) => {
-                  console.error('Image failed to load:', image.url)
-                  e.target.style.display = 'none'
+                  console.error('❌ Image failed to load:', {
+                    url: image.url,
+                    index,
+                    isCurrent,
+                    image
+                  })
+                  // Show a placeholder instead of hiding
+                  e.target.style.opacity = '0.3'
                 }}
                 style={{ 
-                  opacity: isCurrent ? (imageLoaded ? 1 : 0) : (isAdjacent ? 0 : 0),
-                  display: isCurrent || isAdjacent ? 'block' : 'none'
+                  opacity: isCurrent ? (imageLoaded ? 1 : 0) : 0,
+                  display: isCurrent ? 'block' : 'none',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
                 }}
                 className="carousel-image"
                 loading={isCurrent ? 'eager' : 'lazy'}

@@ -192,22 +192,42 @@ const HomePage = () => {
   
   // Flatten all images from all sliders into a single array of 25 images
   const carouselImages = useMemo(() => {
-    if (!sliderData || sliderData.length === 0) return []
+    console.log('📊 HomePage: Processing sliderData for carousel:', {
+      sliderDataLength: sliderData?.length,
+      sliderData
+    })
+    
+    if (!sliderData || sliderData.length === 0) {
+      console.warn('⚠️ HomePage: No slider data available')
+      return []
+    }
     
     // Flatten all images from all sliders
     const allImages = []
     sliderData.forEach(slider => {
-      slider.images.forEach(image => {
-        allImages.push({
-          ...image,
-          sliderId: slider.id,
-          slider: slider // Keep reference to slider for pinning
+      if (slider.images && Array.isArray(slider.images)) {
+        slider.images.forEach(image => {
+          if (image && image.url) {
+            allImages.push({
+              ...image,
+              sliderId: slider.id,
+              slider: slider // Keep reference to slider for pinning
+            })
+          }
         })
-      })
+      }
+    })
+    
+    console.log('✅ HomePage: Flattened images:', {
+      totalImages: allImages.length,
+      firstImage: allImages[0],
+      sampleUrls: allImages.slice(0, 3).map(img => img.url)
     })
     
     // Limit to exactly 25 images
-    return allImages.slice(0, 25)
+    const result = allImages.slice(0, 25)
+    console.log('🎯 HomePage: Final carousel images:', result.length)
+    return result
   }, [sliderData])
 
   const handlePinLook = (slider, currentImage) => {
