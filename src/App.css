@@ -47,8 +47,8 @@
   overflow: hidden; /* No scroll - carousel handles its own scrolling */
   display: flex;
   flex-direction: column;
-  height: 100%;
-  /* No bottom padding - footer is fixed and doesn't affect content */
+  /* Account for footer bar height on mobile (64px) */
+  height: calc(100vh - 56px - 64px); /* Viewport minus navbar (56px) minus footer (64px) */
   /* Hide scrollbar completely */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
@@ -56,6 +56,19 @@
 
 .main-content::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
+}
+
+/* On tablet/desktop, footer is hidden, so account only for navbar */
+@media (min-width: 768px) {
+  .main-content {
+    height: calc(100vh - 52px); /* Viewport minus navbar only (footer hidden) */
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-content {
+    height: calc(100vh - 48px); /* Viewport minus navbar only (footer hidden) */
+  }
 }
 
 /* Remove bottom padding on tablet/desktop where bottom nav is hidden */
