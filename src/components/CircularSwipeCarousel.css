@@ -34,7 +34,6 @@
   height: 100%;
   will-change: transform; /* Optimize for animations */
   align-items: center; /* Vertically center slides */
-  justify-content: center; /* Horizontally center the visible area */
 }
 
 .carousel-slide {
@@ -55,32 +54,24 @@
   display: none !important; /* Remove any pseudo-elements */
 }
 
-/* Slide visibility and sizing */
+/* Slide visibility - all slides are full width, but we clip the viewport */
 .slide-current {
-  /* Primary image: 75% width, centered */
-  width: 75% !important;
-  flex: 0 0 75% !important;
   z-index: 2; /* On top */
 }
 
 .slide-prev {
-  /* Previous image: 10% width, left edge */
-  width: 10% !important;
-  flex: 0 0 10% !important;
   z-index: 1;
-  opacity: 0.9; /* Slightly faded for depth */
+  opacity: 0.85; /* Slightly faded for depth */
 }
 
 .slide-next {
-  /* Next image: 10% width, right edge */
-  width: 10% !important;
-  flex: 0 0 10% !important;
   z-index: 1;
-  opacity: 0.9; /* Slightly faded for depth */
+  opacity: 0.85; /* Slightly faded for depth */
 }
 
 .slide-hidden {
-  display: none !important;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .carousel-image {
