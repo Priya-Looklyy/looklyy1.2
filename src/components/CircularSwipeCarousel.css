@@ -15,8 +15,7 @@
   user-select: none; /* Prevent text selection during drag */
   display: flex;
   flex-direction: column;
-  /* Ensure no overlays or gradients show through */
-  isolation: isolate; /* Create new stacking context */
+  z-index: 1; /* Below navbar (z-index: 100) */
 }
 
 .circular-carousel-empty {
