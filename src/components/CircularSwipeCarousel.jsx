@@ -180,12 +180,12 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   }
 
   // Calculate transform for smooth swipe
-  // Layout: viewport has 12.5% padding on each side (showing 75% center)
+  // Layout: viewport shows 95% (10% left + 75% center + 10% right)
   // Each slide is 100% width of track, track moves by 100% per slide
-  // To center current image: move left by (currentIndex * 100%)
-  // The viewport padding naturally shows 10% of adjacent slides
+  // To center: move left by (currentIndex * 100%) then right by 2.5% to account for viewport padding
+  // This centers the 75% image with 10% previews on each side
   const dragOffset = isDragging ? currentX - startX : 0
-  const transform = `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`
+  const transform = `translateX(calc(-${currentIndex * 100}% + 2.5% + ${dragOffset}px))`
 
   // Debug: Log when component renders
   useEffect(() => {
