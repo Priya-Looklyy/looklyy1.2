@@ -179,9 +179,13 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
     }
   }
 
-  // Calculate transform for smooth swipe
-  const dragOffset = isDragging ? currentX - startX : 0
-  const transform = `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`
+  // Calculate transform for smooth swipe with peek preview
+  // Current image is 75% width, with 10% previews on each side
+  // Total width per slide: 75% + 10% + 10% = 95% (with 2.5% gap on each side)
+  const slideWidth = 95 // Total width percentage per slide
+  const currentOffset = currentIndex * slideWidth // Offset for current slide
+  const dragOffset = isDragging ? (currentX - startX) / (carouselRef.current?.offsetWidth || 1) * 100 : 0
+  const transform = `translateX(calc(-${currentOffset}% + ${dragOffset}%))`
 
   // Debug: Log when component renders
   useEffect(() => {
@@ -239,11 +243,16 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
           const isCurrent = index === currentIndex
           const isNext = index === (currentIndex + 1) % displayImages.length
           const isPrev = index === (currentIndex - 1 + displayImages.length) % displayImages.length
+          // Show current (75%), next (10% right), and prev (10% left)
+          const isVisible = isCurrent || isNext || isPrev
           // Preload current, next, and previous images for crisp display
           const shouldPreload = isCurrent || isNext || isPrev
           
           return (
-            <div key={`${image.id || image.url}-${index}`} className="carousel-slide">
+            <div 
+              key={`${image.id || image.url}-${index}`} 
+              className={`carousel-slide ${isCurrent ? 'slide-current' : isNext ? 'slide-next' : isPrev ? 'slide-prev' : 'slide-hidden'}`}
+            >
               {!imageLoaded && isCurrent && (
                 <div className="image-loading"></div>
               )}
@@ -269,10 +278,10 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
                   e.target.style.filter = 'grayscale(100%)'
                 }}
                 style={{ 
-                  opacity: isCurrent 
+                  opacity: isVisible 
                     ? (imageErrors.includes(image.url) ? 0.5 : 1)
                     : 0,
-                  display: isCurrent ? 'block' : 'none',
+                  display: isVisible ? 'block' : 'none',
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
