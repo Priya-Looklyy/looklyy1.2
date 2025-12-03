@@ -60,10 +60,22 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
     setImageLoaded(false)
   }, [displayImages.length])
   
-  // Reset image loaded when index changes
+  // Reset image loaded when index changes and preload next/prev
   useEffect(() => {
     setImageLoaded(false)
-  }, [currentIndex])
+    // Preload next and previous images for crisp display
+    const nextIndex = (currentIndex + 1) % displayImages.length
+    const prevIndex = (currentIndex - 1 + displayImages.length) % displayImages.length
+    
+    if (displayImages[nextIndex]) {
+      const nextImg = new Image()
+      nextImg.src = displayImages[nextIndex].url
+    }
+    if (displayImages[prevIndex]) {
+      const prevImg = new Image()
+      prevImg.src = displayImages[prevIndex].url
+    }
+  }, [currentIndex, displayImages])
 
   // Touch handlers for swipe
   const handleTouchStart = (e) => {
@@ -225,6 +237,10 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
       >
         {displayImages.map((image, index) => {
           const isCurrent = index === currentIndex
+          const isNext = index === (currentIndex + 1) % displayImages.length
+          const isPrev = index === (currentIndex - 1 + displayImages.length) % displayImages.length
+          // Preload current, next, and previous images for crisp display
+          const shouldPreload = isCurrent || isNext || isPrev
           
           return (
             <div key={`${image.id || image.url}-${index}`} className="carousel-slide">
@@ -254,15 +270,18 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
                 }}
                 style={{ 
                   opacity: isCurrent 
-                    ? (imageErrors.includes(image.url) ? 0.5 : (imageLoaded ? 1 : 0.3))
+                    ? (imageErrors.includes(image.url) ? 0.5 : 1)
                     : 0,
                   display: isCurrent ? 'block' : 'none',
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover'
+                  objectFit: 'cover',
+                  imageRendering: 'crisp-edges', // Better image quality
+                  WebkitImageRendering: '-webkit-optimize-contrast' // Safari optimization
                 }}
                 className="carousel-image"
-                loading={isCurrent ? 'eager' : 'lazy'}
+                loading={shouldPreload ? 'eager' : 'lazy'}
+                decoding="async"
               />
             </div>
           )

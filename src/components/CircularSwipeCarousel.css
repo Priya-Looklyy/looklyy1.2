@@ -11,10 +11,12 @@
   overflow: hidden;
   touch-action: pan-x; /* Only allow horizontal pan for swipe */
   -webkit-overflow-scrolling: touch;
-  background: #f9fafb; /* Light gray background so we can see the container */
+  background: #ffffff; /* Solid white background - no purple showing through */
   user-select: none; /* Prevent text selection during drag */
   display: flex;
   flex-direction: column;
+  /* Ensure no overlays or gradients show through */
+  isolation: isolate; /* Create new stacking context */
 }
 
 .circular-carousel-empty {
@@ -41,16 +43,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #ffffff; /* Solid white - no purple gradient showing through */
   /* No overlays or gradients - clean image display */
+  /* Ensure no pseudo-elements create overlays */
+}
+
+.carousel-slide::before,
+.carousel-slide::after {
+  display: none !important; /* Remove any pseudo-elements */
 }
 
 .carousel-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease; /* Faster transition for crispness */
   display: block; /* Ensure image displays */
   background: #e5e7eb; /* Fallback background while loading */
+  image-rendering: -webkit-optimize-contrast; /* Better image quality on WebKit */
+  image-rendering: crisp-edges; /* Better image quality */
+  -webkit-backface-visibility: hidden; /* Prevent blur on transform */
+  backface-visibility: hidden;
+  transform: translateZ(0); /* Force hardware acceleration for crisp rendering */
   /* No overlays, gradients, or filters - display image as-is */
 }
 
