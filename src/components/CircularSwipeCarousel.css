@@ -6,10 +6,9 @@
 .circular-carousel {
   position: relative;
   width: 100%;
-  height: calc(100vh - 120px); /* Full viewport minus navbar and footer */
-  min-height: 500px;
+  height: 100%; /* Use 100% of parent container */
   overflow: hidden;
-  touch-action: pan-y pinch-zoom; /* Allow vertical pinch but handle horizontal swipe */
+  touch-action: pan-x; /* Only allow horizontal pan for swipe */
   -webkit-overflow-scrolling: touch;
   background: #ffffff;
   user-select: none; /* Prevent text selection during drag */
@@ -178,7 +177,7 @@
    ============================================ */
 @media (min-width: 768px) {
   .circular-carousel {
-    height: calc(100vh - 108px);
+    height: 100%; /* Use 100% of parent */
   }
 
   .icon-button {
@@ -197,7 +196,7 @@
    ============================================ */
 @media (min-width: 1024px) {
   .circular-carousel {
-    height: calc(100vh - 96px);
+    height: 100%; /* Use 100% of parent */
   }
 
   .icon-button:hover {

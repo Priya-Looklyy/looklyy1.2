@@ -13,11 +13,36 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   const touchStartTime = useRef(0)
   
   // Ensure we have exactly 25 images (duplicate if needed for circular effect)
-  const displayImages = images.length > 0 
-    ? images.slice(0, 25).length === 25 
-      ? images.slice(0, 25)
-      : [...images.slice(0, 25), ...images.slice(0, 25 - images.length)].slice(0, 25)
-    : []
+  const displayImages = useMemo(() => {
+    if (images.length === 0) {
+      console.log('⚠️ CircularSwipeCarousel: No images provided')
+      return []
+    }
+    
+    // If we have 25 or more, take first 25
+    if (images.length >= 25) {
+      const result = images.slice(0, 25)
+      console.log(`✅ CircularSwipeCarousel: Using ${result.length} images`)
+      return result
+    }
+    
+    // If we have less than 25, duplicate to reach 25
+    const needed = 25 - images.length
+    const duplicated = [...images, ...images.slice(0, needed)]
+    const result = duplicated.slice(0, 25)
+    console.log(`⚠️ CircularSwipeCarousel: Only ${images.length} images, duplicated to ${result.length}`)
+    return result
+  }, [images])
+  
+  // Debug: Log when images change
+  useEffect(() => {
+    console.log('🖼️ CircularSwipeCarousel images updated:', {
+      inputImages: images.length,
+      displayImages: displayImages.length,
+      currentIndex,
+      currentImage: displayImages[currentIndex]?.url
+    })
+  }, [images, displayImages, currentIndex])
 
   // Circular navigation - wraps around
   const goToIndex = useCallback((newIndex) => {
@@ -165,26 +190,33 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
           transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
         }}
       >
-        {displayImages.map((image, index) => (
-          <div key={`${image.id}-${index}`} className="carousel-slide">
-            {!imageLoaded && index === currentIndex && (
-              <div className="image-loading"></div>
-            )}
-            <img
-              src={image.url}
-              alt={image.alt || `Fashion look ${index + 1}`}
-              onLoad={index === currentIndex ? handleImageLoad : undefined}
-              style={{ 
-                opacity: index === currentIndex 
-                  ? (imageLoaded ? 1 : 0) 
-                  : 0,
-                display: index === currentIndex || Math.abs(index - currentIndex) <= 1 ? 'block' : 'none'
-              }}
-              className="carousel-image"
-              loading={index === currentIndex ? 'eager' : 'lazy'}
-            />
-          </div>
-        ))}
+        {displayImages.map((image, index) => {
+          const isCurrent = index === currentIndex
+          const isAdjacent = Math.abs(index - currentIndex) === 1
+          
+          return (
+            <div key={`${image.id}-${index}`} className="carousel-slide">
+              {!imageLoaded && isCurrent && (
+                <div className="image-loading"></div>
+              )}
+              <img
+                src={image.url}
+                alt={image.alt || `Fashion look ${index + 1}`}
+                onLoad={isCurrent ? handleImageLoad : undefined}
+                onError={(e) => {
+                  console.error('Image failed to load:', image.url)
+                  e.target.style.display = 'none'
+                }}
+                style={{ 
+                  opacity: isCurrent ? (imageLoaded ? 1 : 0) : (isAdjacent ? 0 : 0),
+                  display: isCurrent || isAdjacent ? 'block' : 'none'
+                }}
+                className="carousel-image"
+                loading={isCurrent ? 'eager' : 'lazy'}
+              />
+            </div>
+          )
+        })}
       </div>
 
       {/* Current Image Overlay */}

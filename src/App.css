@@ -1,5 +1,5 @@
 .app {
-  min-height: 100vh;
+  height: 100vh; /* Fixed height - no scroll */
   display: flex;
   flex-direction: column;
   background: linear-gradient(
@@ -11,6 +11,7 @@
     #c4b5fd 100%
   );
   position: relative;
+  overflow: hidden; /* Prevent app-level scrolling */
 }
 
 .app::before {
@@ -43,9 +44,11 @@
 .main-content {
   flex: 1;
   padding: 0;
-  overflow: hidden;
-  /* Add bottom padding on mobile for bottom navigation */
-  padding-bottom: 64px; /* Match bottom nav height */
+  overflow: hidden; /* No scroll - carousel handles its own scrolling */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* No bottom padding - footer is fixed and doesn't affect content */
 }
 
 /* Remove bottom padding on tablet/desktop where bottom nav is hidden */

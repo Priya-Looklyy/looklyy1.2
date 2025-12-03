@@ -5,7 +5,8 @@
 
 .home-page {
   position: relative;
-  height: calc(100vh - 120px); /* Full viewport minus navbar (56px) and footer (64px) */
+  width: 100%;
+  height: 100%; /* Fill parent container */
   overflow: hidden; /* No scrolling in Frame 1 */
   display: flex;
   flex-direction: column;
@@ -19,6 +20,7 @@
   height: 100%;
   position: relative;
   overflow: hidden;
+  flex: 1; /* Take remaining space */
 }
 
 /* Frame 2 Layout - Mobile: Full screen modal */
@@ -167,7 +169,7 @@
    ============================================ */
 @media (min-width: 768px) {
   .home-page {
-    height: calc(100vh - 108px); /* Navbar (52px) + Footer (56px) */
+    height: 100%; /* Use 100% of parent */
   }
 
   .home-content.frame2-layout {
@@ -195,7 +197,7 @@
    ============================================ */
 @media (min-width: 1024px) {
   .home-page {
-    height: calc(100vh - 96px); /* Navbar (48px) + Footer (48px) */
+    height: 100%; /* Use 100% of parent */
   }
 
   .home-content.frame2-layout {
