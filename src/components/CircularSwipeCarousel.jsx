@@ -9,6 +9,7 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   const [startX, setStartX] = useState(0)
   const [currentX, setCurrentX] = useState(0)
   const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageErrors, setImageErrors] = useState(new Set())
   const carouselRef = useRef(null)
   const touchStartTime = useRef(0)
   
@@ -55,8 +56,14 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
       wrappedIndex = 0
     }
     setCurrentIndex(wrappedIndex)
+    // Reset image loaded state for new image
     setImageLoaded(false)
   }, [displayImages.length])
+  
+  // Reset image loaded when index changes
+  useEffect(() => {
+    setImageLoaded(false)
+  }, [currentIndex])
 
   // Touch handlers for swipe
   const handleTouchStart = (e) => {
@@ -227,7 +234,12 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
               <img
                 src={image.url}
                 alt={image.alt || `Fashion look ${index + 1}`}
-                onLoad={isCurrent ? handleImageLoad : undefined}
+                onLoad={() => {
+                  if (isCurrent) {
+                    console.log('✅ Image loaded:', image.url)
+                    handleImageLoad()
+                  }
+                }}
                 onError={(e) => {
                   console.error('❌ Image failed to load:', {
                     url: image.url,
@@ -235,11 +247,15 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
                     isCurrent,
                     image
                   })
-                  // Show a placeholder instead of hiding
-                  e.target.style.opacity = '0.3'
+                  setImageErrors(prev => new Set([...prev, image.url]))
+                  // Keep image visible but show error state
+                  e.target.style.opacity = '0.5'
+                  e.target.style.filter = 'grayscale(100%)'
                 }}
                 style={{ 
-                  opacity: isCurrent ? (imageLoaded ? 1 : 0) : 0,
+                  opacity: isCurrent 
+                    ? (imageErrors.has(image.url) ? 0.5 : (imageLoaded ? 1 : 0.3))
+                    : 0,
                   display: isCurrent ? 'block' : 'none',
                   width: '100%',
                   height: '100%',
