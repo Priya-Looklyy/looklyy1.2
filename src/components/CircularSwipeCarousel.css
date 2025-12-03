@@ -1,0 +1,213 @@
+/* ============================================
+   CIRCULAR SWIPE CAROUSEL (Mobile-First)
+   Frame 1: 25 images, no scroll, circular swipe
+   ============================================ */
+
+.circular-carousel {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 120px); /* Full viewport minus navbar and footer */
+  min-height: 500px;
+  overflow: hidden;
+  touch-action: pan-y pinch-zoom; /* Allow vertical pinch but handle horizontal swipe */
+  -webkit-overflow-scrolling: touch;
+  background: #ffffff;
+  user-select: none; /* Prevent text selection during drag */
+}
+
+.circular-carousel-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #9ca3af;
+  font-size: 1rem;
+}
+
+.carousel-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  will-change: transform; /* Optimize for animations */
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.image-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #7c3aed;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Overlay with Actions */
+.carousel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none; /* Allow clicks through, but buttons are clickable */
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.carousel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: auto; /* Re-enable pointer events for buttons */
+}
+
+.icon-button {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.icon-button:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 1);
+}
+
+.icon-button svg {
+  width: 22px;
+  height: 22px;
+}
+
+.heart-icon,
+.bookmark-icon {
+  stroke: #7c3aed;
+  stroke-width: 2;
+  fill: none;
+  transition: all 0.2s ease;
+}
+
+.heart-icon.icon-filled,
+.bookmark-icon.icon-filled {
+  fill: #7c3aed;
+  stroke: #7c3aed;
+}
+
+/* Image Counter */
+.carousel-counter {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+/* Swipe Indicators (optional - subtle dots) */
+.carousel-indicators {
+  position: absolute;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.carousel-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.carousel-indicator.active {
+  background: rgba(255, 255, 255, 0.9);
+  width: 20px;
+  border-radius: 3px;
+}
+
+/* ============================================
+   TABLET ENHANCEMENTS (768px and up)
+   ============================================ */
+@media (min-width: 768px) {
+  .circular-carousel {
+    height: calc(100vh - 108px);
+  }
+
+  .icon-button {
+    width: 52px;
+    height: 52px;
+  }
+
+  .icon-button svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* ============================================
+   DESKTOP ENHANCEMENTS (1024px and up)
+   ============================================ */
+@media (min-width: 1024px) {
+  .circular-carousel {
+    height: calc(100vh - 96px);
+  }
+
+  .icon-button:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .icon-button:active {
+    transform: scale(0.98);
+  }
+}
+

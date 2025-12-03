@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import ImageSlider from './ImageSlider'
+import React, { useState, useEffect, useMemo } from 'react'
+import CircularSwipeCarousel from './CircularSwipeCarousel'
 import NotificationCenter from './NotificationCenter'
 import SlidingCanvas from './SlidingCanvas'
 import { getAllSliders } from '../data/fashionDatabase'
@@ -190,15 +190,25 @@ const HomePage = () => {
     loadTrendingData()
   }, [imageShuffleSeed, demoImages, demoLoading]) // Include demo images dependencies
   
-  // Sort sliders: favorited ones first, then others
-  const sortedSliders = [...sliderData].sort((a, b) => {
-    const aFavorited = favorites.includes(a.id)
-    const bFavorited = favorites.includes(b.id)
+  // Flatten all images from all sliders into a single array of 25 images
+  const carouselImages = useMemo(() => {
+    if (!sliderData || sliderData.length === 0) return []
     
-    if (aFavorited && !bFavorited) return -1
-    if (!aFavorited && bFavorited) return 1
-    return 0
-  })
+    // Flatten all images from all sliders
+    const allImages = []
+    sliderData.forEach(slider => {
+      slider.images.forEach(image => {
+        allImages.push({
+          ...image,
+          sliderId: slider.id,
+          slider: slider // Keep reference to slider for pinning
+        })
+      })
+    })
+    
+    // Limit to exactly 25 images
+    return allImages.slice(0, 25)
+  }, [sliderData])
 
   const handlePinLook = (slider, currentImage) => {
     setPinnedLook({
@@ -240,60 +250,42 @@ const HomePage = () => {
 
   return (
     <div className={`home-page ${isFrame2Active ? 'frame2-active' : ''}`}>
-      {/* 5 Auto-sliding Carousels - transform when Frame 2 is active */}
-      <div className={`sliders-container ${isFrame2Active ? 'frame2-layout' : ''}`}>
+      <div className={`home-content ${isFrame2Active ? 'frame2-layout' : ''}`}>
         {isFrame2Active ? (
           // Frame 2: Show pinned look on far left (same size as original slider)
-          <div className="pinned-look-display">
-            <div className="pinned-slider">
-              <img 
-                src={pinnedLook.currentImage.url} 
-                alt={pinnedLook.currentImage.alt}
-                className="pinned-image"
-              />
-              <div className="pinned-overlay">
-                <div className="pinned-actions">
-                  <div
-                    className="icon-container"
-                    onClick={closeFrame2}
-                    aria-label="Unpin look"
-                  >
-                    <svg viewBox="0 0 24 24" className="bookmark-icon icon-filled">
-                      <path d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/>
-                    </svg>
+          <>
+            <div className="pinned-look-display">
+              <div className="pinned-slider">
+                <img 
+                  src={pinnedLook.currentImage.url} 
+                  alt={pinnedLook.currentImage.alt}
+                  className="pinned-image"
+                />
+                <div className="pinned-overlay">
+                  <div className="pinned-actions">
+                    <div
+                      className="icon-container"
+                      onClick={closeFrame2}
+                      aria-label="Unpin look"
+                    >
+                      <svg viewBox="0 0 24 24" className="bookmark-icon icon-filled">
+                        <path d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/>
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            <SlidingCanvas 
+              pinnedLook={pinnedLook}
+              onClose={closeFrame2}
+            />
+          </>
         ) : (
-          // Frame 1: Show all sliders in vertical feed (mobile-first)
-          sortedSliders.map((slider, sliderIndex) => {
-            // Generate unique metrics for each image in each slider
-            const metricsPerImage = slider.images.map((_, imageIndex) => {
-              const seed = sliderIndex * 100 + imageIndex
-              return {
-                likes: `${(1.5 + seed * 0.3).toFixed(1)}k`,
-                saves: `${Math.floor(400 + seed * 50)}`,
-                shopped: `${Math.floor(80 + seed * 20)}`
-              }
-            })
-            return (
-              <ImageSlider 
-                key={slider.id} 
-                slider={slider}
-                onPinLook={handlePinLook}
-                metricsPerImage={metricsPerImage}
-              />
-            )
-          })
-        )}
-        
-        {/* Frame 2: Canvas and Closet sections */}
-        {isFrame2Active && (
-          <SlidingCanvas 
-            pinnedLook={pinnedLook}
-            onClose={closeFrame2}
+          // Frame 1: Circular swipe carousel with 25 images (no vertical scroll)
+          <CircularSwipeCarousel 
+            images={carouselImages}
+            onPinLook={handlePinLook}
           />
         )}
       </div>
