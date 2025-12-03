@@ -72,26 +72,16 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Overlay with Actions */
-.carousel-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none; /* Allow clicks through, but buttons are clickable */
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  padding: 1rem;
-  z-index: 10;
-}
-
+/* Action Buttons - Positioned directly without full-screen overlay */
 .carousel-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  pointer-events: auto; /* Re-enable pointer events for buttons */
+  z-index: 10;
+  /* No overlay background - buttons float directly over image */
 }
 
 .icon-button {
