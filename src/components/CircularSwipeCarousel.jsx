@@ -297,6 +297,7 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
             </div>
           )
         })}
+        </div>
       </div>
 
       {/* Action Buttons - Positioned directly, no overlay */}
