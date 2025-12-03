@@ -180,12 +180,14 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   }
 
   // Calculate transform for smooth swipe with peek preview
-  // Current image is 75% width, with 10% previews on each side
-  // Total width per slide: 75% + 10% + 10% = 95% (with 2.5% gap on each side)
-  const slideWidth = 95 // Total width percentage per slide
-  const currentOffset = currentIndex * slideWidth // Offset for current slide
-  const dragOffset = isDragging ? (currentX - startX) / (carouselRef.current?.offsetWidth || 1) * 100 : 0
-  const transform = `translateX(calc(-${currentOffset}% + ${dragOffset}%))`
+  // Layout: [10% prev] [75% current] [10% next] = 95% total per slide
+  // Each slide unit is 95% of container width
+  // To center current: move by (currentIndex * 95%) - 10% (to account for left preview)
+  const slideUnit = 95 // Percentage width per slide unit
+  const leftPreviewWidth = 10 // Left preview takes 10%
+  const baseOffset = currentIndex * slideUnit - leftPreviewWidth
+  const dragOffset = isDragging ? ((currentX - startX) / (carouselRef.current?.offsetWidth || 1)) * 100 : 0
+  const transform = `translateX(calc(-${baseOffset}% + ${dragOffset}%))`
 
   // Debug: Log when component renders
   useEffect(() => {
