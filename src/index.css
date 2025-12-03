@@ -15,15 +15,16 @@ body {
   color: #2d1b4e;
   line-height: 1.6;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden; /* Prevent body scroll - app handles its own scrolling */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100vh; /* Fixed height */
 }
 
 #root {
-  min-height: 100vh;
+  height: 100vh; /* Fixed height */
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden; /* Prevent root scroll - app handles its own scrolling */
 }
 
 
