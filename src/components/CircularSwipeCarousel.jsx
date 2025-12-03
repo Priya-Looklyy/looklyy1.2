@@ -180,14 +180,12 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   }
 
   // Calculate transform for smooth swipe
-  // Layout: 10% left preview + 75% center + 10% right preview = 95% visible
-  // Each slide is 100% width, track moves by 100% per slide
-  // To center: move left by (currentIndex * 100%) then right by 12.5% to center the 75% image
-  // Formula: -100% * index + (100% - 75%) / 2 = -100% * index + 12.5%
+  // Layout: viewport has 12.5% padding on each side (showing 75% center)
+  // Each slide is 100% width of track, track moves by 100% per slide
+  // To center current image: move left by (currentIndex * 100%)
+  // The viewport padding naturally shows 10% of adjacent slides
   const dragOffset = isDragging ? currentX - startX : 0
-  const baseOffset = -currentIndex * 100 // Move to current slide
-  const centerOffset = 12.5 // Center the 75% image (100% - 75%) / 2 = 12.5%
-  const transform = `translateX(calc(${baseOffset}% + ${centerOffset}% + ${dragOffset}px))`
+  const transform = `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`
 
   // Debug: Log when component renders
   useEffect(() => {
@@ -234,13 +232,15 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
       onTouchEnd={handleTouchEnd}
       onMouseDown={handleMouseDown}
     >
-      <div 
-        className="carousel-track"
-        style={{ 
-          transform,
-          transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
-        }}
-      >
+      {/* Clipping container: shows 10% left + 75% center + 10% right */}
+      <div className="carousel-viewport">
+        <div 
+          className="carousel-track"
+          style={{ 
+            transform,
+            transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+        >
         {displayImages.map((image, index) => {
           const isCurrent = index === currentIndex
           const isNext = index === (currentIndex + 1) % displayImages.length
