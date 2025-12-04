@@ -105,8 +105,8 @@
   -webkit-backdrop-filter: blur(10px);
   border: none;
   border-radius: 50%;
-  width: 10px; /* Reduced to 40% of 24px (9.6px rounded) */
-  height: 10px; /* Reduced to 40% of 24px (9.6px rounded) */
+  width: 44px; /* Match minimum touch target size */
+  height: 44px; /* Match minimum touch target size */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,10 +115,7 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  /* Ensure minimum touch target for accessibility */
-  min-width: 44px; /* Android Material Design minimum */
-  min-height: 44px;
-  padding: 17px; /* Increased padding to maintain touch target while icon is much smaller */
+  padding: 0; /* No padding - icon fills button appropriately */
 }
 
 .icon-button:active {
@@ -127,14 +124,14 @@
 }
 
 .icon-button svg {
-  width: 5px; /* Reduced to ~40% of 11px (4.4px, rounded to 5px for visibility) */
-  height: 5px; /* Reduced to ~40% of 11px (4.4px, rounded to 5px for visibility) */
+  width: 28px; /* 60% larger than previous: ~17.5px * 1.6 = 28px, sized to fit nicely in 44px button */
+  height: 28px; /* 60% larger than previous: ~17.5px * 1.6 = 28px */
 }
 
 .heart-icon,
 .bookmark-icon {
   stroke: #7c3aed;
-  stroke-width: 1.5; /* Reduced stroke width for smaller icons */
+  stroke-width: 2; /* Restored stroke width for better visibility */
   fill: none;
   transition: all 0.2s ease;
 }
@@ -184,16 +181,14 @@
   }
 
   .icon-button {
-    width: 10px; /* Reduced to 40% of 26px (10.4px rounded) */
-    height: 10px; /* Reduced to 40% of 26px (10.4px rounded) */
-    min-width: 40px; /* Slightly smaller touch target on tablet */
-    min-height: 40px;
-    padding: 15px; /* Increased padding to maintain touch target */
+    width: 40px; /* Slightly smaller on tablet */
+    height: 40px;
+    padding: 0; /* No padding - icon fills button */
   }
 
   .icon-button svg {
-    width: 5px; /* Reduced to ~40% of 12px (4.8px, rounded to 5px for visibility) */
-    height: 5px; /* Reduced to ~40% of 12px (4.8px, rounded to 5px for visibility) */
+    width: 28px; /* Consistent icon size across breakpoints */
+    height: 28px;
   }
 }
 
@@ -210,9 +205,14 @@
   }
 
   .icon-button {
-    min-width: 36px; /* Smaller touch target on desktop */
-    min-height: 36px;
-    padding: 13px; /* Increased padding to maintain touch target with smaller icon */
+    width: 40px; /* Match tablet size */
+    height: 40px;
+    padding: 0; /* No padding - icon fills button */
+  }
+
+  .icon-button svg {
+    width: 28px; /* Consistent icon size */
+    height: 28px;
   }
 
   .icon-button:hover {
