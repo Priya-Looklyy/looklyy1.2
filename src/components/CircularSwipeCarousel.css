@@ -90,7 +90,7 @@
 /* Action Buttons - Positioned at bottom-right for thumb UX */
 .carousel-actions {
   position: absolute;
-  bottom: calc(64px + 1rem); /* Footer bar (64px) + 1rem padding (16px) = 80px total */
+  bottom: calc(64px + 2rem); /* Footer bar (64px) + 2rem padding (32px) = 96px total - increased spacing */
   right: 1rem;
   display: flex;
   flex-direction: column;
@@ -105,8 +105,8 @@
   -webkit-backdrop-filter: blur(10px);
   border: none;
   border-radius: 50%;
-  width: 44px; /* Match minimum touch target size */
-  height: 44px; /* Match minimum touch target size */
+  width: 31px; /* Reduced by 30%: 44px * 0.7 = 30.8px ≈ 31px */
+  height: 31px; /* Reduced by 30%: 44px * 0.7 = 30.8px ≈ 31px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -124,8 +124,8 @@
 }
 
 .icon-button svg {
-  width: 28px; /* 60% larger than previous: ~17.5px * 1.6 = 28px, sized to fit nicely in 44px button */
-  height: 28px; /* 60% larger than previous: ~17.5px * 1.6 = 28px */
+  width: 20px; /* Reduced by 30%: 28px * 0.7 = 19.6px ≈ 20px */
+  height: 20px; /* Reduced by 30%: 28px * 0.7 = 19.6px ≈ 20px */
 }
 
 .heart-icon,
@@ -180,15 +180,19 @@
     bottom: 1.5rem; /* Footer hidden on tablet, so closer to bottom */
   }
 
+  .carousel-actions {
+    bottom: 2rem; /* Footer hidden on tablet, increased padding from bottom */
+  }
+
   .icon-button {
-    width: 40px; /* Slightly smaller on tablet */
-    height: 40px;
+    width: 28px; /* Reduced by 30%: 40px * 0.7 = 28px */
+    height: 28px; /* Reduced by 30%: 40px * 0.7 = 28px */
     padding: 0; /* No padding - icon fills button */
   }
 
   .icon-button svg {
-    width: 28px; /* Consistent icon size across breakpoints */
-    height: 28px;
+    width: 20px; /* Reduced by 30%: 28px * 0.7 = 19.6px ≈ 20px - consistent across breakpoints */
+    height: 20px; /* Reduced by 30%: 28px * 0.7 = 19.6px ≈ 20px */
   }
 }
 
@@ -204,15 +208,19 @@
     bottom: 1.5rem; /* Footer hidden on desktop */
   }
 
+  .carousel-actions {
+    bottom: 2rem; /* Footer hidden on desktop, increased padding from bottom */
+  }
+
   .icon-button {
-    width: 40px; /* Match tablet size */
-    height: 40px;
+    width: 28px; /* Match tablet size - reduced by 30% */
+    height: 28px;
     padding: 0; /* No padding - icon fills button */
   }
 
   .icon-button svg {
-    width: 28px; /* Consistent icon size */
-    height: 28px;
+    width: 20px; /* Consistent icon size - reduced by 30% */
+    height: 20px;
   }
 
   .icon-button:hover {
