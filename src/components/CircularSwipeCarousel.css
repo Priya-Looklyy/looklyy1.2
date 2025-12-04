@@ -90,7 +90,7 @@
 /* Action Buttons - Positioned at bottom-right for thumb UX */
 .carousel-actions {
   position: absolute;
-  bottom: 5rem; /* Position above footer bar (64px) with padding */
+  bottom: calc(64px + 1rem); /* Footer bar (64px) + 1rem padding (16px) = 80px total */
   right: 1rem;
   display: flex;
   flex-direction: column;
@@ -105,8 +105,8 @@
   -webkit-backdrop-filter: blur(10px);
   border: none;
   border-radius: 50%;
-  width: 24px; /* Reduced by 50% from 48px */
-  height: 24px; /* Reduced by 50% from 48px */
+  width: 10px; /* Reduced to 40% of 24px (9.6px rounded) */
+  height: 10px; /* Reduced to 40% of 24px (9.6px rounded) */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,7 +118,7 @@
   /* Ensure minimum touch target for accessibility */
   min-width: 44px; /* Android Material Design minimum */
   min-height: 44px;
-  padding: 10px; /* Add padding to maintain touch target while icon is smaller */
+  padding: 17px; /* Increased padding to maintain touch target while icon is much smaller */
 }
 
 .icon-button:active {
@@ -127,14 +127,14 @@
 }
 
 .icon-button svg {
-  width: 11px; /* Reduced by 50% from 22px */
-  height: 11px; /* Reduced by 50% from 22px */
+  width: 5px; /* Reduced to ~40% of 11px (4.4px, rounded to 5px for visibility) */
+  height: 5px; /* Reduced to ~40% of 11px (4.4px, rounded to 5px for visibility) */
 }
 
 .heart-icon,
 .bookmark-icon {
   stroke: #7c3aed;
-  stroke-width: 2;
+  stroke-width: 1.5; /* Reduced stroke width for smaller icons */
   fill: none;
   transition: all 0.2s ease;
 }
@@ -184,16 +184,16 @@
   }
 
   .icon-button {
-    width: 26px; /* Reduced by 50% from 52px */
-    height: 26px; /* Reduced by 50% from 52px */
+    width: 10px; /* Reduced to 40% of 26px (10.4px rounded) */
+    height: 10px; /* Reduced to 40% of 26px (10.4px rounded) */
     min-width: 40px; /* Slightly smaller touch target on tablet */
     min-height: 40px;
-    padding: 7px;
+    padding: 15px; /* Increased padding to maintain touch target */
   }
 
   .icon-button svg {
-    width: 12px; /* Reduced by 50% from 24px */
-    height: 12px; /* Reduced by 50% from 24px */
+    width: 5px; /* Reduced to ~40% of 12px (4.8px, rounded to 5px for visibility) */
+    height: 5px; /* Reduced to ~40% of 12px (4.8px, rounded to 5px for visibility) */
   }
 }
 
@@ -212,7 +212,7 @@
   .icon-button {
     min-width: 36px; /* Smaller touch target on desktop */
     min-height: 36px;
-    padding: 5px;
+    padding: 13px; /* Increased padding to maintain touch target with smaller icon */
   }
 
   .icon-button:hover {
