@@ -87,14 +87,14 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Action Buttons - Positioned directly without full-screen overlay */
+/* Action Buttons - Positioned at bottom-right for thumb UX */
 .carousel-actions {
   position: absolute;
-  top: 1rem;
+  bottom: 5rem; /* Position above footer bar (64px) with padding */
   right: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem; /* Reduced gap for smaller buttons */
   z-index: 10;
   /* No overlay background - buttons float directly over image */
 }
@@ -105,8 +105,8 @@
   -webkit-backdrop-filter: blur(10px);
   border: none;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 24px; /* Reduced by 50% from 48px */
+  height: 24px; /* Reduced by 50% from 48px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,6 +115,10 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* Ensure minimum touch target for accessibility */
+  min-width: 44px; /* Android Material Design minimum */
+  min-height: 44px;
+  padding: 10px; /* Add padding to maintain touch target while icon is smaller */
 }
 
 .icon-button:active {
@@ -123,8 +127,8 @@
 }
 
 .icon-button svg {
-  width: 22px;
-  height: 22px;
+  width: 11px; /* Reduced by 50% from 22px */
+  height: 11px; /* Reduced by 50% from 22px */
 }
 
 .heart-icon,
@@ -175,14 +179,21 @@
     height: 100%; /* Use 100% of parent */
   }
 
+  .carousel-actions {
+    bottom: 1.5rem; /* Footer hidden on tablet, so closer to bottom */
+  }
+
   .icon-button {
-    width: 52px;
-    height: 52px;
+    width: 26px; /* Reduced by 50% from 52px */
+    height: 26px; /* Reduced by 50% from 52px */
+    min-width: 40px; /* Slightly smaller touch target on tablet */
+    min-height: 40px;
+    padding: 7px;
   }
 
   .icon-button svg {
-    width: 24px;
-    height: 24px;
+    width: 12px; /* Reduced by 50% from 24px */
+    height: 12px; /* Reduced by 50% from 24px */
   }
 }
 
@@ -192,6 +203,16 @@
 @media (min-width: 1024px) {
   .circular-carousel {
     height: 100%; /* Use 100% of parent */
+  }
+
+  .carousel-actions {
+    bottom: 1.5rem; /* Footer hidden on desktop */
+  }
+
+  .icon-button {
+    min-width: 36px; /* Smaller touch target on desktop */
+    min-height: 36px;
+    padding: 5px;
   }
 
   .icon-button:hover {
