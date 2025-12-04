@@ -5,7 +5,7 @@
 
 .navbar {
   /* Mobile Base Styles - Compact header */
-  display: flex;
+  display: flex !important; /* Force display */
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -14,13 +14,15 @@
   border-bottom: 1px solid rgba(147, 51, 234, 0.12);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000; /* Higher z-index to ensure visibility */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px); /* Android Chrome support */
   box-shadow: 0 2px 20px rgba(147, 51, 234, 0.08);
   min-height: 48px; /* Compact on mobile */
   width: 100%;
   box-sizing: border-box;
+  visibility: visible !important; /* Force visibility */
+  opacity: 1 !important; /* Force opacity */
 }
 
 .nav-left {

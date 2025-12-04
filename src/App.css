@@ -1,5 +1,5 @@
 .app {
-  height: 100vh; /* Fixed height - no scroll */
+  min-height: 100vh; /* Allow navbar to be visible */
   display: flex;
   flex-direction: column;
   background: linear-gradient(
@@ -11,7 +11,8 @@
     #c4b5fd 100%
   );
   position: relative;
-  overflow: hidden; /* Prevent app-level scrolling */
+  overflow-x: hidden; /* Prevent horizontal scroll only */
+  overflow-y: hidden; /* Prevent vertical scroll */
 }
 
 .app::before {
