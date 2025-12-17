@@ -168,6 +168,28 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
     const currentImage = displayImages[currentIndex]
     if (currentImage.sliderId) {
       toggleFavorite(currentImage.sliderId)
+      
+      // Store favorite image in localStorage for Stylist page
+      const storedFavorites = JSON.parse(localStorage.getItem('looklyy_favorite_images') || '[]')
+      const isAlreadyFavorite = storedFavorites.some(img => img.id === currentImage.sliderId)
+      
+      if (!isAlreadyFavorite) {
+        // Add to favorites
+        const favoriteImage = {
+          id: currentImage.sliderId,
+          url: currentImage.url,
+          alt: currentImage.alt,
+          sliderId: currentImage.sliderId,
+          slider: currentImage.slider,
+          favoritedAt: new Date().toISOString()
+        }
+        storedFavorites.push(favoriteImage)
+        localStorage.setItem('looklyy_favorite_images', JSON.stringify(storedFavorites))
+      } else {
+        // Remove from favorites
+        const updatedFavorites = storedFavorites.filter(img => img.id !== currentImage.sliderId)
+        localStorage.setItem('looklyy_favorite_images', JSON.stringify(updatedFavorites))
+      }
     }
   }
 
