@@ -22,6 +22,36 @@
   box-sizing: border-box;
   /* Safe area for notched devices */
   padding-bottom: env(safe-area-inset-bottom);
+  /* Smooth transition for hide/show */
+  transform: translateY(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile: Hide by default, show peek */
+.bottom-nav.hidden {
+  transform: translateY(calc(100% - 10px)); /* Show 10px peek */
+}
+
+.bottom-nav.visible {
+  transform: translateY(0);
+}
+
+/* Tablet/Desktop: Hide by default, show on hover */
+@media (min-width: 768px) {
+  .bottom-nav.hidden {
+    transform: translateY(calc(100% - 8px)); /* Show 8px peek */
+  }
+
+  /* Show full nav on hover of main content area */
+  .main-content:hover ~ .bottom-nav,
+  .app:hover .bottom-nav {
+    transform: translateY(0);
+  }
+  
+  /* Also show when hovering over the peek */
+  .bottom-nav:hover {
+    transform: translateY(0);
+  }
 }
 
 .bottom-nav-item {
@@ -83,9 +113,7 @@
    TABLET ENHANCEMENTS (768px and up)
    ============================================ */
 @media (min-width: 768px) {
-  .bottom-nav {
-    display: none; /* Hide bottom nav on tablet/desktop - use top navbar */
-  }
+  /* Bottom nav now hides/shows on hover instead of being completely hidden */
 }
 
 /* ============================================

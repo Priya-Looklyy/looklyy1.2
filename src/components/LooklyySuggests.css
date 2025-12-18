@@ -15,36 +15,16 @@
 }
 
 .stylist-header {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   border-bottom: 1px solid #f3f4f6;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 244, 255, 0.97) 100%);
   z-index: 10;
-  flex-shrink: 0; /* Prevent header from shrinking */
-}
-
-.stylist-title {
-  font-family: 'Nord', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0 0 0.125rem 0;
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 0.05em;
-}
-
-.stylist-subtitle {
-  font-family: 'Avenir Next', sans-serif;
-  font-size: 0.75rem;
-  color: #6b7280;
-  margin: 0 0 0.75rem 0;
+  flex-shrink: 0;
 }
 
 .stylist-tabs {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.75rem;
 }
 
 .stylist-tab {

@@ -13,7 +13,7 @@ const LooklyySuggests = () => {
   const { imageShuffleSeed } = useAuth()
   const [trendingImages, setTrendingImages] = useState([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('swipe') // 'swipe' or 'community'
+  const [activeTab, setActiveTab] = useState('liked') // 'liked' or 'circle'
   const [selectedLook, setSelectedLook] = useState(null)
   const { demoImages, loading: demoLoading } = useDemoImages()
 
@@ -137,29 +137,27 @@ const LooklyySuggests = () => {
   return (
     <div className="stylist-page">
       <div className="stylist-header">
-        <h1 className="stylist-title">Stylist</h1>
-        <p className="stylist-subtitle">Community style guidance & advice</p>
         <div className="stylist-tabs">
           <button 
-            className={`stylist-tab ${activeTab === 'swipe' ? 'active' : ''}`}
-            onClick={() => setActiveTab('swipe')}
+            className={`stylist-tab ${activeTab === 'liked' ? 'active' : ''}`}
+            onClick={() => setActiveTab('liked')}
           >
-            Browse Looks
+            Your Likes
           </button>
           <button 
-            className={`stylist-tab ${activeTab === 'community' ? 'active' : ''}`}
-            onClick={() => setActiveTab('community')}
+            className={`stylist-tab ${activeTab === 'circle' ? 'active' : ''}`}
+            onClick={() => setActiveTab('circle')}
           >
-            Community Feed
+            Circle
           </button>
         </div>
       </div>
       
       <div className="stylist-content">
-        {activeTab === 'swipe' ? (
+        {activeTab === 'liked' ? (
           <StylistSwipeCarousel 
             favoriteImages={favoriteImages}
-            trendingImages={trendingImages}
+            trendingImages={[]}
           />
         ) : (
           <CommunityFeed onSelectLook={setSelectedLook} />

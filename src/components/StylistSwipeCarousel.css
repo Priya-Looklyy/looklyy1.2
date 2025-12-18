@@ -106,10 +106,10 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Action Buttons */
+/* Action Buttons - Icon only, like homepage */
 .stylist-actions {
   position: absolute;
-  bottom: calc(64px + 1rem);
+  bottom: calc(64px + 2rem);
   right: 1rem;
   display: flex;
   flex-direction: column;
@@ -141,44 +141,36 @@
   color: #7c3aed;
 }
 
-.stylist-action-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.95);
+.stylist-icon-button {
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: none;
-  border-radius: 20px;
-  font-family: 'Avenir Next', sans-serif;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 31px;
+  height: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  min-width: 44px;
   min-height: 44px;
 }
 
-.stylist-action-btn.share-btn {
-  color: #7c3aed;
-}
-
-.stylist-action-btn.advice-btn {
-  color: #059669;
-}
-
-.stylist-action-btn:active {
+.stylist-icon-button:active {
   transform: scale(0.95);
   background: rgba(255, 255, 255, 1);
 }
 
-.action-icon {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
+.icon-button-svg {
+  width: 20px;
+  height: 20px;
+  stroke: #7c3aed;
   stroke-width: 2;
   fill: none;
 }

@@ -2,31 +2,42 @@ import React, { useState, useEffect } from 'react'
 import './CommunityFeed.css'
 
 const CommunityFeed = ({ onSelectLook }) => {
-  const [communityShares, setCommunityShares] = useState([])
+  const [circleLikes, setCircleLikes] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Load community shares from localStorage (in production, this would be an API call)
-    const loadCommunityShares = () => {
+    // Load circle likes - what their circle has liked on their homepage
+    // In production, this would be an API call to get friends/community liked looks
+    const loadCircleLikes = () => {
+      // For demo: simulate circle likes from community shares
       const shares = JSON.parse(localStorage.getItem('looklyy_community_shares') || '[]')
+      // Also get liked images from other users (simulated)
+      const allLikedImages = JSON.parse(localStorage.getItem('looklyy_favorite_images') || '[]')
+      
+      // Combine and show as circle likes
+      const circleData = [
+        ...shares.map(share => ({ ...share.look, source: 'shared', sharedBy: 'Community' })),
+        ...allLikedImages.slice(0, 10).map(img => ({ ...img, source: 'liked', likedBy: 'Friend' }))
+      ]
+      
       // Sort by most recent
-      const sortedShares = shares.sort((a, b) => 
-        new Date(b.sharedAt) - new Date(a.sharedAt)
+      const sorted = circleData.sort((a, b) => 
+        new Date(b.sharedAt || b.favoritedAt || 0) - new Date(a.sharedAt || a.favoritedAt || 0)
       )
-      setCommunityShares(sortedShares)
+      setCircleLikes(sorted)
       setLoading(false)
     }
 
-    loadCommunityShares()
+    loadCircleLikes()
     
     // Listen for new shares
     const handleStorageChange = () => {
-      loadCommunityShares()
+      loadCircleLikes()
     }
     
     window.addEventListener('storage', handleStorageChange)
     // Also check periodically for same-tab updates
-    const interval = setInterval(loadCommunityShares, 2000)
+    const interval = setInterval(loadCircleLikes, 2000)
     
     return () => {
       window.removeEventListener('storage', handleStorageChange)
@@ -38,45 +49,46 @@ const CommunityFeed = ({ onSelectLook }) => {
     return (
       <div className="community-feed-loading">
         <div className="loading-spinner"></div>
-        <p>Loading community feed...</p>
+        <p>Loading circle likes...</p>
       </div>
     )
   }
 
-  if (communityShares.length === 0) {
+  if (circleLikes.length === 0) {
     return (
       <div className="community-feed-empty">
         <div className="empty-icon">👥</div>
-        <h3>No community shares yet</h3>
-        <p>Share a look to get started and see community feedback</p>
+        <h3>No circle activity yet</h3>
+        <p>Your circle's liked looks will appear here</p>
       </div>
     )
   }
 
   return (
     <div className="community-feed">
-      {communityShares.map((share, index) => (
+      {circleLikes.map((item, index) => (
         <div 
           key={index} 
           className="community-feed-item"
-          onClick={() => onSelectLook && onSelectLook(share.look)}
+          onClick={() => onSelectLook && onSelectLook(item)}
         >
           <div className="feed-item-image">
-            <img src={share.look.url} alt={share.look.alt || 'Community look'} />
+            <img src={item.url} alt={item.alt || 'Circle liked look'} />
             <div className="feed-item-badges">
-              {share.groups.map(groupId => (
-                <span key={groupId} className="feed-badge">{groupId}</span>
-              ))}
+              <span className="feed-badge">{item.likedBy || item.sharedBy || 'Circle'}</span>
             </div>
           </div>
-          {share.question && (
+          {item.question && (
             <div className="feed-item-question">
-              <p>{share.question}</p>
+              <p>{item.question}</p>
             </div>
           )}
           <div className="feed-item-meta">
-            <span className="feed-time">{new Date(share.sharedAt).toLocaleDateString()}</span>
-            <button className="feed-advice-btn">Give Advice</button>
+            <span className="feed-time">
+              {item.sharedAt || item.favoritedAt 
+                ? new Date(item.sharedAt || item.favoritedAt).toLocaleDateString()
+                : 'Recently'}
+            </span>
           </div>
         </div>
       ))}
