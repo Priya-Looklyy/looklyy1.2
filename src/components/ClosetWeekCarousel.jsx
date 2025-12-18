@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { useLook } from '../context/LookContext'
 import './ClosetWeekCarousel.css'
 
 const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
-  const { toggleFavorite, isFavorited } = useLook()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
@@ -15,18 +13,33 @@ const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
 
   // Ensure we have all 7 days (duplicate if needed for circular effect)
   const displayImages = useMemo(() => {
-    if (looks.length === 0) {
+    if (!looks || looks.length === 0) {
+      console.log('⚠️ ClosetWeekCarousel: No looks provided')
       return []
     }
     
     // Use all looks, duplicate if less than 7 for smooth circular effect
     if (looks.length < 7) {
       const needed = 7 - looks.length
-      return [...looks, ...looks.slice(0, needed)].slice(0, 7)
+      const result = [...looks, ...looks.slice(0, needed)].slice(0, 7)
+      console.log(`⚠️ ClosetWeekCarousel: Only ${looks.length} looks, duplicated to ${result.length}`)
+      return result
     }
     
-    return looks.slice(0, 7)
+    const result = looks.slice(0, 7)
+    console.log(`✅ ClosetWeekCarousel: Using ${result.length} looks`)
+    return result
   }, [looks])
+
+  // Debug: Log when looks change
+  useEffect(() => {
+    console.log('🖼️ ClosetWeekCarousel looks updated:', {
+      inputLooks: looks?.length || 0,
+      displayImages: displayImages.length,
+      currentIndex,
+      currentImage: displayImages[currentIndex]?.url
+    })
+  }, [looks, displayImages, currentIndex])
 
   // Circular navigation - wraps around
   const goToIndex = useCallback((newIndex) => {
@@ -150,6 +163,7 @@ const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
   const transform = `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`
 
   if (displayImages.length === 0) {
+    console.log('⚠️ ClosetWeekCarousel: No display images, showing empty state')
     return (
       <div className="closet-carousel-empty">
         <p>No looks available for this week</p>
@@ -158,6 +172,22 @@ const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
   }
 
   const currentImage = displayImages[currentIndex]
+  
+  if (!currentImage) {
+    console.error('❌ ClosetWeekCarousel: Current image not found at index', currentIndex)
+    return (
+      <div className="closet-carousel-empty">
+        <p>Error: Current image not found</p>
+      </div>
+    )
+  }
+
+  console.log('✅ ClosetWeekCarousel rendering:', {
+    totalImages: displayImages.length,
+    currentIndex,
+    currentImage: currentImage.day,
+    currentUrl: currentImage.url
+  })
 
   return (
     <div 
@@ -183,36 +213,38 @@ const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
           
           return (
             <div 
-              key={`${image.id || image.day}-${index}`} 
+              key={`${image.id || image.day || index}-${index}`} 
               className={`closet-carousel-slide ${isCurrent ? 'slide-current' : ''}`}
-              style={{
-                display: shouldPreload ? 'flex' : 'none',
-                transform: `translateX(${(index - currentIndex) * 100}%)`,
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                width: '100%',
-                height: '100%',
-                transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
             >
               {!imageLoaded && isCurrent && (
                 <div className="image-loading"></div>
               )}
               <img
                 src={image.url}
-                alt={image.alt || `${image.day} Look`}
+                alt={image.alt || `${image.day || 'Day'} Look`}
                 onLoad={() => {
                   if (isCurrent) {
+                    console.log('✅ Closet image loaded:', image.url)
                     handleImageLoad()
                   }
                 }}
                 onError={(e) => {
-                  console.error('❌ Image failed to load:', image.url)
-                  if (image.fallbackUrl) {
+                  console.error('❌ Closet image failed to load:', {
+                    url: image.url,
+                    fallbackUrl: image.fallbackUrl,
+                    day: image.day,
+                    index
+                  })
+                  if (image.fallbackUrl && e.target.src !== image.fallbackUrl) {
+                    console.log('🔄 Trying fallback URL:', image.fallbackUrl)
                     e.target.src = image.fallbackUrl
                   } else {
-                    setImageErrors(prev => [...prev, image.url])
+                    setImageErrors(prev => {
+                      if (!prev.includes(image.url)) {
+                        return [...prev, image.url]
+                      }
+                      return prev
+                    })
                     e.target.style.opacity = '0.5'
                     e.target.style.filter = 'grayscale(100%)'
                   }
@@ -221,11 +253,12 @@ const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
                   opacity: isCurrent 
                     ? (imageErrors.includes(image.url) ? 0.5 : 1)
                     : 0,
-                  display: 'block',
+                  display: isCurrent ? 'block' : 'none',
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                   imageRendering: 'crisp-edges',
+                  WebkitImageRendering: '-webkit-optimize-contrast',
                   backfaceVisibility: 'hidden',
                   transform: 'translateZ(0)'
                 }}
@@ -234,9 +267,11 @@ const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
                 decoding="async"
               />
               {/* Day Label */}
-              <div className={`closet-day-label ${image.isWeekend ? 'weekend' : 'weekday'}`}>
-                <span className="closet-day-text">{image.day}</span>
-              </div>
+              {image.day && (
+                <div className={`closet-day-label ${image.isWeekend ? 'weekend' : 'weekday'}`}>
+                  <span className="closet-day-text">{image.day}</span>
+                </div>
+              )}
             </div>
           )
         })}

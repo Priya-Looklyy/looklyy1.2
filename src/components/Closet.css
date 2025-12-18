@@ -248,25 +248,157 @@
   }
 }
 
-/* Closet Carousel Container - Circular Swipe like Homepage */
-.closet-carousel-container {
+/* Closet Week Container - All 7 Days Display */
+.closet-week-container {
+  display: flex;
+  gap: 0.5rem;
   width: 100%;
-  height: calc(100vh - 56px - 64px); /* Viewport minus navbar minus footer */
-  overflow: hidden;
-  position: relative;
-  background: #ffffff;
+  height: calc(100vh - 56px - 64px - 200px); /* Viewport minus navbar, footer, and tabs section */
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem;
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 25%, #e9d5ff 50%, #ddd6fe 75%, #c4b5fd 100%);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.closet-week-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 /* On tablet/desktop, footer is hidden */
 @media (min-width: 768px) {
-  .closet-carousel-container {
-    height: calc(100vh - 52px); /* Viewport minus navbar only */
+  .closet-week-container {
+    height: calc(100vh - 52px - 200px); /* Viewport minus navbar and tabs section */
   }
 }
 
 @media (min-width: 1024px) {
-  .closet-carousel-container {
-    height: calc(100vh - 48px); /* Viewport minus navbar only */
+  .closet-week-container {
+    height: calc(100vh - 48px - 200px); /* Viewport minus navbar and tabs section */
+  }
+}
+
+.closet-week-item {
+  flex: 0 0 calc((100% - 3rem) / 7); /* 7 items with gaps */
+  min-width: 120px;
+  height: 100%;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(147, 51, 234, 0.15);
+  transition: all 0.3s ease;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.closet-week-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(147, 51, 234, 0.2);
+}
+
+.closet-week-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.closet-week-day-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 32px;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  z-index: 2;
+  border-radius: 0 0 0 8px;
+  padding: 0 12px;
+}
+
+.closet-week-day-label.weekday {
+  background: rgba(107, 114, 128, 0.7);
+}
+
+.closet-week-day-label.weekend {
+  background: rgba(147, 51, 234, 0.7);
+}
+
+.closet-week-day-text {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  text-transform: none;
+}
+
+.closet-week-actions {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.closet-week-icon-container {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.closet-week-icon-container:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.closet-week-heart-icon,
+.closet-week-change-icon {
+  width: 18px;
+  height: 18px;
+  stroke: #6b7280;
+  transition: stroke 0.3s ease;
+}
+
+.closet-week-icon-container:hover .closet-week-heart-icon {
+  stroke: #ef4444;
+  fill: #ef4444;
+}
+
+.closet-week-icon-container:hover .closet-week-change-icon {
+  stroke: #7c3aed;
+}
+
+/* Mobile: Stack vertically or show fewer items */
+@media (max-width: 768px) {
+  .closet-week-container {
+    flex-direction: column;
+    height: auto;
+    max-height: calc(100vh - 56px - 64px - 200px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .closet-week-item {
+    flex: 0 0 auto;
+    width: 100%;
+    height: calc((100vh - 56px - 64px - 200px) / 7);
+    min-height: 120px;
   }
 }
 
