@@ -19,6 +19,11 @@
   isolation: isolate;
 }
 
+/* Ensure carousel takes full height */
+.closet-carousel-container .closet-week-carousel {
+  height: 100%;
+}
+
 .closet-carousel-empty {
   display: flex;
   align-items: center;
