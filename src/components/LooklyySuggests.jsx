@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import StylistSwipeCarousel from './StylistSwipeCarousel'
+import CommunityFeed from './CommunityFeed'
 import { useLook } from '../context/LookContext'
 import { useAuth } from '../context/AuthContext'
 import { getAllSliders } from '../data/fashionDatabase'
@@ -12,6 +13,8 @@ const LooklyySuggests = () => {
   const { imageShuffleSeed } = useAuth()
   const [trendingImages, setTrendingImages] = useState([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState('swipe') // 'swipe' or 'community'
+  const [selectedLook, setSelectedLook] = useState(null)
   const { demoImages, loading: demoLoading } = useDemoImages()
 
   // Get favorite images from all sliders
@@ -135,14 +138,32 @@ const LooklyySuggests = () => {
     <div className="stylist-page">
       <div className="stylist-header">
         <h1 className="stylist-title">Stylist</h1>
-        <p className="stylist-subtitle">Your personalized fashion guide</p>
+        <p className="stylist-subtitle">Community style guidance & advice</p>
+        <div className="stylist-tabs">
+          <button 
+            className={`stylist-tab ${activeTab === 'swipe' ? 'active' : ''}`}
+            onClick={() => setActiveTab('swipe')}
+          >
+            Browse Looks
+          </button>
+          <button 
+            className={`stylist-tab ${activeTab === 'community' ? 'active' : ''}`}
+            onClick={() => setActiveTab('community')}
+          >
+            Community Feed
+          </button>
+        </div>
       </div>
       
       <div className="stylist-content">
-        <StylistSwipeCarousel 
-          favoriteImages={favoriteImages}
-          trendingImages={trendingImages}
-        />
+        {activeTab === 'swipe' ? (
+          <StylistSwipeCarousel 
+            favoriteImages={favoriteImages}
+            trendingImages={trendingImages}
+          />
+        ) : (
+          <CommunityFeed onSelectLook={setSelectedLook} />
+        )}
       </div>
     </div>
   )

@@ -15,17 +15,18 @@
 }
 
 .stylist-header {
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   border-bottom: 1px solid #f3f4f6;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 244, 255, 0.97) 100%);
   z-index: 10;
+  flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .stylist-title {
   font-family: 'Nord', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.125rem 0;
   background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -35,9 +36,42 @@
 
 .stylist-subtitle {
   font-family: 'Avenir Next', sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: #6b7280;
-  margin: 0;
+  margin: 0 0 0.75rem 0;
+}
+
+.stylist-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.stylist-tab {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  background: #f9fafb;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.stylist-tab:active {
+  transform: scale(0.98);
+}
+
+.stylist-tab.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+  border-color: #7c3aed;
+  color: #7c3aed;
+  font-weight: 600;
 }
 
 .stylist-content {
@@ -85,15 +119,15 @@
    ============================================ */
 @media (min-width: 768px) {
   .stylist-header {
-    padding: 1.25rem 2rem;
+    padding: 0.875rem 2rem;
   }
 
   .stylist-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   .stylist-subtitle {
-    font-size: 0.9375rem;
+    font-size: 0.8125rem;
   }
 }
 
@@ -102,11 +136,11 @@
    ============================================ */
 @media (min-width: 1024px) {
   .stylist-header {
-    padding: 1.5rem 2.5rem;
+    padding: 1rem 2.5rem;
   }
 
   .stylist-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 }
 
