@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import ClosetWeekCarousel from './ClosetWeekCarousel'
 import './Closet.css'
 import { removeBackgroundFromUrl } from '../utils/backgroundRemoval'
 
@@ -769,76 +770,13 @@ const Closet = () => {
 
       {/* Image Hover Modal - disabled */}
       
-      {/* 7 Looks Section - Full Screen */}
-      <div className="closet-images-container">
-        {closetLooks.map(image => (
-          <div 
-            key={image.id} 
-            className="closet-image-item"
-            onMouseEnter={(e) => {
-              // Don't trigger hover if mouse is over action icons
-              if (!e.target.closest('.action-icons-container')) {
-                handleImageHover(image)
-              }
-            }}
-            onMouseLeave={handleImageLeave}
-          >
-            <img 
-              src={image.url} 
-              alt={image.alt}
-              className="closet-image"
-              onError={(e) => {
-                console.log(`Failed to load custom image for ${image.day}: ${image.url}`)
-                console.log(`Using fallback image for ${image.day}`)
-                e.target.src = image.fallbackUrl
-              }}
-            />
-            {/* Action icons at bottom - Love and Change */}
-            <div 
-              className="action-icons-container"
-              onMouseEnter={(e) => {
-                // Prevent hover modal when over action icons
-                e.stopPropagation()
-              }}
-              onMouseLeave={(e) => {
-                // Prevent hover modal when leaving action icons
-                e.stopPropagation()
-              }}
-            >
-              <div 
-                className="icon-container"
-                onClick={() => handleLoveLook(image.day)}
-                aria-label="Love this look"
-              >
-                <svg viewBox="0 0 24 24" className="heart-icon icon-outline">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-              </div>
-              <div 
-                className="icon-container"
-                onClick={(e) => {
-                  console.log('🖱️ CHANGE ICON CLICKED!', image.day, e)
-                  e.preventDefault()
-                  e.stopPropagation()
-                  handleChangeLook(image.day)
-                }}
-                aria-label="Change this look"
-              >
-                <svg viewBox="0 0 24 24" className="change-icon icon-outline">
-                  <path d="M1 4v6h6"/>
-                  <path d="M23 20v-6h-6"/>
-                  <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
-                </svg>
-              </div>
-            </div>
-            {/* Transparent band with weekday */}
-            <div className={`day-label ${image.isWeekend ? 'weekend' : 'weekday'}`}>
-              <span className="day-text">{image.day}</span>
-            </div>
-          </div>
-        ))}
-        
-        {/* Scroll Indicator - REMOVED */}
+      {/* Week's Images - Circular Swipe Carousel */}
+      <div className="closet-carousel-container">
+        <ClosetWeekCarousel 
+          looks={closetLooks}
+          onChangeLook={handleChangeLook}
+          onLoveLook={handleLoveLook}
+        />
       </div>
       
       {/* Categorized Closet Items Tabs Section */}
