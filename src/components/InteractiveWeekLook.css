@@ -1,0 +1,246 @@
+/* ============================================
+   INTERACTIVE WEEK LOOK (Mobile-First)
+   Clickable item cutouts on weekly looks
+   ============================================ */
+
+.interactive-week-look {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #ffffff;
+  user-select: none;
+  touch-action: pan-x;
+}
+
+.look-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.look-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none; /* Allow clicks to pass through to cutouts */
+}
+
+/* Item Cutouts - Clickable areas */
+.item-cutout {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 5;
+  transform-origin: center;
+}
+
+.item-cutout:hover,
+.item-cutout.item-hovered {
+  z-index: 6;
+  transform: scale(1.05);
+}
+
+.item-cutout.item-selected {
+  z-index: 7;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.3),
+              0 0 0 8px rgba(124, 58, 237, 0.1);
+}
+
+.item-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(124, 58, 237, 0.1);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.item-cutout:hover .item-overlay,
+.item-cutout.item-hovered .item-overlay {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+.item-cutout.item-selected .item-overlay {
+  background: rgba(124, 58, 237, 0.3);
+  border-color: #7c3aed;
+  border-width: 3px;
+}
+
+/* Item Label */
+.item-label {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(124, 58, 237, 0.95);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.item-label::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid rgba(124, 58, 237, 0.95);
+}
+
+/* Change Button - Appears when item is selected */
+.item-change-button {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.item-change-button:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+.item-change-button .change-icon {
+  width: 16px;
+  height: 16px;
+  stroke: white;
+  stroke-width: 2;
+  fill: none;
+}
+
+.item-change-button span {
+  font-family: 'Nord', sans-serif;
+}
+
+/* Day Label */
+.look-day-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 32px;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  z-index: 3;
+  border-radius: 0 0 0 8px;
+  padding: 0 12px;
+}
+
+.look-day-label.weekday {
+  background: rgba(107, 114, 128, 0.7);
+}
+
+.look-day-label.weekend {
+  background: rgba(147, 51, 234, 0.7);
+}
+
+.look-day-text {
+  font-family: 'Nord', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  text-transform: none;
+}
+
+/* Action Buttons - Bottom Right */
+.look-actions {
+  position: absolute;
+  bottom: calc(64px + 2rem);
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 4;
+}
+
+.look-action-button {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 50%;
+  width: 31px;
+  height: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.look-action-button:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 1);
+}
+
+.look-action-button .action-icon {
+  width: 20px;
+  height: 20px;
+  stroke: #7c3aed;
+  stroke-width: 2;
+  fill: none;
+}
+
+.look-action-button:first-child .action-icon {
+  fill: none;
+}
+
+.look-action-button:first-child:active .action-icon {
+  fill: #7c3aed;
+}
+
+/* Tablet/Desktop */
+@media (min-width: 768px) {
+  .look-actions {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+}
+

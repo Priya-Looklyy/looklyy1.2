@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import InteractiveWeekLook from './InteractiveWeekLook'
 import './ClosetWeekCarousel.css'
 
-const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
+const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook, onItemSelect, selectedItem, closetItems }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
@@ -219,58 +220,36 @@ const ClosetWeekCarousel = ({ looks, onChangeLook, onLoveLook }) => {
               {!imageLoaded && isCurrent && (
                 <div className="image-loading"></div>
               )}
-              <img
-                src={image.url}
-                alt={image.alt || `${image.day || 'Day'} Look`}
-                onLoad={() => {
-                  if (isCurrent) {
-                    console.log('✅ Closet image loaded:', image.url)
-                    handleImageLoad()
-                  }
-                }}
-                onError={(e) => {
-                  console.error('❌ Closet image failed to load:', {
-                    url: image.url,
-                    fallbackUrl: image.fallbackUrl,
-                    day: image.day,
-                    index
-                  })
-                  if (image.fallbackUrl && e.target.src !== image.fallbackUrl) {
-                    console.log('🔄 Trying fallback URL:', image.fallbackUrl)
-                    e.target.src = image.fallbackUrl
-                  } else {
-                    setImageErrors(prev => {
-                      if (!prev.includes(image.url)) {
-                        return [...prev, image.url]
-                      }
-                      return prev
-                    })
-                    e.target.style.opacity = '0.5'
-                    e.target.style.filter = 'grayscale(100%)'
-                  }
-                }}
-                style={{ 
-                  opacity: isCurrent 
-                    ? (imageErrors.includes(image.url) ? 0.5 : 1)
-                    : 0,
-                  display: isCurrent ? 'block' : 'none',
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  imageRendering: 'crisp-edges',
-                  WebkitImageRendering: '-webkit-optimize-contrast',
-                  backfaceVisibility: 'hidden',
-                  transform: 'translateZ(0)'
-                }}
-                className="closet-carousel-image"
-                loading={shouldPreload ? 'eager' : 'lazy'}
-                decoding="async"
-              />
-              {/* Day Label */}
-              {image.day && (
-                <div className={`closet-day-label ${image.isWeekend ? 'weekend' : 'weekday'}`}>
-                  <span className="closet-day-text">{image.day}</span>
-                </div>
+              {/* Use InteractiveWeekLook component for current image */}
+              {isCurrent ? (
+                <InteractiveWeekLook
+                  look={image}
+                  onItemSelect={onItemSelect}
+                  selectedItemId={selectedItem?.id}
+                  onLoveLook={onLoveLook}
+                  onChangeLook={onChangeLook}
+                  closetItems={closetItems}
+                />
+              ) : (
+                <img
+                  src={image.url}
+                  alt={image.alt || `${image.day || 'Day'} Look`}
+                  onError={(e) => {
+                    if (image.fallbackUrl && e.target.src !== image.fallbackUrl) {
+                      e.target.src = image.fallbackUrl
+                    }
+                  }}
+                  style={{ 
+                    opacity: 0,
+                    display: 'none',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                  className="closet-carousel-image"
+                  loading={shouldPreload ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
               )}
             </div>
           )

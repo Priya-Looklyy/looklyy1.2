@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import ClosetWeekCarousel from './ClosetWeekCarousel'
+import ContextualClosetPanel from './ContextualClosetPanel'
 import './Closet.css'
 import { removeBackgroundFromUrl } from '../utils/backgroundRemoval'
 
@@ -8,6 +9,10 @@ const Closet = () => {
   const [closetFrame2Active, setClosetFrame2Active] = useState(false)
   const [selectedClosetImage, setSelectedClosetImage] = useState(null)
   const [closetCanvasItems, setClosetCanvasItems] = useState([])
+  
+  // Interactive item selection state
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [currentDay, setCurrentDay] = useState(null)
   
   // Debug state changes
   React.useEffect(() => {
@@ -36,7 +41,7 @@ const Closet = () => {
     
     return () => clearTimeout(timer)
   }, [])
-  // 7 closet looks - main display with custom image support
+  // 7 closet looks - main display with custom image support and item cutouts
   const closetLooks = [
     {
       id: 1,
@@ -44,7 +49,12 @@ const Closet = () => {
       fallbackUrl: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Monday Look',
       day: 'Monday',
-      isWeekend: false
+      isWeekend: false,
+      items: [
+        { id: 'top', name: 'Top', type: 'Tops', x: 50, y: 25, width: 35, height: 30 },
+        { id: 'bottom', name: 'Bottom', type: 'Bottoms', x: 50, y: 60, width: 35, height: 30 },
+        { id: 'shoes', name: 'Shoes', type: 'Shoes', x: 50, y: 88, width: 25, height: 18 }
+      ]
     },
     {
       id: 2,
@@ -52,7 +62,12 @@ const Closet = () => {
       fallbackUrl: 'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Tuesday Look',
       day: 'Tuesday',
-      isWeekend: false
+      isWeekend: false,
+      items: [
+        { id: 'top', name: 'Top', type: 'Tops', x: 50, y: 25, width: 35, height: 30 },
+        { id: 'bottom', name: 'Bottom', type: 'Bottoms', x: 50, y: 60, width: 35, height: 30 },
+        { id: 'shoes', name: 'Shoes', type: 'Shoes', x: 50, y: 88, width: 25, height: 18 }
+      ]
     },
     {
       id: 3,
@@ -60,7 +75,12 @@ const Closet = () => {
       fallbackUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Wednesday Look',
       day: 'Wednesday',
-      isWeekend: false
+      isWeekend: false,
+      items: [
+        { id: 'top', name: 'Top', type: 'Tops', x: 50, y: 25, width: 35, height: 30 },
+        { id: 'bottom', name: 'Bottom', type: 'Bottoms', x: 50, y: 60, width: 35, height: 30 },
+        { id: 'shoes', name: 'Shoes', type: 'Shoes', x: 50, y: 88, width: 25, height: 18 }
+      ]
     },
     {
       id: 4,
@@ -68,7 +88,12 @@ const Closet = () => {
       fallbackUrl: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Thursday Look',
       day: 'Thursday',
-      isWeekend: false
+      isWeekend: false,
+      items: [
+        { id: 'top', name: 'Top', type: 'Tops', x: 50, y: 25, width: 35, height: 30 },
+        { id: 'bottom', name: 'Bottom', type: 'Bottoms', x: 50, y: 60, width: 35, height: 30 },
+        { id: 'shoes', name: 'Shoes', type: 'Shoes', x: 50, y: 88, width: 25, height: 18 }
+      ]
     },
     {
       id: 5,
@@ -76,7 +101,12 @@ const Closet = () => {
       fallbackUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Friday Look',
       day: 'Friday',
-      isWeekend: false
+      isWeekend: false,
+      items: [
+        { id: 'top', name: 'Top', type: 'Tops', x: 50, y: 25, width: 35, height: 30 },
+        { id: 'bottom', name: 'Bottom', type: 'Bottoms', x: 50, y: 60, width: 35, height: 30 },
+        { id: 'shoes', name: 'Shoes', type: 'Shoes', x: 50, y: 88, width: 25, height: 18 }
+      ]
     },
     {
       id: 6,
@@ -84,7 +114,12 @@ const Closet = () => {
       fallbackUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Saturday Look',
       day: 'Saturday',
-      isWeekend: true
+      isWeekend: true,
+      items: [
+        { id: 'top', name: 'Top', type: 'Tops', x: 50, y: 25, width: 35, height: 30 },
+        { id: 'bottom', name: 'Bottom', type: 'Bottoms', x: 50, y: 60, width: 35, height: 30 },
+        { id: 'shoes', name: 'Shoes', type: 'Shoes', x: 50, y: 88, width: 25, height: 18 }
+      ]
     },
     {
       id: 7,
@@ -92,7 +127,12 @@ const Closet = () => {
       fallbackUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop&auto=format&q=80',
       alt: 'Sunday Look',
       day: 'Sunday',
-      isWeekend: true
+      isWeekend: true,
+      items: [
+        { id: 'top', name: 'Top', type: 'Tops', x: 50, y: 25, width: 35, height: 30 },
+        { id: 'bottom', name: 'Bottom', type: 'Bottoms', x: 50, y: 60, width: 35, height: 30 },
+        { id: 'shoes', name: 'Shoes', type: 'Shoes', x: 50, y: 88, width: 25, height: 18 }
+      ]
     }
   ]
 
@@ -157,6 +197,17 @@ const Closet = () => {
       { id: 70, name: 'Shift Dress', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Apr 2024', wornCount: 6 },
       { id: 71, name: 'A-Line Dress', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2024', wornCount: 8 },
       { id: 72, name: 'Bodycon Dress', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jun 2024', wornCount: 4 }
+    ],
+    'Shoes': [
+      { id: 80, name: 'Black Heels', image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2023', wornCount: 15 },
+      { id: 81, name: 'White Sneakers', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2023', wornCount: 22 },
+      { id: 82, name: 'Brown Boots', image: 'https://images.unsplash.com/photo-1605812860427-4024433a70fd?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2023', wornCount: 18 },
+      { id: 83, name: 'Red Flats', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jul 2023', wornCount: 12 }
+    ],
+    'Accessories': [
+      { id: 90, name: 'Black Handbag', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Jan 2023', wornCount: 30 },
+      { id: 91, name: 'Gold Necklace', image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'Mar 2023', wornCount: 25 },
+      { id: 92, name: 'Silver Watch', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=400&fit=crop&auto=format&q=80', ownedSince: 'May 2023', wornCount: 20 }
     ]
   }
 
@@ -166,22 +217,47 @@ const Closet = () => {
     // This will feed into the learning system for future personalization
   }
 
-  const handleChangeLook = (day) => {
-    console.log(`🔄 CHANGING LOOK for ${day}`)
-    console.log(`Available closetLooks:`, closetLooks.map(img => img.day))
-    
-    // Find the image for this day
-    const imageToChange = closetLooks.find(img => img.day === day)
-    console.log(`Found image:`, imageToChange)
-    
-    if (imageToChange) {
-      console.log(`✅ Setting Frame 2 active for ${day}`)
-      setSelectedClosetImage(imageToChange)
-      setClosetFrame2Active(true)
-      setClosetCanvasItems([]) // Reset canvas items
+  const handleChangeLook = (day, item = null) => {
+    if (item) {
+      // Item-specific change
+      console.log(`🔄 CHANGING ITEM ${item.name} for ${day}`)
+      setSelectedItem(item)
+      setCurrentDay(day)
     } else {
-      console.log(`❌ No image found for ${day}`)
+      // Full look change - open Frame 2
+      console.log(`🔄 CHANGING LOOK for ${day}`)
+      console.log(`Available closetLooks:`, closetLooks.map(img => img.day))
+      
+      // Find the image for this day
+      const imageToChange = closetLooks.find(img => img.day === day)
+      console.log(`Found image:`, imageToChange)
+      
+      if (imageToChange) {
+        console.log(`✅ Setting Frame 2 active for ${day}`)
+        setSelectedClosetImage(imageToChange)
+        setClosetFrame2Active(true)
+        setClosetCanvasItems([]) // Reset canvas items
+      } else {
+        console.log(`❌ No image found for ${day}`)
+      }
     }
+  }
+
+  const handleItemSelect = (item) => {
+    setSelectedItem(item)
+  }
+
+  const handleItemReplace = (oldItem, newItem, day) => {
+    console.log(`✅ Replacing ${oldItem.name} with ${newItem.name} for ${day}`)
+    // TODO: Update the look with new item
+    // This would update the closetLooks array with the new item
+    setSelectedItem(null)
+    setCurrentDay(null)
+  }
+
+  const handleClosePanel = () => {
+    setSelectedItem(null)
+    setCurrentDay(null)
   }
 
   // Drag and Drop functionality for working canvas
@@ -776,8 +852,20 @@ const Closet = () => {
           looks={closetLooks}
           onChangeLook={handleChangeLook}
           onLoveLook={handleLoveLook}
+          onItemSelect={handleItemSelect}
+          selectedItem={selectedItem}
+          closetItems={closetCategories}
         />
       </div>
+
+      {/* Contextual Closet Panel - Slides in when item is selected */}
+      <ContextualClosetPanel
+        selectedItem={selectedItem}
+        closetItems={closetCategories}
+        onItemReplace={handleItemReplace}
+        onClose={handleClosePanel}
+        currentDay={currentDay}
+      />
       
       {/* Categorized Closet Items Tabs Section */}
       <div className="closet-tabs-section">
