@@ -26,6 +26,17 @@ const ProfileUpdate = ({ onComplete }) => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  // Auto-dismiss color tone help after 6 seconds
+  useEffect(() => {
+    if (showColorToneHelp) {
+      const timer = setTimeout(() => {
+        setShowColorToneHelp(false)
+      }, 6000) // 6 seconds
+
+      return () => clearTimeout(timer)
+    }
+  }, [showColorToneHelp])
+
   // Autofill email if available from auth
   useEffect(() => {
     const token = localStorage.getItem('looklyy_token')
@@ -428,10 +439,16 @@ const ProfileUpdate = ({ onComplete }) => {
                     }}
                   />
                   <div 
-                    className="color-tone-help-tooltip"
+                    className={`color-tone-help-tooltip ${showColorToneHelp ? 'visible' : ''}`}
                     onClick={(e) => {
                       // Prevent clicks inside tooltip from closing it
                       e.stopPropagation()
+                    }}
+                    onMouseEnter={() => {
+                      // Keep open on hover for desktop
+                      if (!isMobile) {
+                        // Don't auto-close if user is hovering
+                      }
                     }}
                     onMouseLeave={() => {
                       // Hide on mouse leave for desktop

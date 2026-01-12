@@ -54,7 +54,7 @@
 
 .profile-title {
   font-family: 'Nord', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: #1f2937;
   margin: 0;
@@ -234,18 +234,24 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   z-index: 101;
   max-width: 100%;
-  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid #e5e7eb;
   display: none;
   pointer-events: auto;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.help-wrapper:hover .color-tone-help-tooltip,
-.help-wrapper.show-help .color-tone-help-tooltip {
+.color-tone-help-tooltip.visible {
   display: block;
+  animation: slideUpFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@keyframes slideUp {
+.color-tone-help-tooltip:not(.visible) {
+  animation: slideDownFadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideUpFadeIn {
   from {
     opacity: 0;
     transform: translateY(-10px);
@@ -255,6 +261,23 @@
     transform: translateY(0);
   }
 }
+
+@keyframes slideDownFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.help-wrapper:hover .color-tone-help-tooltip.visible,
+.help-wrapper.show-help .color-tone-help-tooltip.visible {
+  display: block;
+}
+
 
 .tooltip-header {
   display: flex;
