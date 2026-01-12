@@ -53,6 +53,8 @@
   /* Hide scrollbar completely */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
+  position: relative;
+  z-index: 1; /* Ensure content is below navbar */
 }
 
 .main-content::-webkit-scrollbar {
