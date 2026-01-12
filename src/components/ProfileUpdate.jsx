@@ -212,10 +212,10 @@ const ProfileUpdate = ({ onComplete }) => {
             )}
           </section>
 
-          {/* Section 2: Physical Details */}
+          {/* Section 2: Your Specifics */}
           <section className="profile-section">
             <div className="section-header">
-              <h2 className="section-title">Physical Details <span className="required-asterisk">*</span></h2>
+              <h2 className="section-title">Your Specifics <span className="required-asterisk">*</span></h2>
             </div>
 
             {/* Size Selection - Top Sizes */}
