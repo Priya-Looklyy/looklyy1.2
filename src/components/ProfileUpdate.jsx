@@ -12,6 +12,17 @@ const ProfileUpdate = ({ onComplete }) => {
 
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showColorToneHelp, setShowColorToneHelp] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Autofill email if available from auth
   useEffect(() => {
@@ -231,11 +242,101 @@ const ProfileUpdate = ({ onComplete }) => {
               </p>
               <div className="card-grid body-type-grid">
                 {[
-                  { id: 'apple', label: 'Apple', sketch: '🍎' },
-                  { id: 'pear', label: 'Pear', sketch: '🍐' },
-                  { id: 'hourglass', label: 'Hourglass', sketch: '⏳' },
-                  { id: 'rectangle', label: 'Rectangle', sketch: '▭' },
-                  { id: 'inverted-triangle', label: 'Inverted Triangle', sketch: '▽' }
+                  { 
+                    id: 'apple', 
+                    label: 'Apple',
+                    svg: (
+                      <svg className="body-type-illustration" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+                        {/* Body outline */}
+                        <path d="M100 20 Q90 30 85 50 Q80 70 85 100 Q90 130 95 150 Q100 170 100 200 Q100 230 95 250 Q90 270 85 280 Q80 290 100 290 Q120 290 115 280 Q110 270 105 250 Q100 230 100 200 Q100 170 105 150 Q110 130 115 100 Q120 70 115 50 Q110 30 100 20 Z" 
+                              fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Arms */}
+                        <path d="M85 50 Q70 60 65 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M115 50 Q130 60 135 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Legs */}
+                        <path d="M100 280 Q95 300 90 300" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M100 280 Q105 300 110 300" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Apple shape overlay */}
+                        <ellipse cx="100" cy="150" rx="45" ry="70" fill="rgba(251, 182, 206, 0.3)" stroke="rgba(251, 182, 206, 0.5)" strokeWidth="1"/>
+                      </svg>
+                    )
+                  },
+                  { 
+                    id: 'pear', 
+                    label: 'Pear',
+                    svg: (
+                      <svg className="body-type-illustration" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+                        {/* Body outline */}
+                        <path d="M100 20 Q90 30 85 50 Q80 70 85 100 Q90 120 95 140 Q100 160 100 200 Q100 240 95 260 Q90 280 85 290 Q80 300 100 300 Q120 300 115 290 Q110 280 105 260 Q100 240 100 200 Q100 160 105 140 Q110 120 115 100 Q120 70 115 50 Q110 30 100 20 Z" 
+                              fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Arms */}
+                        <path d="M85 50 Q70 60 65 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M115 50 Q130 60 135 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Legs */}
+                        <path d="M100 300 Q95 320 90 320" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M100 300 Q105 320 110 320" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Pear shape overlay - inverted triangle */}
+                        <path d="M100 200 L70 280 L130 280 Z" fill="rgba(251, 182, 206, 0.3)" stroke="rgba(251, 182, 206, 0.5)" strokeWidth="1"/>
+                      </svg>
+                    )
+                  },
+                  { 
+                    id: 'hourglass', 
+                    label: 'Hourglass',
+                    svg: (
+                      <svg className="body-type-illustration" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+                        {/* Body outline */}
+                        <path d="M100 20 Q90 30 85 50 Q80 70 85 100 Q90 120 95 140 Q100 160 100 200 Q100 240 95 260 Q90 280 85 290 Q80 300 100 300 Q120 300 115 290 Q110 280 105 260 Q100 240 100 200 Q100 160 105 140 Q110 120 115 100 Q120 70 115 50 Q110 30 100 20 Z" 
+                              fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Arms */}
+                        <path d="M85 50 Q70 60 65 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M115 50 Q130 60 135 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Legs */}
+                        <path d="M100 300 Q95 320 90 320" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M100 300 Q105 320 110 320" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Hourglass shape overlay */}
+                        <path d="M100 80 L130 140 L100 200 L70 140 Z" fill="rgba(251, 182, 206, 0.3)" stroke="rgba(251, 182, 206, 0.5)" strokeWidth="1"/>
+                      </svg>
+                    )
+                  },
+                  { 
+                    id: 'rectangle', 
+                    label: 'Rectangle',
+                    svg: (
+                      <svg className="body-type-illustration" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+                        {/* Body outline - straighter sides */}
+                        <path d="M100 20 Q90 30 85 50 Q80 70 85 100 Q85 130 85 150 Q85 170 85 200 Q85 230 85 250 Q85 270 85 280 Q85 290 100 290 Q115 290 115 280 Q115 270 115 250 Q115 230 115 200 Q115 170 115 150 Q115 130 115 100 Q120 70 115 50 Q110 30 100 20 Z" 
+                              fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Arms */}
+                        <path d="M85 50 Q70 60 65 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M115 50 Q130 60 135 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Legs */}
+                        <path d="M100 290 Q95 310 90 310" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M100 290 Q105 310 110 310" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Rectangle shape overlay */}
+                        <rect x="75" y="80" width="50" height="200" fill="rgba(251, 182, 206, 0.3)" stroke="rgba(251, 182, 206, 0.5)" strokeWidth="1" rx="5"/>
+                      </svg>
+                    )
+                  },
+                  { 
+                    id: 'inverted-triangle', 
+                    label: 'Inverted Triangle',
+                    svg: (
+                      <svg className="body-type-illustration" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+                        {/* Body outline - wider shoulders */}
+                        <path d="M100 20 Q90 30 85 50 Q80 70 90 100 Q100 130 110 150 Q120 170 120 200 Q120 230 115 250 Q110 270 105 280 Q100 290 100 300 Q100 310 95 300 Q90 290 85 280 Q80 270 75 250 Q70 230 70 200 Q70 170 80 150 Q90 130 100 100 Q110 70 115 50 Q110 30 100 20 Z" 
+                              fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Arms - wider */}
+                        <path d="M85 50 Q70 60 60 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M115 50 Q130 60 140 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Legs */}
+                        <path d="M100 300 Q95 320 90 320" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M100 300 Q105 320 110 320" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Inverted triangle overlay */}
+                        <path d="M100 80 L130 200 L70 200 Z" fill="rgba(251, 182, 206, 0.3)" stroke="rgba(251, 182, 206, 0.5)" strokeWidth="1"/>
+                      </svg>
+                    )
+                  }
                 ].map((type) => (
                   <button
                     key={type.id}
@@ -243,7 +344,7 @@ const ProfileUpdate = ({ onComplete }) => {
                     className={`select-card body-type-card ${formData.bodyType === type.id ? 'selected' : ''} ${errors.bodyType ? 'card-error' : ''}`}
                     onClick={() => handleCardSelect('bodyType', type.id)}
                   >
-                    <div className="body-sketch">{type.sketch}</div>
+                    <div className="body-sketch">{type.svg}</div>
                     <span className="card-text">{type.label}</span>
                   </button>
                 ))}
@@ -255,7 +356,84 @@ const ProfileUpdate = ({ onComplete }) => {
 
             {/* Color Tone */}
             <div className="card-select-group">
-              <label className="card-select-label">Color Tone Preference</label>
+              <div className="label-with-help">
+                <label className="card-select-label">Color Tone Preference</label>
+                <div className={`help-wrapper ${showColorToneHelp ? 'show-help' : ''}`}>
+                  <button
+                    type="button"
+                    className="help-icon-button"
+                    onClick={() => {
+                      // Toggle on mobile
+                      if (isMobile) {
+                        setShowColorToneHelp(!showColorToneHelp)
+                      }
+                    }}
+                    aria-label="Learn about color tones"
+                  >
+                    <svg className="help-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <circle cx="12" cy="17" r="1" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <div 
+                    className="help-overlay" 
+                    onClick={() => setShowColorToneHelp(false)}
+                  />
+                  <div 
+                    className="color-tone-help-tooltip"
+                    onMouseLeave={() => {
+                      // Hide on mouse leave for desktop
+                      if (!isMobile) {
+                        setShowColorToneHelp(false)
+                      }
+                    }}
+                  >
+                        <div className="tooltip-header">
+                          <h3 className="tooltip-title">How to Choose Your Color Tone</h3>
+                          <button
+                            type="button"
+                            className="tooltip-close"
+                            onClick={() => setShowColorToneHelp(false)}
+                            aria-label="Close"
+                          >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                          </button>
+                        </div>
+                        <div className="tooltip-content">
+                          <div className="tone-explanation">
+                            <div className="tone-item">
+                              <div className="tone-color-indicator" style={{ backgroundColor: '#FF6B6B' }}></div>
+                              <div>
+                                <strong>Warm Tones</strong>
+                                <p>Your skin has golden, peachy, or yellow undertones. You look best in colors like coral, peach, gold, warm reds, and olive greens.</p>
+                              </div>
+                            </div>
+                            <div className="tone-item">
+                              <div className="tone-color-indicator" style={{ backgroundColor: '#4ECDC4' }}></div>
+                              <div>
+                                <strong>Cool Tones</strong>
+                                <p>Your skin has pink, red, or blue undertones. You look best in colors like blue, purple, emerald green, and cool pinks.</p>
+                              </div>
+                            </div>
+                            <div className="tone-item">
+                              <div className="tone-color-indicator" style={{ backgroundColor: '#95A5A6' }}></div>
+                              <div>
+                                <strong>Neutral</strong>
+                                <p>Your skin has a balance of warm and cool undertones. You can wear a wide range of colors from both warm and cool palettes.</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="tone-tip">
+                            <p><strong>Quick Test:</strong> Look at the veins on your wrist. Blue/purple veins suggest cool tones, green veins suggest warm tones, and a mix suggests neutral.</p>
+                          </div>
+                          <p className="tone-note">Don't worry if you're unsure — you can always update this later!</p>
+                        </div>
+                      </div>
+                </div>
+              </div>
               <p className="card-helper">
                 You can always update this later
               </p>
