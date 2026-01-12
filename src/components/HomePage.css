@@ -6,21 +6,41 @@
 .home-page {
   position: relative;
   width: 100%;
+  max-width: 100%; /* Prevent horizontal overflow */
   height: 100%; /* Fill parent container */
-  overflow: hidden; /* No scrolling in Frame 1 */
+  max-height: 100%; /* Prevent vertical overflow */
+  overflow: hidden; /* No scrolling - prevent both horizontal and vertical */
   display: flex;
   flex-direction: column;
   padding: 0;
-  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  box-sizing: border-box;
+  /* Hide scrollbars completely */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.home-page::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 /* Main Content Area - Frame 1: Circular Carousel, Frame 2: Canvas Layout */
 .home-content {
   width: 100%;
+  max-width: 100%; /* Prevent horizontal overflow */
   height: 100%;
+  max-height: 100%; /* Prevent vertical overflow */
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* No scrollbars */
   flex: 1; /* Take remaining space */
+  box-sizing: border-box;
+  /* Hide scrollbars completely */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.home-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 /* Frame 2 Layout - Mobile: Full screen modal */

@@ -6,16 +6,24 @@
 .circular-carousel {
   position: relative;
   width: 100%;
+  max-width: 100%; /* Prevent horizontal overflow */
   height: 100%; /* Use 100% of parent container */
-  min-height: 400px; /* Ensure minimum height */
-  overflow: hidden;
+  max-height: 100%; /* Prevent vertical overflow */
+  overflow: hidden; /* No scrollbars */
   touch-action: pan-x; /* Only allow horizontal pan for swipe */
-  -webkit-overflow-scrolling: touch;
   background: #ffffff; /* Solid white background - no purple showing through */
   user-select: none; /* Prevent text selection during drag */
   display: flex;
   flex-direction: column;
-  z-index: 1; /* Below navbar (z-index: 100) */
+  z-index: 1; /* Below navbar (z-index: 2000) */
+  box-sizing: border-box;
+  /* Hide scrollbars completely */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.circular-carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .circular-carousel-empty {
@@ -30,20 +38,28 @@
 .carousel-track {
   display: flex;
   width: 100%;
+  max-width: 100%; /* Prevent horizontal overflow */
   height: 100%;
+  max-height: 100%; /* Prevent vertical overflow */
   will-change: transform; /* Optimize for animations */
   align-items: center; /* Vertically center slides */
+  box-sizing: border-box;
+  overflow: hidden; /* No scrollbars */
 }
 
 .carousel-slide {
   flex: 0 0 100%; /* Each slide takes full width for transform calculation */
   width: 100%;
+  max-width: 100%; /* Prevent horizontal overflow */
   height: 100%;
+  max-height: 100%; /* Prevent vertical overflow */
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #ffffff; /* Solid white - no purple gradient showing through */
+  box-sizing: border-box;
+  overflow: hidden; /* No scrollbars */
   /* No overlays or gradients - clean image display */
   /* Ensure no pseudo-elements create overlays */
 }
@@ -56,11 +72,15 @@
 
 .carousel-image {
   width: 100%;
+  max-width: 100%; /* Prevent horizontal overflow */
   height: 100%;
+  max-height: 100%; /* Prevent vertical overflow */
   object-fit: cover;
   transition: opacity 0.2s ease; /* Faster transition for crispness */
   display: block; /* Ensure image displays */
   background: #e5e7eb; /* Fallback background while loading */
+  box-sizing: border-box;
+}
   image-rendering: -webkit-optimize-contrast; /* Better image quality on WebKit */
   image-rendering: crisp-edges; /* Better image quality */
   -webkit-backface-visibility: hidden; /* Prevent blur on transform */
@@ -96,6 +116,8 @@
   flex-direction: column;
   gap: 0.5rem; /* Reduced gap for smaller buttons */
   z-index: 10;
+  max-width: calc(100% - 2rem); /* Prevent overflow from right edge */
+  box-sizing: border-box;
   /* No overlay background - buttons float directly over image */
 }
 
