@@ -5,11 +5,11 @@
 
 .circular-carousel {
   position: relative;
-  width: 100%;
-  max-width: 100%; /* Prevent horizontal overflow */
-  height: 100%; /* Use 100% of parent container */
-  max-height: 100%; /* Prevent vertical overflow */
-  overflow: hidden; /* No scrollbars */
+  width: 100% !important;
+  max-width: 100% !important; /* Prevent horizontal overflow */
+  height: 100% !important; /* Use 100% of parent container */
+  max-height: 100% !important; /* Prevent vertical overflow */
+  overflow: hidden !important; /* Force no scrollbars */
   touch-action: pan-x; /* Only allow horizontal pan for swipe */
   background: #ffffff; /* Solid white background - no purple showing through */
   user-select: none; /* Prevent text selection during drag */
@@ -17,13 +17,20 @@
   flex-direction: column;
   z-index: 1; /* Below navbar (z-index: 2000) */
   box-sizing: border-box;
+  padding: 0 !important;
+  margin: 0 !important;
   /* Hide scrollbars completely */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
 }
 
 .circular-carousel::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none !important; /* Chrome, Safari, Opera */
+}
+
+.circular-carousel * {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .circular-carousel-empty {
@@ -37,29 +44,31 @@
 
 .carousel-track {
   display: flex;
-  width: 100%;
-  max-width: 100%; /* Prevent horizontal overflow */
-  height: 100%;
-  max-height: 100%; /* Prevent vertical overflow */
+  width: auto; /* Allow track to be wider than 100% for multiple slides */
+  min-width: 100%; /* Minimum width to fill container */
+  height: 100% !important;
+  max-height: 100% !important; /* Prevent vertical overflow */
   will-change: transform; /* Optimize for animations */
   align-items: center; /* Vertically center slides */
   box-sizing: border-box;
-  overflow: hidden; /* No scrollbars */
+  position: relative;
+  /* Track width = 100% * number of slides, but parent clips overflow */
 }
 
 .carousel-slide {
-  flex: 0 0 100%; /* Each slide takes full width for transform calculation */
-  width: 100%;
-  max-width: 100%; /* Prevent horizontal overflow */
-  height: 100%;
-  max-height: 100%; /* Prevent vertical overflow */
+  flex: 0 0 100% !important; /* Each slide takes full width for transform calculation */
+  width: 100% !important;
+  max-width: 100% !important; /* Prevent horizontal overflow */
+  height: 100% !important;
+  max-height: 100% !important; /* Prevent vertical overflow */
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #ffffff; /* Solid white - no purple gradient showing through */
   box-sizing: border-box;
-  overflow: hidden; /* No scrollbars */
+  overflow: hidden !important; /* Force no scrollbars */
+  flex-shrink: 0; /* Prevent slides from shrinking */
   /* No overlays or gradients - clean image display */
   /* Ensure no pseudo-elements create overlays */
 }
@@ -80,7 +89,6 @@
   display: block; /* Ensure image displays */
   background: #e5e7eb; /* Fallback background while loading */
   box-sizing: border-box;
-}
   image-rendering: -webkit-optimize-contrast; /* Better image quality on WebKit */
   image-rendering: crisp-edges; /* Better image quality */
   -webkit-backface-visibility: hidden; /* Prevent blur on transform */

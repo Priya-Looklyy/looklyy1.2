@@ -9,6 +9,21 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100vh;
+  max-height: 100vh;
+  width: 100vw;
+  max-width: 100vw;
+  overflow: hidden; /* No scrollbars */
+  /* Hide scrollbars completely */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #f8f4ff 0%, #f0ebff 100%);

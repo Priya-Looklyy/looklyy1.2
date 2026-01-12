@@ -9,19 +9,24 @@
   max-width: 100%; /* Prevent horizontal overflow */
   height: 100%; /* Fill parent container */
   max-height: 100%; /* Prevent vertical overflow */
-  overflow: hidden; /* No scrolling - prevent both horizontal and vertical */
+  overflow: hidden !important; /* Force no scrolling - prevent both horizontal and vertical */
   display: flex;
   flex-direction: column;
-  padding: 0;
-  margin: 0;
+  padding: 0 !important;
+  margin: 0 !important;
   box-sizing: border-box;
   /* Hide scrollbars completely */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
 }
 
 .home-page::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none !important; /* Chrome, Safari, Opera */
+}
+
+.home-page * {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Main Content Area - Frame 1: Circular Carousel, Frame 2: Canvas Layout */
