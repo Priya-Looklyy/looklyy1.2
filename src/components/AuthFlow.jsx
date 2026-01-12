@@ -16,6 +16,9 @@ const AuthFlow = () => {
       // Store a mock token using the correct key that AuthContext expects
       const mockToken = 'instagram_mock_token_' + Date.now()
       localStorage.setItem('looklyy_token', mockToken)
+      // Store mock email for profile autofill (in real app, get from OAuth response)
+      const mockEmail = 'user@instagram.com'
+      localStorage.setItem('looklyy_user_email', mockEmail)
       console.log('✅ Token stored:', mockToken)
       // Small delay to ensure token is stored, then reload to trigger auth check
       setTimeout(() => {
@@ -35,6 +38,9 @@ const AuthFlow = () => {
       // Store a mock token using the correct key that AuthContext expects
       const mockToken = 'google_mock_token_' + Date.now()
       localStorage.setItem('looklyy_token', mockToken)
+      // Store mock email for profile autofill (in real app, get from OAuth response)
+      const mockEmail = 'user@gmail.com'
+      localStorage.setItem('looklyy_user_email', mockEmail)
       console.log('✅ Token stored:', mockToken)
       // Small delay to ensure token is stored, then reload to trigger auth check
       setTimeout(() => {

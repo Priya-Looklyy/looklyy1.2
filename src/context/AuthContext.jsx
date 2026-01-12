@@ -18,6 +18,7 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true) // Start as loading to check auth state
   const [error, setError] = useState(null)
   const [imageShuffleSeed, setImageShuffleSeed] = useState(generateShuffleSeed())
+  const [isProfileComplete, setIsProfileComplete] = useState(false)
 
   // Check authentication on mount/app refresh
   useEffect(() => {
@@ -25,25 +26,29 @@ export function AuthProvider({ children }) {
       const token = getToken()
       const isDemoMode = localStorage.getItem('looklyy_demo_mode') === 'true'
       const isDemoAuthenticated = localStorage.getItem('looklyy_demo_authenticated') === 'true'
+      const profileComplete = localStorage.getItem('looklyy_profile_complete') === 'true'
       
-      console.log('🔍 Check auth on refresh - token exists:', !!token, 'demo mode:', isDemoMode, 'demo auth:', isDemoAuthenticated)
+      console.log('🔍 Check auth on refresh - token exists:', !!token, 'demo mode:', isDemoMode, 'demo auth:', isDemoAuthenticated, 'profile complete:', profileComplete)
       
       if (isDemoMode && isDemoAuthenticated) {
         // Demo mode authentication
         setIsAuthenticated(true)
         setUser({ name: 'Demo User', email: 'demo@looklyy.com' })
+        setIsProfileComplete(profileComplete)
         setIsLoading(false)
         console.log('✅ Demo user authenticated')
       } else if (token && token.trim() !== '' && token !== 'null' && token !== 'undefined') {
         // If token exists, assume the user is authenticated and keep them on the app
         setIsAuthenticated(true)
         setUser({ name: 'User', email: 'user@looklyy.com' }) // Mock user data for now
+        setIsProfileComplete(profileComplete)
         setIsLoading(false)
         console.log('✅ User authenticated from stored token on refresh')
       } else {
         // No token, so user needs to login
         setIsAuthenticated(false)
         setUser(null)
+        setIsProfileComplete(false)
         setIsLoading(false)
         console.log('❌ No auth token - showing login page')
       }
@@ -93,6 +98,10 @@ export function AuthProvider({ children }) {
         } else {
           console.warn('⚠️ No token returned from login API')
         }
+        // Store email for profile autofill
+        if (email) {
+          localStorage.setItem('looklyy_user_email', email)
+        }
         return { success: true }
       } else {
         setError(response.error)
@@ -112,10 +121,21 @@ export function AuthProvider({ children }) {
       await logoutUser()
       setUser(null)
       setIsAuthenticated(false)
+      setIsProfileComplete(false)
       setError(null)
+      // Clear profile data on logout
+      localStorage.removeItem('looklyy_profile')
+      localStorage.removeItem('looklyy_profile_complete')
     } catch (error) {
       console.error('Logout error:', error)
     }
+  }
+
+  const completeProfile = (profileData) => {
+    setIsProfileComplete(true)
+    localStorage.setItem('looklyy_profile', JSON.stringify(profileData))
+    localStorage.setItem('looklyy_profile_complete', 'true')
+    console.log('✅ Profile marked as complete')
   }
 
   const value = {
@@ -124,9 +144,11 @@ export function AuthProvider({ children }) {
     isLoading,
     error,
     imageShuffleSeed,
+    isProfileComplete,
     signup,
     login,
-    logout
+    logout,
+    completeProfile
   }
 
   return (

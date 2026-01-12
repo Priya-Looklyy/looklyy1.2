@@ -7,6 +7,7 @@ import TrendingSection from './components/TrendingSection'
 import LooklyySuggests from './components/LooklyySuggests'
 import Closet from './components/Closet'
 import AuthFlow from './components/AuthFlow'
+import ProfileUpdate from './components/ProfileUpdate'
 import Admin from './pages/Admin'
 import Training from './pages/Training'
 import { DemoApp } from './demo/DemoApp'
@@ -83,7 +84,7 @@ function LoadingScreen() {
 
 // Main App Component with Auth Logic  
 function AppContent() {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, isProfileComplete, completeProfile } = useAuth()
   const [isDemoMode, setIsDemoMode] = useState(false)
 
   useEffect(() => {
@@ -139,7 +140,18 @@ function AppContent() {
     return <Training />
   }
 
-  return isAuthenticated ? <ProtectedApp /> : <AuthFlow />
+  // Show auth flow if not authenticated
+  if (!isAuthenticated) {
+    return <AuthFlow />
+  }
+
+  // Show profile update if authenticated but profile not complete
+  if (!isProfileComplete) {
+    return <ProfileUpdate onComplete={completeProfile} />
+  }
+
+  // Show main app if authenticated and profile complete
+  return <ProtectedApp />
 }
 
 function App() {
