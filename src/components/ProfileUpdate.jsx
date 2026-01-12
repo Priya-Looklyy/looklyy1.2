@@ -5,7 +5,9 @@ const ProfileUpdate = ({ onComplete }) => {
   const [formData, setFormData] = useState({
     email: '',
     phone: '',
-    ageGroup: '',
+    topSize: '',
+    bottomSize: '',
+    age: '',
     bodyType: '',
     colorTone: ''
   })
@@ -91,8 +93,16 @@ const ProfileUpdate = ({ onComplete }) => {
     }
 
     // Section 2: All required
-    if (!formData.ageGroup) {
-      newErrors.ageGroup = 'Please select your age group'
+    if (!formData.topSize) {
+      newErrors.topSize = 'Please select your top size'
+    }
+
+    if (!formData.bottomSize) {
+      newErrors.bottomSize = 'Please select your bottom size'
+    }
+
+    if (!formData.age) {
+      newErrors.age = 'Please select your age'
     }
 
     if (!formData.bodyType) {
@@ -100,7 +110,7 @@ const ProfileUpdate = ({ onComplete }) => {
     }
 
     if (!formData.colorTone) {
-      newErrors.colorTone = 'Please select your color tone preference'
+      newErrors.colorTone = 'Please select your color tone'
     }
 
     setErrors(newErrors)
@@ -139,7 +149,7 @@ const ProfileUpdate = ({ onComplete }) => {
   const isFormValid = () => {
     // Check if all required fields are filled
     const hasContact = formData.email || formData.phone
-    const hasAllAttributes = formData.ageGroup && formData.bodyType && formData.colorTone
+    const hasAllAttributes = formData.topSize && formData.bottomSize && formData.age && formData.bodyType && formData.colorTone
     
     // Validate formats
     const emailValid = !formData.email || validateEmail(formData.email)
@@ -153,20 +163,15 @@ const ProfileUpdate = ({ onComplete }) => {
       <div className="profile-update-panel">
         {/* Header */}
         <div className="profile-header">
-          <h1 className="profile-title">Complete Your Profile</h1>
-          <p className="profile-subtitle">Help us personalize your experience</p>
+          <h1 className="profile-title">Help us personalize your experience</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="profile-form">
           {/* Section 1: Personal Information */}
           <section className="profile-section">
             <div className="section-header">
-              <h2 className="section-title">Personal Information</h2>
-              <span className="required-badge">Required</span>
+              <h2 className="section-title">Personal Information <span className="required-asterisk">*</span></h2>
             </div>
-            <p className="section-helper">
-              Provide at least one way for us to contact you
-            </p>
 
             <div className="input-group">
               <label htmlFor="email" className="input-label">
@@ -207,39 +212,75 @@ const ProfileUpdate = ({ onComplete }) => {
             )}
           </section>
 
-          {/* Section 2: Basic Attributes */}
+          {/* Section 2: Physical Details */}
           <section className="profile-section">
             <div className="section-header">
-              <h2 className="section-title">Basic Attributes</h2>
-              <span className="required-badge">Required</span>
+              <h2 className="section-title">Physical Details <span className="required-asterisk">*</span></h2>
             </div>
 
-            {/* Age Group */}
+            {/* Size Selection - Top Sizes */}
             <div className="card-select-group">
-              <label className="card-select-label">Age Group</label>
+              <label className="card-select-label">Top Sizes <span className="required-asterisk">*</span></label>
+              <div className="card-grid">
+                {['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    className={`select-card ${formData.topSize === size ? 'selected' : ''} ${errors.topSize ? 'card-error' : ''}`}
+                    onClick={() => handleCardSelect('topSize', size)}
+                  >
+                    <span className="card-text">{size}</span>
+                  </button>
+                ))}
+              </div>
+              {errors.topSize && (
+                <span className="error-message">{errors.topSize}</span>
+              )}
+            </div>
+
+            {/* Size Selection - Bottom Sizes */}
+            <div className="card-select-group">
+              <label className="card-select-label">Bottom Sizes <span className="required-asterisk">*</span></label>
+              <div className="card-grid">
+                {['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    className={`select-card ${formData.bottomSize === size ? 'selected' : ''} ${errors.bottomSize ? 'card-error' : ''}`}
+                    onClick={() => handleCardSelect('bottomSize', size)}
+                  >
+                    <span className="card-text">{size}</span>
+                  </button>
+                ))}
+              </div>
+              {errors.bottomSize && (
+                <span className="error-message">{errors.bottomSize}</span>
+              )}
+            </div>
+
+            {/* Age */}
+            <div className="card-select-group">
+              <label className="card-select-label">Age <span className="required-asterisk">*</span></label>
               <div className="card-grid">
                 {['Under 18', '18–24', '25–34', '35–44', '45–54', '55+'].map((age) => (
                   <button
                     key={age}
                     type="button"
-                    className={`select-card ${formData.ageGroup === age ? 'selected' : ''} ${errors.ageGroup ? 'card-error' : ''}`}
-                    onClick={() => handleCardSelect('ageGroup', age)}
+                    className={`select-card ${formData.age === age ? 'selected' : ''} ${errors.age ? 'card-error' : ''}`}
+                    onClick={() => handleCardSelect('age', age)}
                   >
                     <span className="card-text">{age}</span>
                   </button>
                 ))}
               </div>
-              {errors.ageGroup && (
-                <span className="error-message">{errors.ageGroup}</span>
+              {errors.age && (
+                <span className="error-message">{errors.age}</span>
               )}
             </div>
 
             {/* Body Type */}
             <div className="card-select-group">
-              <label className="card-select-label">Body Type</label>
-              <p className="card-helper">
-                Choose the option that feels closest — perfection isn't required
-              </p>
+              <label className="card-select-label">Choose body type <span className="required-asterisk">*</span></label>
               <div className="card-grid body-type-grid">
                 {[
                   { 
@@ -266,17 +307,19 @@ const ProfileUpdate = ({ onComplete }) => {
                     label: 'Pear',
                     svg: (
                       <svg className="body-type-illustration" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
-                        {/* Body outline */}
-                        <path d="M100 20 Q90 30 85 50 Q80 70 85 100 Q90 120 95 140 Q100 160 100 200 Q100 240 95 260 Q90 280 85 290 Q80 300 100 300 Q120 300 115 290 Q110 280 105 260 Q100 240 100 200 Q100 160 105 140 Q110 120 115 100 Q120 70 115 50 Q110 30 100 20 Z" 
-                              fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
-                        {/* Arms */}
-                        <path d="M85 50 Q70 60 65 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M115 50 Q130 60 135 80" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Body outline - pear shape with narrower shoulders and wider hips */}
+                        <path d="M100 20 Q90 25 85 40 Q80 55 82 75 Q84 95 88 110 Q92 125 95 140 Q98 155 100 170 Q100 185 100 200 Q100 215 100 230 Q100 245 98 260 Q96 275 92 285 Q88 295 85 300 Q100 300 115 300 Q112 295 108 285 Q104 275 102 260 Q100 245 100 230 Q100 215 100 200 Q100 185 100 170 Q102 155 105 140 Q108 125 112 110 Q116 95 118 75 Q120 55 115 40 Q110 25 100 20 Z" 
+                              fill="none" stroke="#1f2937" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        {/* Head */}
+                        <circle cx="100" cy="20" r="8" fill="none" stroke="#1f2937" strokeWidth="2.5"/>
+                        {/* Arms - narrower */}
+                        <path d="M85 40 Q70 50 60 70" fill="none" stroke="#1f2937" strokeWidth="2.5" strokeLinecap="round"/>
+                        <path d="M115 40 Q130 50 140 70" fill="none" stroke="#1f2937" strokeWidth="2.5" strokeLinecap="round"/>
                         {/* Legs */}
-                        <path d="M100 300 Q95 320 90 320" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M100 300 Q105 320 110 320" fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round"/>
-                        {/* Pear shape overlay - inverted triangle */}
-                        <path d="M100 200 L70 280 L130 280 Z" fill="rgba(251, 182, 206, 0.3)" stroke="rgba(251, 182, 206, 0.5)" strokeWidth="1"/>
+                        <path d="M100 300 Q95 315 88 325" fill="none" stroke="#1f2937" strokeWidth="2.5" strokeLinecap="round"/>
+                        <path d="M100 300 Q105 315 112 325" fill="none" stroke="#1f2937" strokeWidth="2.5" strokeLinecap="round"/>
+                        {/* Pear shape overlay - inverted triangle, more pronounced */}
+                        <path d="M100 180 L65 280 L135 280 Z" fill="rgba(251, 182, 206, 0.35)" stroke="rgba(251, 182, 206, 0.6)" strokeWidth="1.5"/>
                       </svg>
                     )
                   },
@@ -357,7 +400,7 @@ const ProfileUpdate = ({ onComplete }) => {
             {/* Color Tone */}
             <div className="card-select-group">
               <div className="label-with-help">
-                <label className="card-select-label">Color Tone Preference</label>
+                <label className="card-select-label">Choose your colour tone <span className="required-asterisk">*</span></label>
                 <div className={`help-wrapper ${showColorToneHelp ? 'show-help' : ''}`}>
                   <button
                     type="button"
@@ -446,9 +489,6 @@ const ProfileUpdate = ({ onComplete }) => {
                       </div>
                 </div>
               </div>
-              <p className="card-helper">
-                You can always update this later
-              </p>
               <div className="card-grid color-tone-grid">
                 {[
                   { id: 'warm', label: 'Warm tones', color: '#FF6B6B' },
