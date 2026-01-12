@@ -378,10 +378,18 @@ const ProfileUpdate = ({ onComplete }) => {
                   </button>
                   <div 
                     className="help-overlay" 
-                    onClick={() => setShowColorToneHelp(false)}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setShowColorToneHelp(false)
+                    }}
                   />
                   <div 
                     className="color-tone-help-tooltip"
+                    onClick={(e) => {
+                      // Prevent clicks inside tooltip from closing it
+                      e.stopPropagation()
+                    }}
                     onMouseLeave={() => {
                       // Hide on mouse leave for desktop
                       if (!isMobile) {
@@ -394,7 +402,11 @@ const ProfileUpdate = ({ onComplete }) => {
                           <button
                             type="button"
                             className="tooltip-close"
-                            onClick={() => setShowColorToneHelp(false)}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              setShowColorToneHelp(false)
+                            }}
                             aria-label="Close"
                           >
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
