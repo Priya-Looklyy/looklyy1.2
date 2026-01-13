@@ -416,31 +416,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
 
   return (
     <div className="sliding-canvas-container">
-      {/* Marketplace - Extreme left of 80% space (25% of 80%) */}
-      <div className="marketplace-section">
-        <div className="marketplace-header">
-          <h4>Marketplace</h4>
-        </div>
-        <div className="marketplace-items">
-          {partnerBrands.map(item => (
-            <div
-              key={item.id}
-              className="marketplace-item"
-              draggable
-              onDragStart={(e) => handleDragStart(e, item)}
-              onDragEnd={handleDragEnd}
-              title={`Drag to create paper cutout of ${item.name} from ${item.brand}`}
-            >
-              <img src={item.image} alt={item.name} />
-              <div className="item-name">{item.name}</div>
-              <div className="item-brand">{item.brand}</div>
-              <div className="item-price">$99</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Working Canvas (30% of total screen = 37.5% of 80% space) */}
+      {/* Working Canvas (30% of total screen) */}
       <div className="working-canvas-section">
         <div 
           className="working-canvas"
@@ -584,7 +560,7 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
         </div>
       </div>
 
-      {/* Closet - Right of working canvas */}
+      {/* Closet - Right of working canvas (25% of total) */}
       <div className="items-library-section">
         <div className="library-subsection closet-section">
           <h4>Closet</h4>
@@ -621,6 +597,30 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Marketplace - Extreme right (25% of total) */}
+      <div className="marketplace-section">
+        <div className="marketplace-header">
+          <h4>Marketplace</h4>
+        </div>
+        <div className="marketplace-items">
+          {partnerBrands.map(item => (
+            <div
+              key={item.id}
+              className="marketplace-item"
+              draggable
+              onDragStart={(e) => handleDragStart(e, item)}
+              onDragEnd={handleDragEnd}
+              title={`Drag to create paper cutout of ${item.name} from ${item.brand}`}
+            >
+              <img src={item.image} alt={item.name} />
+              <div className="item-name">{item.name}</div>
+              <div className="item-brand">{item.brand}</div>
+              <div className="item-price">$99</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

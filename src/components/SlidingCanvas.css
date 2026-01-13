@@ -24,15 +24,15 @@
   }
 }
 
-/* Marketplace Section - Extreme left of 80% space (25% of 80% = 20% of total) */
+/* Marketplace Section - Extreme right (25% of total screen) */
 .marketplace-section {
-  width: 25%; /* 25% of the 80% space */
+  width: 25%; /* 25% of total screen */
   height: 100%;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   background: #f9fafb;
-  border-right: 1px solid #e5e7eb;
+  border-left: 1px solid #e5e7eb;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -100,9 +100,9 @@
   color: #7c3aed;
 }
 
-/* Working Canvas Section (30% of 80% space = 24% of total, but we want 30% of total) */
+/* Working Canvas Section (30% of total screen) */
 .working-canvas-section {
-  width: 37.5%; /* 37.5% of 80% = 30% of total screen */
+  width: 30%; /* 30% of total screen */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -518,9 +518,9 @@
   transform: scale(1.1);
 }
 
-/* Closet Section - Right of working canvas (37.5% of 80% = 30% of total) */
+/* Closet Section - Right of working canvas (25% of total screen) */
 .items-library-section {
-  width: 37.5%; /* 37.5% of 80% = 30% of total screen */
+  width: 25%; /* 25% of total screen */
   height: 100%;
   display: flex;
   flex-direction: column;
