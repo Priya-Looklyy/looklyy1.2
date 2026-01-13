@@ -178,12 +178,8 @@ const ProfileUpdate = ({ onComplete }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="profile-form">
-          {/* Section 1: Personal Information */}
+          {/* Section 1: Contact Information */}
           <section className="profile-section">
-            <div className="section-header">
-              <h2 className="section-title">Personal Information <span className="required-asterisk">*</span></h2>
-            </div>
-
             <div className="input-group">
               <label htmlFor="email" className="input-label">
                 Email Address
