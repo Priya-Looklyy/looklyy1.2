@@ -12,6 +12,8 @@ import './HomePage.css'
 const HomePage = () => {
   const [pinnedLook, setPinnedLook] = useState(null)
   const [isFrame2Active, setIsFrame2Active] = useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [currentCarouselImage, setCurrentCarouselImage] = useState(null)
   const [sliderData, setSliderData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -231,16 +233,33 @@ const HomePage = () => {
   }, [sliderData])
 
   const handlePinLook = (slider, currentImage) => {
-    setPinnedLook({
-      slider,
-      currentImage
-    })
-    setIsFrame2Active(true)
+    // Store the current carousel image for the transition
+    setCurrentCarouselImage(currentImage)
+    
+    // Start transition animation
+    setIsTransitioning(true)
+    
+    // After a brief delay, activate Frame 2
+    setTimeout(() => {
+      setPinnedLook({
+        slider,
+        currentImage
+      })
+      setIsFrame2Active(true)
+      setIsTransitioning(false)
+    }, 400) // Match CSS transition duration
   }
 
   const closeFrame2 = () => {
-    setIsFrame2Active(false)
-    setPinnedLook(null)
+    // Reverse transition
+    setIsTransitioning(true)
+    
+    setTimeout(() => {
+      setIsFrame2Active(false)
+      setPinnedLook(null)
+      setCurrentCarouselImage(null)
+      setIsTransitioning(false)
+    }, 400)
   }
 
   // Loading state
@@ -269,44 +288,42 @@ const HomePage = () => {
   }
 
   return (
-    <div className={`home-page ${isFrame2Active ? 'frame2-active' : ''}`}>
+    <div className={`home-page ${isFrame2Active ? 'frame2-active' : ''} ${isTransitioning ? 'transitioning' : ''}`}>
       <div className={`home-content ${isFrame2Active ? 'frame2-layout' : ''}`}>
-        {isFrame2Active ? (
-          // Frame 2: Show pinned look on far left (same size as original slider)
+        {/* Always render carousel, but hide/show based on state */}
+        <div className={`carousel-container ${isFrame2Active ? 'carousel-slided-left' : ''}`}>
+          <CircularSwipeCarousel 
+            images={carouselImages}
+            onPinLook={handlePinLook}
+          />
+        </div>
+
+        {/* Frame 2: Canvas, Closet, Marketplace - appears in revealed space */}
+        {isFrame2Active && pinnedLook && (
           <>
-            <div className="pinned-look-display">
-              <div className="pinned-slider">
-                <img 
-                  src={pinnedLook.currentImage.url} 
-                  alt={pinnedLook.currentImage.alt}
-                  className="pinned-image"
-                />
-                <div className="pinned-overlay">
-                  <div className="pinned-actions">
-                    <div
-                      className="icon-container"
-                      onClick={closeFrame2}
-                      aria-label="Unpin look"
-                    >
-                      <svg viewBox="0 0 24 24" className="bookmark-icon icon-filled">
-                        <path d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* Transformed image header - morphs from carousel image */}
+            <div className="canvas-header-image">
+              <img 
+                src={pinnedLook.currentImage.url} 
+                alt={pinnedLook.currentImage.alt}
+                className="header-image"
+              />
+              <button
+                className="close-frame2-btn"
+                onClick={closeFrame2}
+                aria-label="Close Canvas"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
             </div>
+
             <SlidingCanvas 
               pinnedLook={pinnedLook}
               onClose={closeFrame2}
             />
           </>
-        ) : (
-          // Frame 1: Circular swipe carousel with 25 images (no vertical scroll)
-          <CircularSwipeCarousel 
-            images={carouselImages}
-            onPinLook={handlePinLook}
-          />
         )}
       </div>
       

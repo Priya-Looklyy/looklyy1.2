@@ -3,12 +3,17 @@
 .sliding-canvas-container {
   display: flex;
   gap: 1.5rem;
-  width: 80%; /* Remaining 80% after pinned look (20%) */
+  width: 70%; /* Remaining 70% after image slides left (30%) */
   height: 100%;
-  animation: slideInRight 0.6s ease-out;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  animation: revealFromImage 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
 }
 
-@keyframes slideInRight {
+@keyframes revealFromImage {
   from {
     opacity: 0;
     transform: translateX(100%);
