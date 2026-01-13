@@ -48,20 +48,20 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
-/* Carousel Container - slides left when Frame 2 is active (book flip animation) */
+/* Carousel Container - resizes to 20% width when Frame 2 is active */
 .carousel-container {
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
-  overflow: hidden; /* Clip to show only visible portion */
+  overflow: hidden;
 }
 
 .carousel-container.carousel-slided-left {
-  transform: translateX(-80%); /* Slide left by 80%, leaving 20% visible on left */
+  width: 20%; /* Resize to 20% width instead of sliding out */
   pointer-events: none; /* Prevent interaction with carousel when Frame 2 is active */
 }
 
@@ -85,16 +85,17 @@
   min-height: 100% !important;
   width: 100% !important;
   object-fit: cover !important;
-  object-position: left center !important; /* Keep image anchored to left when clipped */
+  object-position: center !important; /* Center of image in focus */
 }
 
 /* Frame 2 Layout - Revealed space for Canvas/Closet/Marketplace */
 .home-content.frame2-layout {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* Horizontal layout: Image (20%) | Canvas (30%) | Closet (25%) | Marketplace (25%) */
   gap: 0;
   overflow: hidden;
+  height: 100%; /* Match height of resized image */
 }
 
 /* Overlay for close button - carousel image visible underneath maintains full height */
@@ -291,7 +292,7 @@
   }
 
   .carousel-container.carousel-slided-left {
-    transform: translateX(-80%);
+    width: 20%; /* Resize to 20% width */
   }
 
   .canvas-header-image {
@@ -314,7 +315,7 @@
   }
 
   .carousel-container.carousel-slided-left {
-    transform: translateX(-80%);
+    width: 20%; /* Resize to 20% width */
   }
 
   .canvas-header-image {
