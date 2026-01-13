@@ -301,13 +301,8 @@ const HomePage = () => {
         {/* Frame 2: Canvas, Closet, Marketplace - appears in revealed space */}
         {isFrame2Active && pinnedLook && (
           <>
-            {/* Transformed image header - morphs from carousel image */}
+            {/* Overlay for close button - carousel image stays visible underneath */}
             <div className="canvas-header-image">
-              <img 
-                src={pinnedLook.currentImage.url} 
-                alt={pinnedLook.currentImage.alt}
-                className="header-image"
-              />
               <button
                 className="close-frame2-btn"
                 onClick={closeFrame2}
