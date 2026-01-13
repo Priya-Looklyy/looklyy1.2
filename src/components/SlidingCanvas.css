@@ -2,12 +2,12 @@
 
 .sliding-canvas-container {
   display: flex;
-  gap: 1.5rem;
-  width: 70%; /* Remaining 70% after image slides left (30%) */
+  gap: 0;
+  width: 80%; /* Remaining 80% after image slides left (20%) */
   height: 100%;
   position: absolute;
   top: 0;
-  right: 0;
+  left: 20%; /* Start after the 20% bookmarked image */
   z-index: 3;
   animation: revealFromImage 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background: #ffffff;
@@ -24,9 +24,85 @@
   }
 }
 
-/* Working Canvas Section (30% of total screen) */
+/* Marketplace Section - Extreme left of 80% space (25% of 80% = 20% of total) */
+.marketplace-section {
+  width: 25%; /* 25% of the 80% space */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  background: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.marketplace-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.marketplace-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.marketplace-items {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.marketplace-item {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.marketplace-item:hover {
+  border-color: #7c3aed;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.1);
+}
+
+.marketplace-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.marketplace-item .item-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.marketplace-item .item-brand {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.marketplace-item .item-price {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #7c3aed;
+}
+
+/* Working Canvas Section (30% of 80% space = 24% of total, but we want 30% of total) */
 .working-canvas-section {
-  width: 37.5%; /* 37.5% of the 80% = 30% of total screen */
+  width: 37.5%; /* 37.5% of 80% = 30% of total screen */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -47,6 +123,24 @@
   position: relative;
   overflow: visible;
   cursor: crosshair; /* Indicates creative workspace */
+}
+
+/* Mannequin at center of working canvas */
+.canvas-mannequin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 400px;
+  z-index: 1;
+  pointer-events: none; /* Allow items to be dropped on it */
+}
+
+.canvas-mannequin svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.3; /* Subtle so it doesn't interfere with items */
 }
 
 .canvas-controls {
@@ -424,14 +518,18 @@
   transform: scale(1.1);
 }
 
-/* Items Library Section (50% of total screen) - Closet + Partner Brands side by side */
+/* Closet Section - Right of working canvas (37.5% of 80% = 30% of total) */
 .items-library-section {
-  width: 62.5%; /* 62.5% of the 80% = 50% of total screen */
+  width: 37.5%; /* 37.5% of 80% = 30% of total screen */
   height: 100%;
   display: flex;
-  flex-direction: row; /* Changed from column to row for side-by-side layout */
-  gap: 1.5rem;
-  overflow: hidden; /* Changed from overflow-y: auto to prevent vertical scrolling */
+  flex-direction: column;
+  gap: 1rem;
+  flex-shrink: 0;
+  background: #f9fafb;
+  border-left: 1px solid #e5e7eb;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .library-subsection {

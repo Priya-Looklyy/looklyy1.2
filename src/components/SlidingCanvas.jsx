@@ -416,7 +416,31 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
 
   return (
     <div className="sliding-canvas-container">
-      {/* Working Canvas (40% width - 1.5x image size) */}
+      {/* Marketplace - Extreme left of 80% space (25% of 80%) */}
+      <div className="marketplace-section">
+        <div className="marketplace-header">
+          <h4>Marketplace</h4>
+        </div>
+        <div className="marketplace-items">
+          {partnerBrands.map(item => (
+            <div
+              key={item.id}
+              className="marketplace-item"
+              draggable
+              onDragStart={(e) => handleDragStart(e, item)}
+              onDragEnd={handleDragEnd}
+              title={`Drag to create paper cutout of ${item.name} from ${item.brand}`}
+            >
+              <img src={item.image} alt={item.name} />
+              <div className="item-name">{item.name}</div>
+              <div className="item-brand">{item.brand}</div>
+              <div className="item-price">$99</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Working Canvas (30% of total screen = 37.5% of 80% space) */}
       <div className="working-canvas-section">
         <div 
           className="working-canvas"
@@ -506,6 +530,24 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
 
           {/* Canvas Workspace (95% right) */}
           <div className="canvas-workspace">
+            {/* Mannequin at center */}
+            <div className="canvas-mannequin">
+              <svg viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                {/* Head */}
+                <circle cx="100" cy="30" r="25" fill="none" stroke="#9ca3af" strokeWidth="2"/>
+                {/* Neck */}
+                <line x1="100" y1="55" x2="100" y2="75" stroke="#9ca3af" strokeWidth="2"/>
+                {/* Torso */}
+                <path d="M100 75 Q85 100 85 150 Q85 200 100 200 Q115 200 115 150 Q115 100 100 75" 
+                      fill="none" stroke="#9ca3af" strokeWidth="2"/>
+                {/* Arms */}
+                <path d="M85 100 Q60 110 50 130" fill="none" stroke="#9ca3af" strokeWidth="2"/>
+                <path d="M115 100 Q140 110 150 130" fill="none" stroke="#9ca3af" strokeWidth="2"/>
+                {/* Legs */}
+                <path d="M100 200 Q95 250 95 300 Q95 350 100 350" fill="none" stroke="#9ca3af" strokeWidth="2"/>
+                <path d="M100 200 Q105 250 105 300 Q105 350 100 350" fill="none" stroke="#9ca3af" strokeWidth="2"/>
+              </svg>
+            </div>
             {canvasItems.map((item, index) => (
               <div
                 key={item.canvasId}
@@ -542,85 +584,42 @@ const SlidingCanvas = ({ pinnedLook, onClose }) => {
         </div>
       </div>
 
-      {/* Closet & Brand Partners (50% width - 25% each) */}
+      {/* Closet - Right of working canvas */}
       <div className="items-library-section">
-        {!partnerBrandsExpanded && (
-          /* Closet */
-          <div className="library-subsection closet-section">
-            <h4>Closet</h4>
-            <div 
-              className="closet-scroll-container"
-              onWheel={handleClosetWheelScroll}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-            >
-              {/* Closet Items Container or Fallback Message */}
-              {!closetLoading && !hasFolderImages ? (
-                /* Fallback Message */
-                <div className="closet-fallback-message">
-                  <p className="closet-fallback-text">
-                    There are no items in your closet that can help recreate this look for you
-                  </p>
-                  <button 
-                    className="closet-fallback-button"
-                    onClick={handleShopFromPartnerBrands}
-                  >
-                    Recreate from partner brands
-                  </button>
-                </div>
-              ) : (
-                /* Closet Items Grid */
-                <div className="closet-items-container">
-                  {visibleClosetItems.map(item => (
-                    <div
-                      key={item.id}
-                      className="library-item"
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, item)}
-                      onDragEnd={handleDragEnd}
-                      title={`Drag to create paper cutout of ${item.name}`}
-                    >
-                      <img src={item.image} alt={item.name} />
-                      <span>{item.name}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Partner Brands */}
-        <div className={`library-subsection ${partnerBrandsExpanded ? 'partner-brands-expanded' : ''}`} ref={partnerBrandsRef}>
-          <div className="partner-brands-header">
-            <h4>Partner Brands</h4>
-            {partnerBrandsExpanded && (
-              <button 
-                className="collapse-partner-brands-btn"
-                onClick={handleCollapsePartnerBrands}
-                title="Back to normal view"
-              >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                </svg>
-              </button>
-            )}
-          </div>
-          <div className="items-grid">
-            {partnerBrands.map(item => (
-              <div
-                key={item.id}
-                className="library-item partner-item"
-                draggable
-                onDragStart={(e) => handleDragStart(e, item)}
-                onDragEnd={handleDragEnd}
-                title={`Drag to create paper cutout of ${item.name} from ${item.brand}`}
-              >
-                <img src={item.image} alt={item.name} />
-                <span>{item.name}</span>
-                <small>{item.brand}</small>
+        <div className="library-subsection closet-section">
+          <h4>Closet</h4>
+          <div 
+            className="closet-scroll-container"
+            onWheel={handleClosetWheelScroll}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Closet Items Container or Fallback Message */}
+            {!closetLoading && !hasFolderImages ? (
+              /* Fallback Message */
+              <div className="closet-fallback-message">
+                <p className="closet-fallback-text">
+                  There are no items in your closet that can help recreate this look for you
+                </p>
               </div>
-            ))}
+            ) : (
+              /* Closet Items Grid */
+              <div className="closet-items-container">
+                {visibleClosetItems.map(item => (
+                  <div
+                    key={item.id}
+                    className="library-item"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragEnd={handleDragEnd}
+                    title={`Drag to create paper cutout of ${item.name}`}
+                  >
+                    <img src={item.image} alt={item.name} />
+                    <span>{item.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

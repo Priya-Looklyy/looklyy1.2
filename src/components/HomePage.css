@@ -60,7 +60,7 @@
 }
 
 .carousel-container.carousel-slided-left {
-  transform: translateX(-30%);
+  transform: translateX(-80%);
   pointer-events: none; /* Prevent interaction with carousel when Frame 2 is active */
 }
 
@@ -73,12 +73,12 @@
   overflow: hidden;
 }
 
-/* Canvas Header Image - morphs from carousel image */
+/* Bookmarked Image - 20% width, slides left */
 .canvas-header-image {
   position: absolute;
   top: 0;
   left: 0;
-  width: 30%;
+  width: 20%;
   height: 100%;
   z-index: 2;
   background: #ffffff;
@@ -269,11 +269,11 @@
   }
 
   .carousel-container.carousel-slided-left {
-    transform: translateX(-30%);
+    transform: translateX(-80%);
   }
 
   .canvas-header-image {
-    width: 30%;
+    width: 20%;
     border-radius: 12px 0 0 12px;
     box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
   }
@@ -292,11 +292,11 @@
   }
 
   .carousel-container.carousel-slided-left {
-    transform: translateX(-30%);
+    transform: translateX(-80%);
   }
 
   .canvas-header-image {
-    width: 30%;
+    width: 20%;
     border-radius: 12px 0 0 12px;
   }
 }
