@@ -85,6 +85,7 @@ const BottomNav = ({ currentSection, onSectionChange }) => {
     document.addEventListener('mousedown', handleInteraction)
     
     // Show nav initially, then hide after 3 seconds
+    setIsVisible(true) // Force visible on mount
     showNav()
 
     return () => {

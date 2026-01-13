@@ -4,11 +4,11 @@
    ============================================ */
 
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  display: flex !important;
   justify-content: space-around;
   align-items: center;
   background: rgba(255, 255, 255, 0.98);
@@ -17,7 +17,7 @@
   border-top: 1px solid rgba(147, 51, 234, 0.1);
   box-shadow: 0 -2px 20px rgba(147, 51, 234, 0.08);
   padding: 0.5rem 0;
-  z-index: 1000;
+  z-index: 1999 !important; /* Just below navbar (2000) but above content */
   height: 64px; /* Android Material Design: 56dp + safe area */
   box-sizing: border-box;
   /* Safe area for notched devices */
@@ -25,15 +25,22 @@
   /* Smooth transition for hide/show */
   transform: translateY(0);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 /* Mobile: Hide by default, show peek */
 .bottom-nav.hidden {
   transform: translateY(calc(100% - 10px)); /* Show 10px peek */
+  visibility: visible !important; /* Keep visible even when hidden (showing peek) */
+  opacity: 1 !important;
 }
 
 .bottom-nav.visible {
   transform: translateY(0);
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Tablet/Desktop: Hide by default, show on hover */
