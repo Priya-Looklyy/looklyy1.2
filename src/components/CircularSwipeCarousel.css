@@ -115,7 +115,18 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Action Buttons - Positioned at bottom-right for thumb UX */
+/* Heart Icon - Positioned at top-right */
+.carousel-actions-top {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  max-width: calc(100% - 2rem); /* Prevent overflow from right edge */
+  box-sizing: border-box;
+  /* No overlay background - button floats directly over image */
+}
+
+/* Bookmark Icon - Positioned at bottom-right for thumb UX */
 .carousel-actions {
   position: absolute;
   bottom: calc(64px + 2rem); /* Footer bar (64px) + 2rem padding (32px) = 96px total - increased spacing */
@@ -206,8 +217,8 @@
     height: 100%; /* Use 100% of parent */
   }
 
-  .carousel-actions {
-    bottom: 1.5rem; /* Footer hidden on tablet, so closer to bottom */
+  .carousel-actions-top {
+    top: 1.5rem; /* Consistent spacing from top on tablet */
   }
 
   .carousel-actions {
@@ -234,8 +245,8 @@
     height: 100%; /* Use 100% of parent */
   }
 
-  .carousel-actions {
-    bottom: 1.5rem; /* Footer hidden on desktop */
+  .carousel-actions-top {
+    top: 1.5rem; /* Consistent spacing from top on desktop */
   }
 
   .carousel-actions {
