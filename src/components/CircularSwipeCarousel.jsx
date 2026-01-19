@@ -372,9 +372,11 @@ const CircularSwipeCarousel = ({ images }) => {
             className="displayed-image-full"
             onClick={handleDisplayedImageClick}
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              width: 'auto',
+              height: 'auto',
+              maxWidth: '150%',
+              maxHeight: '150%',
+              objectFit: 'contain',
               objectPosition: 'center',
               cursor: displayedImage === 'bookmark' ? 'pointer' : 'default'
             }}

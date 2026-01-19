@@ -142,6 +142,8 @@
   justify-content: center;
   background: #ffffff;
   animation: fadeIn 0.3s ease-in-out;
+  overflow: auto; /* Allow scrolling if image is larger */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .carousel-displayed-image ~ .carousel-track {
@@ -150,10 +152,26 @@
 }
 
 .displayed-image-full {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: auto;
+  height: auto;
+  max-width: 150%; /* Allow zoom - 1.5x larger */
+  max-height: 150%; /* Allow zoom - 1.5x larger */
+  object-fit: contain; /* Show full image without cropping */
   object-position: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+/* Zoom on hover for better readability */
+.displayed-image-full:hover {
+  transform: scale(1.1); /* Slight zoom on hover */
+}
+
+/* For touch devices - allow pinch zoom */
+.displayed-image-full {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 @keyframes fadeIn {
