@@ -129,9 +129,40 @@
   /* No overlay background - buttons float directly over image */
 }
 
-/* Legacy carousel-actions class - no longer used, kept for compatibility */
-.carousel-actions {
-  display: none; /* Bookmark icon moved to top-right with heart icon */
+/* Displayed Image - Replaces carousel view */
+.carousel-displayed-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20; /* Above carousel */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.carousel-displayed-image ~ .carousel-track {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.displayed-image-full {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .icon-button {

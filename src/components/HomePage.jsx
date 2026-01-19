@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import CircularSwipeCarousel from './CircularSwipeCarousel'
 import NotificationCenter from './NotificationCenter'
-import SlidingCanvas from './SlidingCanvas'
 import { getAllSliders } from '../data/fashionDatabase'
 import { useDemoImages } from '../hooks/useDemoImages'
 import trendingAPI from '../services/trendingAPI'
@@ -10,10 +9,6 @@ import { useAuth } from '../context/AuthContext'
 import './HomePage.css'
 
 const HomePage = () => {
-  const [pinnedLook, setPinnedLook] = useState(null)
-  const [isFrame2Active, setIsFrame2Active] = useState(false)
-  const [isTransitioning, setIsTransitioning] = useState(false)
-  const [currentCarouselImage, setCurrentCarouselImage] = useState(null)
   const [sliderData, setSliderData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -221,35 +216,6 @@ const HomePage = () => {
     return result
   }, [])
 
-  const handlePinLook = (slider, currentImage) => {
-    // Store the current carousel image for the transition
-    setCurrentCarouselImage(currentImage)
-    
-    // Start transition animation
-    setIsTransitioning(true)
-    
-    // After a brief delay, activate Frame 2
-    setTimeout(() => {
-      setPinnedLook({
-        slider,
-        currentImage
-      })
-      setIsFrame2Active(true)
-      setIsTransitioning(false)
-    }, 400) // Match CSS transition duration
-  }
-
-  const closeFrame2 = () => {
-    // Reverse transition
-    setIsTransitioning(true)
-    
-    setTimeout(() => {
-      setIsFrame2Active(false)
-      setPinnedLook(null)
-      setCurrentCarouselImage(null)
-      setIsTransitioning(false)
-    }, 400)
-  }
 
   // Loading state
   if (loading) {
@@ -277,38 +243,13 @@ const HomePage = () => {
   }
 
   return (
-    <div className={`home-page ${isFrame2Active ? 'frame2-active' : ''} ${isTransitioning ? 'transitioning' : ''}`}>
-      <div className={`home-content ${isFrame2Active ? 'frame2-layout' : ''}`}>
-        {/* Always render carousel, but hide/show based on state */}
-        <div className={`carousel-container ${isFrame2Active ? 'carousel-slided-left' : ''}`}>
+    <div className="home-page">
+      <div className="home-content">
+        <div className="carousel-container">
           <CircularSwipeCarousel 
             images={carouselImages}
-            onPinLook={handlePinLook}
           />
         </div>
-
-        {/* Frame 2: Canvas, Closet, Marketplace - appears in revealed space */}
-        {isFrame2Active && pinnedLook && (
-          <>
-            {/* Overlay for close button - carousel image stays visible underneath */}
-            <div className="canvas-header-image">
-              <button
-                className="close-frame2-btn"
-                onClick={closeFrame2}
-                aria-label="Close Canvas"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M18 6L6 18M6 6l12 12"/>
-                </svg>
-              </button>
-            </div>
-
-            <SlidingCanvas 
-              pinnedLook={pinnedLook}
-              onClose={closeFrame2}
-            />
-          </>
-        )}
       </div>
       
       <NotificationCenter />

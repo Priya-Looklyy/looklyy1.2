@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useLook } from '../context/LookContext'
 import './CircularSwipeCarousel.css'
 
-const CircularSwipeCarousel = ({ images, onPinLook }) => {
+const CircularSwipeCarousel = ({ images }) => {
   const { toggleFavorite, isFavorited } = useLook()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -10,6 +10,7 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
   const [currentX, setCurrentX] = useState(0)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageErrors, setImageErrors] = useState([])
+  const [displayedImage, setDisplayedImage] = useState(null) // null, 'bookmark', or 'image-click'
   const carouselRef = useRef(null)
   const touchStartTime = useRef(0)
   
@@ -91,8 +92,15 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
     setCurrentX(e.touches[0].clientX)
   }
 
-  const handleTouchEnd = () => {
-    if (!isDragging) return
+  const handleTouchEnd = (e) => {
+    if (!isDragging) {
+      // If not dragging, treat as tap/click
+      const deltaTime = Date.now() - touchStartTime.current
+      if (deltaTime < 300) { // Quick tap
+        handleImageClick(e)
+      }
+      return
+    }
     
     const deltaX = startX - currentX
     const deltaTime = Date.now() - touchStartTime.current
@@ -193,13 +201,19 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
     }
   }
 
-  const handlePinClick = (e) => {
+  const handleBookmarkClick = (e) => {
     e.stopPropagation()
-    const currentImage = displayImages[currentIndex]
-    if (onPinLook && currentImage.slider) {
-      onPinLook(currentImage.slider, currentImage)
+    setDisplayedImage('bookmark')
+  }
+
+  const handleImageClick = (e) => {
+    // Only trigger if not dragging (to distinguish from swipe)
+    if (!isDragging) {
+      e.stopPropagation()
+      setDisplayedImage('image-click')
     }
   }
+
 
   // Calculate transform for smooth swipe
   // Full-width layout: each slide takes 100% width
@@ -255,7 +269,9 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
         className="carousel-track"
         style={{ 
           transform,
-          transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+          transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          opacity: displayedImage ? 0 : 1,
+          pointerEvents: displayedImage ? 'none' : 'auto'
         }}
       >
         {displayImages.map((image, index) => {
@@ -276,6 +292,7 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
               <img
                 src={image.url}
                 alt={image.alt || `Fashion look ${index + 1}`}
+                onClick={handleImageClick}
                 onLoad={() => {
                   if (isCurrent) {
                     console.log('✅ Image loaded:', image.url)
@@ -303,7 +320,8 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
                   height: '100%',
                   objectFit: 'cover',
                   imageRendering: 'crisp-edges', // Better image quality
-                  WebkitImageRendering: '-webkit-optimize-contrast' // Safari optimization
+                  WebkitImageRendering: '-webkit-optimize-contrast', // Safari optimization
+                  cursor: 'pointer' // Indicate image is clickable
                 }}
                 className="carousel-image"
                 loading={shouldPreload ? 'eager' : 'lazy'}
@@ -327,14 +345,32 @@ const CircularSwipeCarousel = ({ images, onPinLook }) => {
         </button>
         <button
           className="icon-button"
-          onClick={handlePinClick}
-          aria-label="Pin look"
+          onClick={handleBookmarkClick}
+          onMouseDown={handleBookmarkClick}
+          aria-label="Bookmark look"
         >
           <svg viewBox="0 0 24 24" className="bookmark-icon icon-outline">
             <path d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/>
           </svg>
         </button>
       </div>
+
+      {/* Display selected image - replaces carousel view */}
+      {displayedImage && (
+        <div className="carousel-displayed-image">
+          <img 
+            src={displayedImage === 'bookmark' ? '/pear-shape-bookmark.png' : '/pear-shape-image-click.png'}
+            alt={displayedImage === 'bookmark' ? 'Pear Shape Bookmark' : 'Pear Shape Image Click'}
+            className="displayed-image-full"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center'
+            }}
+          />
+        </div>
+      )}
 
     </div>
   )
