@@ -214,6 +214,14 @@ const CircularSwipeCarousel = ({ images }) => {
     }
   }
 
+  const handleDisplayedImageClick = (e) => {
+    // When clicking on the bookmark image, navigate to the image-click image
+    if (displayedImage === 'bookmark') {
+      e.stopPropagation()
+      setDisplayedImage('image-click')
+    }
+  }
+
 
   // Calculate transform for smooth swipe
   // Full-width layout: each slide takes 100% width
@@ -362,11 +370,13 @@ const CircularSwipeCarousel = ({ images }) => {
             src={displayedImage === 'bookmark' ? '/pear-shape-bookmark.png' : '/pear-shape-image-click.png'}
             alt={displayedImage === 'bookmark' ? 'Pear Shape Bookmark' : 'Pear Shape Image Click'}
             className="displayed-image-full"
+            onClick={handleDisplayedImageClick}
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              objectPosition: 'center'
+              objectPosition: 'center',
+              cursor: displayedImage === 'bookmark' ? 'pointer' : 'default'
             }}
           />
         </div>
