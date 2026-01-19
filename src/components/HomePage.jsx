@@ -192,45 +192,34 @@ const HomePage = () => {
     loadTrendingData()
   }, [imageShuffleSeed, demoImages, demoLoading]) // Include demo images dependencies
   
-  // Flatten all images from all sliders into a single array of 25 images
+  // Create 25 copies of the single homepage image
   const carouselImages = useMemo(() => {
-    console.log('📊 HomePage: Processing sliderData for carousel:', {
-      sliderDataLength: sliderData?.length,
-      sliderData
-    })
-    
-    if (!sliderData || sliderData.length === 0) {
-      console.warn('⚠️ HomePage: No slider data available')
-      return []
+    // Single image to be repeated 25 times
+    const singleImageUrl = '/single-homepage-image.jpg'
+    const singleImage = {
+      id: 'single-homepage-image',
+      url: singleImageUrl,
+      alt: 'Casual Street Style Inspiration',
+      sliderId: 'single-image-slider',
+      slider: {
+        id: 'single-image-slider',
+        title: 'Casual Street Style',
+        description: 'Street style inspiration',
+        tag: 'Street Style',
+        images: [{ id: 'single-homepage-image', url: singleImageUrl, alt: 'Casual Street Style Inspiration' }]
+      }
     }
     
-    // Flatten all images from all sliders
-    const allImages = []
-    sliderData.forEach(slider => {
-      if (slider.images && Array.isArray(slider.images)) {
-        slider.images.forEach(image => {
-          if (image && image.url) {
-            allImages.push({
-              ...image,
-              sliderId: slider.id,
-              slider: slider // Keep reference to slider for pinning
-            })
-          }
-        })
-      }
-    })
+    // Create 25 copies of the same image
+    const result = Array.from({ length: 25 }, (_, index) => ({
+      ...singleImage,
+      id: `single-homepage-image-${index + 1}`,
+      sliderId: `single-image-slider-${index + 1}`
+    }))
     
-    console.log('✅ HomePage: Flattened images:', {
-      totalImages: allImages.length,
-      firstImage: allImages[0],
-      sampleUrls: allImages.slice(0, 3).map(img => img.url)
-    })
-    
-    // Limit to exactly 25 images
-    const result = allImages.slice(0, 25)
-    console.log('🎯 HomePage: Final carousel images:', result.length)
+    console.log('🎯 HomePage: Created 25 copies of single image:', result.length)
     return result
-  }, [sliderData])
+  }, [])
 
   const handlePinLook = (slider, currentImage) => {
     // Store the current carousel image for the transition
