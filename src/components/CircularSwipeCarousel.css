@@ -115,29 +115,23 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Heart Icon - Positioned at top-right */
+/* Heart and Bookmark Icons - Positioned at top-right, stacked vertically */
 .carousel-actions-top {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  z-index: 10;
-  max-width: calc(100% - 2rem); /* Prevent overflow from right edge */
-  box-sizing: border-box;
-  /* No overlay background - button floats directly over image */
-}
-
-/* Bookmark Icon - Positioned at bottom-right for thumb UX */
-.carousel-actions {
-  position: absolute;
-  bottom: calc(64px + 2rem); /* Footer bar (64px) + 2rem padding (32px) = 96px total - increased spacing */
-  right: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* Reduced gap for smaller buttons */
+  gap: 0.75rem; /* Healthy padding between heart and bookmark icons */
   z-index: 10;
   max-width: calc(100% - 2rem); /* Prevent overflow from right edge */
   box-sizing: border-box;
   /* No overlay background - buttons float directly over image */
+}
+
+/* Legacy carousel-actions class - no longer used, kept for compatibility */
+.carousel-actions {
+  display: none; /* Bookmark icon moved to top-right with heart icon */
 }
 
 .icon-button {
@@ -221,10 +215,6 @@
     top: 1.5rem; /* Consistent spacing from top on tablet */
   }
 
-  .carousel-actions {
-    bottom: 2rem; /* Footer hidden on tablet, increased padding from bottom */
-  }
-
   .icon-button {
     width: 28px; /* Reduced by 30%: 40px * 0.7 = 28px */
     height: 28px; /* Reduced by 30%: 40px * 0.7 = 28px */
@@ -247,10 +237,6 @@
 
   .carousel-actions-top {
     top: 1.5rem; /* Consistent spacing from top on desktop */
-  }
-
-  .carousel-actions {
-    bottom: 2rem; /* Footer hidden on desktop, increased padding from bottom */
   }
 
   .icon-button {
