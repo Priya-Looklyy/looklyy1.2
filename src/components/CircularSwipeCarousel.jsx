@@ -82,8 +82,8 @@ const CircularSwipeCarousel = ({ images }) => {
 
   // Touch handlers for swipe
   const handleTouchStart = (e) => {
-    // Don't handle carousel swipes when canvas is active
-    if (showCanvas) return
+    // Don't handle carousel swipes when canvas is active or when displayedImage is shown
+    if (showCanvas || displayedImage) return
     
     setIsDragging(true)
     setStartX(e.touches[0].clientX)
@@ -92,7 +92,7 @@ const CircularSwipeCarousel = ({ images }) => {
   }
 
   const handleTouchMove = (e) => {
-    if (!isDragging || showCanvas) return
+    if (!isDragging || showCanvas || displayedImage) return
     e.preventDefault()
     setCurrentX(e.touches[0].clientX)
   }
@@ -104,13 +104,14 @@ const CircularSwipeCarousel = ({ images }) => {
       const deltaY = endY - canvasSwipeStartY
       if (deltaY > 100) { // Swipe down threshold
         setShowCanvas(false)
+        setDisplayedImage(null)
       }
       setCanvasSwipeStartY(0)
       return
     }
 
-    // Don't handle carousel swipes when canvas is active
-    if (showCanvas) return
+    // Don't handle carousel swipes when canvas is active or when displayedImage is shown
+    if (showCanvas || displayedImage) return
 
     if (!isDragging) {
       // If not dragging, treat as tap/click
@@ -144,21 +145,38 @@ const CircularSwipeCarousel = ({ images }) => {
 
   const handleCanvasTouchStart = (e) => {
     if (showCanvas) {
+      e.stopPropagation()
       setCanvasSwipeStartY(e.touches[0].clientY)
+    }
+  }
+
+  const handleCanvasTouchEnd = (e) => {
+    if (showCanvas && canvasSwipeStartY > 0) {
+      e.stopPropagation()
+      const endY = e.changedTouches ? e.changedTouches[0].clientY : 0
+      const deltaY = endY - canvasSwipeStartY
+      if (deltaY > 100) { // Swipe down threshold
+        setShowCanvas(false)
+        setDisplayedImage(null)
+      }
+      setCanvasSwipeStartY(0)
     }
   }
 
   // Mouse handlers for desktop drag
   const handleMouseDown = useCallback((e) => {
+    // Don't handle carousel drags when canvas is active or when displayedImage is shown
+    if (showCanvas || displayedImage) return
+    
     setIsDragging(true)
     setStartX(e.clientX)
     setCurrentX(e.clientX)
     touchStartTime.current = Date.now()
-  }, [])
+  }, [showCanvas, displayedImage])
 
   // Cleanup mouse events
   useEffect(() => {
-    if (!isDragging) return
+    if (!isDragging || showCanvas || displayedImage) return
 
     const handleMouseMove = (e) => {
       e.preventDefault()
@@ -190,7 +208,7 @@ const CircularSwipeCarousel = ({ images }) => {
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [isDragging, startX, currentX, currentIndex, goToIndex])
+  }, [isDragging, startX, currentX, currentIndex, goToIndex, showCanvas, displayedImage])
 
   const handleImageLoad = () => {
     setImageLoaded(true)
@@ -230,7 +248,18 @@ const CircularSwipeCarousel = ({ images }) => {
     e.stopPropagation()
     e.preventDefault()
     // Toggle canvas overlay
-    setShowCanvas(prev => !prev)
+    setShowCanvas(prev => {
+      const newState = !prev
+      // Reset displayedImage and ensure carousel is functional when closing canvas
+      if (prev && newState === false) {
+        setDisplayedImage(null)
+        // Reset dragging state to ensure carousel works
+        setIsDragging(false)
+        setStartX(0)
+        setCurrentX(0)
+      }
+      return newState
+    })
   }
 
   const handleImageClick = (e) => {
@@ -305,8 +334,8 @@ const CircularSwipeCarousel = ({ images }) => {
         style={{ 
           transform,
           transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          opacity: displayedImage ? 0 : 1,
-          pointerEvents: displayedImage ? 'none' : 'auto'
+          opacity: (displayedImage && !showCanvas) ? 0 : 1,
+          pointerEvents: (displayedImage && !showCanvas) ? 'none' : (showCanvas ? 'none' : 'auto')
         }}
       >
         {displayImages.map((image, index) => {
@@ -395,6 +424,7 @@ const CircularSwipeCarousel = ({ images }) => {
         <div 
           className="canvas-overlay"
           onTouchStart={handleCanvasTouchStart}
+          onTouchEnd={handleCanvasTouchEnd}
         >
           {/* Blurred background */}
           <div className="canvas-background-blur">
