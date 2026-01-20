@@ -115,15 +115,19 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Canvas Active State - Blur background image */
+/* Canvas Active State - Image transformation (slide/collapse) */
 .circular-carousel.canvas-active .carousel-track {
-  filter: blur(8px);
-  opacity: 0.6;
-  transition: filter 0.25s ease, opacity 0.25s ease;
+  filter: blur(12px) brightness(0.7);
+  opacity: 0.5;
+  transform: scale(0.95);
+  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .circular-carousel.canvas-active .carousel-image {
-  transition: filter 0.25s ease, opacity 0.25s ease;
+  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Heart and Bookmark Icons - Positioned at top-right, stacked vertically */
@@ -285,8 +289,9 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
   z-index: 10;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  flex-direction: row; /* Horizontal layout for mini preview and content */
+  align-items: flex-start;
+  gap: 1.25rem;
   animation: cardSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   touch-action: pan-y; /* Allow vertical swipe */
 }
@@ -302,7 +307,7 @@
   }
 }
 
-/* Mini Preview Image */
+/* Mini Preview Image - Left aligned */
 .canvas-mini-preview {
   width: 120px;
   height: 160px;
@@ -310,6 +315,7 @@
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
+  align-self: flex-start; /* Align to top */
 }
 
 .mini-preview-image {
@@ -319,6 +325,14 @@
   object-position: center;
 }
 
+/* Content area - Right side of mini preview */
+.canvas-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.75rem;
+}
+
 /* Recommendation Copy */
 .canvas-recommendation {
   font-family: 'Avenir Next', sans-serif;
@@ -326,7 +340,7 @@
   font-weight: 400;
   color: #4b5563;
   line-height: 1.5;
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 /* Primary CTA Button */
@@ -343,7 +357,8 @@
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
-  margin-top: 0.5rem;
+  margin-top: 0;
+  align-self: flex-start; /* Align to start of content area */
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -366,11 +381,19 @@
     width: 85%;
     padding: 1.25rem;
     border-radius: 20px;
+    flex-direction: row; /* Keep horizontal layout on mobile */
+    gap: 1rem;
   }
 
   .canvas-mini-preview {
     width: 100px;
     height: 140px;
+    flex-shrink: 0;
+  }
+
+  .canvas-card-content {
+    flex: 1;
+    gap: 0.625rem;
   }
 
   .canvas-style-labels {
@@ -386,6 +409,7 @@
   .canvas-cta-button {
     padding: 0.75rem 1.25rem;
     font-size: 0.875rem;
+    width: 100%;
   }
 }
 

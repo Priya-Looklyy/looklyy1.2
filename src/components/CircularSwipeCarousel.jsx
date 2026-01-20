@@ -228,12 +228,9 @@ const CircularSwipeCarousel = ({ images }) => {
 
   const handleBookmarkClick = (e) => {
     e.stopPropagation()
+    e.preventDefault()
     // Toggle canvas overlay
-    if (showCanvas) {
-      setShowCanvas(false)
-    } else {
-      setShowCanvas(true)
-    }
+    setShowCanvas(prev => !prev)
   }
 
   const handleImageClick = (e) => {
@@ -424,22 +421,26 @@ const CircularSwipeCarousel = ({ images }) => {
               />
             </div>
 
-            {/* Recommendation Copy */}
-            <div className="canvas-recommendation">
-              Jacket here, is the statement
-            </div>
+            {/* Content area - Right side */}
+            <div className="canvas-card-content">
+              {/* Recommendation Copy */}
+              <div className="canvas-recommendation">
+                Jacket here, is the statement
+              </div>
 
-            {/* Primary CTA Button */}
-            <button 
-              className="canvas-cta-button"
-              onClick={() => {
-                // Navigate to recreation flow
-                setDisplayedImage('image-click')
-                setShowCanvas(false)
-              }}
-            >
-              Let's Recreate
-            </button>
+              {/* Primary CTA Button */}
+              <button 
+                className="canvas-cta-button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  // Navigate to recreation flow
+                  setDisplayedImage('image-click')
+                  setShowCanvas(false)
+                }}
+              >
+                Let's Recreate
+              </button>
+            </div>
           </div>
         </div>
       )}
