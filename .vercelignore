@@ -1,0 +1,30 @@
+# Ignore Python files and backend code
+requirements.txt
+backend/
+airflow/
+__pycache__/
+*.py
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+dags/
+*.egg-info/
+dist-info/
+
+# Ignore other non-frontend files
+Procfile
+railway.json
+server.js
+mock_api.py
+production_api.py
+simple_local_api.py
+start_with_images.py
+image_manager.py
+create_placeholder_images.py
+create_simple_images.py
