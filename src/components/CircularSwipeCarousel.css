@@ -115,6 +115,17 @@
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* Canvas Active State - Blur background image */
+.circular-carousel.canvas-active .carousel-track {
+  filter: blur(8px);
+  opacity: 0.6;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.circular-carousel.canvas-active .carousel-image {
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
 /* Heart and Bookmark Icons - Positioned at top-right, stacked vertically */
 .carousel-actions-top {
   position: absolute;
@@ -123,10 +134,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem; /* Healthy padding between heart and bookmark icons */
-  z-index: 10;
+  z-index: 30; /* Above canvas overlay */
   max-width: calc(100% - 2rem); /* Prevent overflow from right edge */
   box-sizing: border-box;
   /* No overlay background - buttons float directly over image */
+}
+
+.icon-button.icon-active .bookmark-icon {
+  fill: #7c3aed;
+  stroke: #7c3aed;
 }
 
 /* Displayed Image - Replaces carousel view */
@@ -180,6 +196,196 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+/* ============================================
+   CANVAS OVERLAY (Emerges from tapped image)
+   ============================================ */
+
+.canvas-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15; /* Above carousel, below icons */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: canvasFadeIn 0.25s ease-out;
+}
+
+@keyframes canvasFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Blurred Background */
+.canvas-background-blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.blurred-background-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(12px) brightness(0.7);
+  transform: scale(1.1); /* Slight zoom to hide blur edges */
+}
+
+/* Style Labels - Top */
+.canvas-style-labels {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-family: 'Nord', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #7c3aed;
+  text-transform: uppercase;
+  opacity: 0.9;
+  z-index: 20;
+  animation: slideDownFadeIn 0.3s ease-out 0.1s both;
+}
+
+@keyframes slideDownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+}
+
+/* Canvas Card */
+.canvas-card {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: cardSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  touch-action: pan-y; /* Allow vertical swipe */
+}
+
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mini Preview Image */
+.canvas-mini-preview {
+  width: 120px;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.mini-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Recommendation Copy */
+.canvas-recommendation {
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: #4b5563;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+/* Primary CTA Button */
+.canvas-cta-button {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: #ffffff;
+  border: 2px solid #7c3aed;
+  border-radius: 9999px; /* Pill shape */
+  color: #7c3aed;
+  font-family: 'Nord', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
+  margin-top: 0.5rem;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.canvas-cta-button:hover {
+  background: #7c3aed;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+  transform: translateY(-1px);
+}
+
+.canvas-cta-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.2);
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .canvas-card {
+    width: 85%;
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+
+  .canvas-mini-preview {
+    width: 100px;
+    height: 140px;
+  }
+
+  .canvas-style-labels {
+    font-size: 0.75rem;
+    top: 0.75rem;
+    left: 0.75rem;
+  }
+
+  .canvas-recommendation {
+    font-size: 0.875rem;
+  }
+
+  .canvas-cta-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
   }
 }
 

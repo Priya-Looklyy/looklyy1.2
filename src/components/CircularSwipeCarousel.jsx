@@ -11,6 +11,8 @@ const CircularSwipeCarousel = ({ images }) => {
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageErrors, setImageErrors] = useState([])
   const [displayedImage, setDisplayedImage] = useState(null) // null, 'bookmark', or 'image-click'
+  const [showCanvas, setShowCanvas] = useState(false) // Canvas overlay state
+  const [canvasSwipeStartY, setCanvasSwipeStartY] = useState(0)
   const carouselRef = useRef(null)
   const touchStartTime = useRef(0)
   
@@ -80,6 +82,9 @@ const CircularSwipeCarousel = ({ images }) => {
 
   // Touch handlers for swipe
   const handleTouchStart = (e) => {
+    // Don't handle carousel swipes when canvas is active
+    if (showCanvas) return
+    
     setIsDragging(true)
     setStartX(e.touches[0].clientX)
     setCurrentX(e.touches[0].clientX)
@@ -87,12 +92,26 @@ const CircularSwipeCarousel = ({ images }) => {
   }
 
   const handleTouchMove = (e) => {
-    if (!isDragging) return
+    if (!isDragging || showCanvas) return
     e.preventDefault()
     setCurrentX(e.touches[0].clientX)
   }
 
   const handleTouchEnd = (e) => {
+    // Handle canvas swipe down
+    if (showCanvas && canvasSwipeStartY > 0) {
+      const endY = e.changedTouches ? e.changedTouches[0].clientY : 0
+      const deltaY = endY - canvasSwipeStartY
+      if (deltaY > 100) { // Swipe down threshold
+        setShowCanvas(false)
+      }
+      setCanvasSwipeStartY(0)
+      return
+    }
+
+    // Don't handle carousel swipes when canvas is active
+    if (showCanvas) return
+
     if (!isDragging) {
       // If not dragging, treat as tap/click
       const deltaTime = Date.now() - touchStartTime.current
@@ -121,6 +140,12 @@ const CircularSwipeCarousel = ({ images }) => {
     setIsDragging(false)
     setStartX(0)
     setCurrentX(0)
+  }
+
+  const handleCanvasTouchStart = (e) => {
+    if (showCanvas) {
+      setCanvasSwipeStartY(e.touches[0].clientY)
+    }
   }
 
   // Mouse handlers for desktop drag
@@ -203,7 +228,12 @@ const CircularSwipeCarousel = ({ images }) => {
 
   const handleBookmarkClick = (e) => {
     e.stopPropagation()
-    setDisplayedImage('bookmark')
+    // Toggle canvas overlay
+    if (showCanvas) {
+      setShowCanvas(false)
+    } else {
+      setShowCanvas(true)
+    }
   }
 
   const handleImageClick = (e) => {
@@ -266,7 +296,7 @@ const CircularSwipeCarousel = ({ images }) => {
 
   return (
     <div 
-      className="circular-carousel"
+      className={`circular-carousel ${showCanvas ? 'canvas-active' : ''}`}
       ref={carouselRef}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -352,16 +382,67 @@ const CircularSwipeCarousel = ({ images }) => {
           </svg>
         </button>
         <button
-          className="icon-button"
+          className={`icon-button ${showCanvas ? 'icon-active' : ''}`}
           onClick={handleBookmarkClick}
           onMouseDown={handleBookmarkClick}
-          aria-label="Bookmark look"
+          aria-label={showCanvas ? 'Close canvas' : 'Bookmark look'}
         >
-          <svg viewBox="0 0 24 24" className="bookmark-icon icon-outline">
+          <svg viewBox="0 0 24 24" className={`bookmark-icon ${showCanvas ? 'icon-filled' : 'icon-outline'}`}>
             <path d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/>
           </svg>
         </button>
       </div>
+
+      {/* Canvas Overlay - Emerges from tapped image */}
+      {showCanvas && currentImage && (
+        <div 
+          className="canvas-overlay"
+          onTouchStart={handleCanvasTouchStart}
+        >
+          {/* Blurred background */}
+          <div className="canvas-background-blur">
+            <img 
+              src={currentImage.url} 
+              alt={currentImage.alt}
+              className="blurred-background-image"
+            />
+          </div>
+
+          {/* Style Labels - Top */}
+          <div className="canvas-style-labels">
+            CASUAL | BOHO STREET
+          </div>
+
+          {/* Canvas Card */}
+          <div className="canvas-card">
+            {/* Mini Preview Image - Left aligned */}
+            <div className="canvas-mini-preview">
+              <img 
+                src={currentImage.url} 
+                alt={currentImage.alt}
+                className="mini-preview-image"
+              />
+            </div>
+
+            {/* Recommendation Copy */}
+            <div className="canvas-recommendation">
+              Jacket here, is the statement
+            </div>
+
+            {/* Primary CTA Button */}
+            <button 
+              className="canvas-cta-button"
+              onClick={() => {
+                // Navigate to recreation flow
+                setDisplayedImage('image-click')
+                setShowCanvas(false)
+              }}
+            >
+              Let's Recreate
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Display selected image - replaces carousel view */}
       {displayedImage && (
