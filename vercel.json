@@ -3,7 +3,6 @@
   "outputDirectory": "dist",
   "framework": null,
   "installCommand": "npm install",
-  "functions": {},
   "rewrites": [
     {
       "source": "/api/(.*)",
