@@ -16,6 +16,14 @@ export const metadata: Metadata = {
   title: "Looklyy - Recreate Fashion Looks from Your Wardrobe",
   description: "Stop scrolling endlessly. See a look you love? Looklyy shows you how to recreate it with clothes you already own. Pre-register for early access.",
   keywords: "fashion, wardrobe, styling, personal styling, fashion app, wardrobe management, AI fashion",
+  icons: {
+    icon: [
+      { url: "/favicon-32x32.svg", sizes: "32x32", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: ["/favicon-32x32.svg"],
+    apple: ["/apple-touch-icon.svg"],
+  },
   openGraph: {
     title: "Looklyy - Recreate Fashion Looks from Your Wardrobe",
     description: "Stop scrolling endlessly. See a look you love? Looklyy shows you how to recreate it with clothes you already own.",

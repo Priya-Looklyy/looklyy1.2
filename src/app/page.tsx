@@ -123,22 +123,13 @@ export default function Home() {
         {/* Navigation */}
         <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-b border-gray-100 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
+            <div className="flex justify-start items-center h-16">
               <div className="flex items-center space-x-2">
                 <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">L</span>
                 </div>
                 <span className="text-xl font-semibold text-gray-900">Looklyy</span>
               </div>
-              <button
-                onClick={() => {
-                  document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' });
-                  handleCTAClick('nav');
-                }}
-                className="px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors"
-              >
-                Pre-register →
-              </button>
             </div>
           </div>
         </nav>
@@ -148,16 +139,16 @@ export default function Home() {
           <div className="text-center max-w-4xl mx-auto">
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Recreate any fashion look
+              What if you could learn to style as a skill
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-700">
-                from your own wardrobe
+                as you shop?
               </span>
             </h1>
 
             {/* Sub-headline */}
             <p className="text-xl sm:text-2xl text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto">
-              Stop scrolling endlessly. See a look you love? Looklyy shows you how to recreate it with clothes you already own.
+              Would you consider registering if I showed you, every day, how to dress better through small, low-risk additions using what you already own?
             </p>
 
             {/* Primary CTA */}
@@ -178,9 +169,9 @@ export default function Home() {
                 type="submit"
                 onClick={() => handleCTAClick('hero_button')}
                 disabled={isSubmitting}
-                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="flex-1 w-full sm:w-auto px-6 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {isSubmitting ? 'Registering...' : 'Pre-register for product demo'}
+                {isSubmitting ? 'Registering...' : 'Register'}
               </button>
             </form>
 
@@ -353,7 +344,7 @@ export default function Home() {
                     disabled={isSubmitting}
                     className="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
-                    {isSubmitting ? 'Registering...' : 'Pre-register for product demo'}
+                    {isSubmitting ? 'Registering...' : 'Register'}
                   </button>
                 </div>
                 <p className="mt-4 text-sm text-gray-500">
