@@ -135,32 +135,16 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* Hero Section - Editorial Style */}
-        <section className="pt-32 pb-32 px-6 sm:px-8 lg:px-12">
-          <div className="max-w-7xl mx-auto">
-            {/* Editorial Layout: Image Left, Text Right */}
-            <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-24">
-              {/* Large Hero Image */}
-              <div className="relative h-[500px] lg:h-[600px] order-2 lg:order-1">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/50 to-transparent rounded-2xl"></div>
-                <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
-                  <Image
-                    src="/single-homepage-image.jpg"
-                    alt="Fashion Editorial"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                  {/* Overlay gradient for text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                </div>
-              </div>
-
-              {/* Editorial Text Content */}
-              <div className="order-1 lg:order-2 space-y-8">
+        {/* Hero Section - Editorial Style - Viewport Height */}
+        <section className="min-h-screen flex items-center pt-20 pb-12 px-6 sm:px-8 lg:px-12">
+          <div className="max-w-7xl mx-auto w-full">
+            {/* Editorial Layout: Text Left, Image Right */}
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Editorial Text Content - Left Side */}
+              <div className="space-y-6 lg:space-y-8">
                 {/* Large Editorial Headline */}
-                <div className="space-y-6">
-                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light leading-[1.1] text-gray-900 tracking-tight">
+                <div className="space-y-4 lg:space-y-6">
+                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light leading-[1.1] text-gray-900 tracking-tight">
                     What if you could{' '}
                     <span className="font-normal italic text-purple-700">learn to style</span>
                     <br />
@@ -174,14 +158,14 @@ export default function Home() {
                 </div>
 
                 {/* Sub-headline - Editorial Style */}
-                <p className="text-xl sm:text-2xl text-gray-600 leading-relaxed font-light max-w-xl">
+                <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 leading-relaxed font-light max-w-xl">
                   Would you consider registering if I showed you, every day, how to dress better through small, low-risk additions using what you already own?
                 </p>
 
                 {/* CTA Form - Editorial Style */}
                 <form
                   onSubmit={handleSubmit}
-                  className="flex flex-col sm:flex-row gap-4 pt-4"
+                  className="flex flex-col sm:flex-row gap-4 pt-2 lg:pt-4"
                 >
                   <input
                     type="email"
@@ -203,9 +187,25 @@ export default function Home() {
                 </form>
 
                 {/* Trust indicator - Minimal */}
-                <p className="text-xs text-gray-400 uppercase tracking-wider">
+                <p className="text-xs text-gray-400 uppercase tracking-wider pt-2">
                   No spam. Unsubscribe anytime.
                 </p>
+              </div>
+
+              {/* Large Hero Image - Right Side */}
+              <div className="relative h-[400px] sm:h-[500px] lg:h-[550px] xl:h-[600px] order-first lg:order-last">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/50 to-transparent rounded-2xl"></div>
+                <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
+                  <Image
+                    src="/single-homepage-image.jpg"
+                    alt="Fashion Editorial"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  {/* Overlay gradient for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                </div>
               </div>
             </div>
           </div>
