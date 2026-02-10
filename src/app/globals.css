@@ -13,6 +13,7 @@ body {
   background: white;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
 }
 
 /* Smooth scrolling */
@@ -24,4 +25,18 @@ html {
 *:focus-visible {
   outline: 2px solid #9333ea;
   outline-offset: 2px;
+}
+
+/* Editorial typography enhancements */
+@layer utilities {
+  .editorial-text {
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+  }
+  
+  .editorial-headline {
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.02em;
+  }
 }

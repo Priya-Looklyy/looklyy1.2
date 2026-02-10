@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Script from 'next/script';
+import Image from 'next/image';
 
 // Analytics tracking hook
 function useAnalytics() {
@@ -120,117 +121,163 @@ export default function Home() {
       />
 
       <div className="min-h-screen bg-white">
-        {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-b border-gray-100 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-start items-center h-16">
-              <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">L</span>
+        {/* Navigation - Minimalist */}
+        <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-100 z-50">
+          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+            <div className="flex justify-start items-center h-20">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">L</span>
                 </div>
-                <span className="text-xl font-semibold text-gray-900">Looklyy</span>
+                <span className="text-2xl font-light tracking-tight text-gray-900">Looklyy</span>
               </div>
             </div>
           </div>
         </nav>
 
-        {/* Hero Section - Above the Fold */}
-        <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              What if you could learn to style as a skill
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-700">
-                as you shop?
-              </span>
-            </h1>
+        {/* Hero Section - Editorial Style */}
+        <section className="pt-32 pb-32 px-6 sm:px-8 lg:px-12">
+          <div className="max-w-7xl mx-auto">
+            {/* Editorial Layout: Image Left, Text Right */}
+            <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-24">
+              {/* Large Hero Image */}
+              <div className="relative h-[500px] lg:h-[600px] order-2 lg:order-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/50 to-transparent rounded-2xl"></div>
+                <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
+                  <Image
+                    src="/single-homepage-image.jpg"
+                    alt="Fashion Editorial"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  {/* Overlay gradient for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                </div>
+              </div>
 
-            {/* Sub-headline */}
-            <p className="text-xl sm:text-2xl text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto">
-              Would you consider registering if I showed you, every day, how to dress better through small, low-risk additions using what you already own?
-            </p>
+              {/* Editorial Text Content */}
+              <div className="order-1 lg:order-2 space-y-8">
+                {/* Large Editorial Headline */}
+                <div className="space-y-6">
+                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light leading-[1.1] text-gray-900 tracking-tight">
+                    What if you could{' '}
+                    <span className="font-normal italic text-purple-700">learn to style</span>
+                    <br />
+                    <span className="font-light">as a skill</span>
+                    <br />
+                    <span className="font-normal text-purple-600">as you shop?</span>
+                  </h1>
+                  
+                  {/* Decorative Line */}
+                  <div className="w-24 h-0.5 bg-gradient-to-r from-purple-600 to-transparent"></div>
+                </div>
 
-            {/* Primary CTA */}
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-lg mx-auto mb-8"
-            >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
-                className="flex-1 w-full sm:w-auto px-6 py-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                onClick={() => handleCTAClick('hero_email')}
-              />
-              <button
-                type="submit"
-                onClick={() => handleCTAClick('hero_button')}
-                disabled={isSubmitting}
-                className="flex-1 w-full sm:w-auto px-6 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                {isSubmitting ? 'Registering...' : 'Register'}
-              </button>
-            </form>
+                {/* Sub-headline - Editorial Style */}
+                <p className="text-xl sm:text-2xl text-gray-600 leading-relaxed font-light max-w-xl">
+                  Would you consider registering if I showed you, every day, how to dress better through small, low-risk additions using what you already own?
+                </p>
 
-            {/* Trust indicators */}
-            <p className="text-sm text-gray-500">
-              No spam. Unsubscribe anytime.
-            </p>
+                {/* CTA Form - Editorial Style */}
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col sm:flex-row gap-4 pt-4"
+                >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    className="flex-1 px-6 py-4 text-base border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
+                    onClick={() => handleCTAClick('hero_email')}
+                  />
+                  <button
+                    type="submit"
+                    onClick={() => handleCTAClick('hero_button')}
+                    disabled={isSubmitting}
+                    className="flex-1 sm:flex-none px-8 py-4 bg-purple-600 text-white font-medium tracking-wide uppercase text-sm hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? 'Registering...' : 'Register'}
+                  </button>
+                </form>
+
+                {/* Trust indicator - Minimal */}
+                <p className="text-xs text-gray-400 uppercase tracking-wider">
+                  No spam. Unsubscribe anytime.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Problem & Solution Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-                  You see a look you love. Now what?
-                </h2>
-                <p className="text-lg text-gray-600 mb-4">
+        {/* Visual Break - Full Width Image */}
+        <section className="py-0 px-0 mb-32">
+          <div className="relative h-[400px] lg:h-[500px] w-full overflow-hidden">
+            <Image
+              src="/single-homepage-image.jpg"
+              alt="Fashion Editorial Break"
+              fill
+              className="object-cover grayscale-[0.3]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-transparent to-transparent"></div>
+          </div>
+        </section>
+
+        {/* Problem & Solution Section - Editorial Grid */}
+        <section className="py-32 px-6 sm:px-8 lg:px-12 bg-white">
+          <div className="max-w-7xl mx-auto">
+            {/* Section Header - Editorial Style */}
+            <div className="mb-24 text-center">
+              <div className="inline-block mb-6">
+                <div className="w-16 h-0.5 bg-purple-600 mx-auto"></div>
+              </div>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 tracking-tight mb-8">
+                You see a look you love.
+                <br />
+                <span className="font-normal italic text-purple-700">Now what?</span>
+              </h2>
+            </div>
+
+            {/* Editorial Two-Column Layout */}
+            <div className="grid lg:grid-cols-2 gap-20 items-start">
+              {/* Left Column - Text */}
+              <div className="space-y-8">
+                <p className="text-xl sm:text-2xl text-gray-700 leading-relaxed font-light">
                   Most of us bookmark fashion inspiration, then forget about it. Or worse—we try to recreate it but can&apos;t find the right pieces, even though they&apos;re already in our closet.
                 </p>
-                <p className="text-lg text-gray-600">
+                <p className="text-xl sm:text-2xl text-gray-700 leading-relaxed font-light">
                   Looklyy solves this by connecting inspiration to your actual wardrobe. No more guessing if you have the right pieces. No more buying duplicates of what you already own.
                 </p>
               </div>
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">See a look you love</h3>
-                      <p className="text-gray-600 text-sm">Browse trending fashion inspiration</p>
-                    </div>
+
+              {/* Right Column - Visual Feature List */}
+              <div className="space-y-8">
+                <div className="flex items-start gap-6 pb-8 border-b border-gray-200">
+                  <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-6 h-6 border-2 border-purple-600 rounded-full"></div>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Match to your wardrobe</h3>
-                      <p className="text-gray-600 text-sm">AI finds similar pieces you already own</p>
-                    </div>
+                  <div>
+                    <h3 className="text-xl font-medium text-gray-900 mb-2 uppercase tracking-wide">See a look you love</h3>
+                    <p className="text-gray-600 font-light">Browse trending fashion inspiration</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Recreate instantly</h3>
-                      <p className="text-gray-600 text-sm">Get styling suggestions using your clothes</p>
-                    </div>
+                </div>
+                <div className="flex items-start gap-6 pb-8 border-b border-gray-200">
+                  <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-6 h-6 border-2 border-purple-600 rounded-full"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-medium text-gray-900 mb-2 uppercase tracking-wide">Match to your wardrobe</h3>
+                    <p className="text-gray-600 font-light">AI finds similar pieces you already own</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-6">
+                  <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-6 h-6 border-2 border-purple-600 rounded-full"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-medium text-gray-900 mb-2 uppercase tracking-wide">Recreate instantly</h3>
+                    <p className="text-gray-600 font-light">Get styling suggestions using your clothes</p>
                   </div>
                 </div>
               </div>
@@ -238,95 +285,124 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Curiosity Builder Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-              What you&apos;ll get access to
-            </h2>
-            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-              Early access to Looklyy includes exclusive features designed to transform how you approach personal styling.
-            </p>
+        {/* Visual Break - Abstract Shape */}
+        <section className="py-0 px-0 mb-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/30 to-transparent"></div>
+          <div className="relative h-[300px] flex items-center justify-center">
+            <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
+              <div className="grid grid-cols-3 gap-8">
+                <div className="h-48 bg-gradient-to-br from-purple-200/50 to-transparent rounded-lg"></div>
+                <div className="h-48 bg-gradient-to-br from-purple-300/50 to-transparent rounded-lg"></div>
+                <div className="h-48 bg-gradient-to-br from-purple-200/50 to-transparent rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        </section>
 
+        {/* What You'll Get - Editorial Cards */}
+        <section className="py-32 px-6 sm:px-8 lg:px-12">
+          <div className="max-w-7xl mx-auto">
+            {/* Section Header */}
+            <div className="mb-20 text-center">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 tracking-tight mb-6">
+                What you&apos;ll get access to
+              </h2>
+              <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto">
+                Early access to Looklyy includes exclusive features designed to transform how you approach personal styling.
+              </p>
+            </div>
+
+            {/* Editorial Card Grid */}
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-8">
-                <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+              <div className="group relative overflow-hidden bg-white border border-gray-200 p-10 hover:border-purple-300 transition-all">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-purple-600 mb-6 flex items-center justify-center">
+                    <div className="w-8 h-8 border-2 border-white rounded"></div>
+                  </div>
+                  <h3 className="text-2xl font-medium text-gray-900 mb-4 uppercase tracking-wide">AI-Powered Matching</h3>
+                  <p className="text-gray-600 font-light leading-relaxed">
+                    Our technology analyzes fashion looks and matches them to items in your wardrobe with precision.
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">AI-Powered Matching</h3>
-                <p className="text-gray-600">
-                  Our technology analyzes fashion looks and matches them to items in your wardrobe with precision.
-                </p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-8">
-                <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                  </svg>
+              <div className="group relative overflow-hidden bg-white border border-gray-200 p-10 hover:border-purple-300 transition-all">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-purple-600 mb-6 flex items-center justify-center">
+                    <div className="w-8 h-8 border-2 border-white rounded"></div>
+                  </div>
+                  <h3 className="text-2xl font-medium text-gray-900 mb-4 uppercase tracking-wide">Personalized Suggestions</h3>
+                  <p className="text-gray-600 font-light leading-relaxed">
+                    Get styling recommendations tailored to your body type, preferences, and existing wardrobe.
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Personalized Suggestions</h3>
-                <p className="text-gray-600">
-                  Get styling recommendations tailored to your body type, preferences, and existing wardrobe.
-                </p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-8">
-                <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              <div className="group relative overflow-hidden bg-white border border-gray-200 p-10 hover:border-purple-300 transition-all">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-purple-600 mb-6 flex items-center justify-center">
+                    <div className="w-8 h-8 border-2 border-white rounded"></div>
+                  </div>
+                  <h3 className="text-2xl font-medium text-gray-900 mb-4 uppercase tracking-wide">Wardrobe Intelligence</h3>
+                  <p className="text-gray-600 font-light leading-relaxed">
+                    Understand what you own, what you wear most, and discover hidden styling possibilities.
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Wardrobe Intelligence</h3>
-                <p className="text-gray-600">
-                  Understand what you own, what you wear most, and discover hidden styling possibilities.
-                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Registration Section */}
+        {/* Registration Section - Editorial CTA */}
         <section
           id="register"
-          className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-600 to-purple-700"
+          className="py-40 px-6 sm:px-8 lg:px-12 relative overflow-hidden"
         >
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Ready to transform your wardrobe?
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800"></div>
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')]"></div>
+          </div>
+
+          <div className="max-w-4xl mx-auto text-center relative z-10">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-8 tracking-tight">
+              Ready to transform
+              <br />
+              <span className="font-normal italic">your wardrobe?</span>
             </h2>
-            <p className="text-xl text-purple-100 mb-10">
+            <p className="text-xl sm:text-2xl text-purple-100 mb-12 font-light">
               Join the waitlist and be among the first to experience Looklyy.
             </p>
 
             {isSubmitted ? (
-              <div className="bg-white rounded-lg p-8 shadow-xl">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-white rounded-lg p-12 shadow-2xl max-w-md mx-auto">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">You&apos;re registered!</h3>
-                <p className="text-gray-600">
+                <h3 className="text-3xl font-light text-gray-900 mb-3">You&apos;re registered!</h3>
+                <p className="text-gray-600 font-light">
                   We&apos;ll send you an email when Looklyy is ready. Thanks for your interest!
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="bg-white rounded-lg p-8 shadow-xl">
+              <form onSubmit={handleSubmit} className="bg-white rounded-lg p-10 shadow-2xl max-w-lg mx-auto">
                 {error && (
-                  <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-red-600 text-sm">{error}</p>
                   </div>
                 )}
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Your name (optional)"
-                    className="w-full px-6 py-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-6 py-4 text-base border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
                     onClick={() => handleCTAClick('form_name')}
                   />
                   <input
@@ -335,19 +411,19 @@ export default function Home() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Your email"
                     required
-                    className="w-full px-6 py-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-6 py-4 text-base border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
                     onClick={() => handleCTAClick('form_email')}
                   />
                   <button
                     type="submit"
                     onClick={() => handleCTAClick('form_submit')}
                     disabled={isSubmitting}
-                    className="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="w-full px-8 py-4 bg-purple-600 text-white font-medium tracking-wide uppercase text-sm hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? 'Registering...' : 'Register'}
                   </button>
                 </div>
-                <p className="mt-4 text-sm text-gray-500">
+                <p className="mt-6 text-xs text-gray-400 uppercase tracking-wider">
                   We respect your privacy. No spam, unsubscribe anytime.
                 </p>
               </form>
@@ -355,16 +431,16 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+        {/* Footer - Minimalist */}
+        <footer className="py-16 px-6 sm:px-8 lg:px-12 border-t border-gray-200">
           <div className="max-w-7xl mx-auto text-center">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
+            <div className="flex items-center justify-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">L</span>
               </div>
-              <span className="text-lg font-semibold text-gray-900">Looklyy</span>
+              <span className="text-xl font-light tracking-tight text-gray-900">Looklyy</span>
             </div>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-400 text-sm uppercase tracking-wider">
               © 2025 Looklyy. All rights reserved.
             </p>
           </div>
