@@ -1,16 +1,6 @@
 {
   "framework": "nextjs",
   "installCommand": "npm install",
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
