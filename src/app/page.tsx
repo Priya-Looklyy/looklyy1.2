@@ -139,12 +139,12 @@ export default function Home() {
         <section className="min-h-screen flex items-center pt-20 pb-12 px-6 sm:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto w-full">
             {/* Editorial Layout: Text Left, Image Right */}
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               {/* Editorial Text Content - Left Side */}
-              <div className="space-y-6 lg:space-y-8">
+              <div className="space-y-4 lg:space-y-5">
                 {/* Large Editorial Headline */}
-                <div className="space-y-4 lg:space-y-6">
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light leading-[1.1] text-gray-900 tracking-tight">
+                <div className="space-y-2 lg:space-y-3">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light leading-[1.1] text-gray-900 tracking-tight">
                     What if you could{' '}
                     <span className="font-normal italic text-purple-700">learn to style</span>
                     <br />
@@ -154,18 +154,18 @@ export default function Home() {
                   </h1>
                   
                   {/* Decorative Line */}
-                  <div className="w-24 h-0.5 bg-gradient-to-r from-purple-600 to-transparent"></div>
+                  <div className="w-20 h-0.5 bg-gradient-to-r from-purple-600 to-transparent"></div>
                 </div>
 
                 {/* Sub-headline - Editorial Style */}
-                <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 leading-relaxed font-light max-w-xl">
+                <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed font-light max-w-xl">
                   Would you consider registering if I showed you, every day, how to dress better through small, low-risk additions using what you already own?
                 </p>
 
                 {/* CTA Form - Editorial Style */}
                 <form
                   onSubmit={handleSubmit}
-                  className="flex flex-col sm:flex-row gap-4 pt-2 lg:pt-4"
+                  className="flex flex-col sm:flex-row gap-4 pt-1"
                 >
                   <input
                     type="email"
@@ -187,13 +187,13 @@ export default function Home() {
                 </form>
 
                 {/* Trust indicator - Minimal */}
-                <p className="text-xs text-gray-400 uppercase tracking-wider pt-2">
+                <p className="text-xs text-gray-400 uppercase tracking-wider pt-1">
                   No spam. Unsubscribe anytime.
                 </p>
               </div>
 
               {/* Large Hero Image - Right Side */}
-              <div className="relative h-[400px] sm:h-[500px] lg:h-[550px] xl:h-[600px] order-first lg:order-last">
+              <div className="relative h-[350px] sm:h-[400px] lg:h-[450px] xl:h-[500px] order-first lg:order-last">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/50 to-transparent rounded-2xl"></div>
                 <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                   <Image
