@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Script from 'next/script';
 import Image from 'next/image';
 
@@ -28,7 +28,30 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const { trackEvent } = useAnalytics();
+
+  // Generate slider images array (using demo-images or fallback to single image)
+  const sliderImagesArray = Array.from({ length: 27 }, (_, i) => `/demo-images/${i + 1}.jpg`);
+
+  // Auto-advance slider
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlideIndex((prev) => (prev + 1) % sliderImagesArray.length);
+    }, 3000); // Change slide every 3 seconds
+    return () => clearInterval(interval);
+  }, [sliderImagesArray.length]);
+
+  // Auto-close thank you modal after 5 seconds
+  useEffect(() => {
+    if (showThankYouModal) {
+      const timer = setTimeout(() => {
+        setShowThankYouModal(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showThankYouModal]);
 
   // Track scroll depth
   useEffect(() => {
@@ -96,6 +119,7 @@ export default function Home() {
       });
 
       setIsSubmitted(true);
+      setShowThankYouModal(true); // Show thank you modal
       setEmail('');
       setName('');
     } catch (err) {
@@ -129,6 +153,24 @@ export default function Home() {
           </div>
         </nav>
 
+        {/* Thank You Modal */}
+        {showThankYouModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-sm">
+            <div className="bg-white rounded-lg shadow-2xl p-8 max-w-sm mx-4 transform transition-all animate-fade-in">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-base text-gray-900 font-light leading-relaxed">
+                  Thank you for your interest in looklyy. Our team will reach out to you soon!
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Hero Section - Editorial Style - Strict Viewport Height */}
         <section className="h-screen flex items-center pt-14 px-6 sm:px-8 lg:px-12 overflow-hidden">
           <div className="max-w-7xl mx-auto w-full h-full flex items-center">
@@ -136,19 +178,16 @@ export default function Home() {
             <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-center w-full h-full">
               {/* Editorial Text Content - Left Side */}
               <div className="space-y-3 lg:space-y-4 h-full flex flex-col justify-center">
-                {/* Large Editorial Headline */}
+                {/* Large Editorial Headline - 2 lines, all black */}
                 <div className="space-y-2">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light leading-[1.1] text-gray-900 tracking-tight">
-                    What if you could{' '}
-                    <span className="font-normal italic text-purple-700">learn to style</span>
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-light leading-[1.1] text-gray-900 tracking-tight">
+                    What if you could learn to style
                     <br />
-                    <span className="font-light">as a skill</span>
-                    <br />
-                    <span className="font-normal text-purple-600">as you shop?</span>
+                    as a skill as you shop?
                   </h1>
                   
                   {/* Decorative Line */}
-                  <div className="w-16 h-0.5 bg-gradient-to-r from-purple-600 to-transparent"></div>
+                  <div className="w-16 h-0.5 bg-gradient-to-r from-gray-400 to-transparent"></div>
                 </div>
 
                 {/* Sub-headline - Editorial Style */}
@@ -165,7 +204,7 @@ export default function Home() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
+                    placeholder="Your Email"
                     required
                     className="flex-1 px-5 py-3 text-sm border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
                     onClick={() => handleCTAClick('hero_email')}
@@ -186,19 +225,43 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Large Hero Image - Right Side */}
-              <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[420px] order-first lg:order-last flex items-center justify-center">
+              {/* Dynamic Image Slider - Right Side */}
+              <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[420px] order-first lg:order-last flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/50 to-transparent rounded-2xl"></div>
                 <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
-                  <Image
-                    src="/single-homepage-image.jpg"
-                    alt="Fashion Editorial"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
+                  {/* Slider Container */}
+                  <div 
+                    className="relative h-full transition-transform duration-700 ease-in-out flex"
+                    style={{
+                      transform: `translateX(-${(currentSlideIndex * 100) / sliderImagesArray.length}%)`,
+                      width: `${sliderImagesArray.length * 100}%`
+                    }}
+                  >
+                    {sliderImagesArray.map((imageSrc, index) => (
+                      <div
+                        key={index}
+                        className="relative h-full flex-shrink-0"
+                        style={{ width: `${100 / sliderImagesArray.length}%` }}
+                      >
+                        <Image
+                          src={imageSrc}
+                          alt={`Fashion Editorial ${index + 1}`}
+                          fill
+                          className="object-cover object-center"
+                          priority={index === 0}
+                          onError={(e) => {
+                            // Fallback to single image if demo image doesn't exist
+                            const target = e.target as HTMLImageElement;
+                            if (target) {
+                              target.src = '/single-homepage-image.jpg';
+                            }
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
                   {/* Overlay gradient for text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
                 </div>
               </div>
             </div>
@@ -403,7 +466,7 @@ export default function Home() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your email"
+                    placeholder="Your Email"
                     required
                     className="w-full px-6 py-4 text-base border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
                     onClick={() => handleCTAClick('form_email')}
