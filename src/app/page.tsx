@@ -220,12 +220,12 @@ export default function Home() {
               {/* 2-Column Grid Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-20">
                 {/* Text Column - Left Side */}
-                <div className="max-w-[500px] space-y-6 lg:pr-8">
+                <div className="max-w-[480px] space-y-6 lg:pr-8">
                   {/* Large Editorial Headline - Force 2 lines */}
                   <div className="space-y-2">
-                    <h1 className="text-4xl lg:text-5xl font-light leading-tight max-w-[480px] text-gray-900">
+                    <h1 className="text-4xl lg:text-5xl font-light leading-tight text-gray-900" style={{ maxWidth: '480px' }}>
                       What if you could learn to style
-                      <br className="hidden lg:block" />
+                      <br />
                       as a skill as you shop?
                     </h1>
                   
@@ -270,8 +270,8 @@ export default function Home() {
 
                 {/* Image Slider Column - Right Side */}
                 <div className="flex justify-center lg:justify-end relative w-full max-w-[540px] order-first lg:order-last">
-                  {/* Slider Wrapper with overflow control */}
-                  <div className="relative w-full max-w-[520px] overflow-hidden">
+                  {/* Slider Wrapper - NO overflow-hidden to show side cards */}
+                  <div className="relative w-full max-w-[520px]">
                     {/* Navigation Arrow - Left */}
                     <button
                       onClick={goToPrevSlide}
@@ -328,12 +328,10 @@ export default function Home() {
                         return (
                           <div
                             key={`${slide.index}-${slide.position}`}
-                            className={`${isCenter ? 'relative' : 'absolute'} flex justify-center transition-all duration-500 ease-in-out`}
+                            className="absolute flex justify-center transition-all duration-500 ease-in-out"
                             style={{
-                              left: isCenter ? 'auto' : '50%',
-                              transform: isCenter 
-                                ? 'none'
-                                : `translateX(calc(-50% + ${translateX}px)) scale(${scale}) rotate(${rotation}deg)`,
+                              left: '50%',
+                              transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale}) rotate(${rotation}deg)`,
                               zIndex: zIndex,
                               opacity: opacity,
                               transformOrigin: 'center center',
