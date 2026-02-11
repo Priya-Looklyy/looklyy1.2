@@ -113,13 +113,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Plausible Analytics */}
-      <Script
-        strategy="afterInteractive"
-        data-domain="looklyy.com"
-        src="https://plausible.io/js/script.js"
-      />
-
       <div className="min-h-screen bg-white">
         {/* Navigation - Minimalist */}
         <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-100 z-50">
