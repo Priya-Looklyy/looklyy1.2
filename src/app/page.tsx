@@ -478,7 +478,7 @@ export default function Home() {
                 </form>
 
                 {/* Trust indicator */}
-                <p className="mt-4 text-[10px] text-gray-300 text-center lg:pt-1">
+                <p className="mt-4 text-xs text-gray-300 text-center lg:pt-1">
                   No spam. Unsubscribe anytime.
                 </p>
               </div>
@@ -606,7 +606,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="py-8 px-6 sm:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto text-center">
-            <p className="text-[10px] text-gray-300">
+            <p className="text-xs text-gray-300">
               © 2025 Looklyy. Privacy rights reserved.
             </p>
           </div>
