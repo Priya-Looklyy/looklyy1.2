@@ -32,7 +32,6 @@ export default function Home() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isSliding, setIsSliding] = useState(false);
   const [arrowRipple, setArrowRipple] = useState<'left' | 'right' | null>(null);
-  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set<string>());
   const [currentImageLoaded, setCurrentImageLoaded] = useState(false);
   const { trackEvent } = useAnalytics();
 
@@ -47,53 +46,10 @@ export default function Home() {
     return `/demo-images/${num}.jpg`;
   });
 
-  // Preload images on mount
+  // Auto-advance slider - Disabled until images load properly
   useEffect(() => {
-    const preloadImages = async () => {
-      const imagePromises = sliderImagesArray.map((src) => {
-        return new Promise<string>((resolve, reject) => {
-          const img = document.createElement('img');
-          img.onload = () => resolve(src);
-          img.onerror = () => {
-            // Try fallback image
-            const fallbackImg = document.createElement('img');
-            fallbackImg.onload = () => resolve('/single-homepage-image.jpg');
-            fallbackImg.onerror = () => reject(src);
-            fallbackImg.src = '/single-homepage-image.jpg';
-          };
-          img.src = src;
-        });
-      });
-
-      try {
-        const loaded = await Promise.allSettled(imagePromises);
-        const loadedSet = new Set<string>();
-        loaded.forEach((result, index) => {
-          if (result.status === 'fulfilled') {
-            loadedSet.add(sliderImagesArray[index]);
-          }
-        });
-        setLoadedImages(loadedSet);
-        // Mark current image as loaded if it's in the loaded set
-        if (loadedSet.has(sliderImagesArray[currentSlideIndex])) {
-          setCurrentImageLoaded(true);
-        }
-      } catch (error) {
-        console.error('Error preloading images:', error);
-      }
-    };
-
-    preloadImages();
-  }, []); // Only run once on mount
-
-  // Track when current image loads
-  useEffect(() => {
-    setCurrentImageLoaded(loadedImages.has(sliderImagesArray[currentSlideIndex]));
-  }, [currentSlideIndex, loadedImages]);
-
-  // Auto-advance slider - ONLY when current image is loaded
-  useEffect(() => {
-    if (!currentImageLoaded) return; // Don't auto-advance if image isn't loaded
+    // Only auto-advance if current image is loaded
+    if (!currentImageLoaded) return;
     
     const interval = setInterval(() => {
       setCurrentSlideIndex((prev) => (prev + 1) % sliderImagesArray.length);
@@ -135,15 +91,9 @@ export default function Home() {
     useEffect(() => {
       setImageError(false);
       setImageSrc(image);
-      // Check if image is already preloaded
-      if (loadedImages.has(image)) {
-        setIsLoading(false);
-        setHasLoaded(true);
-      } else {
-        setIsLoading(true);
-        setHasLoaded(false);
-      }
-    }, [image, loadedImages]);
+      setIsLoading(true);
+      setHasLoaded(false);
+    }, [image]);
 
     const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
       const target = e.currentTarget;
@@ -164,8 +114,6 @@ export default function Home() {
     const handleImageLoad = () => {
       setIsLoading(false);
       setHasLoaded(true);
-      // Add to loaded images set
-      setLoadedImages((prev) => new Set(prev).add(imageSrc));
       // If this is the active image, mark it as loaded for auto-slide
       if (isActive) {
         setCurrentImageLoaded(true);
@@ -182,16 +130,18 @@ export default function Home() {
               <div className="w-8 h-8 border-2 border-gray-300 border-t-purple-600 rounded-full animate-spin"></div>
             </div>
           )}
-          <img
-            src={imageSrc}
-            alt={caption}
-            className={`w-full h-full object-cover transition-opacity duration-300 ${
-              isLoading && !hasLoaded ? 'opacity-0' : 'opacity-100'
-            }`}
-            onError={handleImageError}
-            onLoad={handleImageLoad}
-            style={{ display: imageError ? 'none' : 'block' }}
-          />
+          {!imageError && (
+            <img
+              src={imageSrc}
+              alt={caption}
+              className={`w-full h-full object-cover transition-opacity duration-300 ${
+                isLoading && !hasLoaded ? 'opacity-0' : 'opacity-100'
+              }`}
+              onError={handleImageError}
+              onLoad={handleImageLoad}
+              loading="eager"
+            />
+          )}
           {imageError && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-20">
               <div className="text-center p-4">
@@ -601,171 +551,6 @@ export default function Home() {
             </div>
           </section>
         </div>
-
-        {/* Problem & Solution Section - Editorial Grid */}
-        <section className="py-32 px-6 sm:px-8 lg:px-12 bg-white">
-          <div className="max-w-7xl mx-auto">
-            {/* Section Header - Editorial Style */}
-            <div className="mb-24 text-center">
-              <div className="inline-block mb-6">
-                <div className="w-16 h-0.5 bg-purple-600 mx-auto"></div>
-              </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 tracking-tight mb-8">
-                You see a look you love.
-                <br />
-                <span className="font-normal italic text-purple-700">Now what?</span>
-              </h2>
-            </div>
-
-            {/* Editorial Two-Column Layout */}
-            <div className="grid lg:grid-cols-2 gap-20 items-start">
-              {/* Left Column - Text */}
-              <div className="space-y-8">
-                <p className="text-xl sm:text-2xl text-gray-700 leading-relaxed font-light">
-                  Most of us bookmark fashion inspiration, then forget about it. Or worse—we try to recreate it but can&apos;t find the right pieces, even though they&apos;re already in our closet.
-                </p>
-                <p className="text-xl sm:text-2xl text-gray-700 leading-relaxed font-light">
-                  Looklyy solves this by connecting inspiration to your actual wardrobe. No more guessing if you have the right pieces. No more buying duplicates of what you already own.
-                </p>
-              </div>
-
-              {/* Right Column - Visual Feature List */}
-              <div className="space-y-8">
-                <div className="flex items-start gap-6 pb-8 border-b border-gray-200">
-                  <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0">
-                    <div className="w-6 h-6 border-2 border-purple-600 rounded-full"></div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium text-gray-900 mb-2 uppercase tracking-wide">See a look you love</h3>
-                    <p className="text-gray-600 font-light">Browse trending fashion inspiration</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-6 pb-8 border-b border-gray-200">
-                  <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0">
-                    <div className="w-6 h-6 border-2 border-purple-600 rounded-full"></div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium text-gray-900 mb-2 uppercase tracking-wide">Match to your wardrobe</h3>
-                    <p className="text-gray-600 font-light">AI finds similar pieces you already own</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-6">
-                  <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0">
-                    <div className="w-6 h-6 border-2 border-purple-600 rounded-full"></div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium text-gray-900 mb-2 uppercase tracking-wide">Recreate instantly</h3>
-                    <p className="text-gray-600 font-light">Get styling suggestions using your clothes</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Visual Break - Abstract Shape */}
-        <section className="py-0 px-0 mb-32 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/30 to-transparent"></div>
-          <div className="relative h-[300px] flex items-center justify-center">
-            <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-              <div className="grid grid-cols-3 gap-8">
-                <div className="h-48 bg-gradient-to-br from-purple-200/50 to-transparent rounded-lg"></div>
-                <div className="h-48 bg-gradient-to-br from-purple-300/50 to-transparent rounded-lg"></div>
-                <div className="h-48 bg-gradient-to-br from-purple-200/50 to-transparent rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Registration Section - Editorial CTA */}
-        <section
-          id="register"
-          className="py-40 px-6 sm:px-8 lg:px-12 relative overflow-hidden"
-        >
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800"></div>
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')]"></div>
-          </div>
-
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-8 tracking-tight">
-              Ready to transform
-              <br />
-              <span className="font-normal italic">your wardrobe?</span>
-            </h2>
-            <p className="text-xl sm:text-2xl text-purple-100 mb-12 font-light">
-              Join the waitlist and be among the first to experience Looklyy.
-            </p>
-
-            {isSubmitted ? (
-              <div className="bg-white rounded-lg p-12 shadow-2xl max-w-md mx-auto">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3 className="text-3xl font-light text-gray-900 mb-3">You&apos;re registered!</h3>
-                <p className="text-gray-600 font-light">
-                  We&apos;ll send you an email when Looklyy is ready. Thanks for your interest!
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="bg-white rounded-lg p-10 shadow-2xl max-w-lg mx-auto">
-                {error && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-600 text-sm">{error}</p>
-                  </div>
-                )}
-                <div className="space-y-6">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Your name (optional)"
-                    className="w-full px-6 py-4 text-base border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
-                    onClick={() => handleCTAClick('form_name')}
-                  />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your Email"
-                    required
-                    className="w-full px-6 py-4 text-base border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
-                    onClick={() => handleCTAClick('form_email')}
-                  />
-                  <button
-                    type="submit"
-                    onClick={() => handleCTAClick('form_submit')}
-                    disabled={isSubmitting}
-                    className="w-full px-8 py-4 bg-purple-600 text-white font-medium tracking-wide uppercase text-sm hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? 'Registering...' : 'Register'}
-                  </button>
-                </div>
-                <p className="mt-6 text-xs text-gray-400 uppercase tracking-wider">
-                  We respect your privacy. No spam, unsubscribe anytime.
-                </p>
-              </form>
-            )}
-          </div>
-        </section>
-
-        {/* Footer - Minimalist */}
-        <footer className="py-16 px-6 sm:px-8 lg:px-12 border-t border-gray-200">
-          <div className="max-w-7xl mx-auto text-center">
-            <div className="flex items-center justify-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">L</span>
-              </div>
-              <span className="text-xl font-light tracking-tight text-gray-900">Looklyy</span>
-            </div>
-            <p className="text-gray-400 text-sm uppercase tracking-wider">
-              © 2025 Looklyy. All rights reserved.
-            </p>
-          </div>
-        </footer>
       </div>
     </>
   );
