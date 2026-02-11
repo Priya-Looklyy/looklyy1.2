@@ -81,20 +81,24 @@ export default function Home() {
     const [imageError, setImageError] = useState(false);
     const [imageSrc, setImageSrc] = useState(image);
     const [isLoading, setIsLoading] = useState(true);
+    const [hasLoaded, setHasLoaded] = useState(false);
 
     // Reset error state when image changes
     useEffect(() => {
       setImageError(false);
       setImageSrc(image);
       setIsLoading(true);
+      setHasLoaded(false);
     }, [image]);
 
-    const handleImageError = () => {
+    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+      const target = e.currentTarget;
       if (imageSrc !== '/single-homepage-image.jpg') {
         // First error: try fallback image
         console.warn(`Image failed to load: ${imageSrc}, falling back to default`);
         setImageSrc('/single-homepage-image.jpg');
         setIsLoading(true);
+        setHasLoaded(false);
       } else {
         // Fallback also failed: show error state
         console.error(`Fallback image also failed to load`);
@@ -105,6 +109,7 @@ export default function Home() {
 
     const handleImageLoad = () => {
       setIsLoading(false);
+      setHasLoaded(true);
     };
 
     return (
@@ -112,24 +117,23 @@ export default function Home() {
         isActive ? 'hover:scale-105 cursor-pointer' : ''
       }`}>
         <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gray-100 relative">
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          {isLoading && !hasLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
               <div className="w-8 h-8 border-2 border-gray-300 border-t-purple-600 rounded-full animate-spin"></div>
             </div>
           )}
-          <Image
+          <img
             src={imageSrc}
             alt={caption}
-            fill
-            className={`object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
-            sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 380px"
-            priority={isActive}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${
+              isLoading && !hasLoaded ? 'opacity-0' : 'opacity-100'
+            }`}
             onError={handleImageError}
             onLoad={handleImageLoad}
-            onLoadingComplete={handleImageLoad}
+            style={{ display: imageError ? 'none' : 'block' }}
           />
           {imageError && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-20">
               <div className="text-center p-4">
                 <svg className="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
