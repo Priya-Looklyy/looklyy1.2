@@ -305,7 +305,7 @@ export default function Home() {
                     </button>
 
                     {/* Polaroid Cards Container */}
-                    <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ minHeight: '500px' }}>
+                    <div className="relative w-full flex items-center justify-center" style={{ minHeight: '500px' }}>
                       {getVisibleSlides().map((slide) => {
                         const isCenter = slide.position === 0;
                         const absPosition = Math.abs(slide.position);
@@ -316,46 +316,49 @@ export default function Home() {
                         // Opacity: center = 1, side cards = 0.6
                         const opacity = isCenter ? 1 : 0.6;
                         
-                        // Z-index: center = 30, side cards decrease
-                        const zIndex = isCenter ? 30 : 20 - absPosition;
+                        // Z-index: center = 30, side cards = 10
+                        const zIndex = isCenter ? 30 : 10;
                         
-                        // Horizontal offset: side cards translate-x-8 (32px) - SAFE for no overflow
-                        const translateX = slide.position === 0 ? 0 : slide.position * 32; // translate-x-8 = 32px
+                        // Horizontal offset: side cards translate-x-8 (32px)
+                        const translateX = slide.position === 0 ? 0 : slide.position * 32;
+                        
+                        // Rotation: side cards have slight rotation for realism
+                        const rotation = isCenter ? 0 : slide.position > 0 ? 1 : -1; // rotate-1 or -rotate-1
 
                         return (
                           <div
                             key={`${slide.index}-${slide.position}`}
-                            className="absolute w-full max-w-[400px] transition-all duration-500 ease-in-out"
+                            className={`${isCenter ? 'relative' : 'absolute'} transition-all duration-500 ease-in-out`}
                             style={{
-                              left: '50%',
-                              transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale})`,
+                              left: isCenter ? 'auto' : '50%',
+                              transform: isCenter 
+                                ? 'none'
+                                : `translateX(calc(-50% + ${translateX}px)) scale(${scale}) rotate(${rotation}deg)`,
                               zIndex: zIndex,
                               opacity: opacity,
                               transformOrigin: 'center center',
                             }}
                           >
-                            {/* Polaroid-style card frame */}
+                            {/* Polaroid Card Frame */}
                             <div 
-                              className={`relative w-full bg-white rounded-2xl shadow-xl transition-all duration-500 overflow-hidden ${
+                              className={`polaroid-card w-[360px] sm:w-[400px] lg:w-[440px] bg-white rounded-2xl shadow-2xl p-4 pb-8 transition-all duration-500 ${
                                 isCenter ? 'hover:scale-105 cursor-pointer' : ''
                               }`}
                               style={{
-                                aspectRatio: '3/4',
-                                minHeight: '500px',
                                 boxShadow: isCenter 
-                                  ? '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)' 
-                                  : '0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.03)',
+                                  ? '0 25px 50px -12px rgba(0, 0, 0, 0.25)' 
+                                  : '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                               }}
                             >
-                              {/* Image container - fills card with aspect ratio */}
-                              <div className="relative w-full h-full">
+                              {/* Polaroid Image Wrapper */}
+                              <div className="polaroid-image-wrapper aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
                                 <Image
                                   src={slide.src}
                                   alt={`Fashion Editorial ${slide.index + 1}`}
                                   fill
-                                  className="object-cover"
+                                  className="w-full h-full object-cover"
                                   priority={isCenter}
-                                  sizes="(max-width: 768px) 340px, (max-width: 1024px) 400px, 400px"
+                                  sizes="(max-width: 640px) 360px, (max-width: 1024px) 400px, 440px"
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement;
                                     if (target) {
@@ -365,8 +368,10 @@ export default function Home() {
                                 />
                               </div>
                               
-                              {/* Minimal polaroid caption area */}
-                              <div className="absolute bottom-0 left-0 right-0 h-3 bg-white"></div>
+                              {/* Polaroid Caption Area */}
+                              <div className="polaroid-caption mt-4 text-center text-sm text-gray-600 font-light">
+                                Modern Interior
+                              </div>
                             </div>
                           </div>
                         );
