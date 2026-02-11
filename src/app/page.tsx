@@ -214,19 +214,20 @@ export default function Home() {
         )}
 
         {/* Hero Section - Refactored Layout */}
-        <section className="min-h-screen flex items-center pt-14">
-          <div className="max-w-7xl mx-auto px-6 w-full">
-            {/* 2-Column Grid Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              {/* Text Column - Left Side */}
-              <div className="max-w-[480px] space-y-6 lg:pr-12">
-                {/* Large Editorial Headline - 2 lines, all black */}
-                <div className="space-y-2">
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-light leading-[1.1] text-gray-900 tracking-tight">
-                    What if you could learn to style
-                    <br />
-                    as a skill as you shop?
-                  </h1>
+        <div className="w-full overflow-x-hidden">
+          <section className="w-full min-h-screen flex items-center pt-14">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+              {/* 2-Column Grid Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-20">
+                {/* Text Column - Left Side */}
+                <div className="max-w-[480px] space-y-6 lg:pr-8">
+                  {/* Large Editorial Headline - Force 2 lines */}
+                  <div className="space-y-2">
+                    <h1 className="text-4xl lg:text-5xl font-light leading-tight tracking-tight max-w-[480px] text-gray-900">
+                      What if you could learn to style
+                      <br className="hidden lg:block" />
+                      as a skill as you shop?
+                    </h1>
                   
                   {/* Decorative Line */}
                   <div className="w-16 h-0.5 bg-gradient-to-r from-gray-400 to-transparent"></div>
@@ -267,168 +268,145 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Dynamic Image Slider - Right Side - Polaroid Style Stacked Cards */}
-              <div className="relative flex justify-center lg:justify-end order-first lg:order-last">
-                {/* Subtle textured background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-stone-50 via-stone-100/50 to-stone-50 rounded-2xl" style={{
-                  backgroundImage: `radial-gradient(circle at 2px 2px, rgba(120, 113, 108, 0.08) 1px, transparent 0)`,
-                  backgroundSize: '40px 40px'
-                }}></div>
-                
-                {/* Slider Container - Centered with polaroid cards */}
-                <div className="relative max-w-md w-full flex items-center justify-center min-h-[420px] lg:min-h-[500px]">
-                  {/* Navigation Arrow - Left */}
-                  <button
-                    onClick={goToPrevSlide}
-                    disabled={isSliding}
-                    className={`group absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 flex items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 ease-in-out ${
-                      isSliding && arrowRipple === 'left' 
-                        ? 'opacity-70 scale-95' 
-                        : 'opacity-80 hover:opacity-100 hover:scale-110 active:scale-95'
-                    } ${
-                      arrowRipple === 'left' ? 'shadow-lg' : 'shadow-md'
-                    }`}
-                    style={{
-                      backgroundColor: 'rgba(250, 250, 249, 0.75)', // stone-50 with 75% opacity
-                      boxShadow: arrowRipple === 'left' 
-                        ? '0 10px 25px rgba(0, 0, 0, 0.15)' 
-                        : '0 4px 12px rgba(0, 0, 0, 0.1)',
-                    }}
-                    aria-label="Previous slide"
-                  >
-                    <svg 
-                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                        arrowRipple === 'left' ? '-translate-x-0.5' : 'group-hover:-translate-x-0.5'
+                {/* Image Slider Column - Right Side */}
+                <div className="flex justify-center lg:justify-end relative w-full max-w-[540px] order-first lg:order-last">
+                  {/* Slider Wrapper with overflow control */}
+                  <div className="relative w-full max-w-[520px] overflow-hidden">
+                    {/* Navigation Arrow - Left */}
+                    <button
+                      onClick={goToPrevSlide}
+                      disabled={isSliding}
+                      className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out left-2 lg:-left-6 ${
+                        isSliding && arrowRipple === 'left' 
+                          ? 'opacity-70 scale-95' 
+                          : 'opacity-80 hover:opacity-100 active:scale-95'
+                      } ${
+                        arrowRipple === 'left' ? 'shadow-lg' : ''
                       }`}
-                      fill="none" 
-                      stroke="#5a5147" 
-                      strokeWidth={1.5}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      viewBox="0 0 24 24"
+                      aria-label="Previous slide"
                     >
-                      <path d="M15 19l-7-7 7-7" />
-                    </svg>
-                    {/* Ripple effect */}
-                    {arrowRipple === 'left' && (
-                      <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
-                    )}
-                  </button>
+                      <svg 
+                        className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                          arrowRipple === 'left' ? '-translate-x-0.5' : 'group-hover:-translate-x-0.5'
+                        }`}
+                        fill="none" 
+                        stroke="#5a5147" 
+                        strokeWidth={1.5}
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M15 19l-7-7 7-7" />
+                      </svg>
+                      {/* Ripple effect */}
+                      {arrowRipple === 'left' && (
+                        <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
+                      )}
+                    </button>
 
-                  {/* Polaroid Cards Container */}
-                  <div className="relative w-full flex items-center justify-center min-h-[420px] lg:min-h-[500px]">
-                    {getVisibleSlides().map((slide) => {
-                      const isCenter = slide.position === 0;
-                      const absPosition = Math.abs(slide.position);
-                      
-                      // Card sizing: 340px mobile, 420px desktop, 460px large screens
-                      const cardWidth = isCenter 
-                        ? 'w-[340px] sm:w-[420px] lg:w-[460px]' 
-                        : 'w-[340px] sm:w-[420px] lg:w-[460px]';
-                      
-                      // Scale: center = 1, side cards = 0.9
-                      const scale = isCenter ? 1 : 0.9;
-                      
-                      // Opacity: center = 1, side cards = 0.6
-                      const opacity = isCenter ? 1 : 0.6;
-                      
-                      // Z-index: center = 30, side cards decrease
-                      const zIndex = isCenter ? 30 : 20 - absPosition;
-                      
-                      // Horizontal offset: side cards translate-x-12 (48px)
-                      const translateX = slide.position === 0 ? 0 : slide.position * 48; // 12 * 4 = 48px (translate-x-12)
+                    {/* Polaroid Cards Container */}
+                    <div className="relative w-full flex items-center justify-center overflow-hidden">
+                      {getVisibleSlides().map((slide) => {
+                        const isCenter = slide.position === 0;
+                        const absPosition = Math.abs(slide.position);
+                        
+                        // Scale: center = 1, side cards = 0.9
+                        const scale = isCenter ? 1 : 0.9;
+                        
+                        // Opacity: center = 1, side cards = 0.6
+                        const opacity = isCenter ? 1 : 0.6;
+                        
+                        // Z-index: center = 30, side cards decrease
+                        const zIndex = isCenter ? 30 : 20 - absPosition;
+                        
+                        // Horizontal offset: side cards translate-x-8 (32px) - SAFE for no overflow
+                        const translateX = slide.position === 0 ? 0 : slide.position * 32; // translate-x-8 = 32px
 
-                      return (
-                        <div
-                          key={`${slide.index}-${slide.position}`}
-                          className={`absolute ${cardWidth} transition-all duration-500 ease-in-out`}
-                          style={{
-                            left: '50%',
-                            transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale})`,
-                            zIndex: zIndex,
-                            opacity: opacity,
-                            transformOrigin: 'center center',
-                          }}
-                        >
-                          {/* Polaroid-style card frame */}
-                          <div 
-                            className={`relative w-full bg-white rounded-xl shadow-lg transition-all duration-500 ${
-                              isCenter ? 'hover:scale-105 cursor-pointer' : ''
-                            }`}
+                        return (
+                          <div
+                            key={`${slide.index}-${slide.position}`}
+                            className="absolute w-full max-w-[400px] transition-all duration-500 ease-in-out"
                             style={{
-                              boxShadow: isCenter 
-                                ? '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)' 
-                                : '0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.03)',
-                              padding: '6px 6px 8px 6px', // Minimal padding, reduced caption area
+                              left: '50%',
+                              transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale})`,
+                              zIndex: zIndex,
+                              opacity: opacity,
+                              transformOrigin: 'center center',
                             }}
                           >
-                            {/* Image container - takes 85-90% of card height */}
-                            <div className="relative w-full h-[420px] lg:h-[500px] rounded-lg overflow-hidden">
-                              <Image
-                                src={slide.src}
-                                alt={`Fashion Editorial ${slide.index + 1}`}
-                                fill
-                                className="object-cover rounded-xl"
-                                priority={isCenter}
-                                onError={(e) => {
-                                  const target = e.target as HTMLImageElement;
-                                  if (target) {
-                                    target.src = '/single-homepage-image.jpg';
-                                  }
-                                }}
-                              />
+                            {/* Polaroid-style card frame */}
+                            <div 
+                              className={`relative w-full aspect-[3/4] bg-white rounded-2xl shadow-xl transition-all duration-500 overflow-hidden ${
+                                isCenter ? 'hover:scale-105 cursor-pointer' : ''
+                              }`}
+                              style={{
+                                boxShadow: isCenter 
+                                  ? '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)' 
+                                  : '0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.03)',
+                              }}
+                            >
+                              {/* Image container - fills card with aspect ratio */}
+                              <div className="relative w-full h-full">
+                                <Image
+                                  src={slide.src}
+                                  alt={`Fashion Editorial ${slide.index + 1}`}
+                                  fill
+                                  className="object-cover"
+                                  priority={isCenter}
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    if (target) {
+                                      target.src = '/single-homepage-image.jpg';
+                                    }
+                                  }}
+                                />
+                              </div>
+                              
+                              {/* Minimal polaroid caption area */}
+                              <div className="absolute bottom-0 left-0 right-0 h-3 bg-white"></div>
                             </div>
-                            
-                            {/* Minimal polaroid caption area */}
-                            <div className="absolute bottom-0 left-0 right-0 h-2 bg-white rounded-b-xl"></div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
 
-                  {/* Navigation Arrow - Right */}
-                  <button
-                    onClick={goToNextSlide}
-                    disabled={isSliding}
-                    className={`group absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 flex items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 ease-in-out ${
-                      isSliding && arrowRipple === 'right' 
-                        ? 'opacity-70 scale-95' 
-                        : 'opacity-80 hover:opacity-100 hover:scale-110 active:scale-95'
-                    } ${
-                      arrowRipple === 'right' ? 'shadow-lg' : 'shadow-md'
-                    }`}
-                    style={{
-                      backgroundColor: 'rgba(250, 250, 249, 0.75)', // stone-50 with 75% opacity
-                      boxShadow: arrowRipple === 'right' 
-                        ? '0 10px 25px rgba(0, 0, 0, 0.15)' 
-                        : '0 4px 12px rgba(0, 0, 0, 0.1)',
-                    }}
-                    aria-label="Next slide"
-                  >
-                    <svg 
-                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                        arrowRipple === 'right' ? 'translate-x-0.5' : 'group-hover:translate-x-0.5'
+                    {/* Navigation Arrow - Right */}
+                    <button
+                      onClick={goToNextSlide}
+                      disabled={isSliding}
+                      className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out right-2 lg:-right-6 ${
+                        isSliding && arrowRipple === 'right' 
+                          ? 'opacity-70 scale-95' 
+                          : 'opacity-80 hover:opacity-100 active:scale-95'
+                      } ${
+                        arrowRipple === 'right' ? 'shadow-lg' : ''
                       }`}
-                      fill="none" 
-                      stroke="#5a5147" 
-                      strokeWidth={1.5}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      viewBox="0 0 24 24"
+                      aria-label="Next slide"
                     >
-                      <path d="M9 5l7 7-7 7" />
-                    </svg>
-                    {/* Ripple effect */}
-                    {arrowRipple === 'right' && (
-                      <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
-                    )}
-                  </button>
+                      <svg 
+                        className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                          arrowRipple === 'right' ? 'translate-x-0.5' : 'group-hover:translate-x-0.5'
+                        }`}
+                        fill="none" 
+                        stroke="#5a5147" 
+                        strokeWidth={1.5}
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M9 5l7 7-7 7" />
+                      </svg>
+                      {/* Ripple effect */}
+                      {arrowRipple === 'right' && (
+                        <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
 
         {/* Visual Break - Full Width Image */}
         <section className="py-0 px-0 mb-32">
