@@ -30,6 +30,8 @@ export default function Home() {
   const [error, setError] = useState('');
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isSliding, setIsSliding] = useState(false);
+  const [arrowRipple, setArrowRipple] = useState<'left' | 'right' | null>(null);
   const { trackEvent } = useAnalytics();
 
   // Generate slider images array (using demo-images or fallback to single image)
@@ -43,25 +45,41 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [sliderImagesArray.length]);
 
-  // Navigation handlers
+  // Navigation handlers with animation states
   const goToNextSlide = () => {
+    if (isSliding) return;
+    setIsSliding(true);
+    setArrowRipple('right');
     setCurrentSlideIndex((prev) => (prev + 1) % sliderImagesArray.length);
+    setTimeout(() => {
+      setIsSliding(false);
+      setArrowRipple(null);
+    }, 500); // Match transition duration
   };
 
   const goToPrevSlide = () => {
+    if (isSliding) return;
+    setIsSliding(true);
+    setArrowRipple('left');
     setCurrentSlideIndex((prev) => (prev - 1 + sliderImagesArray.length) % sliderImagesArray.length);
+    setTimeout(() => {
+      setIsSliding(false);
+      setArrowRipple(null);
+    }, 500); // Match transition duration
   };
 
-  // Get visible slides (show 4-5 overlapping images at once)
+  // Get visible slides (center + 2-3 on each side = 5-7 total cards)
   const getVisibleSlides = () => {
-    const visibleCount = 5;
+    const cardsPerSide = 3; // 3 cards on each side of center
+    const totalCards = cardsPerSide * 2 + 1; // 7 total cards
     const slides = [];
-    for (let i = 0; i < visibleCount; i++) {
-      const index = (currentSlideIndex + i) % sliderImagesArray.length;
+    
+    for (let i = -cardsPerSide; i <= cardsPerSide; i++) {
+      const index = (currentSlideIndex + i + sliderImagesArray.length) % sliderImagesArray.length;
       slides.push({
         index,
         src: sliderImagesArray[index],
-        position: i, // 0 is center/most prominent
+        position: i, // 0 is center, negative = left, positive = right
       });
     }
     return slides;
@@ -249,70 +267,116 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Dynamic Image Slider - Right Side - Overlapping Fan Style */}
-              <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[420px] order-first lg:order-last flex items-center justify-center overflow-visible">
-                {/* Golden-brown textured background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-amber-100/80 to-amber-50 rounded-2xl" style={{
-                  backgroundImage: `radial-gradient(circle at 2px 2px, rgba(180, 83, 9, 0.15) 1px, transparent 0)`,
+              {/* Dynamic Image Slider - Right Side - Polaroid Style Stacked Cards */}
+              <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[420px] order-first lg:order-last flex items-center justify-center overflow-hidden">
+                {/* Subtle textured background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-stone-50 via-stone-100/50 to-stone-50 rounded-2xl" style={{
+                  backgroundImage: `radial-gradient(circle at 2px 2px, rgba(120, 113, 108, 0.08) 1px, transparent 0)`,
                   backgroundSize: '40px 40px'
                 }}></div>
                 
-                {/* Slider Container - Centered with overlapping images */}
+                {/* Slider Container - Centered with polaroid cards */}
                 <div className="relative h-full w-full flex items-center justify-center">
                   {/* Navigation Arrow - Left */}
                   <button
                     onClick={goToPrevSlide}
-                    className="absolute left-2 z-20 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110"
+                    disabled={isSliding}
+                    className={`group absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 flex items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 ease-in-out ${
+                      isSliding && arrowRipple === 'left' 
+                        ? 'opacity-70 scale-95' 
+                        : 'opacity-80 hover:opacity-100 hover:scale-110 active:scale-95'
+                    } ${
+                      arrowRipple === 'left' ? 'shadow-lg' : 'shadow-md'
+                    }`}
+                    style={{
+                      backgroundColor: 'rgba(250, 250, 249, 0.75)', // stone-50 with 75% opacity
+                      boxShadow: arrowRipple === 'left' 
+                        ? '0 10px 25px rgba(0, 0, 0, 0.15)' 
+                        : '0 4px 12px rgba(0, 0, 0, 0.1)',
+                    }}
                     aria-label="Previous slide"
                   >
-                    <svg className="w-5 h-5 text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    <svg 
+                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                        arrowRipple === 'left' ? '-translate-x-0.5' : 'group-hover:-translate-x-0.5'
+                      }`}
+                      fill="none" 
+                      stroke="#5a5147" 
+                      strokeWidth={1.5}
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M15 19l-7-7 7-7" />
                     </svg>
+                    {/* Ripple effect */}
+                    {arrowRipple === 'left' && (
+                      <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
+                    )}
                   </button>
 
-                  {/* Overlapping Images Container */}
-                  <div className="relative h-full w-full flex items-center justify-center">
-                    {getVisibleSlides().map((slide, idx) => {
+                  {/* Polaroid Cards Container */}
+                  <div className="relative h-[85%] w-full flex items-center justify-center">
+                    {getVisibleSlides().map((slide) => {
                       const isCenter = slide.position === 0;
-                      const offset = (slide.position - 2) * 15; // Offset for fan effect
-                      const rotation = (slide.position - 2) * 3; // Rotation for fan effect
-                      const scale = isCenter ? 1 : 0.85 - (slide.position * 0.05); // Center image is largest
-                      const zIndex = 10 - slide.position; // Center has highest z-index
-                      const opacity = isCenter ? 1 : 0.7 - (slide.position * 0.1);
+                      const absPosition = Math.abs(slide.position);
+                      
+                      // Calculate properties based on position
+                      const scale = isCenter ? 1 : Math.max(0.85, 1 - (absPosition * 0.05)); // 0.85-0.95 for side cards
+                      const opacity = isCenter ? 1 : Math.max(0.6, 1 - (absPosition * 0.15)); // 0.6-0.8 for side cards
+                      const zIndex = isCenter ? 20 : 10 - absPosition; // Center has highest z-index
+                      
+                      // Horizontal offset: center = 0, side cards offset based on position
+                      const translateX = slide.position * (isCenter ? 0 : 12); // Horizontal offset for side cards
+                      
+                      // Parallax depth effect (subtle vertical offset)
+                      const translateY = isCenter ? 0 : absPosition * 2;
 
                       return (
                         <div
                           key={`${slide.index}-${slide.position}`}
-                          className="absolute transition-all duration-700 ease-in-out"
+                          className="absolute transition-all duration-500 ease-in-out"
                           style={{
-                            width: '22.5%', // 22.5% of screen width (between 20-25%)
-                            height: '85%',
-                            transform: `translateX(${offset}%) rotate(${rotation}deg) scale(${scale})`,
+                            width: isCenter ? '22.5%' : '20%', // Center card slightly larger
+                            height: '100%',
+                            left: '50%',
+                            transform: `translateX(calc(-50% + ${translateX}%)) translateY(${translateY}px) scale(${scale})`,
                             zIndex: zIndex,
                             opacity: opacity,
                             transformOrigin: 'center center',
                           }}
                         >
-                          <div className="relative w-full h-full rounded-lg overflow-hidden shadow-2xl" style={{
-                            boxShadow: isCenter 
-                              ? '0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1)' 
-                              : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05)'
-                          }}>
-                            <Image
-                              src={slide.src}
-                              alt={`Fashion Editorial ${slide.index + 1}`}
-                              fill
-                              className="object-cover object-center"
-                              priority={isCenter}
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                if (target) {
-                                  target.src = '/single-homepage-image.jpg';
-                                }
-                              }}
-                            />
-                            {/* White border effect like instant camera print */}
-                            <div className="absolute inset-0 border-4 border-white pointer-events-none"></div>
+                          {/* Polaroid-style card frame */}
+                          <div 
+                            className={`relative w-full h-full bg-white rounded-lg shadow-lg transition-all duration-500 ${
+                              isCenter ? 'hover:scale-105 cursor-pointer' : ''
+                            }`}
+                            style={{
+                              boxShadow: isCenter 
+                                ? '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)' 
+                                : '0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.03)',
+                              padding: '8px 8px 24px 8px', // Thicker bottom padding for polaroid caption area
+                            }}
+                          >
+                            {/* Image container */}
+                            <div className="relative w-full h-[calc(100%-16px)] rounded-md overflow-hidden">
+                              <Image
+                                src={slide.src}
+                                alt={`Fashion Editorial ${slide.index + 1}`}
+                                fill
+                                className="object-cover object-center"
+                                priority={isCenter}
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  if (target) {
+                                    target.src = '/single-homepage-image.jpg';
+                                  }
+                                }}
+                              />
+                            </div>
+                            
+                            {/* Polaroid caption area (bottom padding) */}
+                            <div className="absolute bottom-0 left-0 right-0 h-4 bg-white rounded-b-lg"></div>
                           </div>
                         </div>
                       );
@@ -322,12 +386,39 @@ export default function Home() {
                   {/* Navigation Arrow - Right */}
                   <button
                     onClick={goToNextSlide}
-                    className="absolute right-2 z-20 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110"
+                    disabled={isSliding}
+                    className={`group absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-14 h-14 flex items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 ease-in-out ${
+                      isSliding && arrowRipple === 'right' 
+                        ? 'opacity-70 scale-95' 
+                        : 'opacity-80 hover:opacity-100 hover:scale-110 active:scale-95'
+                    } ${
+                      arrowRipple === 'right' ? 'shadow-lg' : 'shadow-md'
+                    }`}
+                    style={{
+                      backgroundColor: 'rgba(250, 250, 249, 0.75)', // stone-50 with 75% opacity
+                      boxShadow: arrowRipple === 'right' 
+                        ? '0 10px 25px rgba(0, 0, 0, 0.15)' 
+                        : '0 4px 12px rgba(0, 0, 0, 0.1)',
+                    }}
                     aria-label="Next slide"
                   >
-                    <svg className="w-5 h-5 text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <svg 
+                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                        arrowRipple === 'right' ? 'translate-x-0.5' : 'group-hover:translate-x-0.5'
+                      }`}
+                      fill="none" 
+                      stroke="#5a5147" 
+                      strokeWidth={1.5}
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M9 5l7 7-7 7" />
                     </svg>
+                    {/* Ripple effect */}
+                    {arrowRipple === 'right' && (
+                      <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
+                    )}
                   </button>
                 </div>
               </div>
