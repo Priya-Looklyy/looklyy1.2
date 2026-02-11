@@ -213,13 +213,13 @@ export default function Home() {
           </div>
         )}
 
-        {/* Hero Section - Editorial Style - Strict Viewport Height */}
-        <section className="h-screen flex items-center pt-14 px-6 sm:px-8 lg:px-12 overflow-hidden">
-          <div className="max-w-7xl mx-auto w-full h-full flex items-center">
-            {/* Editorial Layout: Text Left, Image Right */}
-            <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-center w-full h-full">
-              {/* Editorial Text Content - Left Side */}
-              <div className="space-y-3 lg:space-y-4 h-full flex flex-col justify-center">
+        {/* Hero Section - Refactored Layout */}
+        <section className="min-h-screen flex items-center pt-14">
+          <div className="max-w-7xl mx-auto px-6 w-full">
+            {/* 2-Column Grid Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              {/* Text Column - Left Side */}
+              <div className="max-w-[480px] space-y-6 lg:pr-12">
                 {/* Large Editorial Headline - 2 lines, all black */}
                 <div className="space-y-2">
                   <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-light leading-[1.1] text-gray-900 tracking-tight">
@@ -233,7 +233,7 @@ export default function Home() {
                 </div>
 
                 {/* Sub-headline - Editorial Style */}
-                <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed font-light max-w-xl">
+                <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed font-light">
                   Would you consider registering if I showed you, every day, how to dress better through small, low-risk additions using what you already own?
                 </p>
 
@@ -268,7 +268,7 @@ export default function Home() {
               </div>
 
               {/* Dynamic Image Slider - Right Side - Polaroid Style Stacked Cards */}
-              <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[420px] order-first lg:order-last flex items-center justify-center overflow-hidden">
+              <div className="relative flex justify-center lg:justify-end order-first lg:order-last">
                 {/* Subtle textured background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-stone-50 via-stone-100/50 to-stone-50 rounded-2xl" style={{
                   backgroundImage: `radial-gradient(circle at 2px 2px, rgba(120, 113, 108, 0.08) 1px, transparent 0)`,
@@ -276,7 +276,7 @@ export default function Home() {
                 }}></div>
                 
                 {/* Slider Container - Centered with polaroid cards */}
-                <div className="relative h-full w-full flex items-center justify-center">
+                <div className="relative max-w-md w-full flex items-center justify-center min-h-[420px] lg:min-h-[500px]">
                   {/* Navigation Arrow - Left */}
                   <button
                     onClick={goToPrevSlide}
@@ -316,31 +316,35 @@ export default function Home() {
                   </button>
 
                   {/* Polaroid Cards Container */}
-                  <div className="relative h-[85%] w-full flex items-center justify-center">
+                  <div className="relative w-full flex items-center justify-center min-h-[420px] lg:min-h-[500px]">
                     {getVisibleSlides().map((slide) => {
                       const isCenter = slide.position === 0;
                       const absPosition = Math.abs(slide.position);
                       
-                      // Calculate properties based on position
-                      const scale = isCenter ? 1 : Math.max(0.85, 1 - (absPosition * 0.05)); // 0.85-0.95 for side cards
-                      const opacity = isCenter ? 1 : Math.max(0.6, 1 - (absPosition * 0.15)); // 0.6-0.8 for side cards
-                      const zIndex = isCenter ? 20 : 10 - absPosition; // Center has highest z-index
+                      // Card sizing: 340px mobile, 420px desktop, 460px large screens
+                      const cardWidth = isCenter 
+                        ? 'w-[340px] sm:w-[420px] lg:w-[460px]' 
+                        : 'w-[340px] sm:w-[420px] lg:w-[460px]';
                       
-                      // Horizontal offset: center = 0, side cards offset based on position
-                      const translateX = slide.position * (isCenter ? 0 : 12); // Horizontal offset for side cards
+                      // Scale: center = 1, side cards = 0.9
+                      const scale = isCenter ? 1 : 0.9;
                       
-                      // Parallax depth effect (subtle vertical offset)
-                      const translateY = isCenter ? 0 : absPosition * 2;
+                      // Opacity: center = 1, side cards = 0.6
+                      const opacity = isCenter ? 1 : 0.6;
+                      
+                      // Z-index: center = 30, side cards decrease
+                      const zIndex = isCenter ? 30 : 20 - absPosition;
+                      
+                      // Horizontal offset: side cards translate-x-12 (48px)
+                      const translateX = slide.position === 0 ? 0 : slide.position * 48; // 12 * 4 = 48px (translate-x-12)
 
                       return (
                         <div
                           key={`${slide.index}-${slide.position}`}
-                          className="absolute transition-all duration-500 ease-in-out"
+                          className={`absolute ${cardWidth} transition-all duration-500 ease-in-out`}
                           style={{
-                            width: isCenter ? '22.5%' : '20%', // Center card slightly larger
-                            height: '100%',
                             left: '50%',
-                            transform: `translateX(calc(-50% + ${translateX}%)) translateY(${translateY}px) scale(${scale})`,
+                            transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale})`,
                             zIndex: zIndex,
                             opacity: opacity,
                             transformOrigin: 'center center',
@@ -348,23 +352,23 @@ export default function Home() {
                         >
                           {/* Polaroid-style card frame */}
                           <div 
-                            className={`relative w-full h-full bg-white rounded-lg shadow-lg transition-all duration-500 ${
+                            className={`relative w-full bg-white rounded-xl shadow-lg transition-all duration-500 ${
                               isCenter ? 'hover:scale-105 cursor-pointer' : ''
                             }`}
                             style={{
                               boxShadow: isCenter 
                                 ? '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)' 
                                 : '0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.03)',
-                              padding: '8px 8px 24px 8px', // Thicker bottom padding for polaroid caption area
+                              padding: '6px 6px 8px 6px', // Minimal padding, reduced caption area
                             }}
                           >
-                            {/* Image container */}
-                            <div className="relative w-full h-[calc(100%-16px)] rounded-md overflow-hidden">
+                            {/* Image container - takes 85-90% of card height */}
+                            <div className="relative w-full h-[420px] lg:h-[500px] rounded-lg overflow-hidden">
                               <Image
                                 src={slide.src}
                                 alt={`Fashion Editorial ${slide.index + 1}`}
                                 fill
-                                className="object-cover object-center"
+                                className="object-cover rounded-xl"
                                 priority={isCenter}
                                 onError={(e) => {
                                   const target = e.target as HTMLImageElement;
@@ -375,8 +379,8 @@ export default function Home() {
                               />
                             </div>
                             
-                            {/* Polaroid caption area (bottom padding) */}
-                            <div className="absolute bottom-0 left-0 right-0 h-4 bg-white rounded-b-lg"></div>
+                            {/* Minimal polaroid caption area */}
+                            <div className="absolute bottom-0 left-0 right-0 h-2 bg-white rounded-b-xl"></div>
                           </div>
                         </div>
                       );
