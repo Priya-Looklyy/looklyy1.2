@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Script from 'next/script';
 import Image from 'next/image';
 
@@ -46,6 +46,37 @@ export default function Home() {
     return `/demo-images/${num}.jpg`;
   });
 
+  // Get visible slides (center + 2-3 on each side = 5-7 total cards)
+  const getVisibleSlides = useCallback(() => {
+    const cardsPerSide = 3; // 3 cards on each side of center
+    const slides = [];
+    
+    for (let i = -cardsPerSide; i <= cardsPerSide; i++) {
+      const index = (currentSlideIndex + i + sliderImagesArray.length) % sliderImagesArray.length;
+      slides.push({
+        index,
+        src: sliderImagesArray[index],
+        position: i, // 0 is center, negative = left, positive = right
+        caption: `Fashion Look ${index + 1}`,
+      });
+    }
+    return slides;
+  }, [currentSlideIndex, sliderImagesArray]);
+
+  // Preload images for visible slides
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const visibleSlides = getVisibleSlides();
+    const imagesToPreload = visibleSlides.map(slide => slide.src);
+    
+    imagesToPreload.forEach((src) => {
+      const img = document.createElement('img');
+      img.src = src;
+      // Preload in background, don't wait for it
+    });
+  }, [getVisibleSlides]);
+
   // Auto-advance slider - Disabled until images load properly
   useEffect(() => {
     // Only auto-advance if current image is loaded
@@ -86,17 +117,81 @@ export default function Home() {
     const [imageSrc, setImageSrc] = useState(image);
     const [isLoading, setIsLoading] = useState(true);
     const [hasLoaded, setHasLoaded] = useState(false);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const imgRef = useRef<HTMLImageElement | null>(null);
 
     // Reset error state when image changes
     useEffect(() => {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+
       setImageError(false);
       setImageSrc(image);
       setIsLoading(true);
       setHasLoaded(false);
+
+      // Set timeout: if image doesn't load in 10 seconds, try fallback
+      timeoutRef.current = setTimeout(() => {
+        if (!hasLoaded && imageSrc === image) {
+          console.warn(`Image loading timeout: ${image}, trying fallback`);
+          if (image !== '/single-homepage-image.jpg') {
+            setImageSrc('/single-homepage-image.jpg');
+            setIsLoading(true);
+            setHasLoaded(false);
+          } else {
+            setImageError(true);
+            setIsLoading(false);
+          }
+        }
+      }, 10000); // 10 second timeout
+
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
     }, [image]);
+
+    // Preload image when component mounts or image changes
+    useEffect(() => {
+      if (typeof window === 'undefined') return;
+      
+      const preloadImg = document.createElement('img');
+      preloadImg.onload = () => {
+        // Image is cached, mark as loaded
+        if (preloadImg.src === imageSrc || preloadImg.src.endsWith(imageSrc)) {
+          setIsLoading(false);
+          setHasLoaded(true);
+          if (isActive) {
+            setCurrentImageLoaded(true);
+          }
+        }
+      };
+      preloadImg.onerror = () => {
+        // Preload failed, but let the actual img tag handle the error
+        if ((preloadImg.src === imageSrc || preloadImg.src.endsWith(imageSrc)) && imageSrc !== '/single-homepage-image.jpg') {
+          // Try fallback
+          setImageSrc('/single-homepage-image.jpg');
+        }
+      };
+      preloadImg.src = imageSrc;
+
+      return () => {
+        preloadImg.onload = null;
+        preloadImg.onerror = null;
+      };
+    }, [imageSrc, isActive]);
 
     const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
       const target = e.currentTarget;
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+
       if (imageSrc !== '/single-homepage-image.jpg') {
         // First error: try fallback image
         console.warn(`Image failed to load: ${imageSrc}, falling back to default`);
@@ -108,12 +203,20 @@ export default function Home() {
         console.error(`Fallback image also failed to load`);
         setImageError(true);
         setIsLoading(false);
+        setHasLoaded(false);
       }
     };
 
-    const handleImageLoad = () => {
+    const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+      // Clear timeout since image loaded successfully
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+
       setIsLoading(false);
       setHasLoaded(true);
+      
       // If this is the active image, mark it as loaded for auto-slide
       if (isActive) {
         setCurrentImageLoaded(true);
@@ -132,6 +235,7 @@ export default function Home() {
           )}
           {!imageError && (
             <img
+              ref={imgRef}
               src={imageSrc}
               alt={caption}
               className={`w-full h-full object-cover transition-opacity duration-300 ${
@@ -140,6 +244,11 @@ export default function Home() {
               onError={handleImageError}
               onLoad={handleImageLoad}
               loading="eager"
+              decoding="async"
+              crossOrigin="anonymous"
+              style={{
+                display: isLoading && !hasLoaded ? 'none' : 'block',
+              }}
             />
           )}
           {imageError && (
@@ -158,23 +267,6 @@ export default function Home() {
         </div>
       </div>
     );
-  };
-
-  // Get visible slides (center + 2-3 on each side = 5-7 total cards)
-  const getVisibleSlides = () => {
-    const cardsPerSide = 3; // 3 cards on each side of center
-    const slides = [];
-    
-    for (let i = -cardsPerSide; i <= cardsPerSide; i++) {
-      const index = (currentSlideIndex + i + sliderImagesArray.length) % sliderImagesArray.length;
-      slides.push({
-        index,
-        src: sliderImagesArray[index],
-        position: i, // 0 is center, negative = left, positive = right
-        caption: `Fashion Look ${index + 1}`,
-      });
-    }
-    return slides;
   };
 
   // Auto-close thank you modal after 5 seconds
