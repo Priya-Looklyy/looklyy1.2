@@ -305,7 +305,7 @@ export default function Home() {
                     </button>
 
                     {/* Polaroid Cards Container */}
-                    <div className="relative w-full flex items-center justify-center overflow-hidden">
+                    <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ minHeight: '500px' }}>
                       {getVisibleSlides().map((slide) => {
                         const isCenter = slide.position === 0;
                         const absPosition = Math.abs(slide.position);
@@ -336,10 +336,12 @@ export default function Home() {
                           >
                             {/* Polaroid-style card frame */}
                             <div 
-                              className={`relative w-full aspect-[3/4] bg-white rounded-2xl shadow-xl transition-all duration-500 overflow-hidden ${
+                              className={`relative w-full bg-white rounded-2xl shadow-xl transition-all duration-500 overflow-hidden ${
                                 isCenter ? 'hover:scale-105 cursor-pointer' : ''
                               }`}
                               style={{
+                                aspectRatio: '3/4',
+                                minHeight: '500px',
                                 boxShadow: isCenter 
                                   ? '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)' 
                                   : '0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.03)',
@@ -353,6 +355,7 @@ export default function Home() {
                                   fill
                                   className="object-cover"
                                   priority={isCenter}
+                                  sizes="(max-width: 768px) 340px, (max-width: 1024px) 400px, 400px"
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement;
                                     if (target) {
