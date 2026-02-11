@@ -117,27 +117,28 @@ export default function Home() {
         {/* Navigation - Minimalist */}
         <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-100 z-50">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-            <div className="flex justify-start items-center h-20">
+            <div className="flex justify-between items-center h-14">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">L</span>
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">L</span>
                 </div>
-                <span className="text-2xl font-light tracking-tight text-gray-900">Looklyy</span>
+                <span className="text-xl font-light tracking-tight text-gray-900">Looklyy</span>
               </div>
+              <span className="text-sm text-gray-500 font-light">Hello</span>
             </div>
           </div>
         </nav>
 
-        {/* Hero Section - Editorial Style - Viewport Height */}
-        <section className="min-h-screen flex items-center pt-20 pb-12 px-6 sm:px-8 lg:px-12">
-          <div className="max-w-7xl mx-auto w-full">
+        {/* Hero Section - Editorial Style - Strict Viewport Height */}
+        <section className="h-screen flex items-center pt-14 px-6 sm:px-8 lg:px-12 overflow-hidden">
+          <div className="max-w-7xl mx-auto w-full h-full flex items-center">
             {/* Editorial Layout: Text Left, Image Right */}
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-center w-full h-full">
               {/* Editorial Text Content - Left Side */}
-              <div className="space-y-4 lg:space-y-5">
+              <div className="space-y-3 lg:space-y-4 h-full flex flex-col justify-center">
                 {/* Large Editorial Headline */}
-                <div className="space-y-2 lg:space-y-3">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light leading-[1.1] text-gray-900 tracking-tight">
+                <div className="space-y-2">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light leading-[1.1] text-gray-900 tracking-tight">
                     What if you could{' '}
                     <span className="font-normal italic text-purple-700">learn to style</span>
                     <br />
@@ -147,18 +148,18 @@ export default function Home() {
                   </h1>
                   
                   {/* Decorative Line */}
-                  <div className="w-20 h-0.5 bg-gradient-to-r from-purple-600 to-transparent"></div>
+                  <div className="w-16 h-0.5 bg-gradient-to-r from-purple-600 to-transparent"></div>
                 </div>
 
                 {/* Sub-headline - Editorial Style */}
-                <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed font-light max-w-xl">
+                <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed font-light max-w-xl">
                   Would you consider registering if I showed you, every day, how to dress better through small, low-risk additions using what you already own?
                 </p>
 
                 {/* CTA Form - Editorial Style */}
                 <form
                   onSubmit={handleSubmit}
-                  className="flex flex-col sm:flex-row gap-4 pt-1"
+                  className="flex flex-col sm:flex-row gap-3 pt-2"
                 >
                   <input
                     type="email"
@@ -166,14 +167,14 @@ export default function Home() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
-                    className="flex-1 px-6 py-4 text-base border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
+                    className="flex-1 px-5 py-3 text-sm border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
                     onClick={() => handleCTAClick('hero_email')}
                   />
                   <button
                     type="submit"
                     onClick={() => handleCTAClick('hero_button')}
                     disabled={isSubmitting}
-                    className="flex-1 sm:flex-none px-8 py-4 bg-purple-600 text-white font-medium tracking-wide uppercase text-sm hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 sm:flex-none px-6 py-3 bg-purple-600 text-white font-medium tracking-wide uppercase text-xs hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? 'Registering...' : 'Register'}
                   </button>
@@ -186,7 +187,7 @@ export default function Home() {
               </div>
 
               {/* Large Hero Image - Right Side */}
-              <div className="relative h-[350px] sm:h-[400px] lg:h-[450px] xl:h-[500px] order-first lg:order-last">
+              <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[420px] order-first lg:order-last flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/50 to-transparent rounded-2xl"></div>
                 <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                   <Image
