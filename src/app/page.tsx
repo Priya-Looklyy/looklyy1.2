@@ -220,10 +220,10 @@ export default function Home() {
               {/* 2-Column Grid Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-20">
                 {/* Text Column - Left Side */}
-                <div className="max-w-[480px] space-y-6 lg:pr-8">
+                <div className="max-w-[500px] space-y-6 lg:pr-8">
                   {/* Large Editorial Headline - Force 2 lines */}
                   <div className="space-y-2">
-                    <h1 className="text-4xl lg:text-5xl font-light leading-tight tracking-tight max-w-[480px] text-gray-900">
+                    <h1 className="text-4xl lg:text-5xl font-light leading-tight max-w-[480px] text-gray-900">
                       What if you could learn to style
                       <br className="hidden lg:block" />
                       as a skill as you shop?
@@ -328,7 +328,7 @@ export default function Home() {
                         return (
                           <div
                             key={`${slide.index}-${slide.position}`}
-                            className={`${isCenter ? 'relative' : 'absolute'} transition-all duration-500 ease-in-out`}
+                            className={`${isCenter ? 'relative' : 'absolute'} flex justify-center transition-all duration-500 ease-in-out`}
                             style={{
                               left: isCenter ? 'auto' : '50%',
                               transform: isCenter 
@@ -339,26 +339,21 @@ export default function Home() {
                               transformOrigin: 'center center',
                             }}
                           >
-                            {/* Polaroid Card Frame */}
+                            {/* Polaroid Card Frame - Correct Structure */}
                             <div 
-                              className={`polaroid-card w-[360px] sm:w-[400px] lg:w-[440px] bg-white rounded-2xl shadow-2xl p-4 pb-8 transition-all duration-500 ${
+                              className={`bg-white rounded-2xl shadow-2xl p-4 pb-10 w-[380px] sm:w-[420px] lg:w-[460px] transition-all duration-500 ${
                                 isCenter ? 'hover:scale-105 cursor-pointer' : ''
                               }`}
-                              style={{
-                                boxShadow: isCenter 
-                                  ? '0 25px 50px -12px rgba(0, 0, 0, 0.25)' 
-                                  : '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                              }}
                             >
-                              {/* Polaroid Image Wrapper */}
-                              <div className="polaroid-image-wrapper aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
+                              {/* Image Wrapper - Inset inside frame */}
+                              <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden">
                                 <Image
                                   src={slide.src}
                                   alt={`Fashion Editorial ${slide.index + 1}`}
                                   fill
                                   className="w-full h-full object-cover"
                                   priority={isCenter}
-                                  sizes="(max-width: 640px) 360px, (max-width: 1024px) 400px, 440px"
+                                  sizes="(max-width: 640px) 380px, (max-width: 1024px) 420px, 460px"
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement;
                                     if (target) {
@@ -368,8 +363,8 @@ export default function Home() {
                                 />
                               </div>
                               
-                              {/* Polaroid Caption Area */}
-                              <div className="polaroid-caption mt-4 text-center text-sm text-gray-600 font-light">
+                              {/* Caption Area - Thicker bottom margin */}
+                              <div className="mt-4 text-center text-sm text-gray-500 tracking-wide">
                                 Modern Interior
                               </div>
                             </div>
