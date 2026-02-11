@@ -32,6 +32,8 @@ export default function Home() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isSliding, setIsSliding] = useState(false);
   const [arrowRipple, setArrowRipple] = useState<'left' | 'right' | null>(null);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set<string>());
+  const [currentImageLoaded, setCurrentImageLoaded] = useState(false);
   const { trackEvent } = useAnalytics();
 
   // Generate slider images array (using demo-images or fallback to single image)
@@ -45,13 +47,59 @@ export default function Home() {
     return `/demo-images/${num}.jpg`;
   });
 
-  // Auto-advance slider
+  // Preload images on mount
   useEffect(() => {
+    const preloadImages = async () => {
+      const imagePromises = sliderImagesArray.map((src) => {
+        return new Promise<string>((resolve, reject) => {
+          const img = document.createElement('img');
+          img.onload = () => resolve(src);
+          img.onerror = () => {
+            // Try fallback image
+            const fallbackImg = document.createElement('img');
+            fallbackImg.onload = () => resolve('/single-homepage-image.jpg');
+            fallbackImg.onerror = () => reject(src);
+            fallbackImg.src = '/single-homepage-image.jpg';
+          };
+          img.src = src;
+        });
+      });
+
+      try {
+        const loaded = await Promise.allSettled(imagePromises);
+        const loadedSet = new Set<string>();
+        loaded.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            loadedSet.add(sliderImagesArray[index]);
+          }
+        });
+        setLoadedImages(loadedSet);
+        // Mark current image as loaded if it's in the loaded set
+        if (loadedSet.has(sliderImagesArray[currentSlideIndex])) {
+          setCurrentImageLoaded(true);
+        }
+      } catch (error) {
+        console.error('Error preloading images:', error);
+      }
+    };
+
+    preloadImages();
+  }, []); // Only run once on mount
+
+  // Track when current image loads
+  useEffect(() => {
+    setCurrentImageLoaded(loadedImages.has(sliderImagesArray[currentSlideIndex]));
+  }, [currentSlideIndex, loadedImages]);
+
+  // Auto-advance slider - ONLY when current image is loaded
+  useEffect(() => {
+    if (!currentImageLoaded) return; // Don't auto-advance if image isn't loaded
+    
     const interval = setInterval(() => {
       setCurrentSlideIndex((prev) => (prev + 1) % sliderImagesArray.length);
     }, 3000); // Change slide every 3 seconds
     return () => clearInterval(interval);
-  }, [sliderImagesArray.length]);
+  }, [currentImageLoaded, sliderImagesArray.length]);
 
   // Navigation handlers with animation states
   const goToNextSlide = () => {
@@ -87,9 +135,15 @@ export default function Home() {
     useEffect(() => {
       setImageError(false);
       setImageSrc(image);
-      setIsLoading(true);
-      setHasLoaded(false);
-    }, [image]);
+      // Check if image is already preloaded
+      if (loadedImages.has(image)) {
+        setIsLoading(false);
+        setHasLoaded(true);
+      } else {
+        setIsLoading(true);
+        setHasLoaded(false);
+      }
+    }, [image, loadedImages]);
 
     const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
       const target = e.currentTarget;
@@ -110,6 +164,12 @@ export default function Home() {
     const handleImageLoad = () => {
       setIsLoading(false);
       setHasLoaded(true);
+      // Add to loaded images set
+      setLoadedImages((prev) => new Set(prev).add(imageSrc));
+      // If this is the active image, mark it as loaded for auto-slide
+      if (isActive) {
+        setCurrentImageLoaded(true);
+      }
     };
 
     return (
@@ -381,6 +441,63 @@ export default function Home() {
                 </p>
               </div>
 
+              {/* What You'll Get Section - Moved here */}
+              <div className="mt-16 lg:mt-24 w-full">
+                <div className="max-w-7xl mx-auto">
+                  {/* Section Header */}
+                  <div className="mb-12 lg:mb-20 text-center">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-900 tracking-tight mb-4 lg:mb-6">
+                      What you&apos;ll get access to
+                    </h2>
+                    <p className="text-lg lg:text-xl text-gray-600 font-light max-w-2xl mx-auto">
+                      Early access to Looklyy includes exclusive features designed to transform how you approach personal styling.
+                    </p>
+                  </div>
+
+                  {/* Editorial Card Grid */}
+                  <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+                    <div className="group relative overflow-hidden bg-white border border-gray-200 p-8 lg:p-10 hover:border-purple-300 transition-all">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="relative z-10">
+                        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-purple-600 mb-4 lg:mb-6 flex items-center justify-center">
+                          <div className="w-6 h-6 lg:w-8 lg:h-8 border-2 border-white rounded"></div>
+                        </div>
+                        <h3 className="text-xl lg:text-2xl font-medium text-gray-900 mb-3 lg:mb-4 uppercase tracking-wide">AI-Powered Matching</h3>
+                        <p className="text-sm lg:text-base text-gray-600 font-light leading-relaxed">
+                          Our technology analyzes fashion looks and matches them to items in your wardrobe with precision.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="group relative overflow-hidden bg-white border border-gray-200 p-8 lg:p-10 hover:border-purple-300 transition-all">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="relative z-10">
+                        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-purple-600 mb-4 lg:mb-6 flex items-center justify-center">
+                          <div className="w-6 h-6 lg:w-8 lg:h-8 border-2 border-white rounded"></div>
+                        </div>
+                        <h3 className="text-xl lg:text-2xl font-medium text-gray-900 mb-3 lg:mb-4 uppercase tracking-wide">Personalized Suggestions</h3>
+                        <p className="text-sm lg:text-base text-gray-600 font-light leading-relaxed">
+                          Get styling recommendations tailored to your body type, preferences, and existing wardrobe.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="group relative overflow-hidden bg-white border border-gray-200 p-8 lg:p-10 hover:border-purple-300 transition-all">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="relative z-10">
+                        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-purple-600 mb-4 lg:mb-6 flex items-center justify-center">
+                          <div className="w-6 h-6 lg:w-8 lg:h-8 border-2 border-white rounded"></div>
+                        </div>
+                        <h3 className="text-xl lg:text-2xl font-medium text-gray-900 mb-3 lg:mb-4 uppercase tracking-wide">Wardrobe Intelligence</h3>
+                        <p className="text-sm lg:text-base text-gray-600 font-light leading-relaxed">
+                          Understand what you own, what you wear most, and discover hidden styling possibilities.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Desktop: Slider Column - Right Side */}
               <div className="hidden lg:flex lg:justify-end lg:relative lg:w-full">
                 <div className="relative w-full max-w-[520px]">
@@ -485,19 +602,6 @@ export default function Home() {
           </section>
         </div>
 
-        {/* Visual Break - Full Width Image */}
-        <section className="py-0 px-0 mb-32">
-          <div className="relative h-[400px] lg:h-[500px] w-full overflow-hidden">
-            <Image
-              src="/single-homepage-image.jpg"
-              alt="Fashion Editorial Break"
-              fill
-              className="object-cover grayscale-[0.3]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-transparent to-transparent"></div>
-          </div>
-        </section>
-
         {/* Problem & Solution Section - Editorial Grid */}
         <section className="py-32 px-6 sm:px-8 lg:px-12 bg-white">
           <div className="max-w-7xl mx-auto">
@@ -568,63 +672,6 @@ export default function Home() {
                 <div className="h-48 bg-gradient-to-br from-purple-200/50 to-transparent rounded-lg"></div>
                 <div className="h-48 bg-gradient-to-br from-purple-300/50 to-transparent rounded-lg"></div>
                 <div className="h-48 bg-gradient-to-br from-purple-200/50 to-transparent rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* What You'll Get - Editorial Cards */}
-        <section className="py-32 px-6 sm:px-8 lg:px-12">
-          <div className="max-w-7xl mx-auto">
-            {/* Section Header */}
-            <div className="mb-20 text-center">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 tracking-tight mb-6">
-                What you&apos;ll get access to
-              </h2>
-              <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto">
-                Early access to Looklyy includes exclusive features designed to transform how you approach personal styling.
-              </p>
-            </div>
-
-            {/* Editorial Card Grid */}
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="group relative overflow-hidden bg-white border border-gray-200 p-10 hover:border-purple-300 transition-all">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-purple-600 mb-6 flex items-center justify-center">
-                    <div className="w-8 h-8 border-2 border-white rounded"></div>
-                  </div>
-                  <h3 className="text-2xl font-medium text-gray-900 mb-4 uppercase tracking-wide">AI-Powered Matching</h3>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Our technology analyzes fashion looks and matches them to items in your wardrobe with precision.
-                  </p>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden bg-white border border-gray-200 p-10 hover:border-purple-300 transition-all">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-purple-600 mb-6 flex items-center justify-center">
-                    <div className="w-8 h-8 border-2 border-white rounded"></div>
-                  </div>
-                  <h3 className="text-2xl font-medium text-gray-900 mb-4 uppercase tracking-wide">Personalized Suggestions</h3>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Get styling recommendations tailored to your body type, preferences, and existing wardrobe.
-                  </p>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden bg-white border border-gray-200 p-10 hover:border-purple-300 transition-all">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-purple-600 mb-6 flex items-center justify-center">
-                    <div className="w-8 h-8 border-2 border-white rounded"></div>
-                  </div>
-                  <h3 className="text-2xl font-medium text-gray-900 mb-4 uppercase tracking-wide">Wardrobe Intelligence</h3>
-                  <p className="text-gray-600 font-light leading-relaxed">
-                    Understand what you own, what you wear most, and discover hidden styling possibilities.
-                  </p>
-                </div>
               </div>
             </div>
           </div>
