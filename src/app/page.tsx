@@ -35,7 +35,15 @@ export default function Home() {
   const { trackEvent } = useAnalytics();
 
   // Generate slider images array (using demo-images or fallback to single image)
-  const sliderImagesArray = Array.from({ length: 27 }, (_, i) => `/demo-images/${i + 1}.jpg`);
+  // Handle files that might not have .jpg extension (files 10 and 11)
+  const sliderImagesArray = Array.from({ length: 27 }, (_, i) => {
+    const num = i + 1;
+    // Files 10 and 11 don't have .jpg extension
+    if (num === 10 || num === 11) {
+      return `/demo-images/${num}`;
+    }
+    return `/demo-images/${num}.jpg`;
+  });
 
   // Auto-advance slider
   useEffect(() => {
@@ -69,30 +77,74 @@ export default function Home() {
   };
 
   // Polaroid Card Component - ALL cards use this same structure
-  const PolaroidCard = ({ image, caption, isActive }: { image: string; caption: string; isActive: boolean }) => (
-    <div className={`bg-white rounded-2xl shadow-2xl p-4 pb-10 w-[280px] sm:w-[320px] lg:w-[380px] transition-all duration-500 ${
-      isActive ? 'hover:scale-105 cursor-pointer' : ''
-    }`}>
-      <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
-        <Image
-          src={image}
-          alt={caption}
-          fill
-          className="w-full h-full object-cover"
-          sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 380px"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            if (target) {
-              target.src = '/single-homepage-image.jpg';
-            }
-          }}
-        />
+  const PolaroidCard = ({ image, caption, isActive }: { image: string; caption: string; isActive: boolean }) => {
+    const [imageError, setImageError] = useState(false);
+    const [imageSrc, setImageSrc] = useState(image);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Reset error state when image changes
+    useEffect(() => {
+      setImageError(false);
+      setImageSrc(image);
+      setIsLoading(true);
+    }, [image]);
+
+    const handleImageError = () => {
+      if (imageSrc !== '/single-homepage-image.jpg') {
+        // First error: try fallback image
+        console.warn(`Image failed to load: ${imageSrc}, falling back to default`);
+        setImageSrc('/single-homepage-image.jpg');
+        setIsLoading(true);
+      } else {
+        // Fallback also failed: show error state
+        console.error(`Fallback image also failed to load`);
+        setImageError(true);
+        setIsLoading(false);
+      }
+    };
+
+    const handleImageLoad = () => {
+      setIsLoading(false);
+    };
+
+    return (
+      <div className={`bg-white rounded-2xl shadow-2xl p-4 pb-10 w-[280px] sm:w-[320px] lg:w-[380px] transition-all duration-500 ${
+        isActive ? 'hover:scale-105 cursor-pointer' : ''
+      }`}>
+        <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gray-100 relative">
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-purple-600 rounded-full animate-spin"></div>
+            </div>
+          )}
+          <Image
+            src={imageSrc}
+            alt={caption}
+            fill
+            className={`object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+            sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 380px"
+            priority={isActive}
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+            onLoadingComplete={handleImageLoad}
+          />
+          {imageError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+              <div className="text-center p-4">
+                <svg className="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p className="text-xs text-gray-500">Image unavailable</p>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="mt-4 text-center text-sm text-gray-500">
+          {caption}
+        </div>
       </div>
-      <div className="mt-4 text-center text-sm text-gray-500">
-        {caption}
-      </div>
-    </div>
-  );
+    );
+  };
 
   // Get visible slides (center + 2-3 on each side = 5-7 total cards)
   const getVisibleSlides = () => {
@@ -247,7 +299,7 @@ export default function Home() {
               {/* Mobile: Headline First */}
               <div className="lg:max-w-[480px]">
                 {/* Headline - Exactly 2 lines, non-negotiable */}
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light leading-tight max-w-[340px] lg:max-w-[480px] text-gray-900">
+                <h1 className="text-2xl sm:text-3xl lg:text-5xl font-light leading-tight max-w-[340px] lg:max-w-[480px] text-gray-900">
                   What if you could learn to style
                   <br />
                   as you shop?
@@ -255,16 +307,17 @@ export default function Home() {
 
                 {/* Mobile: Slider - Image First Priority */}
                 <div className="mt-8 flex justify-center lg:hidden">
-                  <div className="relative w-full flex items-center justify-center" style={{ minHeight: '400px' }}>
+                  <div className="relative w-full flex items-center justify-center overflow-visible" style={{ minHeight: '400px', width: '100%' }}>
                     {getVisibleSlides().map((slide) => {
                       const isCenter = slide.position === 0;
                       const absPosition = Math.abs(slide.position);
                       
-                      const scale = isCenter ? 1 : 0.9;
-                      const opacity = isCenter ? 1 : 0.6;
+                      // Mobile: Show only center card, or show side cards with better visibility
+                      const scale = isCenter ? 1 : 0.85;
+                      const opacity = isCenter ? 1 : 0.5; // Slightly more visible
                       const zIndex = isCenter ? 30 : 10;
-                      const translateX = slide.position === 0 ? 0 : slide.position * 24; // Smaller offset for mobile
-                      const rotation = isCenter ? 0 : slide.position > 0 ? 1 : -1;
+                      const translateX = slide.position === 0 ? 0 : slide.position * 20; // Smaller offset for mobile
+                      const rotation = isCenter ? 0 : slide.position > 0 ? 2 : -2; // Slightly more rotation for visibility
 
                       return (
                         <div
@@ -359,13 +412,13 @@ export default function Home() {
                   </button>
 
                   {/* Polaroid Cards Container - Desktop */}
-                  <div className="relative w-full flex items-center justify-center" style={{ minHeight: '500px' }}>
+                  <div className="relative w-full flex items-center justify-center overflow-visible" style={{ minHeight: '500px', width: '100%' }}>
                     {getVisibleSlides().map((slide) => {
                       const isCenter = slide.position === 0;
                       const absPosition = Math.abs(slide.position);
                       
                       const scale = isCenter ? 1 : 0.9;
-                      const opacity = isCenter ? 1 : 0.6;
+                      const opacity = isCenter ? 1 : 0.65; // Slightly more visible
                       const zIndex = isCenter ? 30 : 10;
                       const translateX = slide.position === 0 ? 0 : slide.position * 24; // translate-x-6 = 24px
                       const rotation = isCenter ? 0 : slide.position > 0 ? 1 : -1;
