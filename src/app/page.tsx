@@ -68,10 +68,35 @@ export default function Home() {
     }, 500); // Match transition duration
   };
 
+  // Polaroid Card Component - ALL cards use this same structure
+  const PolaroidCard = ({ image, caption, isActive }: { image: string; caption: string; isActive: boolean }) => (
+    <div className={`bg-white rounded-2xl shadow-2xl p-4 pb-10 w-[280px] sm:w-[320px] lg:w-[380px] transition-all duration-500 ${
+      isActive ? 'hover:scale-105 cursor-pointer' : ''
+    }`}>
+      <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
+        <Image
+          src={image}
+          alt={caption}
+          fill
+          className="w-full h-full object-cover"
+          sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 380px"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            if (target) {
+              target.src = '/single-homepage-image.jpg';
+            }
+          }}
+        />
+      </div>
+      <div className="mt-4 text-center text-sm text-gray-500">
+        {caption}
+      </div>
+    </div>
+  );
+
   // Get visible slides (center + 2-3 on each side = 5-7 total cards)
   const getVisibleSlides = () => {
     const cardsPerSide = 3; // 3 cards on each side of center
-    const totalCards = cardsPerSide * 2 + 1; // 7 total cards
     const slides = [];
     
     for (let i = -cardsPerSide; i <= cardsPerSide; i++) {
@@ -80,6 +105,7 @@ export default function Home() {
         index,
         src: sliderImagesArray[index],
         position: i, // 0 is center, negative = left, positive = right
+        caption: `Fashion Look ${index + 1}`,
       });
     }
     return slides;
@@ -213,35 +239,65 @@ export default function Home() {
           </div>
         )}
 
-        {/* Hero Section - Refactored Layout */}
+        {/* Hero Section - Mobile First Rebuild */}
         <div className="w-full overflow-x-hidden">
-          <section className="w-full min-h-screen flex items-center pt-14">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
-              {/* 2-Column Grid Layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-20">
-                {/* Text Column - Left Side */}
-                <div className="max-w-[480px] space-y-6 lg:pr-8">
-                  {/* Large Editorial Headline - Force 2 lines */}
-                  <div className="space-y-2">
-                    <h1 className="text-4xl lg:text-5xl font-light leading-tight text-gray-900" style={{ maxWidth: '480px' }}>
-                      What if you could learn to style
-                      <br />
-                      as a skill as you shop?
-                    </h1>
-                  
-                  {/* Decorative Line */}
-                  <div className="w-16 h-0.5 bg-gradient-to-r from-gray-400 to-transparent"></div>
+          <section className="w-full pt-14">
+            <div className="px-6 pt-10 pb-12 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16 lg:max-w-7xl lg:mx-auto lg:px-8 lg:min-h-screen">
+              
+              {/* Mobile: Headline First */}
+              <div className="lg:max-w-[480px]">
+                {/* Headline - Exactly 2 lines, non-negotiable */}
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light leading-tight max-w-[340px] lg:max-w-[480px] text-gray-900">
+                  What if you could learn to style
+                  <br />
+                  as you shop?
+                </h1>
+
+                {/* Mobile: Slider - Image First Priority */}
+                <div className="mt-8 flex justify-center lg:hidden">
+                  <div className="relative w-full flex items-center justify-center" style={{ minHeight: '400px' }}>
+                    {getVisibleSlides().map((slide) => {
+                      const isCenter = slide.position === 0;
+                      const absPosition = Math.abs(slide.position);
+                      
+                      const scale = isCenter ? 1 : 0.9;
+                      const opacity = isCenter ? 1 : 0.6;
+                      const zIndex = isCenter ? 30 : 10;
+                      const translateX = slide.position === 0 ? 0 : slide.position * 24; // Smaller offset for mobile
+                      const rotation = isCenter ? 0 : slide.position > 0 ? 1 : -1;
+
+                      return (
+                        <div
+                          key={`${slide.index}-${slide.position}`}
+                          className="absolute flex justify-center transition-all duration-500 ease-in-out"
+                          style={{
+                            left: '50%',
+                            transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale}) rotate(${rotation}deg)`,
+                            zIndex: zIndex,
+                            opacity: opacity,
+                            transformOrigin: 'center center',
+                          }}
+                        >
+                          <PolaroidCard 
+                            image={slide.src} 
+                            caption={slide.caption}
+                            isActive={isCenter}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                {/* Sub-headline - Editorial Style */}
-                <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed font-light">
-                  Would you consider registering if I showed you, every day, how to dress better through small, low-risk additions using what you already own?
+                {/* Description - Mobile */}
+                <p className="mt-6 text-gray-500 max-w-[340px] lg:max-w-none lg:text-lg lg:text-gray-600 lg:leading-relaxed lg:font-light">
+                  Learn every day how to dress better using small, low-risk additions.
                 </p>
 
-                {/* CTA Form - Editorial Style */}
+                {/* Email CTA - Mobile */}
                 <form
                   onSubmit={handleSubmit}
-                  className="flex flex-col sm:flex-row gap-3 pt-2"
+                  className="mt-6 space-y-4 max-w-[340px] lg:max-w-none lg:flex lg:flex-row lg:gap-3 lg:space-y-0"
                 >
                   <input
                     type="email"
@@ -249,160 +305,123 @@ export default function Home() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Your Email"
                     required
-                    className="flex-1 px-5 py-3 text-sm border-b-2 border-gray-300 bg-transparent focus:outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400"
+                    className="w-full border-b-2 border-gray-300 pb-2 outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400 lg:flex-1 lg:px-5 lg:py-3 lg:text-sm"
                     onClick={() => handleCTAClick('hero_email')}
                   />
                   <button
                     type="submit"
                     onClick={() => handleCTAClick('hero_button')}
                     disabled={isSubmitting}
-                    className="flex-1 sm:flex-none px-6 py-3 bg-purple-600 text-white font-medium tracking-wide uppercase text-xs hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed lg:flex-none lg:px-6 lg:py-3 lg:uppercase lg:text-xs lg:font-medium lg:tracking-wide"
                   >
                     {isSubmitting ? 'Registering...' : 'Register'}
                   </button>
                 </form>
 
-                {/* Trust indicator - Minimal */}
-                <p className="text-xs text-gray-400 uppercase tracking-wider pt-1">
+                {/* Trust indicator */}
+                <p className="mt-4 text-xs text-gray-400 uppercase tracking-wider lg:pt-1">
                   No spam. Unsubscribe anytime.
                 </p>
               </div>
 
-                {/* Image Slider Column - Right Side */}
-                <div className="flex justify-center lg:justify-end relative w-full max-w-[540px] order-first lg:order-last">
-                  {/* Slider Wrapper - NO overflow-hidden to show side cards */}
-                  <div className="relative w-full max-w-[520px]">
-                    {/* Navigation Arrow - Left */}
-                    <button
-                      onClick={goToPrevSlide}
-                      disabled={isSliding}
-                      className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out left-2 lg:-left-6 ${
-                        isSliding && arrowRipple === 'left' 
-                          ? 'opacity-70 scale-95' 
-                          : 'opacity-80 hover:opacity-100 active:scale-95'
-                      } ${
-                        arrowRipple === 'left' ? 'shadow-lg' : ''
+              {/* Desktop: Slider Column - Right Side */}
+              <div className="hidden lg:flex lg:justify-end lg:relative lg:w-full">
+                <div className="relative w-full max-w-[520px]">
+                  {/* Navigation Arrow - Left */}
+                  <button
+                    onClick={goToPrevSlide}
+                    disabled={isSliding}
+                    className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out -left-6 ${
+                      isSliding && arrowRipple === 'left' 
+                        ? 'opacity-70 scale-95' 
+                        : 'opacity-80 hover:opacity-100 active:scale-95'
+                    } ${
+                      arrowRipple === 'left' ? 'shadow-lg' : ''
+                    }`}
+                    aria-label="Previous slide"
+                  >
+                    <svg 
+                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                        arrowRipple === 'left' ? '-translate-x-0.5' : 'group-hover:-translate-x-0.5'
                       }`}
-                      aria-label="Previous slide"
+                      fill="none" 
+                      stroke="#5a5147" 
+                      strokeWidth={1.5}
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      viewBox="0 0 24 24"
                     >
-                      <svg 
-                        className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                          arrowRipple === 'left' ? '-translate-x-0.5' : 'group-hover:-translate-x-0.5'
-                        }`}
-                        fill="none" 
-                        stroke="#5a5147" 
-                        strokeWidth={1.5}
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M15 19l-7-7 7-7" />
-                      </svg>
-                      {/* Ripple effect */}
-                      {arrowRipple === 'left' && (
-                        <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
-                      )}
-                    </button>
+                      <path d="M15 19l-7-7 7-7" />
+                    </svg>
+                    {arrowRipple === 'left' && (
+                      <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
+                    )}
+                  </button>
 
-                    {/* Polaroid Cards Container */}
-                    <div className="relative w-full flex items-center justify-center" style={{ minHeight: '500px' }}>
-                      {getVisibleSlides().map((slide) => {
-                        const isCenter = slide.position === 0;
-                        const absPosition = Math.abs(slide.position);
-                        
-                        // Scale: center = 1, side cards = 0.9
-                        const scale = isCenter ? 1 : 0.9;
-                        
-                        // Opacity: center = 1, side cards = 0.6
-                        const opacity = isCenter ? 1 : 0.6;
-                        
-                        // Z-index: center = 30, side cards = 10
-                        const zIndex = isCenter ? 30 : 10;
-                        
-                        // Horizontal offset: side cards translate-x-8 (32px)
-                        const translateX = slide.position === 0 ? 0 : slide.position * 32;
-                        
-                        // Rotation: side cards have slight rotation for realism
-                        const rotation = isCenter ? 0 : slide.position > 0 ? 1 : -1; // rotate-1 or -rotate-1
+                  {/* Polaroid Cards Container - Desktop */}
+                  <div className="relative w-full flex items-center justify-center" style={{ minHeight: '500px' }}>
+                    {getVisibleSlides().map((slide) => {
+                      const isCenter = slide.position === 0;
+                      const absPosition = Math.abs(slide.position);
+                      
+                      const scale = isCenter ? 1 : 0.9;
+                      const opacity = isCenter ? 1 : 0.6;
+                      const zIndex = isCenter ? 30 : 10;
+                      const translateX = slide.position === 0 ? 0 : slide.position * 24; // translate-x-6 = 24px
+                      const rotation = isCenter ? 0 : slide.position > 0 ? 1 : -1;
 
-                        return (
-                          <div
-                            key={`${slide.index}-${slide.position}`}
-                            className="absolute flex justify-center transition-all duration-500 ease-in-out"
-                            style={{
-                              left: '50%',
-                              transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale}) rotate(${rotation}deg)`,
-                              zIndex: zIndex,
-                              opacity: opacity,
-                              transformOrigin: 'center center',
-                            }}
-                          >
-                            {/* Polaroid Card Frame - Correct Structure */}
-                            <div 
-                              className={`bg-white rounded-2xl shadow-2xl p-4 pb-10 w-[380px] sm:w-[420px] lg:w-[460px] transition-all duration-500 ${
-                                isCenter ? 'hover:scale-105 cursor-pointer' : ''
-                              }`}
-                            >
-                              {/* Image Wrapper - Inset inside frame */}
-                              <div className="aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden">
-                                <Image
-                                  src={slide.src}
-                                  alt={`Fashion Editorial ${slide.index + 1}`}
-                                  fill
-                                  className="w-full h-full object-cover"
-                                  priority={isCenter}
-                                  sizes="(max-width: 640px) 380px, (max-width: 1024px) 420px, 460px"
-                                  onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    if (target) {
-                                      target.src = '/single-homepage-image.jpg';
-                                    }
-                                  }}
-                                />
-                              </div>
-                              
-                              {/* Caption Area - Thicker bottom margin */}
-                              <div className="mt-4 text-center text-sm text-gray-500 tracking-wide">
-                                Modern Interior
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Navigation Arrow - Right */}
-                    <button
-                      onClick={goToNextSlide}
-                      disabled={isSliding}
-                      className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out right-2 lg:-right-6 ${
-                        isSliding && arrowRipple === 'right' 
-                          ? 'opacity-70 scale-95' 
-                          : 'opacity-80 hover:opacity-100 active:scale-95'
-                      } ${
-                        arrowRipple === 'right' ? 'shadow-lg' : ''
-                      }`}
-                      aria-label="Next slide"
-                    >
-                      <svg 
-                        className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                          arrowRipple === 'right' ? 'translate-x-0.5' : 'group-hover:translate-x-0.5'
-                        }`}
-                        fill="none" 
-                        stroke="#5a5147" 
-                        strokeWidth={1.5}
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M9 5l7 7-7 7" />
-                      </svg>
-                      {/* Ripple effect */}
-                      {arrowRipple === 'right' && (
-                        <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
-                      )}
-                    </button>
+                      return (
+                        <div
+                          key={`${slide.index}-${slide.position}`}
+                          className="absolute flex justify-center transition-all duration-500 ease-in-out"
+                          style={{
+                            left: '50%',
+                            transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale}) rotate(${rotation}deg)`,
+                            zIndex: zIndex,
+                            opacity: opacity,
+                            transformOrigin: 'center center',
+                          }}
+                        >
+                          <PolaroidCard 
+                            image={slide.src} 
+                            caption={slide.caption}
+                            isActive={isCenter}
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
+
+                  {/* Navigation Arrow - Right */}
+                  <button
+                    onClick={goToNextSlide}
+                    disabled={isSliding}
+                    className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out -right-6 ${
+                      isSliding && arrowRipple === 'right' 
+                        ? 'opacity-70 scale-95' 
+                        : 'opacity-80 hover:opacity-100 active:scale-95'
+                    } ${
+                      arrowRipple === 'right' ? 'shadow-lg' : ''
+                    }`}
+                    aria-label="Next slide"
+                  >
+                    <svg 
+                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                        arrowRipple === 'right' ? 'translate-x-0.5' : 'group-hover:translate-x-0.5'
+                      }`}
+                      fill="none" 
+                      stroke="#5a5147" 
+                      strokeWidth={1.5}
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M9 5l7 7-7 7" />
+                    </svg>
+                    {arrowRipple === 'right' && (
+                      <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
