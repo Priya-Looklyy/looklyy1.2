@@ -52,3 +52,14 @@ model LookPin {
   @@unique([userId, lookId])
   @@map("look_pins")
 }
+
+// Pre-registration waitlist model
+model Registration {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("registrations")
+}

@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// In production, you'd use a database or email service
-// For now, we'll log to console and return success
-// You can integrate with services like:
-// - Vercel Postgres
-// - Supabase
-// - SendGrid
-// - Resend
-// - etc.
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,27 +14,68 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Here you would:
-    // 1. Save to database
-    // 2. Send confirmation email
-    // 3. Add to email marketing service (e.g., Mailchimp, ConvertKit)
-    
-    // For now, log the registration
-    console.log('New registration:', { email, name, timestamp: new Date().toISOString() });
+    // Normalize email (lowercase, trim)
+    const normalizedEmail = email.toLowerCase().trim();
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Check if email already exists
+    const existing = await prisma.registration.findUnique({
+      where: { email: normalizedEmail },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { 
+          success: true, 
+          message: 'You are already registered!',
+          alreadyRegistered: true 
+        },
+        { status: 200 }
+      );
+    }
+
+    // Save to database
+    const registration = await prisma.registration.create({
+      data: {
+        email: normalizedEmail,
+        name: name?.trim() || null,
+      },
+    });
+
+    console.log('New registration saved:', { 
+      id: registration.id, 
+      email: registration.email, 
+      name: registration.name,
+      timestamp: registration.createdAt 
+    });
+
+    // TODO: In production, you might want to:
+    // 1. Send confirmation email (using Resend, SendGrid, etc.)
+    // 2. Add to email marketing service (Mailchimp, ConvertKit, etc.)
+    // 3. Send webhook notification
 
     return NextResponse.json(
       { 
         success: true, 
         message: 'Registration successful',
-        // In production, you might return a user ID or confirmation token
+        id: registration.id,
       },
       { status: 200 }
     );
   } catch (error) {
     console.error('Registration error:', error);
+    
+    // Handle Prisma unique constraint error (duplicate email)
+    if (error instanceof Error && error.message.includes('Unique constraint')) {
+      return NextResponse.json(
+        { 
+          success: true, 
+          message: 'You are already registered!',
+          alreadyRegistered: true 
+        },
+        { status: 200 }
+      );
+    }
+
     const errorMessage = error instanceof Error ? error.message : 'Failed to process registration. Please try again.';
     return NextResponse.json(
       { error: errorMessage },
