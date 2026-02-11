@@ -43,6 +43,30 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [sliderImagesArray.length]);
 
+  // Navigation handlers
+  const goToNextSlide = () => {
+    setCurrentSlideIndex((prev) => (prev + 1) % sliderImagesArray.length);
+  };
+
+  const goToPrevSlide = () => {
+    setCurrentSlideIndex((prev) => (prev - 1 + sliderImagesArray.length) % sliderImagesArray.length);
+  };
+
+  // Get visible slides (show 4-5 overlapping images at once)
+  const getVisibleSlides = () => {
+    const visibleCount = 5;
+    const slides = [];
+    for (let i = 0; i < visibleCount; i++) {
+      const index = (currentSlideIndex + i) % sliderImagesArray.length;
+      slides.push({
+        index,
+        src: sliderImagesArray[index],
+        position: i, // 0 is center/most prominent
+      });
+    }
+    return slides;
+  };
+
   // Auto-close thank you modal after 5 seconds
   useEffect(() => {
     if (showThankYouModal) {
@@ -225,43 +249,86 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Dynamic Image Slider - Right Side */}
-              <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[420px] order-first lg:order-last flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-purple-100/50 to-transparent rounded-2xl"></div>
-                <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
-                  {/* Slider Container */}
-                  <div 
-                    className="relative h-full transition-transform duration-700 ease-in-out flex"
-                    style={{
-                      transform: `translateX(-${(currentSlideIndex * 100) / sliderImagesArray.length}%)`,
-                      width: `${sliderImagesArray.length * 100}%`
-                    }}
+              {/* Dynamic Image Slider - Right Side - Overlapping Fan Style */}
+              <div className="relative h-[280px] sm:h-[320px] lg:h-[380px] xl:h-[420px] order-first lg:order-last flex items-center justify-center overflow-visible">
+                {/* Golden-brown textured background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-amber-100/80 to-amber-50 rounded-2xl" style={{
+                  backgroundImage: `radial-gradient(circle at 2px 2px, rgba(180, 83, 9, 0.15) 1px, transparent 0)`,
+                  backgroundSize: '40px 40px'
+                }}></div>
+                
+                {/* Slider Container - Centered with overlapping images */}
+                <div className="relative h-full w-full flex items-center justify-center">
+                  {/* Navigation Arrow - Left */}
+                  <button
+                    onClick={goToPrevSlide}
+                    className="absolute left-2 z-20 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110"
+                    aria-label="Previous slide"
                   >
-                    {sliderImagesArray.map((imageSrc, index) => (
-                      <div
-                        key={index}
-                        className="relative h-full flex-shrink-0"
-                        style={{ width: `${100 / sliderImagesArray.length}%` }}
-                      >
-                        <Image
-                          src={imageSrc}
-                          alt={`Fashion Editorial ${index + 1}`}
-                          fill
-                          className="object-cover object-center"
-                          priority={index === 0}
-                          onError={(e) => {
-                            // Fallback to single image if demo image doesn't exist
-                            const target = e.target as HTMLImageElement;
-                            if (target) {
-                              target.src = '/single-homepage-image.jpg';
-                            }
+                    <svg className="w-5 h-5 text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Overlapping Images Container */}
+                  <div className="relative h-full w-full flex items-center justify-center">
+                    {getVisibleSlides().map((slide, idx) => {
+                      const isCenter = slide.position === 0;
+                      const offset = (slide.position - 2) * 15; // Offset for fan effect
+                      const rotation = (slide.position - 2) * 3; // Rotation for fan effect
+                      const scale = isCenter ? 1 : 0.85 - (slide.position * 0.05); // Center image is largest
+                      const zIndex = 10 - slide.position; // Center has highest z-index
+                      const opacity = isCenter ? 1 : 0.7 - (slide.position * 0.1);
+
+                      return (
+                        <div
+                          key={`${slide.index}-${slide.position}`}
+                          className="absolute transition-all duration-700 ease-in-out"
+                          style={{
+                            width: '22.5%', // 22.5% of screen width (between 20-25%)
+                            height: '85%',
+                            transform: `translateX(${offset}%) rotate(${rotation}deg) scale(${scale})`,
+                            zIndex: zIndex,
+                            opacity: opacity,
+                            transformOrigin: 'center center',
                           }}
-                        />
-                      </div>
-                    ))}
+                        >
+                          <div className="relative w-full h-full rounded-lg overflow-hidden shadow-2xl" style={{
+                            boxShadow: isCenter 
+                              ? '0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1)' 
+                              : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05)'
+                          }}>
+                            <Image
+                              src={slide.src}
+                              alt={`Fashion Editorial ${slide.index + 1}`}
+                              fill
+                              className="object-cover object-center"
+                              priority={isCenter}
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                if (target) {
+                                  target.src = '/single-homepage-image.jpg';
+                                }
+                              }}
+                            />
+                            {/* White border effect like instant camera print */}
+                            <div className="absolute inset-0 border-4 border-white pointer-events-none"></div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  {/* Overlay gradient for text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+
+                  {/* Navigation Arrow - Right */}
+                  <button
+                    onClick={goToNextSlide}
+                    className="absolute right-2 z-20 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110"
+                    aria-label="Next slide"
+                  >
+                    <svg className="w-5 h-5 text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
