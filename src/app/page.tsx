@@ -404,47 +404,6 @@ export default function Home() {
                     </p>
                   </div>
 
-                  {/* Editorial Card Grid */}
-                  <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-                    <div className="group relative overflow-hidden bg-white border border-gray-200 p-8 lg:p-10 hover:border-purple-300 transition-all">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                      <div className="relative z-10">
-                        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-purple-600 mb-4 lg:mb-6 flex items-center justify-center">
-                          <div className="w-6 h-6 lg:w-8 lg:h-8 border-2 border-white rounded"></div>
-                        </div>
-                        <h3 className="text-xl lg:text-2xl font-medium text-gray-900 mb-3 lg:mb-4 uppercase tracking-wide">AI-Powered Matching</h3>
-                        <p className="text-sm lg:text-base text-gray-600 font-light leading-relaxed">
-                          Our technology analyzes fashion looks and matches them to items in your wardrobe with precision.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="group relative overflow-hidden bg-white border border-gray-200 p-8 lg:p-10 hover:border-purple-300 transition-all">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                      <div className="relative z-10">
-                        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-purple-600 mb-4 lg:mb-6 flex items-center justify-center">
-                          <div className="w-6 h-6 lg:w-8 lg:h-8 border-2 border-white rounded"></div>
-                        </div>
-                        <h3 className="text-xl lg:text-2xl font-medium text-gray-900 mb-3 lg:mb-4 uppercase tracking-wide">Personalized Suggestions</h3>
-                        <p className="text-sm lg:text-base text-gray-600 font-light leading-relaxed">
-                          Get styling recommendations tailored to your body type, preferences, and existing wardrobe.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="group relative overflow-hidden bg-white border border-gray-200 p-8 lg:p-10 hover:border-purple-300 transition-all">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                      <div className="relative z-10">
-                        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-purple-600 mb-4 lg:mb-6 flex items-center justify-center">
-                          <div className="w-6 h-6 lg:w-8 lg:h-8 border-2 border-white rounded"></div>
-                        </div>
-                        <h3 className="text-xl lg:text-2xl font-medium text-gray-900 mb-3 lg:mb-4 uppercase tracking-wide">Wardrobe Intelligence</h3>
-                        <p className="text-sm lg:text-base text-gray-600 font-light leading-relaxed">
-                          Understand what you own, what you wear most, and discover hidden styling possibilities.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
