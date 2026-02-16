@@ -597,17 +597,23 @@ export default function Home() {
 
             {/* When You Join the Waitlist Section */}
             <div className="px-6 pt-12 pb-16 lg:pt-14 lg:pb-20">
-              <div className="max-w-6xl mx-auto">
+              <div className="max-w-6xl mx-auto mobile-content-column">
                 {/* Heading */}
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-8 lg:mb-12 text-center">
+                <h2 
+                  className="section-title text-center"
+                  style={{ 
+                    marginTop: 'var(--space-xl)',
+                    marginBottom: 'var(--space-md)'
+                  }}
+                >
                   When you join the waitlist
                 </h2>
                 
                 {/* Cards Slider */}
                 <div className="relative">
                   {/* Mobile: Single Card Display with Auto-swipe */}
-                  <div className="lg:hidden relative mb-6" style={{ minHeight: '180px' }}>
-                    <div className="flex items-center justify-center relative">
+                  <div className="lg:hidden relative overflow-hidden" style={{ marginBottom: 'var(--space-sm)' }}>
+                    <div className="flex items-center justify-center relative" style={{ minHeight: '120px' }}>
                       {[
                         { text: 'We will talk about', text2: 'how you choose clothes' },
                         { text: 'You will see early ideas', text2: 'and react to them' },
@@ -617,10 +623,14 @@ export default function Home() {
                         return (
                           <div
                             key={index}
-                            className="bg-white rounded-3xl p-6 w-[224px] border border-gray-100 transition-all duration-500 ease-in-out"
+                            className="bg-white rounded-[18px] border border-gray-100 transition-all duration-500 ease-in-out flex items-center justify-center text-center"
                             style={{ 
                               position: 'absolute',
                               left: '50%',
+                              minHeight: '120px',
+                              padding: 'var(--space-md)',
+                              width: '260px',
+                              maxWidth: '260px',
                               transform: isActive ? 'translateX(-50%) scale(1)' : 'translateX(-50%) translateX(1000px) scale(0.9)',
                               opacity: isActive ? 1 : 0,
                               zIndex: isActive ? 10 : 1,
@@ -628,7 +638,7 @@ export default function Home() {
                               pointerEvents: isActive ? 'auto' : 'none',
                             }}
                           >
-                            <p className="text-sm font-light text-gray-800 leading-relaxed tracking-wide text-center">
+                            <p className="body-large text-gray-800" style={{ fontSize: '16px', lineHeight: '1.5', maxWidth: '260px' }}>
                               {card.text}
                               <br />
                               {card.text2}
@@ -638,7 +648,10 @@ export default function Home() {
                       })}
                     </div>
                     {/* Mobile Dots Indicator */}
-                    <div className="flex justify-center gap-2 mt-6 relative z-20">
+                    <div 
+                      className="flex justify-center gap-2 relative z-20"
+                      style={{ marginBottom: 'var(--space-xl)' }}
+                    >
                       {[0, 1, 2].map((index) => (
                         <button
                           key={index}
@@ -710,20 +723,29 @@ export default function Home() {
                   </div>
                 </div>
 
-                <p className="text-lg sm:text-xl font-light text-gray-600 mt-8 lg:mt-12 text-center italic">
+                <p 
+                  className="body-large text-center italic"
+                  style={{ marginTop: 'var(--space-xl)' }}
+                >
                   Just a small conversation.
                 </p>
               </div>
             </div>
 
             {/* Some outfits feel right Section */}
-            <div className="px-6 pb-16 lg:pb-20 bg-gray-50 pt-14 lg:pt-16">
-              <div className="max-w-3xl mx-auto text-center space-y-8">
-                <div className="space-y-4">
+            <div 
+              className="px-6 pb-16 lg:pb-20 bg-gray-50 pt-14 lg:pt-16 mobile-content-column"
+              style={{ marginTop: 'var(--space-xxl)' }}
+            >
+              <div className="max-w-3xl mx-auto text-center">
+                <div style={{ marginBottom: 'var(--space-md)' }}>
                   <p className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-900 leading-relaxed">
                     Some outfits feel right, others don&apos;t.
                   </p>
-                  <p className="text-lg sm:text-xl lg:text-2xl font-light text-gray-700 leading-relaxed pt-4">
+                  <p 
+                    className="text-lg sm:text-xl lg:text-2xl font-light text-gray-700 leading-relaxed"
+                    style={{ marginTop: 'var(--space-md)' }}
+                  >
                     If this sounds familiar, we should talk!
                   </p>
                 </div>
@@ -731,7 +753,8 @@ export default function Home() {
                 {/* CTA */}
                 <form
                   onSubmit={handleSubmit}
-                  className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-4"
+                  className="flex flex-col sm:flex-row gap-4 items-center justify-center"
+                  style={{ marginTop: 'var(--space-lg)' }}
                 >
                   <input
                     type="email"
@@ -741,12 +764,14 @@ export default function Home() {
                     required
                     className="w-full sm:flex-1 border-b-2 border-gray-300 pb-2 outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400 px-0 text-center sm:text-left"
                     onClick={() => handleCTAClick('second_email')}
+                    style={{ marginBottom: 'var(--space-lg)' }}
                   />
                   <button
                     type="submit"
                     onClick={() => handleCTAClick('second_button')}
                     disabled={isSubmitting}
                     className="w-full sm:w-auto bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                    style={{ marginBottom: 'var(--space-xl)' }}
                   >
                     {isSubmitting ? 'Joining...' : 'Join the early list'}
                   </button>
@@ -755,14 +780,20 @@ export default function Home() {
             </div>
 
             {/* Prefer Writing Section */}
-            <div className="px-6 py-12 lg:py-16 border-t border-gray-200">
+            <div 
+              className="px-6 py-12 lg:py-16 border-t border-gray-200 mobile-content-column"
+              style={{ marginTop: 'var(--space-xxl)' }}
+            >
               <div className="max-w-3xl mx-auto text-center">
-                <p className="text-lg sm:text-xl font-light text-gray-700 mb-2">
+                <p 
+                  className="body-large text-gray-700"
+                  style={{ marginBottom: 'var(--space-sm)' }}
+                >
                   Prefer writing instead?
                 </p>
                 <a 
                   href="mailto:hello@looklyy.com" 
-                  className="text-lg sm:text-xl font-light text-purple-600 hover:text-purple-700 transition-colors"
+                  className="body-large text-purple-600 hover:text-purple-700 transition-colors"
                 >
                   hello@looklyy.com
                 </a>
