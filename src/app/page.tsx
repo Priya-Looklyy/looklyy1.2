@@ -620,7 +620,7 @@ export default function Home() {
                             boxShadow: '0 20px 60px -12px rgba(0, 0, 0, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02)'
                           }}
                         >
-                          <p className="text-lg font-light text-gray-800 leading-relaxed tracking-wide">
+                          <p className="text-sm font-light text-gray-800 leading-relaxed tracking-wide text-center">
                             {card.text}
                             <br />
                             {card.text2}
@@ -672,7 +672,7 @@ export default function Home() {
                             }}
                             onClick={() => setWaitlistCardIndex(index)}
                           >
-                            <p className="text-xl font-light text-gray-800 leading-relaxed tracking-wide">
+                            <p className="text-base font-light text-gray-800 leading-relaxed tracking-wide text-center">
                               {card.text}
                               <br />
                               {card.text2}
