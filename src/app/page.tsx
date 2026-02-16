@@ -604,40 +604,48 @@ export default function Home() {
                 
                 {/* Cards Slider */}
                 <div className="relative">
-                  {/* Mobile: Scrollable Cards */}
-                  <div className="lg:hidden overflow-x-auto pb-4 -mx-6 px-6 scrollbar-hide" style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
-                    <div className="flex gap-6" style={{ width: 'max-content' }}>
+                  {/* Mobile: Single Card Display with Auto-swipe */}
+                  <div className="lg:hidden relative" style={{ minHeight: '180px' }}>
+                    <div className="flex items-center justify-center">
                       {[
                         { text: 'We will talk about', text2: 'how you choose clothes' },
                         { text: 'You will see early ideas', text2: 'and react to them' },
                         { text: 'You can influence', text2: 'what gets built' }
-                      ].map((card, index) => (
-                        <div
-                          key={index}
-                          className="bg-white rounded-3xl p-6 min-w-[224px] flex-shrink-0 border border-gray-100"
-                          style={{ 
-                            scrollSnapAlign: 'start',
-                            boxShadow: '0 20px 60px -12px rgba(0, 0, 0, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02)'
-                          }}
-                        >
-                          <p className="text-sm font-light text-gray-800 leading-relaxed tracking-wide text-center">
-                            {card.text}
-                            <br />
-                            {card.text2}
-                          </p>
-                        </div>
-                      ))}
+                      ].map((card, index) => {
+                        const isActive = index === waitlistCardIndex;
+                        return (
+                          <div
+                            key={index}
+                            className="bg-white rounded-3xl p-6 w-[224px] border border-gray-100 transition-all duration-500 ease-in-out absolute"
+                            style={{ 
+                              transform: isActive ? 'translateX(0) scale(1)' : 'translateX(1000px) scale(0.9)',
+                              opacity: isActive ? 1 : 0,
+                              zIndex: isActive ? 10 : 1,
+                              boxShadow: '0 20px 60px -12px rgba(0, 0, 0, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02)',
+                              pointerEvents: isActive ? 'auto' : 'none',
+                            }}
+                          >
+                            <p className="text-sm font-light text-gray-800 leading-relaxed tracking-wide text-center">
+                              {card.text}
+                              <br />
+                              {card.text2}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
                     {/* Mobile Dots Indicator */}
                     <div className="flex justify-center gap-2 mt-6">
                       {[0, 1, 2].map((index) => (
-                        <div
+                        <button
                           key={index}
+                          onClick={() => setWaitlistCardIndex(index)}
                           className={`w-2 h-2 rounded-full transition-all duration-300 ${
                             index === waitlistCardIndex
                               ? 'bg-purple-600 w-8'
                               : 'bg-gray-300'
                           }`}
+                          aria-label={`Go to card ${index + 1}`}
                         />
                       ))}
                     </div>
@@ -646,29 +654,26 @@ export default function Home() {
                   {/* Desktop: Slider with Auto-swipe */}
                   <div className="hidden lg:block relative px-12">
                     {/* Cards Container */}
-                    <div className="flex items-center justify-center gap-6 overflow-hidden">
+                    <div className="flex items-center justify-center gap-6 overflow-hidden" style={{ minHeight: '200px' }}>
                       {[
                         { text: 'We will talk about', text2: 'how you choose clothes' },
                         { text: 'You will see early ideas', text2: 'and react to them' },
                         { text: 'You can influence', text2: 'what gets built' }
                       ].map((card, index) => {
                         const isActive = index === waitlistCardIndex;
-                        const offset = index - waitlistCardIndex;
-                        const scale = isActive ? 1 : 0.92;
-                        const opacity = isActive ? 1 : 0.5;
-                        const translateX = offset * 24;
 
                         return (
                           <div
                             key={index}
-                            className="bg-white rounded-3xl p-8 w-[240px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02]"
+                            className="bg-white rounded-3xl p-8 w-[240px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02] absolute"
                             style={{
-                              transform: `translateX(${translateX}px) scale(${scale})`,
-                              opacity: opacity,
-                              zIndex: isActive ? 10 : 5,
+                              transform: isActive ? 'translateX(0) scale(1)' : 'translateX(1000px) scale(0.9)',
+                              opacity: isActive ? 1 : 0,
+                              zIndex: isActive ? 10 : 1,
                               boxShadow: isActive 
                                 ? '0 25px 70px -12px rgba(0, 0, 0, 0.12), 0 12px 32px -8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03), 0 0 0 0px rgba(147, 51, 234, 0.1)'
-                                : '0 15px 45px -10px rgba(0, 0, 0, 0.08), 0 6px 18px -6px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02)'
+                                : '0 15px 45px -10px rgba(0, 0, 0, 0.08), 0 6px 18px -6px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02)',
+                              pointerEvents: isActive ? 'auto' : 'none',
                             }}
                             onClick={() => setWaitlistCardIndex(index)}
                           >
