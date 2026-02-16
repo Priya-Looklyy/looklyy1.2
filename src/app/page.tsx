@@ -33,6 +33,7 @@ export default function Home() {
   const [isSliding, setIsSliding] = useState(false);
   const [arrowRipple, setArrowRipple] = useState<'left' | 'right' | null>(null);
   const [currentImageLoaded, setCurrentImageLoaded] = useState(false);
+  const [waitlistCardIndex, setWaitlistCardIndex] = useState(0);
   const { trackEvent } = useAnalytics();
 
   // Generate slider images array (using demo-images or fallback to single image)
@@ -586,6 +587,149 @@ export default function Home() {
               </div>
             </div>
 
+            {/* When You Join the Waitlist Section */}
+            <div className="px-6 py-16 lg:py-20">
+              <div className="max-w-6xl mx-auto">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-8 lg:mb-12 text-center">
+                  When you join the waitlist
+                </h2>
+                
+                {/* Cards Slider */}
+                <div className="relative">
+                  {/* Mobile: Scrollable Cards */}
+                  <div className="lg:hidden overflow-x-auto pb-4 -mx-6 px-6 scrollbar-hide" style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
+                    <div className="flex gap-6" style={{ width: 'max-content' }}>
+                      {[
+                        { text: 'We will talk about how you choose clothes' },
+                        { text: 'You will see early ideas and react to them' },
+                        { text: 'You can influence what gets built' }
+                      ].map((card, index) => (
+                        <div
+                          key={index}
+                          className="bg-white rounded-3xl p-8 min-w-[300px] flex-shrink-0 border border-gray-100"
+                          style={{ 
+                            scrollSnapAlign: 'start',
+                            boxShadow: '0 20px 60px -12px rgba(0, 0, 0, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02)'
+                          }}
+                        >
+                          <div className="w-16 h-16 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20">
+                            <span className="text-white font-light text-2xl tracking-tight">{index + 1}</span>
+                          </div>
+                          <p className="text-lg font-light text-gray-800 leading-relaxed tracking-wide">
+                            {card.text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Desktop: Slider with Navigation */}
+                  <div className="hidden lg:block relative">
+                    {/* Navigation Arrow - Left */}
+                    <button
+                      onClick={() => setWaitlistCardIndex((prev) => (prev - 1 + 3) % 3)}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out"
+                      aria-label="Previous card"
+                    >
+                      <svg 
+                        className="w-5 h-5 transition-all duration-300 ease-in-out"
+                        fill="none" 
+                        stroke="#5a5147" 
+                        strokeWidth={1.5}
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+
+                    {/* Cards Container */}
+                    <div className="flex items-center justify-center gap-6 overflow-hidden">
+                      {[
+                        { text: 'We will talk about how you choose clothes' },
+                        { text: 'You will see early ideas and react to them' },
+                        { text: 'You can influence what gets built' }
+                      ].map((card, index) => {
+                        const isActive = index === waitlistCardIndex;
+                        const offset = index - waitlistCardIndex;
+                        const scale = isActive ? 1 : 0.92;
+                        const opacity = isActive ? 1 : 0.5;
+                        const translateX = offset * 24;
+
+                        return (
+                          <div
+                            key={index}
+                            className="bg-white rounded-3xl p-10 w-[360px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02]"
+                            style={{
+                              transform: `translateX(${translateX}px) scale(${scale})`,
+                              opacity: opacity,
+                              zIndex: isActive ? 10 : 5,
+                              boxShadow: isActive 
+                                ? '0 25px 70px -12px rgba(0, 0, 0, 0.12), 0 12px 32px -8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03), 0 0 0 0px rgba(147, 51, 234, 0.1)'
+                                : '0 15px 45px -10px rgba(0, 0, 0, 0.08), 0 6px 18px -6px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02)'
+                            }}
+                            onClick={() => setWaitlistCardIndex(index)}
+                          >
+                            <div 
+                              className="w-16 h-16 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/25 transition-transform duration-500"
+                              style={{
+                                transform: isActive ? 'scale(1)' : 'scale(0.9)'
+                              }}
+                            >
+                              <span className="text-white font-light text-2xl tracking-tight">{index + 1}</span>
+                            </div>
+                            <p className="text-xl font-light text-gray-800 leading-relaxed tracking-wide">
+                              {card.text}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Navigation Arrow - Right */}
+                    <button
+                      onClick={() => setWaitlistCardIndex((prev) => (prev + 1) % 3)}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out"
+                      aria-label="Next card"
+                    >
+                      <svg 
+                        className="w-5 h-5 transition-all duration-300 ease-in-out"
+                        fill="none" 
+                        stroke="#5a5147" 
+                        strokeWidth={1.5}
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+
+                    {/* Dots Indicator */}
+                    <div className="flex justify-center gap-2 mt-8">
+                      {[0, 1, 2].map((index) => (
+                        <button
+                          key={index}
+                          onClick={() => setWaitlistCardIndex(index)}
+                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                            index === waitlistCardIndex
+                              ? 'bg-purple-600 w-8'
+                              : 'bg-gray-300 hover:bg-gray-400'
+                          }`}
+                          aria-label={`Go to card ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-lg sm:text-xl font-light text-gray-600 mt-8 lg:mt-12 text-center italic">
+                  Just a small conversation.
+                </p>
+              </div>
+            </div>
+
             {/* Some outfits feel right Section */}
             <div className="px-6 pb-16 lg:pb-20 bg-gray-50 pt-14 lg:pt-16">
               <div className="max-w-3xl mx-auto text-center space-y-8">
@@ -621,38 +765,6 @@ export default function Home() {
                     {isSubmitting ? 'Joining...' : 'Join the early list'}
                   </button>
                 </form>
-              </div>
-            </div>
-
-            {/* When You Join the Waitlist Section */}
-            <div className="px-6 py-16 lg:py-20">
-              <div className="max-w-3xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-8 lg:mb-12 text-center">
-                  When you join the waitlist
-                </h2>
-                <div className="space-y-6 lg:space-y-8">
-                  <div className="flex items-start gap-4">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
-                      We will talk about how you choose clothes
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
-                      You will see early ideas and react to them
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
-                      You can influence what gets built
-                    </p>
-                  </div>
-                </div>
-                <p className="text-lg sm:text-xl font-light text-gray-600 mt-8 text-center italic">
-                  Just a small conversation.
-                </p>
               </div>
             </div>
 
