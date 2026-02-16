@@ -401,10 +401,10 @@ export default function Home() {
         <div className="w-full overflow-x-hidden">
           <section className="w-full pt-14">
             {/* Headline Section */}
-            <div className="px-6 pt-10 pb-8 lg:pt-16 lg:pb-12">
+            <div className="px-6 pt-9 pb-8 lg:pt-14 lg:pb-12">
               <div className="max-w-4xl mx-auto text-center">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light leading-tight text-gray-900 mb-8 lg:mb-12">
-                  What if you could tie why some outfits work and others don&apos;t, as you shop?
+                <h1 className="text-xl sm:text-2xl lg:text-4xl xl:text-5xl font-light leading-tight text-gray-900 mb-8 lg:mb-12">
+                  As you shop, what if you could see why some outfits work and others don&apos;t?
                 </h1>
               </div>
             </div>
@@ -550,8 +550,8 @@ export default function Home() {
             {/* Subheadline Section */}
             <div className="px-6 pb-12 lg:pb-16">
               <div className="max-w-3xl mx-auto text-center">
-                <p className="text-lg sm:text-xl lg:text-2xl font-light text-gray-700 leading-relaxed">
-                  We are exploring this idea.
+                <p className="text-base sm:text-lg lg:text-2xl font-light text-gray-700 leading-relaxed">
+                  We are exploring the idea.
                   <br />
                   We want to know how you decide what to wear.
                 </p>
@@ -587,11 +587,11 @@ export default function Home() {
             </div>
 
             {/* Some outfits feel right Section */}
-            <div className="px-6 pb-16 lg:pb-20 bg-gray-50 py-16 lg:py-20">
+            <div className="px-6 pb-16 lg:pb-20 bg-gray-50 pt-14 lg:pt-16">
               <div className="max-w-3xl mx-auto text-center space-y-8">
                 <div className="space-y-4">
                   <p className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-900 leading-relaxed">
-                    Some outfits feel right, others don&apos;t!
+                    Some outfits feel right, others don&apos;t.
                   </p>
                   <p className="text-lg sm:text-xl lg:text-2xl font-light text-gray-700 leading-relaxed pt-4">
                     If this sounds familiar, we should talk!
