@@ -598,6 +598,7 @@ export default function Home() {
             {/* When You Join the Waitlist Section */}
             <div className="px-6 pt-12 pb-16 lg:pt-14 lg:pb-20">
               <div className="max-w-6xl mx-auto">
+                {/* Heading */}
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-8 lg:mb-12 text-center">
                   When you join the waitlist
                 </h2>
@@ -605,8 +606,8 @@ export default function Home() {
                 {/* Cards Slider */}
                 <div className="relative">
                   {/* Mobile: Single Card Display with Auto-swipe */}
-                  <div className="lg:hidden relative" style={{ minHeight: '180px' }}>
-                    <div className="flex items-center justify-center">
+                  <div className="lg:hidden relative mb-6" style={{ minHeight: '180px' }}>
+                    <div className="flex items-center justify-center relative">
                       {[
                         { text: 'We will talk about', text2: 'how you choose clothes' },
                         { text: 'You will see early ideas', text2: 'and react to them' },
@@ -616,9 +617,11 @@ export default function Home() {
                         return (
                           <div
                             key={index}
-                            className="bg-white rounded-3xl p-6 w-[224px] border border-gray-100 transition-all duration-500 ease-in-out absolute"
+                            className="bg-white rounded-3xl p-6 w-[224px] border border-gray-100 transition-all duration-500 ease-in-out"
                             style={{ 
-                              transform: isActive ? 'translateX(0) scale(1)' : 'translateX(1000px) scale(0.9)',
+                              position: 'absolute',
+                              left: '50%',
+                              transform: isActive ? 'translateX(-50%) scale(1)' : 'translateX(-50%) translateX(1000px) scale(0.9)',
                               opacity: isActive ? 1 : 0,
                               zIndex: isActive ? 10 : 1,
                               boxShadow: '0 20px 60px -12px rgba(0, 0, 0, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02)',
@@ -635,7 +638,7 @@ export default function Home() {
                       })}
                     </div>
                     {/* Mobile Dots Indicator */}
-                    <div className="flex justify-center gap-2 mt-6">
+                    <div className="flex justify-center gap-2 mt-6 relative z-20">
                       {[0, 1, 2].map((index) => (
                         <button
                           key={index}
@@ -652,9 +655,9 @@ export default function Home() {
                   </div>
 
                   {/* Desktop: Slider with Auto-swipe */}
-                  <div className="hidden lg:block relative px-12">
+                  <div className="hidden lg:block relative px-12 mb-8">
                     {/* Cards Container */}
-                    <div className="flex items-center justify-center gap-6 overflow-hidden" style={{ minHeight: '200px' }}>
+                    <div className="flex items-center justify-center gap-6 overflow-hidden relative" style={{ minHeight: '200px' }}>
                       {[
                         { text: 'We will talk about', text2: 'how you choose clothes' },
                         { text: 'You will see early ideas', text2: 'and react to them' },
@@ -665,9 +668,11 @@ export default function Home() {
                         return (
                           <div
                             key={index}
-                            className="bg-white rounded-3xl p-8 w-[240px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02] absolute"
+                            className="bg-white rounded-3xl p-8 w-[240px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02]"
                             style={{
-                              transform: isActive ? 'translateX(0) scale(1)' : 'translateX(1000px) scale(0.9)',
+                              position: 'absolute',
+                              left: '50%',
+                              transform: isActive ? 'translateX(-50%) scale(1)' : 'translateX(-50%) translateX(1000px) scale(0.9)',
                               opacity: isActive ? 1 : 0,
                               zIndex: isActive ? 10 : 1,
                               boxShadow: isActive 
@@ -688,7 +693,7 @@ export default function Home() {
                     </div>
 
                     {/* Dots Indicator */}
-                    <div className="flex justify-center gap-2 mt-8">
+                    <div className="flex justify-center gap-2 mt-8 relative z-20">
                       {[0, 1, 2].map((index) => (
                         <button
                           key={index}
