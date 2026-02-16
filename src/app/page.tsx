@@ -403,8 +403,8 @@ export default function Home() {
             {/* Headline Section */}
             <div className="px-6 pt-10 pb-8 lg:pt-16 lg:pb-12">
               <div className="max-w-4xl mx-auto text-center">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light leading-tight text-gray-900 mb-8 lg:mb-12">
-                  What if you could understand why some outfits work and others don&apos;t as you shop?
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light leading-tight text-gray-900 mb-8 lg:mb-12">
+                  What if you could tie why some outfits work and others don&apos;t, as you shop?
                 </h1>
               </div>
             </div>
@@ -551,7 +551,9 @@ export default function Home() {
             <div className="px-6 pb-12 lg:pb-16">
               <div className="max-w-3xl mx-auto text-center">
                 <p className="text-lg sm:text-xl lg:text-2xl font-light text-gray-700 leading-relaxed">
-                  We&apos;re exploring this idea and want to learn how you decide what to wear today.
+                  We are exploring this idea.
+                  <br />
+                  We want to know how you decide what to wear.
                 </p>
               </div>
             </div>
@@ -589,13 +591,10 @@ export default function Home() {
               <div className="max-w-3xl mx-auto text-center space-y-8">
                 <div className="space-y-4">
                   <p className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-900 leading-relaxed">
-                    Some outfits feel right.
-                  </p>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-900 leading-relaxed">
-                    Others don&apos;t, and you can&apos;t explain why.
+                    Some outfits feel right, others don&apos;t!
                   </p>
                   <p className="text-lg sm:text-xl lg:text-2xl font-light text-gray-700 leading-relaxed pt-4">
-                    If this sounds familiar, you can help shape what we explore.
+                    If this sounds familiar, we should talk!
                   </p>
                 </div>
                 
@@ -625,34 +624,34 @@ export default function Home() {
               </div>
             </div>
 
-            {/* What Happens After You Join Section */}
+            {/* When You Join the Waitlist Section */}
             <div className="px-6 py-16 lg:py-20">
               <div className="max-w-3xl mx-auto">
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-8 lg:mb-12 text-center">
-                  WHAT HAPPENS AFTER YOU JOIN
+                  When you join the waitlist
                 </h2>
                 <div className="space-y-6 lg:space-y-8">
                   <div className="flex items-start gap-4">
                     <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
-                      We&apos;ll ask about how you choose clothes
+                      We will talk about how you choose clothes
                     </p>
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
-                      You&apos;ll see early ideas and react to them
+                      You will see early ideas and react to them
                     </p>
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
-                      You can influence what gets built (or if it should be built at all)
+                      You can influence what gets built
                     </p>
                   </div>
                 </div>
                 <p className="text-lg sm:text-xl font-light text-gray-600 mt-8 text-center italic">
-                  Just a short conversation.
+                  Just a small conversation.
                 </p>
               </div>
             </div>
