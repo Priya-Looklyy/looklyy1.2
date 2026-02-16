@@ -568,7 +568,7 @@ export default function Home() {
             </div>
 
             {/* Email CTA Section */}
-            <div className="px-6 pb-16 lg:pb-20">
+            <div className="px-6 pb-12 lg:pb-16">
               <div className="max-w-2xl mx-auto">
                 <form
                   onSubmit={handleSubmit}
@@ -596,7 +596,7 @@ export default function Home() {
             </div>
 
             {/* When You Join the Waitlist Section */}
-            <div className="px-6 py-16 lg:py-20">
+            <div className="px-6 pt-12 pb-16 lg:pt-14 lg:pb-20">
               <div className="max-w-6xl mx-auto">
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-8 lg:mb-12 text-center">
                   When you join the waitlist
@@ -608,13 +608,13 @@ export default function Home() {
                   <div className="lg:hidden overflow-x-auto pb-4 -mx-6 px-6 scrollbar-hide" style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
                     <div className="flex gap-6" style={{ width: 'max-content' }}>
                       {[
-                        { text: 'We will talk about how you choose clothes' },
-                        { text: 'You will see early ideas and react to them' },
-                        { text: 'You can influence what gets built' }
+                        { text: 'We will talk about', text2: 'how you choose clothes' },
+                        { text: 'You will see early ideas', text2: 'and react to them' },
+                        { text: 'You can influence', text2: 'what gets built' }
                       ].map((card, index) => (
                         <div
                           key={index}
-                          className="bg-white rounded-3xl p-8 min-w-[280px] flex-shrink-0 border border-gray-100"
+                          className="bg-white rounded-3xl p-6 min-w-[224px] flex-shrink-0 border border-gray-100"
                           style={{ 
                             scrollSnapAlign: 'start',
                             boxShadow: '0 20px 60px -12px rgba(0, 0, 0, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02)'
@@ -622,6 +622,8 @@ export default function Home() {
                         >
                           <p className="text-lg font-light text-gray-800 leading-relaxed tracking-wide">
                             {card.text}
+                            <br />
+                            {card.text2}
                           </p>
                         </div>
                       ))}
@@ -646,9 +648,9 @@ export default function Home() {
                     {/* Cards Container */}
                     <div className="flex items-center justify-center gap-6 overflow-hidden">
                       {[
-                        { text: 'We will talk about how you choose clothes' },
-                        { text: 'You will see early ideas and react to them' },
-                        { text: 'You can influence what gets built' }
+                        { text: 'We will talk about', text2: 'how you choose clothes' },
+                        { text: 'You will see early ideas', text2: 'and react to them' },
+                        { text: 'You can influence', text2: 'what gets built' }
                       ].map((card, index) => {
                         const isActive = index === waitlistCardIndex;
                         const offset = index - waitlistCardIndex;
@@ -659,7 +661,7 @@ export default function Home() {
                         return (
                           <div
                             key={index}
-                            className="bg-white rounded-3xl p-10 w-[300px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02]"
+                            className="bg-white rounded-3xl p-8 w-[240px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02]"
                             style={{
                               transform: `translateX(${translateX}px) scale(${scale})`,
                               opacity: opacity,
@@ -672,6 +674,8 @@ export default function Home() {
                           >
                             <p className="text-xl font-light text-gray-800 leading-relaxed tracking-wide">
                               {card.text}
+                              <br />
+                              {card.text2}
                             </p>
                           </div>
                         );
