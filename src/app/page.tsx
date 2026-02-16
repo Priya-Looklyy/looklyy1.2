@@ -36,6 +36,14 @@ export default function Home() {
   const [waitlistCardIndex, setWaitlistCardIndex] = useState(0);
   const { trackEvent } = useAnalytics();
 
+  // Auto-advance waitlist cards
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWaitlistCardIndex((prev) => (prev + 1) % 3);
+    }, 4000); // Change card every 4 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   // Generate slider images array (using demo-images or fallback to single image)
   // Handle files that might not have .jpg extension (files 10 and 11)
   const sliderImagesArray = Array.from({ length: 27 }, (_, i) => {
@@ -606,44 +614,35 @@ export default function Home() {
                       ].map((card, index) => (
                         <div
                           key={index}
-                          className="bg-white rounded-3xl p-8 min-w-[300px] flex-shrink-0 border border-gray-100"
+                          className="bg-white rounded-3xl p-8 min-w-[280px] flex-shrink-0 border border-gray-100"
                           style={{ 
                             scrollSnapAlign: 'start',
                             boxShadow: '0 20px 60px -12px rgba(0, 0, 0, 0.08), 0 8px 24px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02)'
                           }}
                         >
-                          <div className="w-16 h-16 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20">
-                            <span className="text-white font-light text-2xl tracking-tight">{index + 1}</span>
-                          </div>
                           <p className="text-lg font-light text-gray-800 leading-relaxed tracking-wide">
                             {card.text}
                           </p>
                         </div>
                       ))}
                     </div>
+                    {/* Mobile Dots Indicator */}
+                    <div className="flex justify-center gap-2 mt-6">
+                      {[0, 1, 2].map((index) => (
+                        <div
+                          key={index}
+                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                            index === waitlistCardIndex
+                              ? 'bg-purple-600 w-8'
+                              : 'bg-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
 
-                  {/* Desktop: Slider with Navigation */}
-                  <div className="hidden lg:block relative">
-                    {/* Navigation Arrow - Left */}
-                    <button
-                      onClick={() => setWaitlistCardIndex((prev) => (prev - 1 + 3) % 3)}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out"
-                      aria-label="Previous card"
-                    >
-                      <svg 
-                        className="w-5 h-5 transition-all duration-300 ease-in-out"
-                        fill="none" 
-                        stroke="#5a5147" 
-                        strokeWidth={1.5}
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M15 19l-7-7 7-7" />
-                      </svg>
-                    </button>
-
+                  {/* Desktop: Slider with Auto-swipe */}
+                  <div className="hidden lg:block relative px-12">
                     {/* Cards Container */}
                     <div className="flex items-center justify-center gap-6 overflow-hidden">
                       {[
@@ -660,7 +659,7 @@ export default function Home() {
                         return (
                           <div
                             key={index}
-                            className="bg-white rounded-3xl p-10 w-[360px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02]"
+                            className="bg-white rounded-3xl p-10 w-[300px] flex-shrink-0 border border-gray-100 transition-all duration-500 ease-in-out cursor-pointer hover:scale-[1.02]"
                             style={{
                               transform: `translateX(${translateX}px) scale(${scale})`,
                               opacity: opacity,
@@ -671,14 +670,6 @@ export default function Home() {
                             }}
                             onClick={() => setWaitlistCardIndex(index)}
                           >
-                            <div 
-                              className="w-16 h-16 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/25 transition-transform duration-500"
-                              style={{
-                                transform: isActive ? 'scale(1)' : 'scale(0.9)'
-                              }}
-                            >
-                              <span className="text-white font-light text-2xl tracking-tight">{index + 1}</span>
-                            </div>
                             <p className="text-xl font-light text-gray-800 leading-relaxed tracking-wide">
                               {card.text}
                             </p>
@@ -686,25 +677,6 @@ export default function Home() {
                         );
                       })}
                     </div>
-
-                    {/* Navigation Arrow - Right */}
-                    <button
-                      onClick={() => setWaitlistCardIndex((prev) => (prev + 1) % 3)}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out"
-                      aria-label="Next card"
-                    >
-                      <svg 
-                        className="w-5 h-5 transition-all duration-300 ease-in-out"
-                        fill="none" 
-                        stroke="#5a5147" 
-                        strokeWidth={1.5}
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
 
                     {/* Dots Indicator */}
                     <div className="flex justify-center gap-2 mt-8">
