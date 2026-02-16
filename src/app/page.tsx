@@ -397,33 +397,31 @@ export default function Home() {
           </div>
         )}
 
-        {/* Hero Section - Mobile First Rebuild */}
+        {/* Hero Section - New Structure */}
         <div className="w-full overflow-x-hidden">
           <section className="w-full pt-14">
-            <div className="px-6 pt-10 pb-12 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16 lg:max-w-7xl lg:mx-auto lg:px-8 lg:min-h-screen">
-              
-              {/* Mobile: Headline First */}
-              <div className="lg:max-w-[480px]">
-                {/* Headline - Exactly 2 lines, non-negotiable */}
-                <h1 className="text-2xl sm:text-3xl lg:text-5xl font-light leading-tight max-w-[340px] lg:max-w-[480px] text-gray-900">
-                  What if you could learn to style
-                  <br />
-                  as you shop?
+            {/* Headline Section */}
+            <div className="px-6 pt-10 pb-8 lg:pt-16 lg:pb-12">
+              <div className="max-w-4xl mx-auto text-center">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light leading-tight text-gray-900 mb-8 lg:mb-12">
+                  What if you could understand why some outfits work and others don&apos;t as you shop?
                 </h1>
+              </div>
+            </div>
 
-                {/* Mobile: Slider - Image First Priority */}
-                <div className="mt-8 flex justify-center lg:hidden">
+            {/* Image Sliders Section */}
+            <div className="px-6 pb-12 lg:pb-16">
+              <div className="max-w-7xl mx-auto">
+                {/* Mobile Slider */}
+                <div className="flex justify-center lg:hidden">
                   <div className="relative w-full flex items-center justify-center overflow-visible" style={{ minHeight: '400px', width: '100%' }}>
                     {getVisibleSlides().map((slide) => {
                       const isCenter = slide.position === 0;
-                      const absPosition = Math.abs(slide.position);
-                      
-                      // Mobile: Show only center card, or show side cards with better visibility
                       const scale = isCenter ? 1 : 0.85;
-                      const opacity = isCenter ? 1 : 0.5; // Slightly more visible
+                      const opacity = isCenter ? 1 : 0.5;
                       const zIndex = isCenter ? 30 : 10;
-                      const translateX = slide.position === 0 ? 0 : slide.position * 20; // Smaller offset for mobile
-                      const rotation = isCenter ? 0 : slide.position > 0 ? 2 : -2; // Slightly more rotation for visibility
+                      const translateX = slide.position === 0 ? 0 : slide.position * 20;
+                      const rotation = isCenter ? 0 : slide.position > 0 ? 2 : -2;
 
                       return (
                         <div
@@ -448,15 +446,122 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Description - Mobile */}
-                <p className="mt-6 text-gray-500 max-w-[340px] lg:max-w-none lg:text-lg lg:text-gray-600 lg:leading-relaxed lg:font-light">
-                  Learn every day how to dress better using small, low-risk additions.
-                </p>
+                {/* Desktop Slider */}
+                <div className="hidden lg:flex lg:justify-center lg:relative lg:w-full">
+                  <div className="relative w-full max-w-[520px]">
+                    {/* Navigation Arrow - Left */}
+                    <button
+                      onClick={goToPrevSlide}
+                      disabled={isSliding}
+                      className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out -left-6 ${
+                        isSliding && arrowRipple === 'left' 
+                          ? 'opacity-70 scale-95' 
+                          : 'opacity-80 hover:opacity-100 active:scale-95'
+                      } ${
+                        arrowRipple === 'left' ? 'shadow-lg' : ''
+                      }`}
+                      aria-label="Previous slide"
+                    >
+                      <svg 
+                        className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                          arrowRipple === 'left' ? '-translate-x-0.5' : 'group-hover:-translate-x-0.5'
+                        }`}
+                        fill="none" 
+                        stroke="#5a5147" 
+                        strokeWidth={1.5}
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M15 19l-7-7 7-7" />
+                      </svg>
+                      {arrowRipple === 'left' && (
+                        <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
+                      )}
+                    </button>
 
-                {/* Email CTA - Mobile */}
+                    {/* Polaroid Cards Container - Desktop */}
+                    <div className="relative w-full flex items-center justify-center overflow-visible" style={{ minHeight: '500px', width: '100%' }}>
+                      {getVisibleSlides().map((slide) => {
+                        const isCenter = slide.position === 0;
+                        const scale = isCenter ? 1 : 0.9;
+                        const opacity = isCenter ? 1 : 0.65;
+                        const zIndex = isCenter ? 30 : 10;
+                        const translateX = slide.position === 0 ? 0 : slide.position * 24;
+                        const rotation = isCenter ? 0 : slide.position > 0 ? 1 : -1;
+
+                        return (
+                          <div
+                            key={`${slide.index}-${slide.position}`}
+                            className="absolute flex justify-center transition-all duration-500 ease-in-out"
+                            style={{
+                              left: '50%',
+                              transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale}) rotate(${rotation}deg)`,
+                              zIndex: zIndex,
+                              opacity: opacity,
+                              transformOrigin: 'center center',
+                            }}
+                          >
+                            <PolaroidCard 
+                              image={slide.src} 
+                              caption={slide.caption}
+                              isActive={isCenter}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Navigation Arrow - Right */}
+                    <button
+                      onClick={goToNextSlide}
+                      disabled={isSliding}
+                      className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out -right-6 ${
+                        isSliding && arrowRipple === 'right' 
+                          ? 'opacity-70 scale-95' 
+                          : 'opacity-80 hover:opacity-100 active:scale-95'
+                      } ${
+                        arrowRipple === 'right' ? 'shadow-lg' : ''
+                      }`}
+                      aria-label="Next slide"
+                    >
+                      <svg 
+                        className={`w-5 h-5 transition-all duration-300 ease-in-out ${
+                          arrowRipple === 'right' ? 'translate-x-0.5' : 'group-hover:translate-x-0.5'
+                        }`}
+                        fill="none" 
+                        stroke="#5a5147" 
+                        strokeWidth={1.5}
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M9 5l7 7-7 7" />
+                      </svg>
+                      {arrowRipple === 'right' && (
+                        <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Subheadline Section */}
+            <div className="px-6 pb-12 lg:pb-16">
+              <div className="max-w-3xl mx-auto text-center">
+                <p className="text-lg sm:text-xl lg:text-2xl font-light text-gray-700 leading-relaxed">
+                  We&apos;re exploring this idea and want to learn how you decide what to wear today.
+                </p>
+              </div>
+            </div>
+
+            {/* Email CTA Section */}
+            <div className="px-6 pb-16 lg:pb-20">
+              <div className="max-w-2xl mx-auto">
                 <form
                   onSubmit={handleSubmit}
-                  className="mt-6 space-y-4 max-w-[340px] lg:max-w-none lg:flex lg:flex-row lg:gap-3 lg:space-y-0"
+                  className="flex flex-col sm:flex-row gap-4 items-center justify-center"
                 >
                   <input
                     type="email"
@@ -464,150 +569,116 @@ export default function Home() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Your Email"
                     required
-                    className="w-full border-b-2 border-gray-300 pb-2 outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400 lg:flex-1 lg:px-5 lg:py-3 lg:text-sm"
+                    className="w-full sm:flex-1 border-b-2 border-gray-300 pb-2 outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400 px-0 text-center sm:text-left"
                     onClick={() => handleCTAClick('hero_email')}
                   />
                   <button
                     type="submit"
                     onClick={() => handleCTAClick('hero_button')}
                     disabled={isSubmitting}
-                    className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed lg:flex-none lg:px-6 lg:py-3 lg:uppercase lg:text-xs lg:font-medium lg:tracking-wide"
+                    className="w-full sm:w-auto bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                   >
-                    {isSubmitting ? 'Registering...' : 'Register'}
+                    {isSubmitting ? 'Joining...' : 'Join the early list'}
                   </button>
                 </form>
-
-                {/* Trust indicator */}
-                <p className="mt-4 text-xs text-gray-300 text-center lg:pt-1">
-                  No spam. Unsubscribe anytime.
-                </p>
               </div>
+            </div>
 
-              {/* What You'll Get Section - Moved here */}
-              <div className="mt-16 lg:mt-24 w-full">
-                <div className="max-w-7xl mx-auto">
-                  {/* Section Header */}
-                  <div className="mb-12 lg:mb-20 text-center">
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-900 tracking-tight mb-4 lg:mb-6">
-                      What you&apos;ll get access to
-                    </h2>
-                    <p className="text-lg lg:text-xl text-gray-600 font-light max-w-2xl mx-auto">
-                      Early access to Looklyy includes exclusive features designed to transform how you approach personal styling.
+            {/* Some outfits feel right Section */}
+            <div className="px-6 pb-16 lg:pb-20 bg-gray-50 py-16 lg:py-20">
+              <div className="max-w-3xl mx-auto text-center space-y-8">
+                <div className="space-y-4">
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-900 leading-relaxed">
+                    Some outfits feel right.
+                  </p>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-900 leading-relaxed">
+                    Others don&apos;t, and you can&apos;t explain why.
+                  </p>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-light text-gray-700 leading-relaxed pt-4">
+                    If this sounds familiar, you can help shape what we explore.
+                  </p>
+                </div>
+                
+                {/* CTA */}
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-4"
+                >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Your Email"
+                    required
+                    className="w-full sm:flex-1 border-b-2 border-gray-300 pb-2 outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400 px-0 text-center sm:text-left"
+                    onClick={() => handleCTAClick('second_email')}
+                  />
+                  <button
+                    type="submit"
+                    onClick={() => handleCTAClick('second_button')}
+                    disabled={isSubmitting}
+                    className="w-full sm:w-auto bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  >
+                    {isSubmitting ? 'Joining...' : 'Join the early list'}
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            {/* What Happens After You Join Section */}
+            <div className="px-6 py-16 lg:py-20">
+              <div className="max-w-3xl mx-auto">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-8 lg:mb-12 text-center">
+                  WHAT HAPPENS AFTER YOU JOIN
+                </h2>
+                <div className="space-y-6 lg:space-y-8">
+                  <div className="flex items-start gap-4">
+                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
+                      We&apos;ll ask about how you choose clothes
                     </p>
                   </div>
-
-                </div>
-              </div>
-
-              {/* Desktop: Slider Column - Right Side */}
-              <div className="hidden lg:flex lg:justify-end lg:relative lg:w-full">
-                <div className="relative w-full max-w-[520px]">
-                  {/* Navigation Arrow - Left */}
-                  <button
-                    onClick={goToPrevSlide}
-                    disabled={isSliding}
-                    className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out -left-6 ${
-                      isSliding && arrowRipple === 'left' 
-                        ? 'opacity-70 scale-95' 
-                        : 'opacity-80 hover:opacity-100 active:scale-95'
-                    } ${
-                      arrowRipple === 'left' ? 'shadow-lg' : ''
-                    }`}
-                    aria-label="Previous slide"
-                  >
-                    <svg 
-                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                        arrowRipple === 'left' ? '-translate-x-0.5' : 'group-hover:-translate-x-0.5'
-                      }`}
-                      fill="none" 
-                      stroke="#5a5147" 
-                      strokeWidth={1.5}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M15 19l-7-7 7-7" />
-                    </svg>
-                    {arrowRipple === 'left' && (
-                      <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
-                    )}
-                  </button>
-
-                  {/* Polaroid Cards Container - Desktop */}
-                  <div className="relative w-full flex items-center justify-center overflow-visible" style={{ minHeight: '500px', width: '100%' }}>
-                    {getVisibleSlides().map((slide) => {
-                      const isCenter = slide.position === 0;
-                      const absPosition = Math.abs(slide.position);
-                      
-                      const scale = isCenter ? 1 : 0.9;
-                      const opacity = isCenter ? 1 : 0.65; // Slightly more visible
-                      const zIndex = isCenter ? 30 : 10;
-                      const translateX = slide.position === 0 ? 0 : slide.position * 24; // translate-x-6 = 24px
-                      const rotation = isCenter ? 0 : slide.position > 0 ? 1 : -1;
-
-                      return (
-                        <div
-                          key={`${slide.index}-${slide.position}`}
-                          className="absolute flex justify-center transition-all duration-500 ease-in-out"
-                          style={{
-                            left: '50%',
-                            transform: `translateX(calc(-50% + ${translateX}px)) scale(${scale}) rotate(${rotation}deg)`,
-                            zIndex: zIndex,
-                            opacity: opacity,
-                            transformOrigin: 'center center',
-                          }}
-                        >
-                          <PolaroidCard 
-                            image={slide.src} 
-                            caption={slide.caption}
-                            isActive={isCenter}
-                          />
-                        </div>
-                      );
-                    })}
+                  <div className="flex items-start gap-4">
+                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
+                      You&apos;ll see early ideas and react to them
+                    </p>
                   </div>
-
-                  {/* Navigation Arrow - Right */}
-                  <button
-                    onClick={goToNextSlide}
-                    disabled={isSliding}
-                    className={`group absolute top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-md hover:scale-110 transition-all duration-300 ease-in-out -right-6 ${
-                      isSliding && arrowRipple === 'right' 
-                        ? 'opacity-70 scale-95' 
-                        : 'opacity-80 hover:opacity-100 active:scale-95'
-                    } ${
-                      arrowRipple === 'right' ? 'shadow-lg' : ''
-                    }`}
-                    aria-label="Next slide"
-                  >
-                    <svg 
-                      className={`w-5 h-5 transition-all duration-300 ease-in-out ${
-                        arrowRipple === 'right' ? 'translate-x-0.5' : 'group-hover:translate-x-0.5'
-                      }`}
-                      fill="none" 
-                      stroke="#5a5147" 
-                      strokeWidth={1.5}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M9 5l7 7-7 7" />
-                    </svg>
-                    {arrowRipple === 'right' && (
-                      <span className="absolute inset-0 rounded-full bg-stone-400/20 arrow-ripple"></span>
-                    )}
-                  </button>
+                  <div className="flex items-start gap-4">
+                    <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-lg sm:text-xl font-light text-gray-700 leading-relaxed">
+                      You can influence what gets built (or if it should be built at all)
+                    </p>
+                  </div>
                 </div>
+                <p className="text-lg sm:text-xl font-light text-gray-600 mt-8 text-center italic">
+                  Just a short conversation.
+                </p>
+              </div>
+            </div>
+
+            {/* Prefer Writing Section */}
+            <div className="px-6 py-12 lg:py-16 border-t border-gray-200">
+              <div className="max-w-3xl mx-auto text-center">
+                <p className="text-lg sm:text-xl font-light text-gray-700 mb-2">
+                  Prefer writing instead?
+                </p>
+                <a 
+                  href="mailto:hello@looklyy.com" 
+                  className="text-lg sm:text-xl font-light text-purple-600 hover:text-purple-700 transition-colors"
+                >
+                  hello@looklyy.com
+                </a>
               </div>
             </div>
           </section>
         </div>
 
         {/* Footer */}
-        <footer className="py-8 px-6 sm:px-8 lg:px-12">
+        <footer className="py-8 px-6 sm:px-8 lg:px-12 border-t border-gray-200">
           <div className="max-w-7xl mx-auto text-center">
-            <p className="text-xs text-gray-300">
-              © 2025 Looklyy. Privacy rights reserved.
+            <p className="text-sm text-gray-600 font-light">
+              2025@looklyy, Privacy Rights Reserved
             </p>
           </div>
         </footer>
