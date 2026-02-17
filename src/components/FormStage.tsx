@@ -11,10 +11,17 @@ type FormStageProps = {
 };
 
 export default function FormStage({ step, emailStep, phoneStep, height = '200px' }: FormStageProps) {
+  const [mounted, setMounted] = useState(false);
   const [displayedStep, setDisplayedStep] = useState<Step>(step);
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     if (step !== displayedStep && !isAnimating) {
       setIsAnimating(true);
       
@@ -26,8 +33,32 @@ export default function FormStage({ step, emailStep, phoneStep, height = '200px'
 
       return () => clearTimeout(timer);
     }
-  }, [step, displayedStep, isAnimating]);
+  }, [step, displayedStep, isAnimating, mounted]);
 
+  // Before mounted: render only active step with no animation
+  if (!mounted) {
+    return (
+      <div
+        className="relative"
+        style={{
+          height: height,
+        }}
+      >
+        {step === 'email' && (
+          <div className="absolute inset-0 w-full">
+            {emailStep}
+          </div>
+        )}
+        {step === 'phone' && (
+          <div className="absolute inset-0 w-full">
+            {phoneStep}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // After mounted: enable transition behavior
   const showEmail = displayedStep === 'email' || (step === 'email' && isAnimating);
   const showPhone = displayedStep === 'phone' || (step === 'phone' && isAnimating);
 
