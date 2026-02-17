@@ -63,7 +63,7 @@ export default function Section2() {
         <div
           style={{
             width: '100%',
-            paddingTop: 'var(--space-4)',
+            paddingTop: '32px',
             flexShrink: 0,
           }}
         >
@@ -74,7 +74,7 @@ export default function Section2() {
               justifyContent: 'space-between',
               alignItems: 'flex-start',
               width: '100%',
-              marginBottom: 'var(--space-4)',
+              marginBottom: '32px',
             }}
           >
             {/* Logo */}
@@ -83,23 +83,21 @@ export default function Section2() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 flexShrink: 0,
+                minHeight: '60px',
               }}
             >
-              {!imageErrors.logo ? (
-                <img
-                  src="/assets/logo/Looklyy_LogoSVG.svg"
-                  alt="Looklyy Logo"
-                  className="w-auto h-auto"
-                  style={{
-                    height: 'auto',
-                    maxWidth: '200px',
-                    display: 'block',
-                  }}
-                  onError={() => handleImageError('logo')}
-                />
-              ) : (
-                <div style={{ width: '150px', height: '60px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
-              )}
+              <img
+                src="/assets/logo/Looklyy_LogoSVG.svg"
+                alt="Looklyy Logo"
+                className="w-auto h-auto"
+                style={{
+                  height: 'auto',
+                  maxWidth: '200px',
+                  minWidth: '150px',
+                  display: 'block',
+                }}
+                onError={() => handleImageError('logo')}
+              />
             </div>
 
             {/* Hello - Premium mobile typography */}
@@ -131,25 +129,22 @@ export default function Section2() {
             style={{
               width: '100%',
               flexShrink: 0,
+              minHeight: '200px',
             }}
           >
-            {!imageErrors.headline ? (
-              <img
-                src="/assets/frames/Home_HeadlinePNG.png"
-                alt="What if you could see"
-                className="w-auto h-auto"
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                  objectFit: 'contain',
-                  maxHeight: '320px',
-                  display: 'block',
-                }}
-                onError={() => handleImageError('headline')}
-              />
-            ) : (
-              <div style={{ width: '100%', height: '200px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
-            )}
+            <img
+              src="/assets/frames/Home_HeadlinePNG.png"
+              alt="What if you could see"
+              className="w-auto h-auto"
+              style={{
+                width: '100%',
+                height: 'auto',
+                objectFit: 'contain',
+                maxHeight: '320px',
+                display: 'block',
+              }}
+              onError={() => handleImageError('headline')}
+            />
           </div>
         </div>
 
@@ -162,57 +157,50 @@ export default function Section2() {
             justifyContent: 'center',
             paddingLeft: '20px',
             paddingRight: '20px',
-            minHeight: 0,
+            minHeight: '200px',
             flexShrink: 1,
             overflow: 'hidden',
           }}
         >
-          {!imageErrors.people ? (
-            <img
-              src="/assets/illustrations/Homepage_ImagePNG.png"
-              alt="4 People Illustration"
-              className="w-auto h-auto"
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-                objectFit: 'contain',
-                display: 'block',
-              }}
-              onError={() => handleImageError('people')}
-            />
-          ) : (
-            <div style={{ width: '100%', height: '100%', backgroundColor: 'rgba(255,255,255,0.3)', maxHeight: '420px' }} />
-          )}
+          <img
+            src="/assets/illustrations/Homepage_ImagePNG.png"
+            alt="4 People Illustration"
+            className="w-auto h-auto"
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              objectFit: 'contain',
+              display: 'block',
+            }}
+            onError={() => handleImageError('people')}
+          />
         </div>
 
         {/* Bottom Zone: Banner - Sticks to bottom */}
         <div
           style={{
-            paddingBottom: 'var(--space-4)',
+            paddingBottom: '32px',
             height: '72px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
             width: '100%',
+            minHeight: '72px',
           }}
         >
-          {!imageErrors.footnote ? (
-            <img
-              src="/assets/frames/Footnote_Section1PNG.png"
-              alt="We are exploring this idea"
-              className="w-auto h-auto"
-              style={{
-                maxWidth: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                display: 'block',
-              }}
-              onError={() => handleImageError('footnote')}
-            />
-          ) : (
-            <div style={{ width: '100%', height: '72px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
-          )}
+          <img
+            src="/assets/frames/Footnote_Section1PNG.png"
+            alt="We are exploring this idea"
+            className="w-auto h-auto"
+            style={{
+              maxWidth: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              display: 'block',
+            }}
+            onError={() => handleImageError('footnote')}
+          />
         </div>
       </div>
     </section>
