@@ -31,13 +31,14 @@ export default function Section2() {
         {/* Logo - Top Left */}
         {!imageErrors.logo && (
           <div className="absolute top-4 left-4 sm:top-8 sm:left-8 md:top-12 md:left-12 z-20">
-            <Image
+            <img
               src="/assets/logo/Looklyy_LogoSVG.svg"
               alt="Looklyy Logo"
               width={150}
               height={60}
               className="w-auto h-auto"
               onError={() => handleImageError('logo')}
+              style={{ maxWidth: '150px', height: 'auto' }}
             />
           </div>
         )}
