@@ -82,7 +82,7 @@ export default function Section2() {
           </div>
         )}
 
-        {/* Hello - col 10-12 */}
+        {/* Hello - col 10-12 - Premium mobile typography */}
         <div
           style={{
             gridColumn: '10 / 13',
@@ -92,10 +92,13 @@ export default function Section2() {
           }}
         >
           <p
-            className="text-orange-500 font-medium"
+            className="text-orange-500"
             style={{
-              fontSize: '18px',
+              fontSize: '16px',
+              fontWeight: 500,
+              lineHeight: 1,
               margin: 0,
+              letterSpacing: '-0.01em',
             }}
           >
             Hello
@@ -103,11 +106,12 @@ export default function Section2() {
         </div>
 
         {/* "What if" to Main Headline - col 2-10, height 260-320px */}
+        {/* 28-36px space after header */}
         {!imageErrors.headline && (
           <div
             style={{
               gridColumn: '2 / 11', // Columns 2 through 10
-              marginTop: 'var(--space-6)',
+              marginTop: '32px', // 28-36px space after header (using 32px)
               minHeight: '260px',
               maxHeight: '320px',
               display: 'flex',
@@ -130,15 +134,19 @@ export default function Section2() {
         )}
 
         {/* Illustration area - full width centered, height 420px */}
+        {/* 24px gap between headline block and characters */}
+        {/* Characters should not touch screen edges (side padding 20px) */}
         {!imageErrors.people && (
           <div
             style={{
               gridColumn: '1 / -1',
-              marginTop: 'var(--space-6)',
+              marginTop: '24px', // 24px gap between headline block and characters
               height: '420px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              paddingLeft: '20px', // Side padding so characters don't touch edges
+              paddingRight: '20px',
             }}
           >
             <img
@@ -156,11 +164,12 @@ export default function Section2() {
         )}
 
         {/* Footer strip - full width, height 72px */}
+        {/* Breathing room above bottom banner (min 40px) */}
         {!imageErrors.footnote && (
           <div
             style={{
               gridColumn: '1 / -1',
-              marginTop: 'var(--space-5)',
+              marginTop: '40px', // Min 40px breathing room above bottom banner
               height: '72px',
               display: 'flex',
               alignItems: 'center',
