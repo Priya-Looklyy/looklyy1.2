@@ -1,7 +1,9 @@
 'use client';
 
+import type { Step } from '@/types/flow';
+
 type WaitlistSuccessProps = {
-  stepState: 'email' | 'phone' | 'submitting' | 'success';
+  stepState: Step;
 };
 
 export default function WaitlistSuccess({ stepState }: WaitlistSuccessProps) {

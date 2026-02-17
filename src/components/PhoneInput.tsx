@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import type { Step } from '@/types/flow';
 
 type PhoneInputProps = {
-  stepState: 'email' | 'phone' | 'submitting' | 'success';
-  setStepState: (step: 'email' | 'phone' | 'submitting' | 'success') => void;
+  stepState: Step;
+  setStepState: (step: Step) => void;
   email: string;
   submitWaitlist: (email: string, phone: string) => Promise<void>;
 };

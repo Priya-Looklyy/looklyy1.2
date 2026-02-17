@@ -7,6 +7,7 @@ import WaitlistEmailStep from '@/components/WaitlistEmailStep';
 import PhoneInput from '@/components/PhoneInput';
 import WaitlistSuccess from '@/components/WaitlistSuccess';
 import { submitWaitlist as submitWaitlistToDB } from '@/lib/supabase';
+import type { Step } from '@/types/flow';
 
 // Analytics tracking hook
 function useAnalytics() {
@@ -25,9 +26,6 @@ function useAnalytics() {
 
   return { trackEvent };
 }
-
-// Step state machine type
-type Step = 'email' | 'phone' | 'submitting' | 'success';
 
 export default function Home() {
   const [step, setStep] = useState<Step>('email');
