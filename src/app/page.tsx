@@ -3,6 +3,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Script from 'next/script';
 import Image from 'next/image';
+import WaitlistEmailStep from '@/components/WaitlistEmailStep';
+import PhoneInput from '@/components/PhoneInput';
+import WaitlistSuccess from '@/components/WaitlistSuccess';
+import { submitWaitlist as submitWaitlistToDB } from '@/lib/supabase';
 
 // Analytics tracking hook
 function useAnalytics() {
@@ -27,6 +31,7 @@ type StepState = 'email' | 'phone' | 'submitting' | 'success';
 
 export default function Home() {
   const [email, setEmail] = useState('');
+  const [waitlistEmail, setWaitlistEmail] = useState('');
   const [name, setName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -325,6 +330,44 @@ export default function Home() {
     };
   }, [trackEvent]);
 
+  const submitWaitlist = async (email: string, phone: string) => {
+    // Prevent duplicate submissions
+    if (stepState === 'submitting' || stepState === 'success') {
+      return;
+    }
+
+    setError('');
+    setStepState('submitting');
+
+    const formStartTime = Date.now();
+
+    // Track form start
+    trackEvent('form_start');
+
+    try {
+      const result = await submitWaitlistToDB(email, phone || null);
+
+      if (!result.success) {
+        throw new Error(result.error || 'Something went wrong');
+      }
+
+      // Track successful registration
+      const timeToRegister = Math.round((Date.now() - formStartTime) / 1000);
+      trackEvent('registration', {
+        time_to_register: timeToRegister,
+        has_phone: !!phone,
+      });
+
+      setStepState('success');
+      setShowThankYouModal(true);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to register. Please try again.';
+      setError(errorMessage);
+      trackEvent('form_error', { error: errorMessage });
+      setStepState('phone'); // Return to phone step on error
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -593,29 +636,24 @@ export default function Home() {
 
             {/* Email CTA Section */}
             <div className="px-6 pb-12 lg:pb-16">
-              <div className="max-w-2xl mx-auto">
-                <form
-                  onSubmit={handleSubmit}
-                  className="flex flex-col sm:flex-row gap-4 items-center justify-center"
-                >
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your Email"
-                    required
-                    className="w-full sm:flex-1 border-b-2 border-gray-300 pb-2 outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400 px-0 text-center sm:text-left"
-                    onClick={() => handleCTAClick('hero_email')}
-                  />
-                  <button
-                    type="submit"
-                    onClick={() => handleCTAClick('hero_button')}
-                    disabled={isSubmitting}
-                    className="w-full sm:w-auto bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                  >
-                    {isSubmitting ? 'Joining...' : 'Join the early list'}
-                  </button>
-                </form>
+              <div className="max-w-2xl mx-auto mobile-content-column">
+                {stepState === 'success' ? (
+                  <WaitlistSuccess stepState={stepState} />
+                ) : (
+                  <>
+                    <WaitlistEmailStep 
+                      stepState={stepState} 
+                      setStepState={setStepState}
+                      onEmailSubmit={setWaitlistEmail}
+                    />
+                    <PhoneInput 
+                      stepState={stepState} 
+                      setStepState={setStepState}
+                      email={waitlistEmail}
+                      submitWaitlist={submitWaitlist}
+                    />
+                  </>
+                )}
               </div>
             </div>
 
