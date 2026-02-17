@@ -11,147 +11,175 @@ export default function Section2() {
   };
 
   return (
-    <section className="w-full relative" style={{ minHeight: '100dvh' }}>
-      {/* Background - Full screen, no resize/skew */}
-      <div className="relative w-full" style={{ minHeight: '100dvh' }}>
+    <section 
+      className="w-full relative"
+      style={{
+        minHeight: 'min(100vh, 1100px)',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      {/* Background */}
+      <div 
+        className="absolute inset-0 w-full"
+        style={{
+          minHeight: 'min(100vh, 1100px)',
+          zIndex: 0,
+        }}
+      >
         {!imageErrors.background ? (
           <Image
             src="/assets/frames/Section2_BackgroundPNG.png"
             alt="Section 2 Background"
             width={1080}
             height={1920}
-            className="w-full h-full object-cover"
+            className="w-full h-full"
             priority
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
             onError={() => handleImageError('background')}
           />
         ) : (
-          <div className="w-full min-h-screen bg-yellow-100" />
+          <div className="w-full h-full bg-yellow-100" />
         )}
-        
-        {/* Container for all content - positioned relative to background */}
-        <div className="absolute inset-0 w-full" style={{ minHeight: '100dvh' }}>
-          {/* Logo - Top Left, 80% larger */}
-          {!imageErrors.logo && (
-            <div 
-              className="absolute z-20"
-              style={{
-                top: '4%',
-                left: '4%',
-              }}
-            >
-              <img
-                src="/assets/logo/Looklyy_LogoSVG.svg"
-                alt="Looklyy Logo"
-                className="w-auto h-auto"
-                style={{ 
-                  width: '270px', // 150px * 1.8 = 270px (80% larger)
-                  height: 'auto'
-                }}
-                onError={() => handleImageError('logo')}
-              />
-            </div>
-          )}
-          
-          {/* Hello - Top Right, aligned with logo, 10% smaller font */}
-          <div 
-            className="absolute z-20"
+      </div>
+
+      {/* Content Container with 12-column grid */}
+      <div
+        className="relative w-full mx-auto"
+        style={{
+          maxWidth: '1200px',
+          paddingLeft: '6vw',
+          paddingRight: '6vw',
+          minHeight: 'min(100vh, 1100px)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(12, 1fr)',
+          gap: 'var(--space-2)',
+          paddingTop: 'var(--space-4)',
+          paddingBottom: 'var(--space-4)',
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
+        {/* Logo - col 1-3 */}
+        {!imageErrors.logo && (
+          <div
             style={{
-              top: '4%',
-              right: '4%',
+              gridColumn: '1 / 4',
               display: 'flex',
-              alignItems: 'center',
-              height: '108px', // Match logo height approximately
+              alignItems: 'flex-start',
             }}
           >
-            <p 
-              className="text-orange-500 font-medium"
+            <img
+              src="/assets/logo/Looklyy_LogoSVG.svg"
+              alt="Looklyy Logo"
+              className="w-auto h-auto"
               style={{
-                fontSize: '18px', // Reduced by 10% from ~20px
-                margin: 0,
+                height: 'auto',
+                maxWidth: '100%',
               }}
-            >
-              Hello
-            </p>
+              onError={() => handleImageError('logo')}
+            />
           </div>
-          
-          {/* Headline - Below logo/Hello, 10% padding, left-aligned to logo */}
-          {!imageErrors.headline && (
-            <div 
-              className="absolute z-20"
-              style={{
-                top: '20%', // Approximately logo height + 10% padding
-                left: '4%', // Aligned to logo left
-              }}
-            >
-              <img
-                src="/assets/frames/Home_HeadlinePNG.png"
-                alt="Home Headline"
-                className="w-auto h-auto"
-                style={{ 
-                  maxWidth: '90vw',
-                  height: 'auto',
-                  objectFit: 'contain'
-                }}
-                onError={() => handleImageError('headline')}
-              />
-            </div>
-          )}
-          
-          {/* 4 People Illustration - Below headline, center-aligned, 10% padding */}
-          {!imageErrors.people && (
-            <div 
-              className="absolute z-20"
-              style={{
-                top: '45%', // Positioned below headline with spacing
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <img
-                src="/assets/illustrations/Homepage_ImagePNG.png"
-                alt="4 People Illustration"
-                className="w-auto h-auto"
-                style={{ 
-                  maxWidth: '90vw',
-                  height: 'auto',
-                  objectFit: 'contain'
-                }}
-                onError={() => handleImageError('people')}
-              />
-            </div>
-          )}
-          
-          {/* Footnote - Below 4 people illustration, 5% padding after feet */}
-          {!imageErrors.footnote && (
-            <div 
-              className="absolute z-20"
-              style={{
-                bottom: '5%', // 5% padding from bottom (after feet)
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <img
-                src="/assets/frames/Footnote_Section1PNG.png"
-                alt="We are exploring this idea"
-                className="w-auto h-auto"
-                style={{ 
-                  maxWidth: '90vw',
-                  height: 'auto',
-                  objectFit: 'contain'
-                }}
-                onError={() => handleImageError('footnote')}
-              />
-            </div>
-          )}
+        )}
+
+        {/* Hello - col 10-12 */}
+        <div
+          style={{
+            gridColumn: '10 / 13',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <p
+            className="text-orange-500 font-medium"
+            style={{
+              fontSize: '18px',
+              margin: 0,
+            }}
+          >
+            Hello
+          </p>
         </div>
+
+        {/* "What if" to Main Headline - col 2-10, height 260-320px */}
+        {!imageErrors.headline && (
+          <div
+            style={{
+              gridColumn: '2 / 11', // Columns 2 through 10
+              marginTop: 'var(--space-6)',
+              minHeight: '260px',
+              maxHeight: '320px',
+              display: 'flex',
+              alignItems: 'flex-start',
+            }}
+          >
+            <img
+              src="/assets/frames/Home_HeadlinePNG.png"
+              alt="What if you could see"
+              className="w-auto h-auto"
+              style={{
+                width: '100%',
+                height: 'auto',
+                objectFit: 'contain',
+                maxHeight: '320px',
+              }}
+              onError={() => handleImageError('headline')}
+            />
+          </div>
+        )}
+
+        {/* Illustration area - full width centered, height 420px */}
+        {!imageErrors.people && (
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              marginTop: 'var(--space-6)',
+              height: '420px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <img
+              src="/assets/illustrations/Homepage_ImagePNG.png"
+              alt="4 People Illustration"
+              className="w-auto h-auto"
+              style={{
+                maxWidth: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+              onError={() => handleImageError('people')}
+            />
+          </div>
+        )}
+
+        {/* Footer strip - full width, height 72px */}
+        {!imageErrors.footnote && (
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              marginTop: 'var(--space-5)',
+              height: '72px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <img
+              src="/assets/frames/Footnote_Section1PNG.png"
+              alt="We are exploring this idea"
+              className="w-auto h-auto"
+              style={{
+                maxWidth: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+              onError={() => handleImageError('footnote')}
+            />
+          </div>
+        )}
       </div>
     </section>
   );
