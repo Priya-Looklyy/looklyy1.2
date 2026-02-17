@@ -4,15 +4,30 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
 
+// Create Supabase client with fallback for missing env vars
+let supabase: ReturnType<typeof createClient>;
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  console.warn('Missing Supabase environment variables. Supabase features will be disabled.');
+  // Create a mock client that won't crash the app
+  supabase = createClient('https://placeholder.supabase.co', 'placeholder-key');
+} else {
+  supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
-// Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export { supabase };
 
 // Submit waitlist function
 export async function submitWaitlist(email: string, phone: string | null): Promise<{ success: boolean; error?: string }> {
+  // Check if Supabase is properly configured
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn('Supabase not configured. Registration will be simulated.');
+    // Simulate success for development/testing
+    return {
+      success: true,
+    };
+  }
+
   try {
     const { data, error } = await supabase
       .from('waitlist')
