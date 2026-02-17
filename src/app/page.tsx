@@ -639,16 +639,36 @@ export default function Home() {
             <div className="px-6 pb-12 lg:pb-16">
               <div className="max-w-2xl mx-auto mobile-content-column">
                 {step === 'email' && (
-                  <div>Email Step</div>
+                  <>
+                    <h2 className="text-4xl font-bold leading-tight mb-4">
+                      Join the waitlist
+                    </h2>
+                    <p className="text-base mb-8">
+                      Be the first to know when we launch.
+                    </p>
+                    <WaitlistEmailStep 
+                      stepState={step} 
+                      setStepState={setStep}
+                      onEmailSubmit={(email) => {
+                        setEmail(email);
+                        setStep('phone');
+                      }}
+                    />
+                  </>
                 )}
                 {step === 'phone' && (
-                  <div>Phone Step</div>
+                  <PhoneInput 
+                    stepState={step} 
+                    setStepState={setStep}
+                    email={email}
+                    submitWaitlist={submitWaitlist}
+                  />
                 )}
                 {step === 'submitting' && (
                   <div>Submitting Step</div>
                 )}
                 {step === 'success' && (
-                  <div>Success Step</div>
+                  <WaitlistSuccess stepState={step} />
                 )}
               </div>
             </div>
