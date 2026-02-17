@@ -466,18 +466,6 @@ export default function Home() {
             paddingRight: '16px',
           }}
         >
-          {/* Navigation - Minimalist */}
-          <nav className="bg-white/95 backdrop-blur-md border-b border-gray-100 z-50">
-            <div className="flex justify-between items-center h-14">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">L</span>
-                </div>
-                <span className="text-xl font-light tracking-tight text-gray-900">Looklyy</span>
-              </div>
-              <span className="text-sm text-gray-500 font-light">Hello</span>
-            </div>
-          </nav>
 
         {/* Thank You Modal */}
         {showThankYouModal && (
