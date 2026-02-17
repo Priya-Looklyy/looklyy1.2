@@ -59,18 +59,21 @@ export default function PhoneInput({ stepState, setStepState, email, submitWaitl
     }
   };
 
-  if (stepState !== 'phone') {
+  if (stepState !== 'phone' && stepState !== 'submitting') {
     return null;
   }
 
+  const isSubmitting = stepState === 'submitting';
+
   return (
-    <div className="w-full">
+    <div className="w-full" style={{ minHeight: '120px' }}>
       <input
         type="tel"
         value={phone}
         onChange={handlePhoneChange}
         placeholder="+1 234 567 8900"
-        className="w-full border-b-2 border-gray-300 pb-2 outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400 px-0 text-center"
+        disabled={isSubmitting}
+        className="w-full border-b-2 border-gray-300 pb-2 outline-none focus:border-purple-600 transition-colors placeholder:text-gray-400 px-0 text-center disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
           minHeight: '44px',
           fontSize: '16px',
@@ -79,14 +82,36 @@ export default function PhoneInput({ stepState, setStepState, email, submitWaitl
       />
       <button
         onClick={handleContinue}
-        disabled={!isValid}
-        className="w-full bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium mt-6"
+        disabled={!isValid || isSubmitting}
+        className="w-full bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium mt-6 flex items-center justify-center gap-2"
         style={{
           minHeight: '44px',
           fontSize: '16px',
         }}
       >
-        Continue
+        {isSubmitting && (
+          <svg
+            className="animate-spin h-4 w-4 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+        )}
+        {isSubmitting ? 'Joining...' : 'Join waitlist'}
       </button>
     </div>
   );
