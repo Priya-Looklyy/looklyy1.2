@@ -39,7 +39,7 @@ export async function submitWaitlist(email: string, phone: string | null): Promi
           email,
           phone_number: phone,
         },
-      ])
+      ] as any)
       .select();
 
     if (error) {
