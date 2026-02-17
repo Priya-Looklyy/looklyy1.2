@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { Step } from '@/types/flow';
 
 type WaitlistEmailStepProps = {
@@ -12,6 +12,7 @@ type WaitlistEmailStepProps = {
 export default function WaitlistEmailStep({ stepState, setStepState, onEmailSubmit }: WaitlistEmailStepProps) {
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Email validation
   const validateEmail = (emailValue: string) => {
@@ -32,13 +33,26 @@ export default function WaitlistEmailStep({ stepState, setStepState, onEmailSubm
     }
   };
 
+  useEffect(() => {
+    if (stepState === 'email' && inputRef.current) {
+      // Delay focus by 150ms to avoid iOS layout jump
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+        inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 150);
+
+      return () => clearTimeout(timer);
+    }
+  }, [stepState]);
+
   if (stepState !== 'email') {
     return null;
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full opacity-0 translate-y-4 animate-fade-in-up">
       <input
+        ref={inputRef}
         type="email"
         value={email}
         onChange={handleEmailChange}

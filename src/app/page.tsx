@@ -421,12 +421,13 @@ export default function Home() {
       <div 
         className="bg-white"
         style={{
-          minHeight: '100dvh',
+          height: '100dvh',
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          paddingTop: 'env(safe-area-inset-top)',
-          paddingBottom: 'env(safe-area-inset-bottom)',
+          paddingTop: 'calc(env(safe-area-inset-top) + 32px)',
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)',
           paddingLeft: 'env(safe-area-inset-left)',
           paddingRight: 'env(safe-area-inset-right)',
         }}
@@ -437,6 +438,8 @@ export default function Home() {
           style={{
             maxWidth: '420px',
             width: '100%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
             paddingLeft: '16px',
             paddingRight: '16px',
           }}
