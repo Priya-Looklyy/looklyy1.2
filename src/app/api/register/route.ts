@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       .from('registrations')
       .select('email')
       .eq('email', normalizedEmail)
-      .maybeSingle();
+      .maybeSingle() as any;
 
     if (existing) {
       return NextResponse.json(
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
           phone_number: trimmedPhone,
           updatedAt: new Date().toISOString(),
         },
-      ])
+      ] as any)
       .select();
 
     if (insertError) {
