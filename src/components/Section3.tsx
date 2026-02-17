@@ -12,6 +12,7 @@ export default function Section3() {
   const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   // Check localStorage on mount
   useEffect(() => {
@@ -22,6 +23,10 @@ export default function Section3() {
       }
     }
   }, []);
+
+  const handleImageError = (key: string) => {
+    setImageErrors(prev => ({ ...prev, [key]: true }));
+  };
 
   const handleEmailContinue = () => {
     setStep('phone');
@@ -64,36 +69,47 @@ export default function Section3() {
     <section className="w-full relative min-h-screen flex flex-col">
       {/* Background */}
       <div className="relative w-full flex-1">
-        <Image
-          src="/assets/frames/Section3_BackgroundPNG.png"
-          alt="Section 3 Background"
-          width={1200}
-          height={800}
-          className="w-full h-auto object-cover"
-          priority
-        />
+        {!imageErrors.background ? (
+          <Image
+            src="/assets/frames/Section3_BackgroundPNG.png"
+            alt="Section 3 Background"
+            width={1200}
+            height={800}
+            className="w-full h-auto object-cover"
+            priority
+            onError={() => handleImageError('background')}
+          />
+        ) : (
+          <div className="w-full h-[800px] bg-orange-100" />
+        )}
         
         {/* Bottom Panel */}
-        <div className="absolute bottom-0 left-0 right-0 z-10">
-          <Image
-            src="/assets/frames/Section3_BottompanelPNG.png"
-            alt="Section 3 Bottom Panel"
-            width={1200}
-            height={300}
-            className="w-full h-auto"
-          />
-        </div>
+        {!imageErrors.bottomPanel && (
+          <div className="absolute bottom-0 left-0 right-0 z-10">
+            <Image
+              src="/assets/frames/Section3_BottompanelPNG.png"
+              alt="Section 3 Bottom Panel"
+              width={1200}
+              height={300}
+              className="w-full h-auto"
+              onError={() => handleImageError('bottomPanel')}
+            />
+          </div>
+        )}
         
         {/* Bottom Text */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-          <Image
-            src="/assets/frames/Section3_BottomtextPNG.png"
-            alt="Section 3 Bottom Text"
-            width={800}
-            height={100}
-            className="w-auto h-auto max-w-[90vw]"
-          />
-        </div>
+        {!imageErrors.bottomText && (
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+            <Image
+              src="/assets/frames/Section3_BottomtextPNG.png"
+              alt="Section 3 Bottom Text"
+              width={800}
+              height={100}
+              className="w-auto h-auto max-w-[90vw]"
+              onError={() => handleImageError('bottomText')}
+            />
+          </div>
+        )}
         
         {/* Interactive Form Overlay - Positioned in orange section */}
         <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4 sm:px-8 z-30">
