@@ -22,6 +22,9 @@ function useAnalytics() {
   return { trackEvent };
 }
 
+// Step state machine type
+type StepState = 'email' | 'phone' | 'submitting' | 'success';
+
 export default function Home() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -34,6 +37,7 @@ export default function Home() {
   const [arrowRipple, setArrowRipple] = useState<'left' | 'right' | null>(null);
   const [currentImageLoaded, setCurrentImageLoaded] = useState(false);
   const [waitlistCardIndex, setWaitlistCardIndex] = useState(0);
+  const [stepState, setStepState] = useState<StepState>('email');
   const { trackEvent } = useAnalytics();
 
   // Auto-advance waitlist cards
@@ -372,10 +376,31 @@ export default function Home() {
 
   return (
     <>
-      <div className="min-h-screen bg-white">
-        {/* Navigation - Minimalist */}
-        <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-100 z-50">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div 
+        className="bg-white"
+        style={{
+          minHeight: '100dvh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          paddingLeft: 'env(safe-area-inset-left)',
+          paddingRight: 'env(safe-area-inset-right)',
+        }}
+      >
+        {/* Main Container */}
+        <div 
+          className="w-full flex-1 flex flex-col"
+          style={{
+            maxWidth: '420px',
+            width: '100%',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+          }}
+        >
+          {/* Navigation - Minimalist */}
+          <nav className="bg-white/95 backdrop-blur-md border-b border-gray-100 z-50">
             <div className="flex justify-between items-center h-14">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
@@ -385,8 +410,7 @@ export default function Home() {
               </div>
               <span className="text-sm text-gray-500 font-light">Hello</span>
             </div>
-          </div>
-        </nav>
+          </nav>
 
         {/* Thank You Modal */}
         {showThankYouModal && (
@@ -803,13 +827,14 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <footer className="py-8 px-6 sm:px-8 lg:px-12 border-t border-gray-200">
-          <div className="max-w-7xl mx-auto text-center">
+        <footer className="py-8 border-t border-gray-200">
+          <div className="text-center">
             <p className="text-sm text-gray-600 font-light">
               2025@looklyy, Privacy Rights Reserved
             </p>
           </div>
         </footer>
+        </div>
       </div>
     </>
   );
