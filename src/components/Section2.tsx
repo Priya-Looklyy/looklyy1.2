@@ -64,6 +64,7 @@ export default function Section2() {
           style={{
             width: '100%',
             paddingTop: 'var(--space-4)',
+            flexShrink: 0,
           }}
         >
           {/* Header Row: Logo and Hello */}
@@ -73,16 +74,18 @@ export default function Section2() {
               justifyContent: 'space-between',
               alignItems: 'flex-start',
               width: '100%',
+              marginBottom: 'var(--space-4)',
             }}
           >
             {/* Logo */}
-            {!imageErrors.logo && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                }}
-              >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                flexShrink: 0,
+              }}
+            >
+              {!imageErrors.logo ? (
                 <img
                   src="/assets/logo/Looklyy_LogoSVG.svg"
                   alt="Looklyy Logo"
@@ -90,17 +93,21 @@ export default function Section2() {
                   style={{
                     height: 'auto',
                     maxWidth: '200px',
+                    display: 'block',
                   }}
                   onError={() => handleImageError('logo')}
                 />
-              </div>
-            )}
+              ) : (
+                <div style={{ width: '150px', height: '60px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
+              )}
+            </div>
 
             {/* Hello - Premium mobile typography */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
+                flexShrink: 0,
               }}
             >
               <p
@@ -111,6 +118,7 @@ export default function Section2() {
                   lineHeight: 1,
                   margin: 0,
                   letterSpacing: '-0.01em',
+                  color: '#f97316',
                 }}
               >
                 Hello
@@ -119,15 +127,13 @@ export default function Section2() {
           </div>
 
           {/* "What if" to Main Headline */}
-          {!imageErrors.headline && (
-            <div
-              style={{
-                marginTop: 'var(--space-4)',
-                display: 'flex',
-                alignItems: 'flex-start',
-                width: '100%',
-              }}
-            >
+          <div
+            style={{
+              width: '100%',
+              flexShrink: 0,
+            }}
+          >
+            {!imageErrors.headline ? (
               <img
                 src="/assets/frames/Home_HeadlinePNG.png"
                 alt="What if you could see"
@@ -137,26 +143,31 @@ export default function Section2() {
                   height: 'auto',
                   objectFit: 'contain',
                   maxHeight: '320px',
+                  display: 'block',
                 }}
                 onError={() => handleImageError('headline')}
               />
-            </div>
-          )}
+            ) : (
+              <div style={{ width: '100%', height: '200px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
+            )}
+          </div>
         </div>
 
         {/* Middle Zone: Characters - Flex 1 to occupy remaining space */}
-        {!imageErrors.people && (
-          <div
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingLeft: '20px',
-              paddingRight: '20px',
-              minHeight: 0, // Important for flex children
-            }}
-          >
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingLeft: '20px',
+            paddingRight: '20px',
+            minHeight: 0,
+            flexShrink: 1,
+            overflow: 'hidden',
+          }}
+        >
+          {!imageErrors.people ? (
             <img
               src="/assets/illustrations/Homepage_ImagePNG.png"
               alt="4 People Illustration"
@@ -165,23 +176,28 @@ export default function Section2() {
                 maxWidth: '100%',
                 maxHeight: '100%',
                 objectFit: 'contain',
+                display: 'block',
               }}
               onError={() => handleImageError('people')}
             />
-          </div>
-        )}
+          ) : (
+            <div style={{ width: '100%', height: '100%', backgroundColor: 'rgba(255,255,255,0.3)', maxHeight: '420px' }} />
+          )}
+        </div>
 
         {/* Bottom Zone: Banner - Sticks to bottom */}
-        {!imageErrors.footnote && (
-          <div
-            style={{
-              paddingBottom: 'var(--space-4)',
-              height: '72px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+        <div
+          style={{
+            paddingBottom: 'var(--space-4)',
+            height: '72px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            width: '100%',
+          }}
+        >
+          {!imageErrors.footnote ? (
             <img
               src="/assets/frames/Footnote_Section1PNG.png"
               alt="We are exploring this idea"
@@ -190,11 +206,14 @@ export default function Section2() {
                 maxWidth: '100%',
                 height: '100%',
                 objectFit: 'contain',
+                display: 'block',
               }}
               onError={() => handleImageError('footnote')}
             />
-          </div>
-        )}
+          ) : (
+            <div style={{ width: '100%', height: '72px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
+          )}
+        </div>
       </div>
     </section>
   );
