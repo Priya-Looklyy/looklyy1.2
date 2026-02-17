@@ -20,7 +20,10 @@ export { supabase };
 // Submit waitlist function
 export async function submitWaitlist(email: string, phone: string | null): Promise<{ success: boolean; error?: string }> {
   // Check if Supabase is properly configured
-  if (!supabaseUrl || !supabaseAnonKey) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
+  
+  if (!url || !key) {
     console.warn('Supabase not configured. Registration will be simulated.');
     // Simulate success for development/testing
     return {
