@@ -1,84 +1,90 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, name } = body;
+    const { email, phone } = body;
 
-    // Validate email
-    if (!email || !email.includes('@')) {
+    // Trim both values
+    const trimmedEmail = email?.trim() || '';
+    const trimmedPhone = phone?.trim() || '';
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!trimmedEmail || !emailRegex.test(trimmedEmail)) {
       return NextResponse.json(
-        { error: 'Please provide a valid email address' },
+        { error: 'Invalid input' },
         { status: 400 }
       );
     }
 
-    // Normalize email (lowercase, trim)
-    const normalizedEmail = email.toLowerCase().trim();
+    // Validate phone: 7-15 digits (allow + and spaces)
+    const cleanedPhone = trimmedPhone.replace(/[\s-]/g, '');
+    const phoneDigits = cleanedPhone.startsWith('+') 
+      ? cleanedPhone.slice(1).replace(/\D/g, '')
+      : cleanedPhone.replace(/\D/g, '');
+    
+    if (!trimmedPhone || phoneDigits.length < 7 || phoneDigits.length > 15) {
+      return NextResponse.json(
+        { error: 'Invalid input' },
+        { status: 400 }
+      );
+    }
+
+    // Normalize email (lowercase)
+    const normalizedEmail = trimmedEmail.toLowerCase();
 
     // Check if email already exists
-    const existing = await prisma.registration.findUnique({
-      where: { email: normalizedEmail },
-    });
+    const { data: existing } = await supabase
+      .from('registrations')
+      .select('email')
+      .eq('email', normalizedEmail)
+      .maybeSingle();
 
     if (existing) {
       return NextResponse.json(
-        { 
-          success: true, 
-          message: 'You are already registered!',
-          alreadyRegistered: true 
-        },
+        { success: true, duplicate: true },
         { status: 200 }
       );
     }
 
-    // Save to database
-    const registration = await prisma.registration.create({
-      data: {
-        email: normalizedEmail,
-        name: name?.trim() || null,
-      },
-    });
+    // Insert into Supabase
+    const { data, error: insertError } = await supabase
+      .from('registrations')
+      .insert([
+        {
+          email: normalizedEmail,
+          phone_number: trimmedPhone,
+          updatedAt: new Date().toISOString(),
+        },
+      ])
+      .select();
 
-    console.log('New registration saved:', { 
-      id: registration.id, 
-      email: registration.email, 
-      name: registration.name,
-      timestamp: registration.createdAt 
-    });
+    if (insertError) {
+      // Handle duplicate email error from Supabase
+      if (insertError.code === '23505' || insertError.message.includes('duplicate')) {
+        return NextResponse.json(
+          { success: true, duplicate: true },
+          { status: 200 }
+        );
+      }
 
-    // TODO: In production, you might want to:
-    // 1. Send confirmation email (using Resend, SendGrid, etc.)
-    // 2. Add to email marketing service (Mailchimp, ConvertKit, etc.)
-    // 3. Send webhook notification
+      console.error('Supabase insert error:', insertError);
+      return NextResponse.json(
+        { error: 'Failed to process registration' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
-      { 
-        success: true, 
-        message: 'Registration successful',
-        id: registration.id,
-      },
+      { success: true },
       { status: 200 }
     );
   } catch (error) {
     console.error('Registration error:', error);
-    
-    // Handle Prisma unique constraint error (duplicate email)
-    if (error instanceof Error && error.message.includes('Unique constraint')) {
-      return NextResponse.json(
-        { 
-          success: true, 
-          message: 'You are already registered!',
-          alreadyRegistered: true 
-        },
-        { status: 200 }
-      );
-    }
-
-    const errorMessage = error instanceof Error ? error.message : 'Failed to process registration. Please try again.';
     return NextResponse.json(
-      { error: errorMessage },
+      { error: 'Failed to process registration' },
       { status: 500 }
     );
   }

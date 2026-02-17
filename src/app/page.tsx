@@ -27,10 +27,12 @@ function useAnalytics() {
 }
 
 // Step state machine type
-type StepState = 'email' | 'phone' | 'submitting' | 'success';
+type Step = 'email' | 'phone' | 'submitting' | 'success';
 
 export default function Home() {
+  const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [name, setName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,7 +44,6 @@ export default function Home() {
   const [arrowRipple, setArrowRipple] = useState<'left' | 'right' | null>(null);
   const [currentImageLoaded, setCurrentImageLoaded] = useState(false);
   const [waitlistCardIndex, setWaitlistCardIndex] = useState(0);
-  const [stepState, setStepState] = useState<StepState>('email');
   const { trackEvent } = useAnalytics();
 
   // Auto-advance waitlist cards
@@ -332,12 +333,12 @@ export default function Home() {
 
   const submitWaitlist = async (email: string, phone: string) => {
     // Prevent duplicate submissions
-    if (stepState === 'submitting' || stepState === 'success') {
+    if (step === 'submitting' || step === 'success') {
       return;
     }
 
     setError('');
-    setStepState('submitting');
+    setStep('submitting');
 
     const formStartTime = Date.now();
 
@@ -358,13 +359,13 @@ export default function Home() {
         has_phone: !!phone,
       });
 
-      setStepState('success');
+      setStep('success');
       setShowThankYouModal(true);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to register. Please try again.';
       setError(errorMessage);
       trackEvent('form_error', { error: errorMessage });
-      setStepState('phone'); // Return to phone step on error
+      setStep('phone'); // Return to phone step on error
     }
   };
 
@@ -637,22 +638,17 @@ export default function Home() {
             {/* Email CTA Section */}
             <div className="px-6 pb-12 lg:pb-16">
               <div className="max-w-2xl mx-auto mobile-content-column">
-                {stepState === 'success' ? (
-                  <WaitlistSuccess stepState={stepState} />
-                ) : (
-                  <>
-                    <WaitlistEmailStep 
-                      stepState={stepState} 
-                      setStepState={setStepState}
-                      onEmailSubmit={setWaitlistEmail}
-                    />
-                    <PhoneInput 
-                      stepState={stepState} 
-                      setStepState={setStepState}
-                      email={waitlistEmail}
-                      submitWaitlist={submitWaitlist}
-                    />
-                  </>
+                {step === 'email' && (
+                  <div>Email Step</div>
+                )}
+                {step === 'phone' && (
+                  <div>Phone Step</div>
+                )}
+                {step === 'submitting' && (
+                  <div>Submitting Step</div>
+                )}
+                {step === 'success' && (
+                  <div>Success Step</div>
                 )}
               </div>
             </div>
