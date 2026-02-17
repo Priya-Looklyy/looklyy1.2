@@ -5,7 +5,11 @@ import Script from 'next/script';
 import Image from 'next/image';
 import WaitlistEmailStep from '@/components/WaitlistEmailStep';
 import PhoneInput from '@/components/PhoneInput';
-import WaitlistSuccess from '@/components/WaitlistSuccess';
+import SuccessStep from '@/components/SuccessStep';
+import Section1 from '@/components/Section1';
+import Section2 from '@/components/Section2';
+import Section3 from '@/components/Section3';
+import Section4 from '@/components/Section4';
 import { submitWaitlist as submitWaitlistToDB } from '@/lib/supabase';
 import type { Step } from '@/types/flow';
 
@@ -43,6 +47,16 @@ export default function Home() {
   const [currentImageLoaded, setCurrentImageLoaded] = useState(false);
   const [waitlistCardIndex, setWaitlistCardIndex] = useState(0);
   const { trackEvent } = useAnalytics();
+
+  // Check localStorage on mount - auto skip form if flag exists
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const joinedWaitlist = localStorage.getItem('joined_waitlist');
+      if (joinedWaitlist === 'true') {
+        setStep('success');
+      }
+    }
+  }, []);
 
   // Auto-advance waitlist cards
   useEffect(() => {
@@ -339,12 +353,17 @@ export default function Home() {
     setStep('submitting');
 
     const formStartTime = Date.now();
+    const minDuration = 600; // Minimum duration in ms
 
     // Track form start
     trackEvent('form_start');
 
     try {
-      const result = await submitWaitlistToDB(email, phone || null);
+      // Start API call and minimum duration timer in parallel
+      const [result] = await Promise.all([
+        submitWaitlistToDB(email, phone || null),
+        new Promise(resolve => setTimeout(resolve, minDuration)),
+      ]);
 
       if (!result.success) {
         throw new Error(result.error || 'Something went wrong');
@@ -357,6 +376,10 @@ export default function Home() {
         has_phone: !!phone,
       });
 
+      // Store localStorage flag
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('joined_waitlist', 'true');
+      }
       setStep('success');
       setShowThankYouModal(true);
     } catch (err) {
@@ -473,6 +496,16 @@ export default function Home() {
             </div>
           </div>
         )}
+
+        {/* Design Sections */}
+        {/* Section 1: "What if you could see" */}
+        <Section2 />
+        {/* Section 2: "We want to know" */}
+        <Section1 />
+        {/* Section 3: "Founder story" */}
+        <Section4 />
+        {/* Section 4: "Believe in the idea" */}
+        <Section3 />
 
         {/* Hero Section - New Structure */}
         <div className="w-full overflow-x-hidden">
@@ -656,7 +689,7 @@ export default function Home() {
                     />
                   </>
                 )}
-                {step === 'phone' && (
+                {(step === 'phone' || step === 'submitting') && (
                   <PhoneInput 
                     stepState={step} 
                     setStepState={setStep}
@@ -664,11 +697,8 @@ export default function Home() {
                     submitWaitlist={submitWaitlist}
                   />
                 )}
-                {step === 'submitting' && (
-                  <div>Submitting Step</div>
-                )}
                 {step === 'success' && (
-                  <WaitlistSuccess stepState={step} />
+                  <SuccessStep />
                 )}
               </div>
             </div>
