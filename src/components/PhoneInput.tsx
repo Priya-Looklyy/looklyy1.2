@@ -79,14 +79,14 @@ export default function PhoneInput({ stepState, setStepState, email, submitWaitl
       />
       <button
         onClick={handleContinue}
-        disabled={!isValid || stepState === 'submitting' || stepState === 'success'}
+        disabled={!isValid}
         className="w-full bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium mt-6"
         style={{
           minHeight: '44px',
           fontSize: '16px',
         }}
       >
-        {stepState === 'submitting' ? 'Submitting...' : 'Continue'}
+        Continue
       </button>
     </div>
   );
