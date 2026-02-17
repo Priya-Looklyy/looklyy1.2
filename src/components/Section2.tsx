@@ -14,16 +14,17 @@ export default function Section2() {
     <section 
       className="w-full relative"
       style={{
-        minHeight: 'min(100vh, 1100px)',
+        height: '100dvh',
         display: 'flex',
         flexDirection: 'column',
+        overflow: 'hidden',
       }}
     >
       {/* Background */}
       <div 
         className="absolute inset-0 w-full"
         style={{
-          minHeight: 'min(100vh, 1100px)',
+          height: '100%',
           zIndex: 0,
         }}
       >
@@ -43,110 +44,112 @@ export default function Section2() {
         )}
       </div>
 
-      {/* Content Container with 12-column grid */}
+      {/* Main Content Container - Flex column with space-between */}
       <div
         className="relative w-full mx-auto"
         style={{
           maxWidth: '1200px',
           paddingLeft: '6vw',
           paddingRight: '6vw',
-          minHeight: 'min(100vh, 1100px)',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(12, 1fr)',
-          gap: 'var(--space-2)',
-          paddingTop: 'var(--space-4)',
-          paddingBottom: 'var(--space-4)',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
           position: 'relative',
           zIndex: 10,
         }}
       >
-        {/* Logo - col 1-3 */}
-        {!imageErrors.logo && (
-          <div
-            style={{
-              gridColumn: '1 / 4',
-              display: 'flex',
-              alignItems: 'flex-start',
-            }}
-          >
-            <img
-              src="/assets/logo/Looklyy_LogoSVG.svg"
-              alt="Looklyy Logo"
-              className="w-auto h-auto"
-              style={{
-                height: 'auto',
-                maxWidth: '100%',
-              }}
-              onError={() => handleImageError('logo')}
-            />
-          </div>
-        )}
-
-        {/* Hello - col 10-12 - Premium mobile typography */}
+        {/* Top Zone: Header + Headline */}
         <div
           style={{
-            gridColumn: '10 / 13',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'flex-end',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(12, 1fr)',
+            gap: 'var(--space-2)',
+            paddingTop: 'var(--space-4)',
           }}
         >
-          <p
-            className="text-orange-500"
-            style={{
-              fontSize: '16px',
-              fontWeight: 500,
-              lineHeight: 1,
-              margin: 0,
-              letterSpacing: '-0.01em',
-            }}
-          >
-            Hello
-          </p>
-        </div>
+          {/* Logo - col 1-3 */}
+          {!imageErrors.logo && (
+            <div
+              style={{
+                gridColumn: '1 / 4',
+                display: 'flex',
+                alignItems: 'flex-start',
+              }}
+            >
+              <img
+                src="/assets/logo/Looklyy_LogoSVG.svg"
+                alt="Looklyy Logo"
+                className="w-auto h-auto"
+                style={{
+                  height: 'auto',
+                  maxWidth: '100%',
+                }}
+                onError={() => handleImageError('logo')}
+              />
+            </div>
+          )}
 
-        {/* "What if" to Main Headline - col 2-10, height 260-320px */}
-        {/* 28-36px space after header */}
-        {!imageErrors.headline && (
+          {/* Hello - col 10-12 - Premium mobile typography */}
           <div
             style={{
-              gridColumn: '2 / 11', // Columns 2 through 10
-              marginTop: '32px', // 28-36px space after header (using 32px)
-              minHeight: '260px',
-              maxHeight: '320px',
+              gridColumn: '10 / 13',
               display: 'flex',
               alignItems: 'flex-start',
+              justifyContent: 'flex-end',
             }}
           >
-            <img
-              src="/assets/frames/Home_HeadlinePNG.png"
-              alt="What if you could see"
-              className="w-auto h-auto"
+            <p
+              className="text-orange-500"
               style={{
-                width: '100%',
-                height: 'auto',
-                objectFit: 'contain',
-                maxHeight: '320px',
+                fontSize: '16px',
+                fontWeight: 500,
+                lineHeight: 1,
+                margin: 0,
+                letterSpacing: '-0.01em',
               }}
-              onError={() => handleImageError('headline')}
-            />
+            >
+              Hello
+            </p>
           </div>
-        )}
 
-        {/* Illustration area - full width centered, height 420px */}
-        {/* 24px gap between headline block and characters */}
-        {/* Characters should not touch screen edges (side padding 20px) */}
+          {/* "What if" to Main Headline - col 2-10 */}
+          {!imageErrors.headline && (
+            <div
+              style={{
+                gridColumn: '2 / 11',
+                marginTop: 'var(--space-4)', // Small spacing after header
+                display: 'flex',
+                alignItems: 'flex-start',
+              }}
+            >
+              <img
+                src="/assets/frames/Home_HeadlinePNG.png"
+                alt="What if you could see"
+                className="w-auto h-auto"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  maxHeight: '320px',
+                }}
+                onError={() => handleImageError('headline')}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Middle Zone: Characters - Flex 1 to occupy remaining space */}
         {!imageErrors.people && (
           <div
             style={{
-              gridColumn: '1 / -1',
-              marginTop: '24px', // 24px gap between headline block and characters
-              height: '420px',
+              flex: 1,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingLeft: '20px', // Side padding so characters don't touch edges
+              paddingLeft: '20px',
               paddingRight: '20px',
+              minHeight: 0, // Important for flex children
             }}
           >
             <img
@@ -155,7 +158,7 @@ export default function Section2() {
               className="w-auto h-auto"
               style={{
                 maxWidth: '100%',
-                height: '100%',
+                maxHeight: '100%',
                 objectFit: 'contain',
               }}
               onError={() => handleImageError('people')}
@@ -163,13 +166,11 @@ export default function Section2() {
           </div>
         )}
 
-        {/* Footer strip - full width, height 72px */}
-        {/* Breathing room above bottom banner (min 40px) */}
+        {/* Bottom Zone: Banner - Sticks to bottom */}
         {!imageErrors.footnote && (
           <div
             style={{
-              gridColumn: '1 / -1',
-              marginTop: '40px', // Min 40px breathing room above bottom banner
+              paddingBottom: 'var(--space-4)',
               height: '72px',
               display: 'flex',
               alignItems: 'center',
