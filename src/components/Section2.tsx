@@ -46,11 +46,11 @@ export default function Section2() {
 
       {/* Main Content Container - Flex column with space-between */}
       <div
-        className="relative w-full mx-auto"
+        className="relative w-full"
         style={{
-          maxWidth: '1200px',
-          paddingLeft: '6vw',
-          paddingRight: '6vw',
+          width: '100%',
+          paddingLeft: '20px',
+          paddingRight: '20px',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -62,65 +62,70 @@ export default function Section2() {
         {/* Top Zone: Header + Headline */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(12, 1fr)',
-            gap: 'var(--space-2)',
+            width: '100%',
             paddingTop: 'var(--space-4)',
           }}
         >
-          {/* Logo - col 1-3 */}
-          {!imageErrors.logo && (
+          {/* Header Row: Logo and Hello */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              width: '100%',
+            }}
+          >
+            {/* Logo */}
+            {!imageErrors.logo && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <img
+                  src="/assets/logo/Looklyy_LogoSVG.svg"
+                  alt="Looklyy Logo"
+                  className="w-auto h-auto"
+                  style={{
+                    height: 'auto',
+                    maxWidth: '200px',
+                  }}
+                  onError={() => handleImageError('logo')}
+                />
+              </div>
+            )}
+
+            {/* Hello - Premium mobile typography */}
             <div
               style={{
-                gridColumn: '1 / 4',
                 display: 'flex',
                 alignItems: 'flex-start',
               }}
             >
-              <img
-                src="/assets/logo/Looklyy_LogoSVG.svg"
-                alt="Looklyy Logo"
-                className="w-auto h-auto"
+              <p
+                className="text-orange-500"
                 style={{
-                  height: 'auto',
-                  maxWidth: '100%',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  lineHeight: 1,
+                  margin: 0,
+                  letterSpacing: '-0.01em',
                 }}
-                onError={() => handleImageError('logo')}
-              />
+              >
+                Hello
+              </p>
             </div>
-          )}
-
-          {/* Hello - col 10-12 - Premium mobile typography */}
-          <div
-            style={{
-              gridColumn: '10 / 13',
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <p
-              className="text-orange-500"
-              style={{
-                fontSize: '16px',
-                fontWeight: 500,
-                lineHeight: 1,
-                margin: 0,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Hello
-            </p>
           </div>
 
-          {/* "What if" to Main Headline - col 2-10 */}
+          {/* "What if" to Main Headline */}
           {!imageErrors.headline && (
             <div
               style={{
-                gridColumn: '2 / 11',
-                marginTop: 'var(--space-4)', // Small spacing after header
+                marginTop: 'var(--space-4)',
                 display: 'flex',
                 alignItems: 'flex-start',
+                width: '100%',
               }}
             >
               <img
