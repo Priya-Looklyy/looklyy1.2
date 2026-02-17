@@ -44,7 +44,7 @@ export default function Section2() {
         </div>
         
         {/* Right Top Text - Responsive positioning */}
-        <div className="absolute top-4 right-4 sm:top-8 sm:right-8 md:top-12 md:right-12">
+        <div className="absolute top-20 right-4 sm:top-24 sm:right-8 md:top-32 md:right-12">
           <Image
             src="/assets/frames/Section2RightTopText_PNG.png"
             alt="Section 2 Right Top Text"

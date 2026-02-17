@@ -18,7 +18,7 @@ export default function Section4() {
       </div>
       
       {/* Bottom Section - Founder Story */}
-      <div className="relative w-full bg-beige-50">
+      <div className="relative w-full" style={{ backgroundColor: '#F5F5DC' }}>
         <div className="relative w-full">
           <Image
             src="/assets/frames/Section4_BottomtextPNG.png"
