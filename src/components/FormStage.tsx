@@ -54,6 +54,11 @@ export default function FormStage({ step, emailStep, phoneStep, height = '200px'
             {phoneStep}
           </div>
         )}
+        {(step === 'submitting' || step === 'success') && (
+          <div className="absolute inset-0 w-full">
+            {/* Render nothing for submitting/success states */}
+          </div>
+        )}
       </div>
     );
   }
