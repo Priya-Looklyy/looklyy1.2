@@ -425,7 +425,6 @@ export default function Home() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          alignItems: 'center',
           paddingTop: 'calc(env(safe-area-inset-top) + 32px)',
           paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)',
           paddingLeft: 'env(safe-area-inset-left)',
@@ -434,7 +433,7 @@ export default function Home() {
       >
         {/* Main Container */}
         <div 
-          className="w-full flex-1 flex flex-col"
+          className="w-full flex-1 flex flex-col overflow-y-auto"
           style={{
             maxWidth: '420px',
             width: '100%',
