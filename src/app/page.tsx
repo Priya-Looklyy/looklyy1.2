@@ -505,6 +505,33 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Canva Design Embed */}
+            <div className="px-6 pb-8 lg:pb-12">
+              <div className="max-w-4xl mx-auto">
+                <div style={{ position: 'relative', width: '100%', height: 0, paddingTop: '177.7778%', paddingBottom: 0, boxShadow: '0 2px 8px 0 rgba(63,69,81,0.16)', marginTop: '1.6em', marginBottom: '0.9em', overflow: 'hidden', borderRadius: '8px', willChange: 'transform' }}>
+                  <iframe 
+                    loading="lazy" 
+                    style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, border: 'none', padding: 0, margin: 0 }}
+                    src="https://www.canva.com/design/DAHBjb2WWf8/NwaKGWIxbv_v6wa_08jSuQ/watch?embed" 
+                    allowFullScreen={true}
+                    allow="fullscreen"
+                    title="Canva Design"
+                  />
+                </div>
+                <div className="text-center mt-4">
+                  <a 
+                    href="https://www.canva.com/design/DAHBjb2WWf8/NwaKGWIxbv_v6wa_08jSuQ/watch?utm_content=DAHBjb2WWf8&utm_campaign=designshare&utm_medium=embeds&utm_source=link" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    o (iOS Home Screen)
+                  </a>
+                  <span className="text-sm text-gray-500"> by Priya Stephen</span>
+                </div>
+              </div>
+            </div>
+
             {/* Image Sliders Section */}
             <div className="px-6 pb-12 lg:pb-16">
               <div className="max-w-7xl mx-auto">
