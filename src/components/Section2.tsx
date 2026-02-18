@@ -15,9 +15,11 @@ export default function Section2() {
       className="w-full relative"
       style={{
         height: '100dvh',
+        maxHeight: '100dvh',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
       {/* Background */}
@@ -25,7 +27,13 @@ export default function Section2() {
         className="absolute inset-0 w-full"
         style={{
           height: '100%',
+          width: '100%',
           zIndex: 0,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
         }}
       >
         {!imageErrors.background ? (
@@ -52,19 +60,22 @@ export default function Section2() {
           paddingLeft: '20px',
           paddingRight: '20px',
           height: '100%',
+          maxHeight: '100%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           position: 'relative',
           zIndex: 10,
+          boxSizing: 'border-box',
         }}
       >
         {/* Top Zone: Header + Headline */}
         <div
           style={{
             width: '100%',
-            paddingTop: '32px',
+            paddingTop: '24px',
             flexShrink: 0,
+            boxSizing: 'border-box',
           }}
         >
           {/* Header Row: Logo and Hello */}
@@ -74,7 +85,7 @@ export default function Section2() {
               justifyContent: 'space-between',
               alignItems: 'flex-start',
               width: '100%',
-              marginBottom: '32px',
+              marginBottom: '24px',
             }}
           >
             {/* Logo */}
@@ -83,7 +94,6 @@ export default function Section2() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 flexShrink: 0,
-                minHeight: '60px',
               }}
             >
               <img
@@ -92,8 +102,8 @@ export default function Section2() {
                 className="w-auto h-auto"
                 style={{
                   height: 'auto',
-                  maxWidth: '200px',
-                  minWidth: '150px',
+                  maxWidth: '180px',
+                  width: 'auto',
                   display: 'block',
                 }}
                 onError={() => handleImageError('logo')}
@@ -109,7 +119,6 @@ export default function Section2() {
               }}
             >
               <p
-                className="text-orange-500"
                 style={{
                   fontSize: '16px',
                   fontWeight: 500,
@@ -129,7 +138,6 @@ export default function Section2() {
             style={{
               width: '100%',
               flexShrink: 0,
-              minHeight: '200px',
             }}
           >
             <img
@@ -140,7 +148,7 @@ export default function Section2() {
                 width: '100%',
                 height: 'auto',
                 objectFit: 'contain',
-                maxHeight: '320px',
+                maxHeight: '280px',
                 display: 'block',
               }}
               onError={() => handleImageError('headline')}
@@ -151,15 +159,16 @@ export default function Section2() {
         {/* Middle Zone: Characters - Flex 1 to occupy remaining space */}
         <div
           style={{
-            flex: 1,
+            flex: '1 1 auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             paddingLeft: '20px',
             paddingRight: '20px',
-            minHeight: '200px',
             flexShrink: 1,
             overflow: 'hidden',
+            minHeight: 0,
+            maxHeight: '100%',
           }}
         >
           <img
@@ -169,6 +178,8 @@ export default function Section2() {
             style={{
               maxWidth: '100%',
               maxHeight: '100%',
+              width: 'auto',
+              height: 'auto',
               objectFit: 'contain',
               display: 'block',
             }}
@@ -179,14 +190,14 @@ export default function Section2() {
         {/* Bottom Zone: Banner - Sticks to bottom */}
         <div
           style={{
-            paddingBottom: '32px',
+            paddingBottom: '24px',
             height: '72px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
             width: '100%',
-            minHeight: '72px',
+            boxSizing: 'border-box',
           }}
         >
           <img
@@ -195,7 +206,8 @@ export default function Section2() {
             className="w-auto h-auto"
             style={{
               maxWidth: '100%',
-              height: '100%',
+              height: '72px',
+              width: 'auto',
               objectFit: 'contain',
               display: 'block',
             }}
