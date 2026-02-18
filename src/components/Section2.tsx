@@ -269,6 +269,5 @@ export default function Section2() {
           )}
         </div>
       </section>
-    </>
   );
 }
