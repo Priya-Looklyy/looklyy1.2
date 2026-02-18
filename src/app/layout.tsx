@@ -56,6 +56,11 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.svg" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.svg" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+        {/* Roboto Mono font for Section2 */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap"
+          rel="stylesheet"
+        />
         {/* Privacy-friendly analytics by Plausible */}
         <Script
           async

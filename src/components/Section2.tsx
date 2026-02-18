@@ -30,12 +30,7 @@ export default function Section2() {
   const textWhySome = isSmallMobile ? '28px' : isMobile ? '32px' : '40px';
 
   return (
-    <>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap"
-        rel="stylesheet"
-      />
-      <section
+    <section
         style={{
           width: '100%',
           height: '100dvh',
