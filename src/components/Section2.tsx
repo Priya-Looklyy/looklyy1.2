@@ -70,7 +70,7 @@ export default function Section2() {
           >
             {!imageErrors.logo ? (
               <img
-                src="/assets/logo/Looklyy_LogoSVG.svg"
+                src="/assets/Looklyy Logo.svg"
                 alt="Looklyy Logo"
                 style={{
                   width: '100%',
@@ -211,7 +211,7 @@ export default function Section2() {
           >
             {!imageErrors.illustration ? (
               <img
-                src="/assets/illustrations/Homepage_ImagePNG.png"
+                src="/assets/illustrations/Homepage_Illistration.svg"
                 alt="Looklyy Illustration"
                 style={{
                   width: '130%',
@@ -254,7 +254,7 @@ export default function Section2() {
         >
           {!imageErrors.footer ? (
             <img
-              src="/assets/frames/Footnote_Section1PNG.png"
+              src="/assets/illustrations/Footer_Hopemapge.svg"
               alt="Looklyy Footer"
               style={{
                 width: '100%',
