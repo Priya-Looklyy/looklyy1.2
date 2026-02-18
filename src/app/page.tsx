@@ -506,16 +506,44 @@ export default function Home() {
             </div>
 
             {/* Canva Design Embed */}
-            <div className="px-6 pb-8 lg:pb-12">
+            <div className="px-6 pb-8 lg:pb-12" style={{ minHeight: '400px' }}>
               <div className="max-w-4xl mx-auto">
-                <div style={{ position: 'relative', width: '100%', height: 0, paddingTop: '177.7778%', paddingBottom: 0, boxShadow: '0 2px 8px 0 rgba(63,69,81,0.16)', marginTop: '1.6em', marginBottom: '0.9em', overflow: 'hidden', borderRadius: '8px', willChange: 'transform' }}>
+                <div 
+                  style={{ 
+                    position: 'relative', 
+                    width: '100%', 
+                    height: 0, 
+                    paddingTop: '177.7778%', 
+                    paddingBottom: 0, 
+                    boxShadow: '0 2px 8px 0 rgba(63,69,81,0.16)', 
+                    marginTop: '1.6em', 
+                    marginBottom: '0.9em', 
+                    overflow: 'hidden', 
+                    borderRadius: '8px', 
+                    willChange: 'transform',
+                    backgroundColor: '#f3f4f6' // Temporary background to see container
+                  }}
+                >
                   <iframe 
                     loading="lazy" 
-                    style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, border: 'none', padding: 0, margin: 0 }}
+                    style={{ 
+                      position: 'absolute', 
+                      width: '100%', 
+                      height: '100%', 
+                      top: 0, 
+                      left: 0, 
+                      border: 'none', 
+                      padding: 0, 
+                      margin: 0,
+                      minHeight: '400px'
+                    }}
                     src="https://www.canva.com/design/DAHBjb2WWf8/NwaKGWIxbv_v6wa_08jSuQ/watch?embed" 
                     allowFullScreen={true}
                     allow="fullscreen"
                     title="Canva Design"
+                    onError={(e) => {
+                      console.error('Canva embed failed to load:', e);
+                    }}
                   />
                 </div>
                 <div className="text-center mt-4">
