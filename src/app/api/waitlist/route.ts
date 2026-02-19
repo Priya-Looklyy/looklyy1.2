@@ -323,7 +323,7 @@ export async function POST(request: NextRequest) {
         details: error.details,
       });
       
-      // If it's a fetch/network error, try REST API fallback
+      // If it's a fetch/network error, try REST API fallback FIRST
       if (errorMsg.includes('fetch') || errorMsg.includes('network') || errorMsg.includes('ECONNREFUSED') || errorMsg.includes('TypeError')) {
         console.log('🔄 Supabase client fetch failed, trying direct REST API call as fallback...');
         
@@ -380,22 +380,11 @@ export async function POST(request: NextRequest) {
         }
       }
 
-    // Handle Supabase response errors
-    if (insertResult.error) {
-      const error = insertResult.error;
-      
-      console.error('❌ Supabase insert error:', {
-        message: error.message,
-        code: error.code,
-        details: error.details,
-        hint: error.hint,
-      });
-
       // Handle duplicate email error gracefully
       if (error.code === '23505' || 
-          error.message?.toLowerCase().includes('duplicate') || 
-          error.message?.toLowerCase().includes('unique') ||
-          error.message?.toLowerCase().includes('already exists')) {
+          errorMsg?.toLowerCase().includes('duplicate') || 
+          errorMsg?.toLowerCase().includes('unique') ||
+          errorMsg?.toLowerCase().includes('already exists')) {
         console.log('✅ Email already on waitlist (duplicate):', trimmedEmail.substring(0, 10) + '...');
         return NextResponse.json(
           { success: true }, // Treat duplicate as success
@@ -404,11 +393,11 @@ export async function POST(request: NextRequest) {
       }
 
       // Return detailed error for debugging (safe to expose to client)
-      const errorMessage = error.message || 'Unknown database error';
+      const errorMessage = errorMsg;
       const errorCode = error.code || 'UNKNOWN';
       
       // Check for common issues
-      if (error.message?.includes('relation') || error.message?.includes('does not exist')) {
+      if (errorMsg?.includes('relation') || errorMsg?.includes('does not exist')) {
         return NextResponse.json(
           { 
             success: false, 
@@ -419,7 +408,7 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      if (error.message?.includes('permission') || error.message?.includes('policy')) {
+      if (errorMsg?.includes('permission') || errorMsg?.includes('policy')) {
         return NextResponse.json(
           { 
             success: false, 
@@ -430,7 +419,7 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      if (error.message?.includes('column') || error.message?.includes('field')) {
+      if (errorMsg?.includes('column') || errorMsg?.includes('field')) {
         return NextResponse.json(
           { 
             success: false, 
