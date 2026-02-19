@@ -31,11 +31,12 @@
       "image/avif",
       "image/webp"
     ],
-    "dangerouslyAllowSVG": false,
-    "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;",
+    "maximumResponseBody": 50000000,
+    "dangerouslyAllowSVG": true,
+    "contentSecurityPolicy": "default-src 'self'; script-src 'none'; sandbox;",
     "contentDispositionType": "attachment",
     "remotePatterns": [],
-    "unoptimized": false,
+    "unoptimized": true,
     "sizes": [
       640,
       750,

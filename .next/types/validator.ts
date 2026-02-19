@@ -74,6 +74,42 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/api/waitlist/diagnose/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/waitlist/diagnose">> = Specific
+  const handler = {} as typeof import("../../src/app/api/waitlist/diagnose/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/waitlist/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/waitlist">> = Specific
+  const handler = {} as typeof import("../../src/app/api/waitlist/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/waitlist/test-connection/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/waitlist/test-connection">> = Specific
+  const handler = {} as typeof import("../../src/app/api/waitlist/test-connection/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/api/waitlist/test/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/waitlist/test">> = Specific
+  const handler = {} as typeof import("../../src/app/api/waitlist/test/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 
 
 

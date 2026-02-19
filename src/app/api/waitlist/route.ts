@@ -326,12 +326,25 @@ export async function POST(request: NextRequest) {
       // If it's a fetch/network error, try REST API fallback FIRST
       if (errorMsg.includes('fetch') || errorMsg.includes('network') || errorMsg.includes('ECONNREFUSED') || errorMsg.includes('TypeError')) {
         console.log('🔄 Supabase client fetch failed, trying direct REST API call as fallback...');
+        console.log('🔍 Debug info:', {
+          supabaseUrl: supabaseUrl,
+          urlLength: supabaseUrl?.length,
+          keyLength: supabaseAnonKey?.length,
+          keyPrefix: supabaseAnonKey?.substring(0, 20) + '...',
+        });
+        
+        // Ensure URL ends with /rest/v1/waitlist (handle trailing slash)
+        const baseUrl = supabaseUrl.endsWith('/') ? supabaseUrl.slice(0, -1) : supabaseUrl;
+        const restUrl = `${baseUrl}/rest/v1/waitlist`;
+        console.log('🌐 REST API URL:', restUrl);
         
         try {
-          const restUrl = `${supabaseUrl}/rest/v1/waitlist`;
-          console.log('🌐 Calling REST API:', restUrl);
+          console.log('📋 Request payload:', {
+            email: trimmedEmail.substring(0, 10) + '...',
+            hasPhone: !!trimmedPhone,
+          });
           
-          const response = await fetch(restUrl, {
+          const fetchOptions = {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -343,13 +356,24 @@ export async function POST(request: NextRequest) {
               email: trimmedEmail,
               phone_number: trimmedPhone || null,
             }),
+          };
+          
+          console.log('📤 Fetch options prepared, making request...');
+          const response = await fetch(restUrl, fetchOptions);
+          console.log('📡 REST API response received:', {
+            status: response.status,
+            statusText: response.statusText,
+            ok: response.ok,
+            headers: Object.fromEntries(response.headers.entries()),
           });
-
-          console.log('📡 REST API response status:', response.status);
 
           if (!response.ok) {
             const errorText = await response.text();
-            console.error('❌ Direct REST API call failed:', response.status, errorText);
+            console.error('❌ Direct REST API call failed:', {
+              status: response.status,
+              statusText: response.statusText,
+              errorText: errorText.substring(0, 500),
+            });
             return NextResponse.json(
               { 
                 success: false, 
@@ -368,12 +392,24 @@ export async function POST(request: NextRequest) {
           );
         } catch (restError) {
           const restErrorMsg = restError instanceof Error ? restError.message : String(restError);
-          console.error('❌ Direct REST API fallback also failed:', restErrorMsg);
+          const restErrorName = restError instanceof Error ? restError.name : 'Unknown';
+          const restErrorStack = restError instanceof Error ? restError.stack : undefined;
+          
+          console.error('❌ Direct REST API fallback failed:', {
+            name: restErrorName,
+            message: restErrorMsg,
+            stack: restErrorStack?.substring(0, 500),
+            url: restUrl,
+            hasUrl: !!supabaseUrl,
+            hasKey: !!supabaseAnonKey,
+          });
+          
           return NextResponse.json(
             { 
               success: false, 
-              error: 'Network error connecting to database. Please check Supabase URL and network connectivity.',
-              details: `Client error: ${errorMsg}, REST API error: ${restErrorMsg}`
+              error: 'Network error connecting to database. Please verify SUPABASE_URL and SUPABASE_ANON_KEY are set correctly in Vercel environment variables.',
+              details: `Client error: ${errorMsg}, REST API error: ${restErrorName}: ${restErrorMsg}`,
+              troubleshooting: 'Check Vercel Dashboard → Settings → Environment Variables → Ensure SUPABASE_URL and SUPABASE_ANON_KEY are set for Production environment'
             },
             { status: 500 }
           );
