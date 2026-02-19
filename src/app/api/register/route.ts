@@ -1,10 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, phone } = body;
+
+    // Get Supabase credentials from server-side env vars
+    const supabaseUrl = process.env.SUPABASE_URL || '';
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('❌ Supabase environment variables not configured on server');
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable' },
+        { status: 500 }
+      );
+    }
+
+    // Create Supabase client
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     // Trim both values
     const trimmedEmail = email?.trim() || '';
