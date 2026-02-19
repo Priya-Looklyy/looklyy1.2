@@ -82,12 +82,20 @@ export async function POST(request: NextRequest) {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
+    // Extract project ID from URL for verification
+    const projectIdMatch = supabaseUrl?.match(/https:\/\/([^.]+)\.supabase\.co/);
+    const projectId = projectIdMatch ? projectIdMatch[1] : 'UNKNOWN';
+    
     console.log('🔐 Supabase environment check:', {
       hasUrl: !!supabaseUrl,
       hasKey: !!supabaseAnonKey,
       urlLength: supabaseUrl?.length || 0,
       keyLength: supabaseAnonKey?.length || 0,
-      urlPrefix: supabaseUrl ? supabaseUrl.substring(0, 20) + '...' : 'MISSING',
+      urlPrefix: supabaseUrl ? supabaseUrl.substring(0, 30) + '...' : 'MISSING',
+      projectId: projectId,
+      fullUrl: supabaseUrl || 'MISSING',
+      nodeEnv: process.env.NODE_ENV,
+      vercelEnv: process.env.VERCEL_ENV || 'unknown',
     });
 
     if (!supabaseUrl || !supabaseAnonKey) {
