@@ -200,11 +200,50 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Handle other database errors
+      // Return detailed error for debugging (safe to expose to client)
+      const errorMessage = error.message || 'Unknown database error';
+      const errorCode = error.code || 'UNKNOWN';
+      
+      // Check for common issues
+      if (error.message?.includes('relation') || error.message?.includes('does not exist')) {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: 'Database table not found. Please check Supabase configuration.',
+            details: `Table 'waitlist' may not exist. Error: ${errorMessage}`
+          },
+          { status: 500 }
+        );
+      }
+      
+      if (error.message?.includes('permission') || error.message?.includes('policy')) {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: 'Database permission error. Please check Row Level Security policies.',
+            details: `RLS policy may be blocking insert. Error: ${errorMessage}`
+          },
+          { status: 500 }
+        );
+      }
+      
+      if (error.message?.includes('column') || error.message?.includes('field')) {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: 'Database schema mismatch. Column names may not match.',
+            details: `Schema error: ${errorMessage}`
+          },
+          { status: 500 }
+        );
+      }
+
+      // Return the actual error message for other cases
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Failed to save your information. Please try again later.' 
+          error: `Database error: ${errorMessage}`,
+          code: errorCode
         },
         { status: 500 }
       );
