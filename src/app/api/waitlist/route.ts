@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
             email: trimmedEmail,
             phone_number: trimmedPhone || null,
           },
-        ])
+        ] as any)
         .select();
 
       console.log('📊 Supabase insert result:', {
