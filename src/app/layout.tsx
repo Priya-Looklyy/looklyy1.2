@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Looklyy - Recreate Fashion Looks from Your Wardrobe",
-  description: "Stop scrolling endlessly. See a look you love? Looklyy shows you how to recreate it with clothes you already own. Pre-register for early access.",
-  keywords: "fashion, wardrobe, styling, personal styling, fashion app, wardrobe management, AI fashion",
+  title: "Looklyy - What if You could see Why some Outfits Work for you",
+  description: "What if you could see why some outfits work for you? Join the waitlist.",
+  keywords: "fashion, styling, fashion app, waitlist",
   icons: {
     icon: [
       { url: "/favicon.svg", sizes: "any", type: "image/svg+xml" },
@@ -27,15 +27,15 @@ export const metadata: Metadata = {
     apple: ["/apple-touch-icon.svg"],
   },
   openGraph: {
-    title: "Looklyy - Recreate Fashion Looks from Your Wardrobe",
-    description: "Stop scrolling endlessly. See a look you love? Looklyy shows you how to recreate it with clothes you already own.",
+    title: "Looklyy - What if You could see Why some Outfits Work for you",
+    description: "What if you could see why some outfits work for you? Join the waitlist.",
     type: "website",
     siteName: "Looklyy",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Looklyy - Recreate Fashion Looks from Your Wardrobe",
-    description: "Stop scrolling endlessly. See a look you love? Looklyy shows you how to recreate it with clothes you already own.",
+    title: "Looklyy - What if You could see Why some Outfits Work for you",
+    description: "What if you could see why some outfits work for you? Join the waitlist.",
   },
   robots: {
     index: true,
@@ -56,11 +56,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.svg" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.svg" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
-        {/* Roboto Mono font for Section2 */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap"
-          rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap" rel="stylesheet" />
         {/* Privacy-friendly analytics by Plausible */}
         <Script
           async

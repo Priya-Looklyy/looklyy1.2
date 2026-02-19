@@ -149,3 +149,88 @@ html {
     margin-right: auto;
   }
 }
+
+/* Landing page design - cream background, Roboto Mono, orange accent */
+.landing-page {
+  font-family: 'Roboto Mono', monospace;
+  background-color: #fdf3c0;
+}
+
+.landing-page .landing-accent {
+  color: #ffa114;
+}
+
+.landing-page .landing-input {
+  border-color: #ffa114;
+}
+
+.landing-page .landing-input:focus {
+  outline: none;
+  border-color: #ffa114;
+  box-shadow: 0 0 0 1px #ffa114;
+}
+
+.landing-page .landing-btn {
+  background-color: #ffa114;
+  color: #fdf3c0;
+}
+
+.landing-page .landing-btn:hover:not(:disabled) {
+  background-color: #e89010;
+}
+
+.landing-page .landing-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Override form components in landing theme */
+.landing-page input[type="email"]:focus,
+.landing-page input[type="tel"]:focus {
+  border-color: #ffa114 !important;
+}
+
+.landing-page .extended-content button.bg-purple-600,
+.landing-page .extended-content button.bg-purple-700,
+.landing-page .extended-content button[class*="bg-purple"] {
+  background-color: #ffa114 !important;
+}
+
+.landing-page .extended-content button:hover:not(:disabled) {
+  background-color: #e89010 !important;
+}
+
+.landing-page .logo-placeholder {
+  width: clamp(72px, 18vw, 129px);
+  height: clamp(72px, 18vw, 129px);
+}
+
+/* Landing page responsive */
+@media (max-width: 640px) {
+  .landing-page .wrapper {
+    padding: 16px;
+    padding-right: 0;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  .landing-page .main-content { padding-right: 16px; }
+  .landing-page header { margin-bottom: 32px; padding-right: 16px; }
+  .landing-page .text-what-if { font-size: 25.436px !important; }
+  .landing-page .text-you-could { font-size: 26.496px !important; }
+  .landing-page .text-why-some { font-size: 44.16px !important; }
+  .landing-page .text-box { width: calc(100% + 16px); margin-left: -16px; padding-left: 18.4px; }
+  .landing-page .extended-content { width: calc(100% + 16px); margin-left: -16px; margin-right: -16px; }
+}
+@media (max-width: 480px) {
+  .landing-page .wrapper {
+    padding: 12px;
+    padding-right: 0;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .landing-page .main-content { padding-right: 12px; }
+  .landing-page header { margin-bottom: 24px; padding-right: 12px; }
+  .landing-page .text-what-if { font-size: 23.846px !important; }
+  .landing-page .text-you-could { font-size: 24.84px !important; }
+  .landing-page .text-why-some { font-size: 41.4px !important; }
+  .landing-page .text-box { width: calc(100% + 12px); margin-left: -12px; padding-left: 13.8px; }
+  .landing-page .extended-content { width: calc(100% + 12px); margin-left: -12px; margin-right: -12px; }
+}

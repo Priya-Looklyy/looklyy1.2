@@ -40,7 +40,11 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-src 'self' https://www.canva.com https://*.canva.com;"
+            value: "frame-src 'self' https://www.canva.com https://*.canva.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.canva.com https://*.canva.com;"
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'screen-wake-lock=(self "https://www.canva.com" "https://*.canva.com"), autoplay=(self "https://www.canva.com" "https://*.canva.com"), fullscreen=(self "https://www.canva.com" "https://*.canva.com")'
           },
         ],
       },
