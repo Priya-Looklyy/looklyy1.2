@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Force Node.js runtime (not Edge) for Supabase SDK compatibility
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   // Initialize error tracking
@@ -131,13 +132,13 @@ export async function POST(request: NextRequest) {
           autoRefreshToken: false,
           detectSessionInUrl: false,
         },
-        global: {
-          fetch: fetch, // Use Next.js built-in fetch
-        },
       });
       console.log('✅ Supabase client created successfully');
     } catch (clientError) {
-      console.error('❌ Failed to create Supabase client:', clientError);
+      console.error('❌ Failed to create Supabase client:', {
+        message: clientError instanceof Error ? clientError.message : String(clientError),
+        name: clientError instanceof Error ? clientError.name : 'Unknown',
+      });
       return NextResponse.json(
         { 
           success: false, 
