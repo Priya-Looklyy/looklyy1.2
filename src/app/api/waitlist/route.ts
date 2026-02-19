@@ -126,23 +126,27 @@ export async function POST(request: NextRequest) {
 
     // Create Supabase client with explicit configuration for server-side
     try {
-      supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-      });
+      // Use minimal config - let Supabase handle defaults
+      supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
       console.log('✅ Supabase client created successfully');
+      
+      // Test connection with a simple query
+      const { error: testError } = await supabaseClient.from('waitlist').select('email').limit(1);
+      if (testError && !testError.message.includes('permission') && !testError.message.includes('relation')) {
+        console.error('❌ Supabase connection test failed:', testError.message);
+        throw new Error(`Supabase connection failed: ${testError.message}`);
+      }
+      console.log('✅ Supabase connection test passed');
     } catch (clientError) {
-      console.error('❌ Failed to create Supabase client:', {
+      console.error('❌ Failed to create/test Supabase client:', {
         message: clientError instanceof Error ? clientError.message : String(clientError),
         name: clientError instanceof Error ? clientError.name : 'Unknown',
+        stack: clientError instanceof Error ? clientError.stack?.substring(0, 300) : undefined,
       });
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Failed to initialize database connection. Please try again later.' 
+          error: `Database connection failed: ${clientError instanceof Error ? clientError.message : 'Unknown error'}` 
         },
         { status: 500 }
       );
