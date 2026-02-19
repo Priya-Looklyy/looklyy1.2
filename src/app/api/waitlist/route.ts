@@ -49,10 +49,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create Supabase client with explicit fetch for server-side
+    // Create Supabase client with explicit configuration for server-side
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+      global: {
+        fetch: fetch, // Use Next.js built-in fetch
       },
     });
 
