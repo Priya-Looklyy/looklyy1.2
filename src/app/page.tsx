@@ -378,65 +378,12 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Believe in the idea - full-width panel */}
-            <div
-              className="w-screen mt-12 mb-8 flex flex-col overflow-hidden"
-              style={{
-                marginLeft: 'calc(-50vw + 50%)',
-                marginRight: 'calc(-50vw + 50%)',
-                backgroundColor: '#ffd864',
-                minHeight: '400px',
-                fontFamily: "'Roboto Mono', monospace",
-              }}
-            >
-              <h3
-                className="font-bold text-left w-full px-6 md:px-10 pt-6 pb-3 uppercase tracking-wide"
-                style={{
-                  fontSize: 'clamp(17px, 4.2vw, 22px)',
-                  color: '#ffa114',
-                  letterSpacing: '0.02em',
-                }}
-              >
-                BELIEVE IN THE IDEA?
-              </h3>
-              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-0 min-h-0 px-4 md:px-8 pb-6">
-                {/* Illustration: on mobile first (top), on md+ left */}
-                <div className="flex items-center justify-center overflow-hidden p-4 order-1 min-h-[200px] md:min-h-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/refs/heads/master/public/assets/illustrations/Co-Founder.svg"
-                    alt="Co-Founder"
-                    loading="lazy"
-                    className="w-full h-full max-h-[280px] md:max-h-none object-contain"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.background = '#ffd864';
-                      (e.target as HTMLImageElement).alt = 'Image unavailable';
-                    }}
-                  />
-                </div>
-                {/* Text: on mobile second (bottom), on md+ right; left aligned, vertical center */}
-                <div className="flex items-center px-4 md:px-6 py-4 order-2">
-                  <p
-                    className="font-normal text-left w-full"
-                    style={{
-                      fontSize: 'clamp(14px, 2.2vw, 18px)',
-                      lineHeight: 1.4,
-                      color: '#000000',
-                    }}
-                  >
-                    I&apos;m looking for a Co-Founder to shape this idea
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* Write to me + email - full width, no bleed top/bottom/sides */}
             <div
-              className="w-screen py-8 px-4"
+              className="w-screen py-8 px-4 mt-12"
               style={{
                 marginLeft: 'calc(-50vw + 50%)',
                 marginRight: 'calc(-50vw + 50%)',
-                marginTop: '-2rem',
                 marginBottom: '-2rem',
                 backgroundColor: '#ffd864',
               }}

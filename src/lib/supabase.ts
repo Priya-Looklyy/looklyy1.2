@@ -1,21 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
-
-// Get environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
-
-// Create Supabase client with fallback for missing env vars
-let supabase: ReturnType<typeof createClient>;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Missing Supabase environment variables. Supabase features will be disabled.');
-  // Create a mock client that won't crash the app
-  supabase = createClient('https://placeholder.supabase.co', 'placeholder-key');
-} else {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-}
-
-export { supabase };
+// Note: Supabase operations are handled via API routes (/api/waitlist)
+// This allows us to use server-side environment variables securely
+// No client-side Supabase client is needed for the waitlist forms
 
 // Submit waitlist function - now uses API route to access server-side env vars
 export async function submitWaitlist(email: string, phone: string | null): Promise<{ success: boolean; error?: string }> {
