@@ -8,6 +8,10 @@ export async function GET() {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
+  // Extract project ID from URL for verification
+  const projectIdMatch = supabaseUrl?.match(/https:\/\/([^.]+)\.supabase\.co/);
+  const projectId = projectIdMatch ? projectIdMatch[1] : 'UNKNOWN';
+  
   const diagnostics: any = {
     timestamp: new Date().toISOString(),
     environment: {
@@ -17,7 +21,13 @@ export async function GET() {
       keyLength: supabaseAnonKey?.length || 0,
       urlPrefix: supabaseUrl ? supabaseUrl.substring(0, 30) + '...' : 'MISSING',
       keyPrefix: supabaseAnonKey ? supabaseAnonKey.substring(0, 20) + '...' : 'MISSING',
+      // Show full URL and project ID for verification
+      urlFull: supabaseUrl || 'MISSING',
+      projectId: projectId,
+      expectedProjectId: 'czxyxvfbddjrxnykfghh',
+      isCorrectProject: projectId === 'czxyxvfbddjrxnykfghh',
       nodeEnv: process.env.NODE_ENV,
+      vercelEnv: process.env.VERCEL_ENV || 'unknown',
     },
   };
 
