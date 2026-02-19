@@ -180,6 +180,66 @@ export async function POST(request: NextRequest) {
         hasError: !!insertResult.error,
         dataLength: insertResult.data?.length || 0,
       });
+      
+      // Check if Supabase returned a fetch error - trigger REST API fallback immediately
+      if (insertResult.error) {
+        const errorMsg = insertResult.error.message || '';
+        if (errorMsg.includes('fetch') || errorMsg.includes('TypeError') || errorMsg.includes('network')) {
+          console.log('🔄 Supabase client fetch failed, trying direct REST API call as fallback...');
+          
+          try {
+            const restUrl = `${supabaseUrl}/rest/v1/waitlist`;
+            console.log('🌐 Calling REST API:', restUrl);
+            
+            const response = await fetch(restUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': supabaseAnonKey,
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+                'Prefer': 'return=representation',
+              },
+              body: JSON.stringify({
+                email: trimmedEmail,
+                phone_number: trimmedPhone || null,
+              }),
+            });
+
+            console.log('📡 REST API response status:', response.status);
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error('❌ Direct REST API call failed:', response.status, errorText);
+              return NextResponse.json(
+                { 
+                  success: false, 
+                  error: `Database error: ${response.status} ${response.statusText}`,
+                  details: errorText.substring(0, 200)
+                },
+                { status: 500 }
+              );
+            }
+
+            const data = await response.json();
+            console.log('✅ Direct REST API call succeeded:', data);
+            return NextResponse.json(
+              { success: true },
+              { status: 200 }
+            );
+          } catch (restError) {
+            const restErrorMsg = restError instanceof Error ? restError.message : String(restError);
+            console.error('❌ Direct REST API fallback also failed:', restErrorMsg);
+            return NextResponse.json(
+              { 
+                success: false, 
+                error: 'Network error connecting to database. Please check Supabase URL and network connectivity.',
+                details: `Client error: ${errorMsg}, REST API error: ${restErrorMsg}`
+              },
+              { status: 500 }
+            );
+          }
+        }
+      }
     } catch (insertError) {
       const errorMsg = insertError instanceof Error ? insertError.message : String(insertError);
       const errorName = insertError instanceof Error ? insertError.name : 'Unknown';
@@ -251,6 +311,74 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Check if Supabase returned an error object (not thrown exception)
+    if (insertResult.error) {
+      const error = insertResult.error;
+      const errorMsg = error.message || 'Unknown error';
+      
+      console.error('❌ Supabase returned error object:', {
+        message: errorMsg,
+        code: error.code,
+        details: error.details,
+      });
+      
+      // If it's a fetch/network error, try REST API fallback
+      if (errorMsg.includes('fetch') || errorMsg.includes('network') || errorMsg.includes('ECONNREFUSED') || errorMsg.includes('TypeError')) {
+        console.log('🔄 Supabase client fetch failed, trying direct REST API call as fallback...');
+        
+        try {
+          const restUrl = `${supabaseUrl}/rest/v1/waitlist`;
+          console.log('🌐 Calling REST API:', restUrl);
+          
+          const response = await fetch(restUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': supabaseAnonKey,
+              'Authorization': `Bearer ${supabaseAnonKey}`,
+              'Prefer': 'return=representation',
+            },
+            body: JSON.stringify({
+              email: trimmedEmail,
+              phone_number: trimmedPhone || null,
+            }),
+          });
+
+          console.log('📡 REST API response status:', response.status);
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Direct REST API call failed:', response.status, errorText);
+            return NextResponse.json(
+              { 
+                success: false, 
+                error: `Database error: ${response.status} ${response.statusText}`,
+                details: errorText.substring(0, 200)
+              },
+              { status: 500 }
+            );
+          }
+
+          const data = await response.json();
+          console.log('✅ Direct REST API call succeeded:', data);
+          return NextResponse.json(
+            { success: true },
+            { status: 200 }
+          );
+        } catch (restError) {
+          const restErrorMsg = restError instanceof Error ? restError.message : String(restError);
+          console.error('❌ Direct REST API fallback also failed:', restErrorMsg);
+          return NextResponse.json(
+            { 
+              success: false, 
+              error: 'Network error connecting to database. Please check Supabase URL and network connectivity.',
+              details: `Client error: ${errorMsg}, REST API error: ${restErrorMsg}`
+            },
+            { status: 500 }
+          );
+        }
+      }
 
     // Handle Supabase response errors
     if (insertResult.error) {
