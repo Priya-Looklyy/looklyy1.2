@@ -9,15 +9,17 @@ import type { Step } from '@/types/flow';
 
 export default function Home() {
   const [step, setStep] = useState<Step>('email');
-  const [error, setError] = useState('');
+  // Separate error state for each form
+  const [form1Error, setForm1Error] = useState('');
+  const [form2Error, setForm2Error] = useState('');
   const [showThankYou, setShowThankYou] = useState(false);
+  // Separate state for each form instance
+  const [form1Submitted, setForm1Submitted] = useState(false);
+  const [form2Submitted, setForm2Submitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const joined = localStorage.getItem('joined_waitlist');
-      if (joined === 'true') setStep('success');
-    }
-  }, []);
+  // Removed localStorage check - it was causing both forms to disappear on page load
+  // Each form should work independently
 
   useEffect(() => {
     if (showThankYou) {
@@ -26,22 +28,78 @@ export default function Home() {
     }
   }, [showThankYou]);
 
-  const submitWaitlist = async (e: string, phone: string) => {
-    if (step === 'submitting' || step === 'success') return;
-    setError('');
-    setStep('submitting');
-
-    const result = await submitWaitlistToDB(e, phone || null);
-    if (!result.success) {
-      setError(result.error || 'Something went wrong');
-      setStep('email');
+  const submitWaitlist = async (e: string, phone: string, formId: 'form1' | 'form2') => {
+    // Prevent double submission
+    if (isSubmitting) {
+      console.log('⏸️ Already submitting, ignoring duplicate request');
       return;
     }
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('joined_waitlist', 'true');
+    
+    // Check if this specific form was already submitted
+    if (formId === 'form1' && form1Submitted) {
+      console.log('⏸️ Form 1 already submitted');
+      return;
     }
-    setStep('success');
-    setShowThankYou(true);
+    if (formId === 'form2' && form2Submitted) {
+      console.log('⏸️ Form 2 already submitted');
+      return;
+    }
+
+    console.log(`📤 Submitting form ${formId} with email:`, e);
+    
+    // Clear error for the specific form
+    if (formId === 'form1') {
+      setForm1Error('');
+    } else {
+      setForm2Error('');
+    }
+    
+    setIsSubmitting(true);
+
+    try {
+      const result = await submitWaitlistToDB(e, phone || null);
+      
+      console.log(`📥 Form ${formId} submission result:`, result);
+      
+      if (!result.success) {
+        console.error(`❌ Form ${formId} submission failed:`, result.error);
+        // Set error for the specific form
+        if (formId === 'form1') {
+          setForm1Error(result.error || 'Something went wrong');
+        } else {
+          setForm2Error(result.error || 'Something went wrong');
+        }
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Mark this specific form as submitted (only this one!)
+      if (formId === 'form1') {
+        console.log('✅ Form 1 submitted successfully');
+        setForm1Submitted(true);
+        setForm1Error(''); // Clear any previous errors
+      } else {
+        console.log('✅ Form 2 submitted successfully');
+        setForm2Submitted(true);
+        setForm2Error(''); // Clear any previous errors
+      }
+      
+      // Don't set localStorage - let each form work independently
+      setIsSubmitting(false);
+      setShowThankYou(true);
+      
+      // Update step for backward compatibility (for SuccessStep component)
+      setStep('success');
+    } catch (err) {
+      console.error(`❌ Unexpected error in form ${formId}:`, err);
+      const errorMsg = 'An unexpected error occurred. Please try again.';
+      if (formId === 'form1') {
+        setForm1Error(errorMsg);
+      } else {
+        setForm2Error(errorMsg);
+      }
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -188,12 +246,25 @@ export default function Home() {
                   (e.target as HTMLImageElement).alt = 'Illustration unavailable';
                 }}
               />
-              {step !== 'success' && (
+              {!form1Submitted ? (
                 <IllustrationWaitlistForm
-                  onSubmit={submitWaitlist}
-                  isSubmitting={step === 'submitting'}
-                  error={error}
+                  onSubmit={(email, phone) => submitWaitlist(email, phone, 'form1')}
+                  isSubmitting={isSubmitting}
+                  error={form1Error}
                 />
+              ) : (
+                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                  <p
+                    className="text-center font-medium"
+                    style={{
+                      fontFamily: "'Roboto Mono', monospace",
+                      color: '#fdf3c0',
+                      fontSize: 'clamp(16px, 3.5vw, 20px)',
+                    }}
+                  >
+                    You&apos;re on the list.
+                  </p>
+                </div>
               )}
             </div>
 
@@ -407,12 +478,25 @@ export default function Home() {
                 background: 'linear-gradient(135deg, #ffa114 0%, #ff8c00 100%)',
               }}
             >
-              {step !== 'success' && (
+              {!form2Submitted ? (
                 <IllustrationWaitlistForm
-                  onSubmit={submitWaitlist}
-                  isSubmitting={step === 'submitting'}
-                  error={error}
+                  onSubmit={(email, phone) => submitWaitlist(email, phone, 'form2')}
+                  isSubmitting={isSubmitting}
+                  error={form2Error}
                 />
+              ) : (
+                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                  <p
+                    className="text-center font-medium"
+                    style={{
+                      fontFamily: "'Roboto Mono', monospace",
+                      color: '#fdf3c0',
+                      fontSize: 'clamp(16px, 3.5vw, 20px)',
+                    }}
+                  >
+                    You&apos;re on the list.
+                  </p>
+                </div>
               )}
             </div>
 

@@ -27,11 +27,33 @@ export default function IllustrationWaitlistForm({
     e.preventDefault();
     const trimmedEmail = email.trim();
     const trimmedPhone = phone.trim();
-    if (!trimmedEmail) return;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) return;
+    
+    // Validate email
+    if (!trimmedEmail) {
+      console.warn('⚠️ Email is required');
+      return;
+    }
+    
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      console.warn('⚠️ Invalid email format:', trimmedEmail);
+      return;
+    }
+    
+    // Validate phone (optional, but if provided must be valid)
     const digits = trimmedPhone.replace(/\D/g, '');
-    if (digits.length > 0 && (digits.length < 7 || digits.length > 16)) return;
-    await onSubmit(trimmedEmail, trimmedPhone || '');
+    if (digits.length > 0 && (digits.length < 7 || digits.length > 16)) {
+      console.warn('⚠️ Invalid phone format:', trimmedPhone);
+      return;
+    }
+    
+    console.log('📝 Form submitting:', { email: trimmedEmail, phone: trimmedPhone || 'not provided' });
+    
+    try {
+      await onSubmit(trimmedEmail, trimmedPhone || '');
+      // Don't clear fields here - let the parent component handle success state
+    } catch (err) {
+      console.error('❌ Form submission error:', err);
+    }
   };
 
   const showEmailPlaceholder = !emailFocused && !email;
