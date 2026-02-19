@@ -100,9 +100,14 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('❌ Unexpected error submitting waitlist:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+    console.error('❌ Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined,
+    });
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { success: false, error: 'Failed to submit. Please try again later.' },
+      { success: false, error: errorMessage || 'Failed to submit. Please try again later.' },
       { status: 500 }
     );
   }
