@@ -163,15 +163,19 @@ export async function POST(request: NextRequest) {
         dataLength: insertResult.data?.length || 0,
       });
     } catch (insertError) {
+      const errorMsg = insertError instanceof Error ? insertError.message : String(insertError);
       console.error('❌ Supabase insert exception:', {
-        message: insertError instanceof Error ? insertError.message : String(insertError),
+        message: errorMsg,
         name: insertError instanceof Error ? insertError.name : 'Unknown',
-        stack: insertError instanceof Error ? insertError.stack?.substring(0, 200) : undefined,
+        stack: insertError instanceof Error ? insertError.stack?.substring(0, 300) : undefined,
       });
+      
+      // Return the actual error message for debugging
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Failed to save your information. Please try again later.' 
+          error: `Insert failed: ${errorMsg}`,
+          details: 'Check Vercel logs for full error details'
         },
         { status: 500 }
       );
