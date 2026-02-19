@@ -126,8 +126,19 @@ export async function POST(request: NextRequest) {
 
     // Create Supabase client with explicit configuration for server-side
     try {
-      // Use minimal config - let Supabase handle defaults
-      supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+      // Verify Supabase URL is accessible
+      console.log('🔗 Testing Supabase URL connectivity...');
+      const testUrl = new URL(supabaseUrl);
+      console.log('✅ Supabase URL is valid:', testUrl.hostname);
+      
+      // Create client with minimal config - let Supabase handle fetch internally
+      supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      });
       console.log('✅ Supabase client created successfully');
     } catch (clientError) {
       console.error('❌ Failed to create Supabase client:', {
@@ -164,18 +175,33 @@ export async function POST(request: NextRequest) {
       });
     } catch (insertError) {
       const errorMsg = insertError instanceof Error ? insertError.message : String(insertError);
+      const errorName = insertError instanceof Error ? insertError.name : 'Unknown';
+      
       console.error('❌ Supabase insert exception:', {
         message: errorMsg,
-        name: insertError instanceof Error ? insertError.name : 'Unknown',
-        stack: insertError instanceof Error ? insertError.stack?.substring(0, 300) : undefined,
+        name: errorName,
+        stack: insertError instanceof Error ? insertError.stack?.substring(0, 500) : undefined,
+        cause: insertError instanceof Error && 'cause' in insertError ? insertError.cause : undefined,
       });
+      
+      // Check if it's a fetch/network error
+      if (errorMsg.includes('fetch') || errorMsg.includes('network') || errorMsg.includes('ECONNREFUSED')) {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: 'Network error connecting to database. Please check Supabase URL and network connectivity.',
+            details: errorMsg
+          },
+          { status: 500 }
+        );
+      }
       
       // Return the actual error message for debugging
       return NextResponse.json(
         { 
           success: false, 
-          error: `Insert failed: ${errorMsg}`,
-          details: 'Check Vercel logs for full error details'
+          error: `Database error: ${errorMsg}`,
+          code: errorName
         },
         { status: 500 }
       );
