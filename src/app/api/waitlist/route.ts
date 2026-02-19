@@ -158,6 +158,11 @@ export async function POST(request: NextRequest) {
     // Insert into waitlist table with error handling
     let insertResult;
     try {
+      console.log('📝 Attempting to insert into waitlist table:', {
+        email: trimmedEmail.substring(0, 10) + '...',
+        hasPhone: !!trimmedPhone,
+      });
+      
       insertResult = await supabaseClient
         .from('waitlist')
         .insert([
