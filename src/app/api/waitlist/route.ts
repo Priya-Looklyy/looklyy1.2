@@ -49,8 +49,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create Supabase client
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    // Create Supabase client with explicit fetch for server-side
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+      },
+    });
 
     // Prepare phone number (optional)
     const trimmedPhone = phone && typeof phone === 'string' ? phone.trim() : null;
