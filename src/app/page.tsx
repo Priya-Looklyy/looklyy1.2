@@ -139,20 +139,8 @@ export default function Home() {
           {/* HeadText Box */}
           <div className="text-box w-[calc(100%+24px)] -ml-6 bg-transparent py-6 pl-7 -mb-2">
             <div className="flex flex-wrap gap-2 leading-[1.12] items-baseline">
-              <span className="text-what-if font-light uppercase" style={{ fontSize: '31.795px', color: '#ffa114' }}>
-                What if
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2 leading-[1.12] items-baseline">
               <span className="text-you-could font-bold uppercase" style={{ fontSize: '33.12px', color: '#ffa114' }}>
-                You could see
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2 leading-[1.12] items-baseline">
-              <span className="text-why-some font-bold uppercase" style={{ fontSize: '55.2px', color: '#ffa114' }}>
-                Why some Outfits
-                <br />
-                Work for you
+                What if you could Learn how to wear them while you shop?
               </span>
             </div>
           </div>
@@ -177,75 +165,32 @@ export default function Home() {
         {/* Extended Content - Waitlist Form */}
         <div className="extended-content w-[calc(100%+24px)] -ml-6 -mr-6 bg-[#fdf3c0] p-6 min-h-[400px]">
           <div className="max-w-xl mx-auto">
-            {/* Conversation section - responsive HTML text instead of SVG text */}
+            {/* Single CTA line - same style as former "We are exploring the idea" */}
             <div
-              className="w-full py-5 mb-6 flex flex-col items-center"
+              className="w-full py-5 mb-6 flex flex-col items-center justify-center"
               style={{ fontFamily: "'Roboto Mono', monospace", color: '#ffa114' }}
             >
               <p
-                className="font-bold uppercase w-full text-left mb-4"
+                className="font-bold uppercase text-center"
                 style={{
                   fontSize: 'clamp(20px, 5vw, 33.12px)',
                   lineHeight: 1.12,
                 }}
               >
-                We are exploring the idea
-              </p>
-
-              {/* Speech bubble with VOICE YOUR THOUGHTS */}
-              <div
-                className="relative w-full max-w-[420px] py-6 px-6 mb-4 flex items-center justify-center"
-                style={{
-                  backgroundColor: '#ff8c00',
-                  boxShadow: '0 4px 20px rgba(255, 140, 0, 0.3)',
-                }}
-              >
-                <div
-                  className="absolute -bottom-4 left-8 w-0 h-0 border-l-[20px] border-r-[20px] border-t-[24px] border-l-transparent border-r-transparent border-t-[#ff8c00]"
-                  style={{ transform: 'rotate(-15deg)' }}
-                />
-                <p
-                  className="font-bold uppercase text-white text-center leading-tight"
-                  style={{
-                    fontSize: 'clamp(18px, 4.5vw, 28px)',
-                  }}
-                >
-                  Voice your thoughts
-                </p>
-              </div>
-
-              <p
-                className="font-bold uppercase w-full text-left"
-                style={{
-                  fontSize: 'clamp(20px, 5vw, 33.12px)',
-                  lineHeight: 1.12,
-                }}
-              >
-                How you decide what to wear
+                Curious? Join the early list.
               </p>
             </div>
 
-            {/* Full-width Phone & Email illustration with overlay form */}
+            {/* Full-width form section (no illustration) */}
             <div
               className="relative w-screen overflow-hidden my-6 flex items-center justify-center"
               style={{
                 marginLeft: 'calc(-50vw + 50%)',
                 marginRight: 'calc(-50vw + 50%)',
-                aspectRatio: '16 / 10',
+                minHeight: '280px',
                 background: 'linear-gradient(135deg, #ffa114 0%, #ff8c00 100%)',
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/refs/heads/master/public/assets/illustrations/Illustration_Phone%26Email.svg"
-                alt="Phone and Email illustration"
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.background = 'rgba(255, 255, 255, 0.1)';
-                  (e.target as HTMLImageElement).alt = 'Illustration unavailable';
-                }}
-              />
               {!form1Submitted ? (
                 <IllustrationWaitlistForm
                   onSubmit={(email, phone) => submitWaitlist(email, phone, 'form1')}
