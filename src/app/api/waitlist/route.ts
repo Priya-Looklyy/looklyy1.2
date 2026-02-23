@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/../lib/db';
 
-// Force Node.js runtime (not Edge) so Prisma can connect reliably
+// Waitlist form submissions are saved to the registrations table (Postgres via Prisma).
+// Force Node.js runtime (not Edge) so Prisma can connect reliably.
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Basic phone validation (still collected, but not yet stored in DB)
+    // Phone validation and normalize for storage
     let trimmedPhone: string | null = null;
     if (phone && typeof phone === 'string') {
       trimmedPhone = phone.trim();
@@ -65,22 +66,23 @@ export async function POST(request: NextRequest) {
       if (phoneDigits.length === 0) trimmedPhone = null;
     }
 
-    // Write to Postgres via Prisma (Registration table)
-    // We treat duplicate emails as success, so users can submit multiple times safely.
+    // Write to Postgres via Prisma (Registration table), including phone_number
     try {
       await prisma.registration.upsert({
         where: { email: trimmedEmail },
         update: {
           updatedAt: new Date(),
+          phoneNumber: trimmedPhone,
         },
         create: {
           email: trimmedEmail,
+          phoneNumber: trimmedPhone,
         },
       });
 
       console.log('✅ Waitlist stored via Prisma Registration:', {
         email: trimmedEmail.substring(0, 10) + '...',
-        phoneProvided: !!trimmedPhone,
+        phoneStored: !!trimmedPhone,
       });
 
       return NextResponse.json({ success: true }, { status: 200 });

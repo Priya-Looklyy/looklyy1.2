@@ -55,11 +55,12 @@ model LookPin {
 
 // Pre-registration waitlist model
 model Registration {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  phoneNumber  String?  @map("phone_number")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@map("registrations")
 }
