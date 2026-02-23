@@ -9,13 +9,9 @@ import type { Step } from '@/types/flow';
 
 export default function Home() {
   const [step, setStep] = useState<Step>('email');
-  // Separate error state for each form
   const [form1Error, setForm1Error] = useState('');
-  const [form2Error, setForm2Error] = useState('');
   const [showThankYou, setShowThankYou] = useState(false);
-  // Separate state for each form instance
   const [form1Submitted, setForm1Submitted] = useState(false);
-  const [form2Submitted, setForm2Submitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Removed localStorage check - it was causing both forms to disappear on page load
@@ -28,76 +24,34 @@ export default function Home() {
     }
   }, [showThankYou]);
 
-  const submitWaitlist = async (e: string, phone: string, formId: 'form1' | 'form2') => {
-    // Prevent double submission
-    if (isSubmitting) {
-      console.log('⏸️ Already submitting, ignoring duplicate request');
-      return;
-    }
-    
-    // Check if this specific form was already submitted
-    if (formId === 'form1' && form1Submitted) {
-      console.log('⏸️ Form 1 already submitted');
-      return;
-    }
-    if (formId === 'form2' && form2Submitted) {
-      console.log('⏸️ Form 2 already submitted');
-      return;
-    }
+  const submitWaitlist = async (e: string, phone: string, formId: 'form1') => {
+    if (isSubmitting) return;
+    if (form1Submitted) return;
 
-    console.log(`📤 Submitting form ${formId} with email:`, e);
-    
-    // Clear error for the specific form
-    if (formId === 'form1') {
-      setForm1Error('');
-    } else {
-      setForm2Error('');
-    }
+    console.log('📤 Submitting form with email:', e);
+    setForm1Error('');
     
     setIsSubmitting(true);
 
     try {
       const result = await submitWaitlistToDB(e, phone || null);
       
-      console.log(`📥 Form ${formId} submission result:`, result);
-      
+      console.log('📥 Form submission result:', result);
+
       if (!result.success) {
-        console.error(`❌ Form ${formId} submission failed:`, result.error);
-        // Set error for the specific form
-        if (formId === 'form1') {
-          setForm1Error(result.error || 'Something went wrong');
-        } else {
-          setForm2Error(result.error || 'Something went wrong');
-        }
+        setForm1Error(result.error || 'Something went wrong');
         setIsSubmitting(false);
         return;
       }
-      
-      // Mark this specific form as submitted (only this one!)
-      if (formId === 'form1') {
-        console.log('✅ Form 1 submitted successfully');
-        setForm1Submitted(true);
-        setForm1Error(''); // Clear any previous errors
-      } else {
-        console.log('✅ Form 2 submitted successfully');
-        setForm2Submitted(true);
-        setForm2Error(''); // Clear any previous errors
-      }
-      
-      // Don't set localStorage - let each form work independently
+
+      setForm1Submitted(true);
+      setForm1Error('');
       setIsSubmitting(false);
       setShowThankYou(true);
-      
-      // Update step for backward compatibility (for SuccessStep component)
       setStep('success');
     } catch (err) {
-      console.error(`❌ Unexpected error in form ${formId}:`, err);
-      const errorMsg = 'An unexpected error occurred. Please try again.';
-      if (formId === 'form1') {
-        setForm1Error(errorMsg);
-      } else {
-        setForm2Error(errorMsg);
-      }
+      console.error('❌ Unexpected error in form:', err);
+      setForm1Error('An unexpected error occurred. Please try again.');
       setIsSubmitting(false);
     }
   };
@@ -136,13 +90,19 @@ export default function Home() {
 
         {/* Main Content */}
         <main className="main-content flex flex-col items-center flex-1 -mt-2 pr-6">
-          {/* HeadText Box */}
-          <div className="text-box w-[calc(100%+24px)] -ml-6 bg-transparent py-6 pl-7 -mb-2">
-            <div className="flex flex-wrap gap-2 leading-[1.12] items-baseline">
-              <span className="text-you-could font-bold uppercase" style={{ fontSize: '33.12px', color: '#ffa114' }}>
-                What if you could Learn how to wear them while you shop?
-              </span>
-            </div>
+          {/* HeadText Box - TT Norms, bold, centre aligned, responsive */}
+          <div className="text-box w-full max-w-[calc(100%+24px)] -ml-6 bg-transparent py-6 px-6 -mb-2 flex justify-center">
+            <p
+              className="text-you-could font-bold text-center"
+              style={{
+                fontFamily: "'TT Norms', -apple-system, sans-serif",
+                fontSize: 'clamp(20px, 5vw, 36px)',
+                lineHeight: 1.2,
+                color: '#ffa114',
+              }}
+            >
+              What if you could learn how to style them while you shop?
+            </p>
           </div>
 
           {/* Illustration - fits container, no cropping (SVG viewBox 375×450) */}
@@ -321,75 +281,6 @@ export default function Home() {
                 </p>
                 <p>Looklyy began as a response to that gap.</p>
               </div>
-            </div>
-
-            {/* Write to me + email - full width, no bleed top/bottom/sides */}
-            <div
-              className="w-screen py-8 px-4 mt-12"
-              style={{
-                marginLeft: 'calc(-50vw + 50%)',
-                marginRight: 'calc(-50vw + 50%)',
-                marginBottom: '-2rem',
-                backgroundColor: '#ffd864',
-              }}
-            >
-              <p
-                className="text-center mb-2"
-                style={{
-                  fontFamily: "'Roboto Mono', monospace",
-                  fontSize: 'clamp(10px, 2.5vw, 12px)',
-                  color: '#000000',
-                  fontWeight: 400,
-                }}
-              >
-                Write to me
-              </p>
-              <div className="flex justify-center">
-                <span
-                  className="inline-block text-center px-4 py-2"
-                  style={{
-                    fontFamily: "'Roboto Mono', monospace",
-                    fontSize: 'clamp(14px, 3.5vw, 17px)',
-                    color: '#000000',
-                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                  }}
-                >
-                  hello@looklyy.com
-                </span>
-              </div>
-            </div>
-
-            {/* Replica waitlist form - same functionality, no illustration */}
-            <div
-              className="relative w-screen my-8 flex items-center justify-center overflow-hidden"
-              style={{
-                marginLeft: 'calc(-50vw + 50%)',
-                marginRight: 'calc(-50vw + 50%)',
-                minHeight: '280px',
-                aspectRatio: '16 / 10',
-                background: 'linear-gradient(135deg, #ffa114 0%, #ff8c00 100%)',
-              }}
-            >
-              {!form2Submitted ? (
-                <IllustrationWaitlistForm
-                  onSubmit={(email, phone) => submitWaitlist(email, phone, 'form2')}
-                  isSubmitting={isSubmitting}
-                  error={form2Error}
-                />
-              ) : (
-                <div className="absolute inset-0 z-10 flex items-center justify-center">
-                  <p
-                    className="text-center font-medium"
-                    style={{
-                      fontFamily: "'Roboto Mono', monospace",
-                      color: '#fdf3c0',
-                      fontSize: 'clamp(16px, 3.5vw, 20px)',
-                    }}
-                  >
-                    You&apos;re on the list.
-                  </p>
-                </div>
-              )}
             </div>
 
             <p
