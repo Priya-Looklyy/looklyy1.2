@@ -72,7 +72,7 @@ export default function Home() {
         <header className="flex justify-between items-center mb-12 gap-4 pr-6">
           <div className="logo-placeholder flex items-center justify-center shrink-0 overflow-hidden">
             <Image
-              src="/assets/Looklyy Logo.svg"
+              src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/refs/heads/master/public/assets/illustrations/Looklyy%20Logo%20(1).svg"
               alt="Looklyy Logo"
               width={129}
               height={129}

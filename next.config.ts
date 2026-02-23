@@ -9,7 +9,10 @@ const nextConfig: NextConfig = {
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
-    domains: [],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'raw.githubusercontent.com', pathname: '/Priya-Looklyy/**' },
+    ],
+    domains: ['raw.githubusercontent.com'],
     unoptimized: true, // Disable optimization to avoid 400 errors
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
