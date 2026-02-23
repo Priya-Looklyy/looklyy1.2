@@ -10,7 +10,7 @@ type IllustrationWaitlistFormProps = {
 
 const PILL_STYLE = {
   fontFamily: "'Roboto Mono', monospace",
-  color: '#fdf3c0',
+  color: '#5a4d6b',
 };
 
 export default function IllustrationWaitlistForm({
@@ -71,7 +71,7 @@ export default function IllustrationWaitlistForm({
           className="rounded-full overflow-hidden flex items-center relative"
           style={{
             ...PILL_STYLE,
-            border: '2px solid #fdf3c0',
+            border: '2px solid #c4b5d4',
             background: 'transparent',
             minHeight: '37px',
           }}
@@ -109,7 +109,7 @@ export default function IllustrationWaitlistForm({
           className="rounded-full overflow-hidden flex items-center relative"
           style={{
             ...PILL_STYLE,
-            border: '2px solid #fdf3c0',
+            border: '2px solid #c4b5d4',
             background: 'transparent',
             minHeight: '37px',
           }}
@@ -153,12 +153,12 @@ export default function IllustrationWaitlistForm({
           className="relative z-20 rounded-full px-8 py-3 border-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 transition-opacity"
           style={{
             fontFamily: "'Roboto Mono', monospace",
-            backgroundColor: 'rgba(253, 243, 192, 0.5)',
+            backgroundColor: 'rgba(250, 247, 252, 0.9)',
             color: '#8f1eae',
             fontSize: 'clamp(13px, 2.8vw, 15px)',
           }}
         >
-          Join the early list
+          Join the Early List
         </button>
       </div>
 

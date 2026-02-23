@@ -150,10 +150,10 @@ html {
   }
 }
 
-/* Landing page design - cream background, Roboto Mono, orange accent */
+/* Landing page design - #faf7fc background, Roboto Mono, orange accent */
 .landing-page {
   font-family: 'Roboto Mono', monospace;
-  background-color: #fdf3c0;
+  background-color: #faf7fc;
 }
 
 .landing-page .landing-accent {
@@ -172,7 +172,7 @@ html {
 
 .landing-page .landing-btn {
   background-color: #ffa114;
-  color: #fdf3c0;
+  color: #faf7fc;
 }
 
 .landing-page .landing-btn:hover:not(:disabled) {

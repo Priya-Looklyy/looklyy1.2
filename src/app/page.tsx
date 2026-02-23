@@ -61,7 +61,7 @@ export default function Home() {
       className="landing-page fixed inset-0 overflow-x-hidden overflow-y-auto"
       style={{
         fontFamily: "'Roboto Mono', monospace",
-        backgroundColor: '#fdf3c0',
+        backgroundColor: '#faf7fc',
       }}
     >
       <div
@@ -93,7 +93,7 @@ export default function Home() {
           {/* HeadText Box - TT Norms, bold, centre aligned, responsive */}
           <div className="text-box w-full max-w-[calc(100%+24px)] -ml-6 bg-transparent py-6 px-6 -mb-2 flex justify-center">
             <p
-              className="text-you-could font-bold text-center"
+              className="text-you-could text-center font-normal"
               style={{
                 fontFamily: "'TT Norms', -apple-system, sans-serif",
                 fontSize: 'clamp(20px, 5vw, 36px)',
@@ -101,7 +101,7 @@ export default function Home() {
                 color: '#ffa114',
               }}
             >
-              What if you could learn how to style them while you shop?
+              What if you could learn how to style while you shop?
             </p>
           </div>
 
@@ -123,21 +123,21 @@ export default function Home() {
         </main>
 
         {/* Extended Content - Waitlist Form */}
-        <div className="extended-content w-[calc(100%+24px)] -ml-6 -mr-6 bg-[#fdf3c0] p-6 min-h-[400px]">
+        <div className="extended-content w-[calc(100%+24px)] -ml-6 -mr-6 bg-[#faf7fc] p-6 min-h-[400px]">
           <div className="max-w-xl mx-auto">
-            {/* Single CTA line - same style as former "We are exploring the idea" */}
+            {/* CTA line - TT Norms, sentence, no bold */}
             <div
               className="w-full py-5 mb-6 flex flex-col items-center justify-center"
-              style={{ fontFamily: "'Roboto Mono', monospace", color: '#ffa114' }}
+              style={{ fontFamily: "'TT Norms', -apple-system, sans-serif", color: '#ffa114' }}
             >
               <p
-                className="font-bold uppercase text-center"
+                className="text-center font-normal"
                 style={{
                   fontSize: 'clamp(20px, 5vw, 33.12px)',
                   lineHeight: 1.12,
                 }}
               >
-                Curious? Join the early list.
+                Curious? Join the Early List
               </p>
             </div>
 
@@ -148,7 +148,7 @@ export default function Home() {
                 marginLeft: 'calc(-50vw + 50%)',
                 marginRight: 'calc(-50vw + 50%)',
                 minHeight: '280px',
-                background: 'linear-gradient(135deg, #ffa114 0%, #ff8c00 100%)',
+                background: '#faf7fc',
               }}
             >
               {!form1Submitted ? (
@@ -163,7 +163,7 @@ export default function Home() {
                     className="text-center font-medium"
                     style={{
                       fontFamily: "'Roboto Mono', monospace",
-                      color: '#fdf3c0',
+                      color: '#5a4d6b',
                       fontSize: 'clamp(16px, 3.5vw, 20px)',
                     }}
                   >
@@ -178,7 +178,7 @@ export default function Home() {
               className="w-[90%] max-w-full mx-auto my-8 py-6 flex flex-col gap-6"
               style={{
                 fontFamily: "'Roboto Mono', monospace",
-                backgroundColor: '#fdf3c0',
+                backgroundColor: '#faf7fc',
               }}
             >
               <h3
@@ -244,7 +244,7 @@ export default function Home() {
                 {/* Left half on desktop - founder photo; second on mobile */}
                 <div
                   className="w-full flex items-center justify-center min-h-[200px] md:min-h-0 order-2 md:order-1"
-                  style={{ backgroundColor: '#fdf3c0' }}
+                  style={{ backgroundColor: '#faf7fc' }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -291,7 +291,15 @@ export default function Home() {
                 fontSize: 'clamp(11px, 2.5vw, 12px)',
               }}
             >
-              Be the first to know when we launch | Looklyy |
+              Be the first to know when we launch |{' '}
+              <a
+                href="mailto:hello@looklyy.com"
+                className="underline hover:opacity-80"
+                style={{ color: 'inherit' }}
+              >
+                hello@looklyy.com
+              </a>{' '}
+              |
               <br />
               By submitting you agree to our terms of Privacy Policy
             </p>
@@ -310,11 +318,11 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
           <div
             className="rounded-lg shadow-xl p-8 max-w-sm w-full text-center"
-            style={{ backgroundColor: '#fdf3c0', border: '2px solid #ffa114' }}
+            style={{ backgroundColor: '#faf7fc', border: '2px solid #ffa114' }}
           >
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ backgroundColor: 'rgba(255, 161, 20, 0.3)' }}
+              style={{ backgroundColor: 'rgba(250, 247, 252, 0.9)' }}
             >
               <svg
                 className="w-6 h-6"
