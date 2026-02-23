@@ -150,15 +150,15 @@ export default function IllustrationWaitlistForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="relative z-20 rounded-full px-8 py-3 border-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 transition-opacity"
+          className="landing-btn relative z-20 rounded-full px-8 py-3 border-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
           style={{
             fontFamily: "'Roboto Mono', monospace",
-            backgroundColor: 'rgba(250, 247, 252, 0.9)',
-            color: '#8f1eae',
+            backgroundColor: '#8f1eae',
+            color: '#faf7fc',
             fontSize: 'clamp(13px, 2.8vw, 15px)',
           }}
         >
-          Join the Early List
+          Join the early list
         </button>
       </div>
 

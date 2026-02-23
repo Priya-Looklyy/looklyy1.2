@@ -81,8 +81,8 @@ export default function Home() {
             />
           </div>
           <span
-            className="hello-text font-light text-[#ffa114] ml-auto"
-            style={{ fontSize: 'clamp(14px, 4vw, 22px)' }}
+            className="hello-text font-light ml-auto"
+            style={{ color: '#8f1eae', fontSize: 'clamp(14px, 4vw, 22px)' }}
           >
             hello
           </span>
@@ -98,7 +98,7 @@ export default function Home() {
                 fontFamily: "'TT Norms', -apple-system, sans-serif",
                 fontSize: 'clamp(20px, 5vw, 36px)',
                 lineHeight: 1.2,
-                color: '#ffa114',
+                color: '#8f1eae',
               }}
             >
               What if you could learn how to style while you shop?
@@ -108,7 +108,7 @@ export default function Home() {
           {/* Illustration - fits container, no cropping (SVG viewBox 375×450) */}
           <div
             className="illustration-placeholder w-full max-w-[600px] bg-transparent rounded-xl flex items-center justify-center mx-auto mb-0 overflow-visible"
-            style={{ fontFamily: "'Roboto Mono', monospace", color: '#ffa114' }}
+            style={{ fontFamily: "'Roboto Mono', monospace", color: '#8f1eae' }}
           >
             <div className="w-full relative" style={{ aspectRatio: '375 / 450' }}>
               <Image
@@ -128,7 +128,7 @@ export default function Home() {
             {/* CTA line - TT Norms, sentence, no bold */}
             <div
               className="w-full py-5 mb-6 flex flex-col items-center justify-center"
-              style={{ fontFamily: "'TT Norms', -apple-system, sans-serif", color: '#ffa114' }}
+              style={{ fontFamily: "'TT Norms', -apple-system, sans-serif", color: '#8f1eae' }}
             >
               <p
                 className="text-center font-normal"
@@ -137,7 +137,9 @@ export default function Home() {
                   lineHeight: 1.12,
                 }}
               >
-                Curious? Join the Early List
+                Curious?
+                <br />
+                Join the early list
               </p>
             </div>
 
@@ -202,7 +204,7 @@ export default function Home() {
                       fontFamily: "'Roboto Mono', monospace",
                       fontSize: 'clamp(18px, 4.5vw, 24px)',
                       lineHeight: 1.3,
-                      color: '#ffa114',
+                      color: '#8f1eae',
                     }}
                   >
                     Priya Stephen
@@ -305,7 +307,7 @@ export default function Home() {
             </p>
 
             {step === 'success' && (
-              <div style={{ color: '#ffa114' }}>
+              <div style={{ color: '#8f1eae' }}>
                 <SuccessStep />
               </div>
             )}
@@ -318,7 +320,7 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
           <div
             className="rounded-lg shadow-xl p-8 max-w-sm w-full text-center"
-            style={{ backgroundColor: '#faf7fc', border: '2px solid #ffa114' }}
+            style={{ backgroundColor: '#faf7fc', border: '2px solid #8f1eae' }}
           >
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
@@ -326,7 +328,7 @@ export default function Home() {
             >
               <svg
                 className="w-6 h-6"
-                style={{ color: '#ffa114' }}
+                style={{ color: '#8f1eae' }}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -334,7 +336,7 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <p className="font-medium" style={{ color: '#ffa114' }}>
+            <p className="font-medium" style={{ color: '#8f1eae' }}>
               Thank you! We&apos;ll be in touch soon.
             </p>
           </div>

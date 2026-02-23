@@ -157,26 +157,26 @@ html {
 }
 
 .landing-page .landing-accent {
-  color: #ffa114;
+  color: #8f1eae;
 }
 
 .landing-page .landing-input {
-  border-color: #ffa114;
+  border-color: #8f1eae;
 }
 
 .landing-page .landing-input:focus {
   outline: none;
-  border-color: #ffa114;
-  box-shadow: 0 0 0 1px #ffa114;
+  border-color: #8f1eae;
+  box-shadow: 0 0 0 1px #8f1eae;
 }
 
 .landing-page .landing-btn {
-  background-color: #ffa114;
+  background-color: #8f1eae;
   color: #faf7fc;
 }
 
 .landing-page .landing-btn:hover:not(:disabled) {
-  background-color: #e89010;
+  background-color: #7a1a96;
 }
 
 .landing-page .landing-btn:disabled {
@@ -187,17 +187,17 @@ html {
 /* Override form components in landing theme */
 .landing-page input[type="email"]:focus,
 .landing-page input[type="tel"]:focus {
-  border-color: #ffa114 !important;
+  border-color: #8f1eae !important;
 }
 
 .landing-page .extended-content button.bg-purple-600,
 .landing-page .extended-content button.bg-purple-700,
 .landing-page .extended-content button[class*="bg-purple"] {
-  background-color: #ffa114 !important;
+  background-color: #8f1eae !important;
 }
 
 .landing-page .extended-content button:hover:not(:disabled) {
-  background-color: #e89010 !important;
+  background-color: #7a1a96 !important;
 }
 
 .landing-page .logo-placeholder {
