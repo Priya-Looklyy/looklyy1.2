@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseEnv } from '@/lib/supabase-env';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, phone } = body;
 
-    // Get Supabase credentials from server-side env vars
-    const supabaseUrl = process.env.SUPABASE_URL || '';
-    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
+    // Get Supabase credentials (supports SUPABASE_* or Project_URL / ANON_KEY)
+    const { supabaseUrl, supabaseAnonKey } = getSupabaseEnv();
 
     if (!supabaseUrl || !supabaseAnonKey) {
       console.error('❌ Supabase environment variables not configured on server');

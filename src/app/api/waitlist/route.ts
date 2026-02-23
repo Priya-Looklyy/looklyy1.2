@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseEnv } from '@/lib/supabase-env';
 
 // Force Node.js runtime (not Edge) for Supabase SDK compatibility
 export const runtime = 'nodejs';
@@ -78,9 +79,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check Supabase environment variables with detailed error messages
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+    // Check Supabase environment variables (supports SUPABASE_* or Project_URL / ANON_KEY)
+    const { supabaseUrl, supabaseAnonKey } = getSupabaseEnv();
 
     // Extract project ID from URL for verification
     const projectIdMatch = supabaseUrl?.match(/https:\/\/([^.]+)\.supabase\.co/);

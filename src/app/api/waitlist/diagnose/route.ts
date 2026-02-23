@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getSupabaseEnv } from '@/lib/supabase-env';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+  const { supabaseUrl, supabaseAnonKey } = getSupabaseEnv();
 
   // Extract project ID from URL for verification
   const projectIdMatch = supabaseUrl?.match(/https:\/\/([^.]+)\.supabase\.co/);
@@ -35,7 +35,7 @@ export async function GET() {
     return NextResponse.json({
       ...diagnostics,
       error: 'Missing environment variables',
-      action: 'Set SUPABASE_URL and SUPABASE_ANON_KEY in Vercel Dashboard → Settings → Environment Variables',
+      action: 'Set SUPABASE_URL + SUPABASE_ANON_KEY (or Project_URL + ANON_KEY) in Vercel → Settings → Environment Variables',
     }, { status: 500 });
   }
 
