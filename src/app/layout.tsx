@@ -57,6 +57,8 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.svg" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
         <link href="https://fonts.cdnfonts.com/css/tt-norms" rel="stylesheet" />
         {/* Privacy-friendly analytics by Plausible */}
         <Script

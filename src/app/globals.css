@@ -200,9 +200,19 @@ html {
   background-color: #7a1a96 !important;
 }
 
-.landing-page .logo-placeholder {
-  width: clamp(72px, 18vw, 129px);
-  height: clamp(72px, 18vw, 129px);
+/* Hero section - full bleed image, centered typography, responsive */
+.landing-page .hero-section {
+  width: 100vw;
+  min-height: min(100vh, 800px);
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+.landing-page .hero-bg {
+  width: 100%;
+  height: 100%;
+}
+.landing-page .hero-content {
+  max-width: min(90vw, 1200px);
 }
 
 /* Landing page responsive */
@@ -213,7 +223,7 @@ html {
     padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
   .landing-page .main-content { padding-right: 16px; }
-  .landing-page header { margin-bottom: 32px; padding-right: 16px; }
+  .landing-page .hero-section { min-height: min(100vh, 700px); }
   .landing-page .text-what-if { font-size: 25.436px !important; }
   .landing-page .text-you-could { font-size: 26.496px !important; }
   .landing-page .text-why-some { font-size: 44.16px !important; }
@@ -227,7 +237,7 @@ html {
     padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
   .landing-page .main-content { padding-right: 12px; }
-  .landing-page header { margin-bottom: 24px; padding-right: 12px; }
+  .landing-page .hero-section { min-height: min(100vh, 600px); }
   .landing-page .text-what-if { font-size: 23.846px !important; }
   .landing-page .text-you-could { font-size: 24.84px !important; }
   .landing-page .text-why-some { font-size: 41.4px !important; }

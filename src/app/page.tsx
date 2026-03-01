@@ -68,25 +68,45 @@ export default function Home() {
         className="wrapper flex flex-col w-full min-h-full p-6 pr-0 pb-[max(24px,env(safe-area-inset-bottom))]"
         style={{ paddingRight: 0 }}
       >
-        {/* Header with Logo and Hello - responsive */}
-        <header className="flex justify-between items-center mb-12 gap-4 pr-6">
-          <div className="logo-placeholder flex items-center justify-center shrink-0 overflow-hidden">
+        {/* Hero Section - full bleed image + centered typography, responsive */}
+        <section className="hero-section relative w-full min-h-[min(100vh,800px)] overflow-hidden flex items-center justify-center">
+          <div className="hero-bg absolute inset-0">
             <Image
-              src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/refs/heads/master/public/assets/illustrations/Looklyy%20Logo%20(1).svg"
-              alt="Looklyy Logo"
-              width={129}
-              height={129}
-              className="w-full h-full object-contain"
-              sizes="(max-width: 480px) 72px, (max-width: 640px) 104px, 129px"
+              src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/master/public/assets/photos/Untitled%20design%20(41).png"
+              alt=""
+              fill
+              className="object-cover object-center"
+              sizes="100vw"
+              priority
             />
           </div>
-          <span
-            className="hello-text font-light ml-auto"
-            style={{ color: '#8f1eae', fontSize: 'clamp(14px, 4vw, 22px)' }}
-          >
-            hello
-          </span>
-        </header>
+          <div className="hero-content relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6">
+            <h1
+              className="hero-headtext"
+              style={{
+                fontFamily: "'League Spartan', sans-serif",
+                fontSize: 'clamp(2.5rem, 12vw, 135px)',
+                lineHeight: 0.94,
+                color: '#8f1eae',
+              }}
+            >
+              Style,
+              <br />
+              Simplified.
+            </h1>
+            <p
+              className="hero-subtext mt-[clamp(2rem,12vw,135px)]"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: 'clamp(1rem, 2.5vw, 25px)',
+                lineHeight: 0.94,
+                color: '#8f1eae',
+              }}
+            >
+              Turn every shopping moment into a styling lesson
+            </p>
+          </div>
+        </section>
 
         {/* Main Content */}
         <main className="main-content flex flex-col items-center flex-1 -mt-2 pr-6">
