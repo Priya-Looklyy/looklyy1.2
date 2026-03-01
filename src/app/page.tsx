@@ -110,59 +110,47 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Main Content */}
-        <main className="main-content flex flex-col items-center flex-1 -mt-2 pr-6">
-          {/* Illustration - fits container, no cropping (SVG viewBox 375×450) */}
-          <div
-            className="illustration-placeholder w-full max-w-[600px] bg-transparent rounded-xl flex items-center justify-center mx-auto mb-0 overflow-visible"
-            style={{ fontFamily: "'Roboto Mono', monospace", color: '#8f1eae' }}
-          >
-            <div className="w-full relative" style={{ aspectRatio: '375 / 450' }}>
-              <Image
-                src="/assets/illustrations/Homepage_Illistration.svg"
-                alt="Looklyy Illustration"
-                fill
-                className="object-contain rounded-lg"
-                sizes="(max-width: 600px) 100vw, 600px"
-              />
-            </div>
+        {/* Join the Early List - two columns: image left, form right (1366×768) */}
+        <section
+          className="w-full max-w-[1366px] mx-auto grid grid-cols-1 md:grid-cols-2 min-h-[768px] md:h-[768px] bg-[#faf7fc]"
+          style={{ width: 'min(100%, 1366px)' }}
+        >
+          {/* Left: image edge-to-edge */}
+          <div className="relative w-full h-[50vh] md:h-full min-h-[280px] overflow-hidden">
+            <Image
+              src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/master/public/assets/photos/Untitled%20design%20(43).png"
+              alt=""
+              fill
+              className="object-cover object-center"
+              sizes="683px"
+            />
           </div>
-        </main>
+          {/* Right: form */}
+          <div className="relative w-full min-h-[320px] md:min-h-0 md:h-full flex items-center justify-center bg-[#faf7fc] p-6">
+            {!form1Submitted ? (
+              <IllustrationWaitlistForm
+                onSubmit={(email, phone) => submitWaitlist(email, phone, 'form1')}
+                isSubmitting={isSubmitting}
+                error={form1Error}
+              />
+            ) : (
+              <p
+                className="text-center font-medium"
+                style={{
+                  fontFamily: "'Roboto Mono', monospace",
+                  color: '#5a4d6b',
+                  fontSize: 'clamp(16px, 3.5vw, 20px)',
+                }}
+              >
+                You&apos;re on the list.
+              </p>
+            )}
+          </div>
+        </section>
 
-        {/* Extended Content - Waitlist Form */}
+        {/* Extended Content - Founder Story & footer */}
         <div className="extended-content w-[calc(100%+24px)] -ml-6 -mr-6 bg-[#faf7fc] p-6 min-h-[400px]">
           <div className="max-w-xl mx-auto">
-            {/* Full-width form section (no illustration) */}
-            <div
-              className="relative w-screen overflow-hidden my-6 flex items-center justify-center"
-              style={{
-                marginLeft: 'calc(-50vw + 50%)',
-                marginRight: 'calc(-50vw + 50%)',
-                minHeight: '280px',
-                background: '#faf7fc',
-              }}
-            >
-              {!form1Submitted ? (
-                <IllustrationWaitlistForm
-                  onSubmit={(email, phone) => submitWaitlist(email, phone, 'form1')}
-                  isSubmitting={isSubmitting}
-                  error={form1Error}
-                />
-              ) : (
-                <div className="absolute inset-0 z-10 flex items-center justify-center">
-                  <p
-                    className="text-center font-medium"
-                    style={{
-                      fontFamily: "'Roboto Mono', monospace",
-                      color: '#5a4d6b',
-                      fontSize: 'clamp(16px, 3.5vw, 20px)',
-                    }}
-                  >
-                    You&apos;re on the list.
-                  </p>
-                </div>
-              )}
-            </div>
 
             {/* Founder Story - photo left 50%, name + 3 paragraphs right 50%; mobile: text first, then photo; rest full width */}
             <div
