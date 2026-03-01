@@ -110,13 +110,13 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Join the Early List - two columns: image left, form right (1366×768) */}
+        {/* Join the Early List - two columns: image left, form right (1366×768); responsive: form first, then image */}
         <section
           className="w-full max-w-[1366px] mx-auto grid grid-cols-1 md:grid-cols-2 min-h-[768px] md:h-[768px] bg-[#faf7fc]"
           style={{ width: 'min(100%, 1366px)' }}
         >
-          {/* Left: image edge-to-edge */}
-          <div className="relative w-full h-[50vh] md:h-full min-h-[280px] overflow-hidden">
+          {/* Left on desktop, second on mobile: image edge-to-edge */}
+          <div className="relative w-full h-[50vh] md:h-full min-h-[280px] overflow-hidden order-2 md:order-1">
             <Image
               src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/master/public/assets/photos/Untitled%20design%20(43).png"
               alt=""
@@ -125,8 +125,8 @@ export default function Home() {
               sizes="683px"
             />
           </div>
-          {/* Right: form */}
-          <div className="relative w-full min-h-[320px] md:min-h-0 md:h-full flex items-center justify-center bg-[#faf7fc] p-6">
+          {/* Right on desktop, first on mobile: form */}
+          <div className="relative w-full min-h-[320px] md:min-h-0 md:h-full flex items-center justify-center bg-[#faf7fc] p-6 order-1 md:order-2">
             {!form1Submitted ? (
               <IllustrationWaitlistForm
                 onSubmit={(email, phone) => submitWaitlist(email, phone, 'form1')}
@@ -152,7 +152,7 @@ export default function Home() {
         <div className="extended-content w-[calc(100%+24px)] -ml-6 -mr-6 bg-[#faf7fc] p-6 min-h-[400px]">
           <div className="max-w-xl mx-auto">
 
-            {/* Founder Story - photo left 50%, name + 3 paragraphs right 50%; mobile: text first, then photo; rest full width */}
+            {/* Founder Story - text only, no illustration */}
             <div
               className="w-[90%] max-w-full mx-auto my-8 py-6 flex flex-col gap-6"
               style={{
@@ -171,75 +171,6 @@ export default function Home() {
                 Founder Story
               </h3>
 
-              {/* Top row: photo 50% | name + 3 paragraphs 50%; mobile: name + 3 paras first, then photo */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
-                {/* Right half on desktop - founder name + 3 paragraphs; first on mobile */}
-                <div className="w-full flex flex-col gap-4 order-1 md:order-2">
-                  <p
-                    className="font-bold"
-                    style={{
-                      fontFamily: "'Roboto Mono', monospace",
-                      fontSize: 'clamp(18px, 4.5vw, 24px)',
-                      lineHeight: 1.3,
-                      color: '#8f1eae',
-                    }}
-                  >
-                    Priya Stephen
-                  </p>
-                  <p
-                    className="font-normal italic"
-                    style={{
-                      fontFamily: "'Roboto Mono', monospace",
-                      fontSize: 'clamp(14px, 3.5vw, 18px)',
-                      lineHeight: 1.5,
-                      color: '#000',
-                    }}
-                  >
-                    Style is considered as taste, I believe it&apos;s a skill
-                  </p>
-                  <p
-                    className="font-normal"
-                    style={{
-                      fontFamily: "'Roboto Mono', monospace",
-                      fontSize: 'clamp(14px, 3.5vw, 17px)',
-                      lineHeight: 1.55,
-                      color: '#000',
-                    }}
-                  >
-                    I didn&apos;t set out to build a fashion product.
-                  </p>
-                  <p
-                    className="font-normal"
-                    style={{
-                      fontFamily: "'Roboto Mono', monospace",
-                      fontSize: 'clamp(14px, 3.5vw, 17px)',
-                      lineHeight: 1.55,
-                      color: '#000',
-                    }}
-                  >
-                    After a personal weight-transformation journey, my messages slowly filled with questions about how I dressed. Most people asked where my clothes were from.
-                  </p>
-                </div>
-                {/* Left half on desktop - founder photo; second on mobile */}
-                <div
-                  className="w-full flex items-center justify-center min-h-[200px] md:min-h-0 order-2 md:order-1"
-                  style={{ backgroundColor: '#faf7fc' }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/refs/heads/master/public/assets/illustrations/FounderPhoto.svg"
-                    alt="Founder"
-                    loading="lazy"
-                    className="w-full h-full object-contain block"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.background = '#e5e7eb';
-                      (e.target as HTMLImageElement).alt = 'Image unavailable';
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Bottom row - rest of paragraphs full width */}
               <div
                 className="w-full flex flex-col gap-4 font-normal"
                 style={{
@@ -249,15 +180,34 @@ export default function Home() {
                   color: '#000',
                 }}
               >
-                <p>
-                  But what worked for me didn&apos;t quite land the same way for others. I could share an outfit, but not the understanding behind it.
+                <p
+                  className="font-bold"
+                  style={{
+                    fontSize: 'clamp(18px, 4.5vw, 24px)',
+                    lineHeight: 1.3,
+                    color: '#8f1eae',
+                  }}
+                >
+                  Priya Stephen
                 </p>
-                <p>
-                  Over time, I noticed a pattern. People weren&apos;t asking for more choices — they were asking quieter questions: the kind you don&apos;t always know how to phrase, only how to feel.
+                <p style={{ fontStyle: 'italic' }}>
+                  Style is considered as taste, I believe it&apos;s a skill
                 </p>
+
+                <p>I didn&apos;t set out to build a fashion product.</p>
+
                 <p>
-                  My background has always lived between creativity and behaviour, studying fashion, working as a marketing professional, building a home business, and competing and winning a crown at Mrs World International. Different worlds, but the same observation repeated: people don&apos;t struggle with expression; they struggle with understanding themselves.
+                  After a personal weight-transformation journey, my messages slowly filled with questions about how I dressed. Most people asked where my clothes were from, what brand, from where.... but what worked for me didn&apos;t quite land the same way for others. How do I share the understanding behind my attention to how I wore them?
                 </p>
+
+                <p>
+                  Over time, I noticed a pattern. People weren&apos;t asking for more choices; they were asking quieter questions: the kind you don&apos;t always know how to phrase, only how to feel.
+                </p>
+
+                <p>
+                  My background has always thrived between creativity and behaviour, studying fashion, working as a marketing professional, building a home business, and competing and winning a crown at Mrs World International. Different worlds, but the same observation repeated: people don&apos;t struggle with expression; they struggle with understanding themselves.
+                </p>
+
                 <p>Looklyy began as a response to that gap.</p>
               </div>
             </div>
