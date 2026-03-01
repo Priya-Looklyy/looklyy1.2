@@ -110,21 +110,6 @@ export default function Home() {
 
         {/* Main Content */}
         <main className="main-content flex flex-col items-center flex-1 -mt-2 pr-6">
-          {/* HeadText Box - TT Norms, bold, centre aligned, responsive */}
-          <div className="text-box w-full max-w-[calc(100%+24px)] -ml-6 bg-transparent py-6 px-6 -mb-2 flex justify-center">
-            <p
-              className="text-you-could text-center font-normal"
-              style={{
-                fontFamily: "'TT Norms', -apple-system, sans-serif",
-                fontSize: 'clamp(20px, 5vw, 36px)',
-                lineHeight: 1.2,
-                color: '#8f1eae',
-              }}
-            >
-              What if you could learn how to style while you shop?
-            </p>
-          </div>
-
           {/* Illustration - fits container, no cropping (SVG viewBox 375×450) */}
           <div
             className="illustration-placeholder w-full max-w-[600px] bg-transparent rounded-xl flex items-center justify-center mx-auto mb-0 overflow-visible"
@@ -145,24 +130,6 @@ export default function Home() {
         {/* Extended Content - Waitlist Form */}
         <div className="extended-content w-[calc(100%+24px)] -ml-6 -mr-6 bg-[#faf7fc] p-6 min-h-[400px]">
           <div className="max-w-xl mx-auto">
-            {/* CTA line - TT Norms, sentence, no bold */}
-            <div
-              className="w-full py-5 mb-6 flex flex-col items-center justify-center"
-              style={{ fontFamily: "'TT Norms', -apple-system, sans-serif", color: '#8f1eae' }}
-            >
-              <p
-                className="text-center font-normal"
-                style={{
-                  fontSize: 'clamp(20px, 5vw, 33.12px)',
-                  lineHeight: 1.12,
-                }}
-              >
-                Curious?
-                <br />
-                Join the early list
-              </p>
-            </div>
-
             {/* Full-width form section (no illustration) */}
             <div
               className="relative w-screen overflow-hidden my-6 flex items-center justify-center"
