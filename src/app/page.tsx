@@ -96,12 +96,13 @@ export default function Home() {
               Simplified.
             </h1>
             <p
-              className="hero-subtext mt-[clamp(2rem,12vw,135px)]"
+              className="hero-subtext"
               style={{
                 fontFamily: "'Playfair Display', serif",
-                fontSize: 'clamp(1rem, 2.5vw, 25px)',
+                fontSize: '40px',
                 lineHeight: 0.94,
                 color: '#8f1eae',
+                marginTop: '55px',
               }}
             >
               Turn every shopping moment into a styling lesson
