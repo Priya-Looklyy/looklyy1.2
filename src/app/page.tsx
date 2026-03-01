@@ -72,7 +72,7 @@ export default function Home() {
         <section className="hero-section relative w-full min-h-[min(100vh,800px)] overflow-hidden flex items-center justify-center">
           <div className="hero-bg absolute inset-0">
             <Image
-              src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/master/public/assets/photos/Untitled%20design%20(41).png"
+              src="https://raw.githubusercontent.com/Priya-Looklyy/looklyy1.2/master/public/assets/photos/Untitled%20design%20(42).png"
               alt=""
               fill
               className="object-cover object-center"
@@ -86,6 +86,7 @@ export default function Home() {
               style={{
                 fontFamily: "'League Spartan', sans-serif",
                 fontSize: 'clamp(2.5rem, 12vw, 135px)',
+                fontWeight: 'bold',
                 lineHeight: 0.94,
                 color: '#8f1eae',
               }}
