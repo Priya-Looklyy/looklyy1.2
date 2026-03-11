@@ -72,8 +72,28 @@ export default function Home() {
           <div className="pointer-events-none absolute -right-24 top-10 h-64 w-64 rounded-full bg-[#8f1eae]/25 blur-3xl sm:h-80 sm:w-80" />
         </div>
 
-        {/* Empty hero space with video only */}
-        <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32" />
+        {/* Hero text + primary CTA */}
+        <div className="relative mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6 sm:py-32">
+          <h1
+            style={{
+              fontFamily: '"TT Norms", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+              fontWeight: 700,
+              fontSize: 'clamp(3rem, 18vw, 300px)',
+              lineHeight: 0.9,
+              color: '#8f1eae',
+            }}
+          >
+            Style,
+            <br />
+            Simplified.
+          </h1>
+          <button
+            type="button"
+            className="mt-10 rounded-full bg-[#8f1eae] px-10 py-3 text-xs sm:text-sm font-semibold text-white shadow-md shadow-[#8f1eae]/40 hover:bg-[#731887] transition-colors"
+          >
+            Join the waitlist
+          </button>
+        </div>
       </section>
 
       {/* Waitlist section */}
@@ -82,12 +102,6 @@ export default function Home() {
         className="bg-[#faf7fc] py-10 sm:py-16"
       >
         <div className="mx-auto flex max-w-md flex-col items-center gap-6 px-4 sm:px-6">
-          <button
-            type="button"
-            className="rounded-full bg-[#8f1eae] px-8 py-3 text-xs sm:text-sm font-semibold text-white shadow-md shadow-[#8f1eae]/30 hover:bg-[#731887] transition-colors"
-          >
-            Join the waitlist
-          </button>
           <div className="w-full rounded-3xl border border-[#e5d7f0] bg-white/90 p-5 shadow-[0_16px_40px_rgba(54,16,83,0.12)] backdrop-blur">
             {!form1Submitted && (
               <IllustrationWaitlistForm

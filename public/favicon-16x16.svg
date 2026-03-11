@@ -1,10 +1,8 @@
 <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#9333ea;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
-    </linearGradient>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&amp;display=swap');
+    </style>
   </defs>
-  <rect width="16" height="16" rx="3" fill="url(#logoGradient)"/>
-  <text x="8" y="11" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="white">L</text>
+  <text x="8" y="8" font-family="'League Spartan', sans-serif" font-size="12" font-weight="bold" text-anchor="middle" dominant-baseline="central" fill="#8f1eae">L</text>
 </svg>
