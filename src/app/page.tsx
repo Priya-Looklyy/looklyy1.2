@@ -57,7 +57,7 @@ export default function Home() {
       style={{ fontFamily: "'Roboto Mono', monospace" }}
     >
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      <section className="relative flex min-h-screen items-center overflow-hidden">
         <div className="absolute inset-0 -z-10">
           <video
             className="h-full w-full object-cover"
@@ -68,11 +68,11 @@ export default function Home() {
             playsInline
           />
           {/* Soft overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/25 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/10 to-black/15 mix-blend-multiply" />
           <div className="pointer-events-none absolute -right-24 top-10 h-64 w-64 rounded-full bg-[#8f1eae]/25 blur-3xl sm:h-80 sm:w-80" />
         </div>
 
-        {/* Hero text + primary CTA */}
+        {/* Hero text */}
         <div className="relative mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6 sm:py-32">
           <h1
             style={{
@@ -87,12 +87,6 @@ export default function Home() {
             <br />
             Simplified.
           </h1>
-          <button
-            type="button"
-            className="mt-10 rounded-full bg-[#8f1eae] px-10 py-3 text-xs sm:text-sm font-semibold text-white shadow-md shadow-[#8f1eae]/40 hover:bg-[#731887] transition-colors"
-          >
-            Join the waitlist
-          </button>
         </div>
       </section>
 
@@ -102,15 +96,13 @@ export default function Home() {
         className="bg-[#faf7fc] py-10 sm:py-16"
       >
         <div className="mx-auto flex max-w-md flex-col items-center gap-6 px-4 sm:px-6">
-          <div className="w-full rounded-3xl border border-[#e5d7f0] bg-white/90 p-5 shadow-[0_16px_40px_rgba(54,16,83,0.12)] backdrop-blur">
-            {!form1Submitted && (
-              <IllustrationWaitlistForm
-                onSubmit={(email, phone) => submitWaitlist(email, phone, 'form1')}
-                isSubmitting={isSubmitting}
-                error={form1Error}
-              />
-            )}
-          </div>
+          {!form1Submitted && (
+            <IllustrationWaitlistForm
+              onSubmit={(email, phone) => submitWaitlist(email, phone, 'form1')}
+              isSubmitting={isSubmitting}
+              error={form1Error}
+            />
+          )}
         </div>
       </section>
 
