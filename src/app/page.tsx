@@ -67,9 +67,6 @@ export default function Home() {
             loop
             playsInline
           />
-          {/* Soft overlay for text readability (kept very light so video is visible) */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/0 to-black/10" />
-          <div className="pointer-events-none absolute -right-24 top-10 h-64 w-64 rounded-full bg-[#8f1eae]/25 blur-3xl sm:h-80 sm:w-80" />
         </div>
 
         {/* Hero text */}
