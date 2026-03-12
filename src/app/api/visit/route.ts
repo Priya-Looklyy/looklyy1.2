@@ -6,10 +6,9 @@ const countryCounts = new Map<string, number>();
 export async function POST(req: NextRequest) {
   const { pathname, language, timezone } = await req.json().catch(() => ({}));
 
+  const headerIp = req.headers.get('x-forwarded-for');
   const ip =
-    req.headers.get('x-forwarded-for') ??
-    // @ts-expect-error ip is not always present
-    (req as any).ip ??
+    (Array.isArray(headerIp) ? headerIp[0] : headerIp) ??
     'unknown';
 
   const country = req.headers.get('x-vercel-ip-country') ?? 'unknown';
