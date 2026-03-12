@@ -20,6 +20,26 @@ export default function Home() {
     }
   }, [showThankYou]);
 
+  // Simple visit analytics: record one visit per session
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const key = 'looklyy_visit_logged_v1';
+    if (window.sessionStorage.getItem(key)) return;
+    window.sessionStorage.setItem(key, '1');
+
+    fetch('/api/visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pathname: window.location.pathname,
+        language: window.navigator.language,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
+    }).catch(() => {
+      // best-effort only
+    });
+  }, []);
+
   const submitWaitlist = async (e: string, phone: string, formId: 'form1') => {
     if (isSubmitting) return;
     if (form1Submitted) return;
@@ -59,13 +79,10 @@ export default function Home() {
       {/* Hero */}
       <section className="relative flex min-h-screen items-center overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          <video
+          <img
+            src="/assets/Style-Simplified.png"
+            alt="Illustrated clothing rack"
             className="h-full w-full object-cover"
-            src="/assets/Style-Simplified.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
           />
         </div>
 
@@ -87,13 +104,48 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Waitlist section */}
+      {/* Section 1 */}
+      <section className="bg-[#faf7fc] py-12 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#8f1eae]">
+            Shopping online was supposed to be fun
+          </h2>
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#5a4d6b]">
+            Somewhere along the way it turned into endless scrolling, recycled trends, and the same content everywhere.
+          </p>
+        </div>
+      </section>
+
+      {/* Section 2 */}
+      <section className="bg-[#faf7fc] py-12 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#8f1eae]">
+            Finding cool stuff that suits you shouldn&apos;t feel like work
+          </h2>
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#5a4d6b]">
+            The best combinations are always hidden under algorithms, ads, and things you never asked to see.
+          </p>
+        </div>
+      </section>
+
+      {/* Section 3 */}
+      <section className="bg-[#faf7fc] py-12 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#8f1eae]">
+            We&apos;re fixing that quietly
+          </h2>
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#5a4d6b]">
+            Early members will be the first to experience Looklyy.
+          </p>
+        </div>
+      </section>
+
+      {/* Waitlist section with form */}
       <section
         id="waitlist"
         className="bg-[#faf7fc] py-10 sm:py-16"
       >
         <div className="mx-auto flex max-w-md flex-col items-center gap-6 px-4 sm:px-6">
-          {/* Transparent container so the absolutely positioned form stays here and doesn't overlap the hero */}
           <div className="relative w-full max-w-md min-h-[220px]">
             {!form1Submitted && (
               <IllustrationWaitlistForm
