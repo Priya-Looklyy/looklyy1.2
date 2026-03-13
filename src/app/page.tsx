@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import IllustrationWaitlistForm from '@/components/IllustrationWaitlistForm';
 import { submitWaitlist as submitWaitlistToDB } from '@/lib/supabase';
 
@@ -9,6 +9,8 @@ export default function Home() {
   const [showThankYou, setShowThankYou] = useState(false);
   const [form1Submitted, setForm1Submitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
   // Removed localStorage check - it was causing both forms to disappear on page load
   // Each form should work independently
@@ -38,6 +40,24 @@ export default function Home() {
     }).catch(() => {
       // best-effort only
     });
+  }, []);
+
+  // Scroll-triggered section visibility for animations
+  useEffect(() => {
+    const observers = sectionRefs.current
+      .filter(Boolean)
+      .map((el, i) => {
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (!entry.isIntersecting) return;
+            setVisibleSections((prev) => new Set(prev).add(i));
+          },
+          { rootMargin: '0px 0px -80px 0px', threshold: 0.1 }
+        );
+        observer.observe(el!);
+        return observer;
+      });
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   const submitWaitlist = async (e: string, phone: string, formId: 'form1') => {
@@ -73,7 +93,7 @@ export default function Home() {
 
   return (
     <main
-      className="min-h-screen w-full overflow-x-hidden bg-[#faf7fc]"
+      className="min-h-screen w-full overflow-x-hidden bg-[#faf7fc] landing-mesh"
       style={{ fontFamily: "'Roboto Mono', monospace" }}
     >
       {/* Hero */}
@@ -89,6 +109,7 @@ export default function Home() {
         {/* Hero text */}
         <div className="relative mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6 sm:py-32">
           <h1
+            className="landing-hero-reveal"
             style={{
               fontFamily: '"TT Norms", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
               fontWeight: 700,
@@ -105,8 +126,13 @@ export default function Home() {
       </section>
 
       {/* Section 1 */}
-      <section className="bg-[#faf7fc] py-12 sm:py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+      <section
+        ref={(el) => { sectionRefs.current[0] = el; }}
+        className="bg-[#faf7fc] py-12 sm:py-16"
+      >
+        <div
+          className={`mx-auto max-w-3xl px-4 sm:px-6 text-center landing-reveal ${visibleSections.has(0) ? 'landing-reveal--visible' : ''}`}
+        >
           <h2 className="text-xl sm:text-2xl font-semibold text-[#8f1eae]">
             Shopping online was supposed to be fun
           </h2>
@@ -117,8 +143,13 @@ export default function Home() {
       </section>
 
       {/* Section 2 */}
-      <section className="bg-[#faf7fc] py-12 sm:py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+      <section
+        ref={(el) => { sectionRefs.current[1] = el; }}
+        className="bg-[#faf7fc] py-12 sm:py-16"
+      >
+        <div
+          className={`mx-auto max-w-3xl px-4 sm:px-6 text-center landing-reveal landing-reveal-delay-1 ${visibleSections.has(1) ? 'landing-reveal--visible' : ''}`}
+        >
           <h2 className="text-xl sm:text-2xl font-semibold text-[#8f1eae]">
             Finding cool stuff that suits you shouldn&apos;t feel like work
           </h2>
@@ -129,8 +160,13 @@ export default function Home() {
       </section>
 
       {/* Section 3 */}
-      <section className="bg-[#faf7fc] py-12 sm:py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+      <section
+        ref={(el) => { sectionRefs.current[2] = el; }}
+        className="bg-[#faf7fc] py-12 sm:py-16"
+      >
+        <div
+          className={`mx-auto max-w-3xl px-4 sm:px-6 text-center landing-reveal landing-reveal-delay-2 ${visibleSections.has(2) ? 'landing-reveal--visible' : ''}`}
+        >
           <h2 className="text-xl sm:text-2xl font-semibold text-[#8f1eae]">
             We&apos;re fixing that quietly
           </h2>
@@ -142,11 +178,14 @@ export default function Home() {
 
       {/* Waitlist section with form */}
       <section
+        ref={(el) => { sectionRefs.current[3] = el; }}
         id="waitlist"
         className="bg-[#faf7fc] py-10 sm:py-16"
       >
-        <div className="mx-auto flex max-w-md flex-col items-center gap-6 px-4 sm:px-6">
-          <div className="relative w-full max-w-md min-h-[220px]">
+        <div
+          className={`mx-auto flex max-w-md flex-col items-center gap-6 px-4 sm:px-6 landing-reveal landing-reveal-delay-3 ${visibleSections.has(3) ? 'landing-reveal--visible' : ''}`}
+        >
+          <div className="relative w-full max-w-md min-h-[220px] landing-form-card rounded-3xl border border-[#e5d7f0] bg-white/90 p-5 shadow-[0_16px_40px_rgba(54,16,83,0.12)] backdrop-blur">
             {!form1Submitted && (
               <IllustrationWaitlistForm
                 onSubmit={(email, phone) => submitWaitlist(email, phone, 'form1')}
@@ -162,7 +201,7 @@ export default function Home() {
       {showThankYou && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
           <div
-            className="max-w-sm w-full rounded-lg border border-[#8f1eae] bg-[#faf7fc] p-8 text-center shadow-xl"
+            className="max-w-sm w-full rounded-2xl border border-[#8f1eae] bg-[#faf7fc] p-8 text-center shadow-xl landing-thank-you-modal"
           >
             <div
               className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full"

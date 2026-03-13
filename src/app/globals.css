@@ -244,3 +244,62 @@ html {
   .landing-page .text-box { width: calc(100% + 12px); margin-left: -12px; padding-left: 13.8px; }
   .landing-page .extended-content { width: calc(100% + 12px); margin-left: -12px; margin-right: -12px; }
 }
+
+/* ===== Landing: dynamic / modern aesthetics ===== */
+
+/* Hero headline entrance */
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.landing-hero-reveal {
+  animation: hero-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+  opacity: 0;
+}
+
+/* Section scroll-in (use with .landing-reveal + .landing-reveal--visible) */
+.landing-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-reveal.landing-reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.landing-reveal-delay-1 { transition-delay: 0.1s; }
+.landing-reveal-delay-2 { transition-delay: 0.2s; }
+.landing-reveal-delay-3 { transition-delay: 0.3s; }
+
+/* Form card hover lift */
+.landing-form-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.landing-form-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(143, 30, 174, 0.12);
+}
+
+/* Subtle gradient mesh for sections */
+.landing-mesh {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(143, 30, 174, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 50%, rgba(143, 30, 174, 0.05), transparent),
+    radial-gradient(ellipse 60% 40% at 0% 50%, rgba(143, 30, 174, 0.05), transparent);
+}
+
+/* Thank you modal: use existing fade-in */
+.landing-thank-you-modal {
+  animation: fade-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
