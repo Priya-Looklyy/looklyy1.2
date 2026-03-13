@@ -8,9 +8,11 @@ type IllustrationWaitlistFormProps = {
   error: string;
 };
 
-const PILL_STYLE = {
-  fontFamily: "'Roboto Mono', monospace",
-  color: '#5a4d6b',
+const BASE_FONT_STYLE = {
+  fontFamily:
+    '"TT Norms", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  fontWeight: 300 as const,
+  color: '#8f1eae',
 };
 
 export default function IllustrationWaitlistForm({
@@ -62,15 +64,15 @@ export default function IllustrationWaitlistForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="absolute inset-0 z-10 flex flex-col justify-center px-[8%] md:px-[10%]"
+      className="flex w-full flex-col justify-center px-2 sm:px-0"
     >
       {/* Pills container - full width with equal side padding */}
-      <div className="flex flex-col gap-3 w-full">
+      <div className="flex w-full flex-col gap-2.5">
         {/* Email pill - label dissolves when input is focused or has value */}
         <div
           className="rounded-full overflow-hidden flex items-center relative"
           style={{
-            ...PILL_STYLE,
+            ...BASE_FONT_STYLE,
             border: '2px solid #c4b5d4',
             background: 'transparent',
             minHeight: '37px',
@@ -80,7 +82,7 @@ export default function IllustrationWaitlistForm({
             <span
               className="absolute inset-0 flex items-center px-5 pointer-events-none select-none"
               style={{
-                ...PILL_STYLE,
+                ...BASE_FONT_STYLE,
                 fontSize: 'clamp(12px, 2.8vw, 14px)',
               }}
             >
@@ -98,7 +100,7 @@ export default function IllustrationWaitlistForm({
             autoComplete="email"
             className="relative z-10 w-full min-h-[33px] px-5 py-2 bg-transparent border-none outline-none text-left placeholder:opacity-60 touch-manipulation"
             style={{
-              ...PILL_STYLE,
+              ...BASE_FONT_STYLE,
               fontSize: 'clamp(12px, 2.8vw, 14px)',
             }}
           />
@@ -108,7 +110,7 @@ export default function IllustrationWaitlistForm({
         <div
           className="rounded-full overflow-hidden flex items-center relative"
           style={{
-            ...PILL_STYLE,
+            ...BASE_FONT_STYLE,
             border: '2px solid #c4b5d4',
             background: 'transparent',
             minHeight: '37px',
@@ -118,7 +120,7 @@ export default function IllustrationWaitlistForm({
             <span
               className="absolute inset-0 flex items-center px-5 pointer-events-none select-none"
               style={{
-                ...PILL_STYLE,
+                ...BASE_FONT_STYLE,
                 fontSize: 'clamp(12px, 2.8vw, 14px)',
               }}
             >
@@ -137,7 +139,7 @@ export default function IllustrationWaitlistForm({
             autoComplete="tel"
             className="relative z-10 w-full min-h-[33px] px-5 py-2 bg-transparent border-none outline-none text-left placeholder:opacity-60 touch-manipulation"
             style={{
-              ...PILL_STYLE,
+              ...BASE_FONT_STYLE,
               fontSize: 'clamp(12px, 2.8vw, 14px)',
             }}
           />
@@ -146,16 +148,16 @@ export default function IllustrationWaitlistForm({
 
 
       {/* Submit button - center aligned, below pills, above illustration */}
-      <div className="relative z-20 w-full flex justify-center mt-5 px-4">
+      <div className="relative z-20 mt-4 flex w-full justify-center px-2 sm:px-4">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="landing-btn relative z-20 rounded-full px-8 py-3 border-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+          className="landing-btn relative z-20 rounded-full border-none px-6 py-3 text-xs sm:px-8 sm:text-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
           style={{
-            fontFamily: "'Roboto Mono', monospace",
+            ...BASE_FONT_STYLE,
             backgroundColor: '#8f1eae',
             color: '#faf7fc',
-            fontSize: 'clamp(13px, 2.8vw, 15px)',
+            fontSize: 'clamp(11px, 3.1vw, 15px)',
           }}
         >
           Join the early list
@@ -165,7 +167,7 @@ export default function IllustrationWaitlistForm({
       {error && (
         <p
           className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-white bg-red-500/70 px-3 py-2 rounded"
-          style={{ fontFamily: "'Roboto Mono', monospace" }}
+          style={BASE_FONT_STYLE}
         >
           {error}
         </p>
