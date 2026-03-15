@@ -91,6 +91,7 @@ export default function Home() {
       <header className="sticky top-0 z-30 bg-[#faf7fc]/85 backdrop-blur-sm border-b border-[#ece1f4]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-3">
           <span
+            className="text-base sm:text-lg md:text-xl"
             style={{
               fontFamily:
                 '"TT Norms", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -102,7 +103,7 @@ export default function Home() {
             looklyy
           </span>
           <span
-            className="text-xs sm:text-sm"
+            className="text-xs sm:text-sm md:text-base"
             style={{
               fontFamily:
                 '"TT Norms", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -132,33 +133,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Placeholder single video section – clean, no scroll for now */}
+      {/* YouTube Short – Looklyy intro */}
       <section className="bg-[#faf7fc] pb-12 sm:pb-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mx-auto w-full sm:w-3/4 md:w-1/2 border border-[#e5d7f0] bg-white/90 shadow-[0_18px_50px_rgba(15,23,42,0.18)] overflow-hidden">
-            <div className="aspect-[9/16] w-full flex flex-col items-center justify-center gap-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="h-10 w-10 md:h-12 md:w-12 opacity-30"
-                fill="none"
-                stroke="#8f1eae"
-                strokeWidth="1.8"
-              >
-                <circle cx="12" cy="12" r="8" />
-                <path d="M10 9.5v5l4-2.5-4-2.5z" fill="#8f1eae" />
-              </svg>
-              <span
-                className="text-sm md:text-base text-center opacity-30"
-                style={{
-                  fontFamily:
-                    '"TT Norms", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-                  fontWeight: 300,
-                  color: '#8f1eae',
-                }}
-              >
-                Coming soon
-              </span>
+          <div className="mx-auto w-full sm:w-3/4 md:w-1/2 border border-[#e5d7f0] bg-black shadow-[0_18px_50px_rgba(15,23,42,0.18)] overflow-hidden rounded-sm">
+            <div className="relative w-full" style={{ aspectRatio: '9/16', minHeight: '320px' }}>
+              <iframe
+                src="https://www.youtube.com/embed/aZcClLjvaGo?mute=1&playsinline=1&modestbranding=1&rel=0"
+                title="Looklyy intro"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full rounded-sm"
+                loading="eager"
+              />
             </div>
           </div>
         </div>
