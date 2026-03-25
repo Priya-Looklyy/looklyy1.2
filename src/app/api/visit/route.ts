@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Simple in-memory aggregation for current server process
+/**
+ * Optional lightweight server logging. For full analytics, see docs/visitor-tracking-system.md.
+ */
 const countryCounts = new Map<string, number>();
 
 export async function POST(req: NextRequest) {
@@ -8,7 +10,7 @@ export async function POST(req: NextRequest) {
 
   const headerIp = req.headers.get('x-forwarded-for');
   const ip =
-    (Array.isArray(headerIp) ? headerIp[0] : headerIp) ??
+    (Array.isArray(headerIp) ? headerIp[0] : headerIp)?.split(',')[0]?.trim() ??
     'unknown';
 
   const country = req.headers.get('x-vercel-ip-country') ?? 'unknown';
@@ -25,7 +27,7 @@ export async function POST(req: NextRequest) {
     pathname,
     language,
     timezone,
-    ua,
+    ua: ua.slice(0, 120),
   });
 
   return NextResponse.json({
@@ -33,4 +35,3 @@ export async function POST(req: NextRequest) {
     countryCounts: Object.fromEntries(countryCounts),
   });
 }
-

@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-src 'self' https://www.canva.com https://*.canva.com https://www.youtube.com https://www.youtube-nocookie.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.canva.com https://*.canva.com;"
+            value: "frame-src 'self' https://www.canva.com https://*.canva.com https://www.youtube.com https://www.youtube-nocookie.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.canva.com https://*.canva.com; connect-src 'self' https://ipapi.co https://*.ipapi.co;"
           },
           {
             key: 'Permissions-Policy',

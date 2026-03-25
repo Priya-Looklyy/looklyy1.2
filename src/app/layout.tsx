@@ -60,27 +60,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
         <link href="https://fonts.cdnfonts.com/css/tt-norms" rel="stylesheet" />
-        {/* Privacy-friendly analytics by Plausible */}
-        <Script
-          async
-          src="https://plausible.io/js/pa-3se6lzrrvi2jmFwU7Ut8v.js"
-          strategy="afterInteractive"
-        />
-        <Script
-          id="plausible-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-              plausible.init()
-            `,
-          }}
-        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Script src="/analytics/looklyy-track.js" strategy="lazyOnload" />
       </body>
     </html>
   );

@@ -1,7 +1,0 @@
-{
-  "/api/register/route": "/api/register",
-  "/_not-found/page": "/_not-found",
-  "/favicon.ico/route": "/favicon.ico",
-  "/page": "/",
-  "/login/page": "/login"
-}

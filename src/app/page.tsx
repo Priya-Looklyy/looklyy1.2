@@ -5,6 +5,7 @@ import IllustrationWaitlistForm from '@/components/IllustrationWaitlistForm';
 import { submitWaitlist as submitWaitlistToDB } from '@/lib/supabase';
 import { Hero } from '@/components/Hero';
 import { AmoebaCards } from '@/components/AmoebaCards';
+import { VideoShortsRow } from '@/components/VideoShortsRow';
 
 export default function Home() {
   const [form1Error, setForm1Error] = useState('');
@@ -23,26 +24,6 @@ export default function Home() {
       return () => clearTimeout(t);
     }
   }, [showThankYou]);
-
-  // Simple visit analytics: record one visit per session
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const key = 'looklyy_visit_logged_v1';
-    if (window.sessionStorage.getItem(key)) return;
-    window.sessionStorage.setItem(key, '1');
-
-    fetch('/api/visit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        pathname: window.location.pathname,
-        language: window.navigator.language,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      }),
-    }).catch(() => {
-      // best-effort only
-    });
-  }, []);
 
   // Show subtle "back to top" arrow after scrolling
   useEffect(() => {
@@ -133,23 +114,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* YouTube Short – Looklyy intro */}
-      <section className="bg-[#faf7fc] pb-12 sm:pb-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mx-auto w-full sm:w-3/4 md:w-1/2 border border-[#e5d7f0] bg-black shadow-[0_18px_50px_rgba(15,23,42,0.18)] overflow-hidden rounded-sm">
-            <div className="relative w-full" style={{ aspectRatio: '9/16', minHeight: '320px' }}>
-              <iframe
-                src="https://www.youtube.com/embed/aZcClLjvaGo?mute=1&playsinline=1&modestbranding=1&rel=0"
-                title="Looklyy intro"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full rounded-sm"
-                loading="eager"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <VideoShortsRow />
 
       {/* Email + fine print */}
       <section className="bg-[#faf7fc] pb-10">
