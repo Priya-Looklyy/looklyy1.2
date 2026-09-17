@@ -163,6 +163,20 @@
   background: rgba(147, 51, 234, 0.1);
 }
 
+/* D&B Registered Seal */
+.dnb-seal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+}
+
+.dnb-seal-container iframe {
+  border: none;
+  background: transparent;
+}
+
 /* ============================================
    TABLET ENHANCEMENTS (768px and up)
    ============================================ */
