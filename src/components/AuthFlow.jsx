@@ -165,6 +165,20 @@ const AuthFlow = () => {
           </a>
           .
         </p>
+
+        {/* D&B Registered Seal */}
+        <div className="dnb-seal-container">
+          <iframe 
+            id="dnb-seal" 
+            src="https://dunsregistered.dnb.com/SealAuthentication.aspx?Cid=1" 
+            width="114" 
+            height="97" 
+            frameBorder="0" 
+            scrolling="no" 
+            allowTransparency={true}
+            title="D&B Registered Business"
+          />
+        </div>
       </div>
     </div>
   )
