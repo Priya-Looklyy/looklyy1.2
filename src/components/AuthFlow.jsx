@@ -1,9 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './AuthFlow.css'
 
 const AuthFlow = () => {
   const [loading, setLoading] = useState(false)
   const [authProvider, setAuthProvider] = useState(null)
+
+  // Load D&B seal script
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://dunsregistered.dnb.com'
+    script.type = 'text/javascript'
+    script.async = true
+    document.body.appendChild(script)
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [])
 
   const handleInstagramAuth = async () => {
     setLoading(true)
@@ -170,7 +182,7 @@ const AuthFlow = () => {
         <div className="dnb-seal-container">
           <iframe 
             id="dnb-seal" 
-            src="https://dunsregistered.dnb.com/SealAuthentication.aspx?Cid=1" 
+            src="https://dunsregistered.dnb.com/SealAuthentication.aspx?Cid=772074004" 
             width="114" 
             height="97" 
             frameBorder="0" 
