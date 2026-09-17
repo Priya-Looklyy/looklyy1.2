@@ -6,6 +6,7 @@ import { submitWaitlist as submitWaitlistToDB } from '@/lib/supabase';
 import { Hero } from '@/components/Hero';
 import { AmoebaCards } from '@/components/AmoebaCards';
 import { VideoShortsRow } from '@/components/VideoShortsRow';
+import { DunBradstreetSeal } from '@/components/DunBradstreetSeal';
 
 export default function Home() {
   const [form1Error, setForm1Error] = useState('');
@@ -116,8 +117,8 @@ export default function Home() {
 
       <VideoShortsRow />
 
-      {/* Email + fine print */}
-      <section className="bg-[#faf7fc] pb-10">
+      {/* Email + fine print + D&B registered seal */}
+      <footer className="bg-[#faf7fc] pb-10">
         <div className="mx-auto max-w-3xl px-6 text-center space-y-1">
           <p
             className="text-[11px] sm:text-xs whitespace-nowrap"
@@ -152,8 +153,11 @@ export default function Home() {
             </button>{' '}
             by joining our early list
           </p>
+          <div className="flex justify-center pt-4">
+            <DunBradstreetSeal />
+          </div>
         </div>
-      </section>
+      </footer>
 
       {/* Thank You Modal */}
       {showThankYou && (
