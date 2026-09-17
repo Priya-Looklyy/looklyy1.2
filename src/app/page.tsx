@@ -152,6 +152,19 @@ export default function Home() {
             </button>{' '}
             by joining our early list
           </p>
+          {/* D&B Registered Seal */}
+          <div className="pt-4 flex justify-center">
+            <iframe
+              id="dnb-seal"
+              src="https://dunsregistered.dnb.com/SealAuthentication.aspx?Cid=1"
+              width={114}
+              height={97}
+              frameBorder={0}
+              scrolling="no"
+              style={{ border: 'none', background: 'transparent' }}
+              title="D&B Registered Business"
+            />
+          </div>
         </div>
       </section>
 
