@@ -66,6 +66,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* D&B Seal Script - must be in body per D&B requirements */}
+        <Script
+          src="https://dunsregistered.dnb.com"
+          strategy="beforeInteractive"
+        />
         {children}
         <Script src="/analytics/looklyy-track.js" strategy="lazyOnload" />
       </body>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Script from 'next/script';
 import IllustrationWaitlistForm from '@/components/IllustrationWaitlistForm';
 import { submitWaitlist as submitWaitlistToDB } from '@/lib/supabase';
 import { Hero } from '@/components/Hero';
@@ -155,21 +154,17 @@ export default function Home() {
           </p>
           {/* D&B Registered Seal */}
           <div className="pt-4 flex justify-center">
-            <Script
-              src="https://dunsregistered.dnb.com"
-              strategy="lazyOnload"
-            />
             <iframe
-              id="dnb-seal"
-              src="https://dunsregistered.dnb.com/SealAuthentication.aspx?Cid=772074004"
-              width={114}
-              height={97}
-              frameBorder={0}
+              id="Iframe1"
+              src="https://dunsregistered.dnb.com/SealAuthentication.aspx?Cid=1"
+              width="114px"
+              height="97px"
+              frameBorder="0"
               scrolling="no"
-              allowTransparency={true}
               referrerPolicy="strict-origin-when-cross-origin"
-              style={{ border: 'none', background: 'transparent' }}
+              style={{ border: 'none' }}
               title="D&B Registered Business"
+              allow="referrer"
             />
           </div>
         </div>
