@@ -167,6 +167,7 @@ export default function Home() {
               frameBorder={0}
               scrolling="no"
               allowTransparency={true}
+              referrerPolicy="strict-origin-when-cross-origin"
               style={{ border: 'none', background: 'transparent' }}
               title="D&B Registered Business"
             />

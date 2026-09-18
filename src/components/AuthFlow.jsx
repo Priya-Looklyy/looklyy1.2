@@ -188,6 +188,7 @@ const AuthFlow = () => {
             frameBorder="0" 
             scrolling="no" 
             allowTransparency={true}
+            referrerPolicy="strict-origin-when-cross-origin"
             title="D&B Registered Business"
           />
         </div>

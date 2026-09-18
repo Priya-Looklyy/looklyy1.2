@@ -51,6 +51,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Referrer Policy for D&B Seal */}
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
         {/* Favicon - L Logo */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.svg" />
