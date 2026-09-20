@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: "Looklyy - What if You could see Why some Outfits Work for you",
   description: "What if you could see why some outfits work for you? Join the waitlist.",
   keywords: "fashion, styling, fashion app, waitlist",
+  referrer: "strict-origin-when-cross-origin",
+  other: {
+    "referrer": "strict-origin-when-cross-origin",
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", sizes: "any", type: "image/svg+xml" },

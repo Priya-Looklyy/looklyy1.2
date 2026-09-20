@@ -5,15 +5,27 @@ const AuthFlow = () => {
   const [loading, setLoading] = useState(false)
   const [authProvider, setAuthProvider] = useState(null)
 
-  // Load D&B seal script
+  // Load D&B seal script and set referrer policy
   useEffect(() => {
+    // Set document referrer policy
+    let metaReferrer = document.querySelector('meta[name="referrer"]')
+    if (!metaReferrer) {
+      metaReferrer = document.createElement('meta')
+      metaReferrer.name = 'referrer'
+      document.head.appendChild(metaReferrer)
+    }
+    metaReferrer.content = 'strict-origin-when-cross-origin'
+
+    // Load D&B script
     const script = document.createElement('script')
     script.src = 'https://dunsregistered.dnb.com'
     script.type = 'text/javascript'
-    script.async = true
     document.body.appendChild(script)
+    
     return () => {
-      document.body.removeChild(script)
+      if (script.parentNode) {
+        script.parentNode.removeChild(script)
+      }
     }
   }, [])
 
@@ -183,13 +195,13 @@ const AuthFlow = () => {
           <iframe 
             id="Iframe1" 
             src="https://dunsregistered.dnb.com/SealAuthentication.aspx?Cid=1" 
-            width="114px" 
-            height="97px" 
+            width="114" 
+            height="97" 
             frameBorder="0" 
             scrolling="no" 
+            allowTransparency={true}
             referrerPolicy="strict-origin-when-cross-origin"
             title="D&B Registered Business"
-            allow="referrer"
           />
         </div>
       </div>

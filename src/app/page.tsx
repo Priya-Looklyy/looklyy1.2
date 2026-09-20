@@ -35,6 +35,32 @@ export default function Home() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Load D&B seal script and set referrer policy
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Set document referrer policy
+    let metaReferrer = document.querySelector('meta[name="referrer"]') as HTMLMetaElement | null;
+    if (!metaReferrer) {
+      metaReferrer = document.createElement('meta');
+      metaReferrer.name = 'referrer';
+      document.head.appendChild(metaReferrer);
+    }
+    metaReferrer.content = 'strict-origin-when-cross-origin';
+
+    // Load D&B script
+    const script = document.createElement('script');
+    script.src = 'https://dunsregistered.dnb.com';
+    script.type = 'text/javascript';
+    document.body.appendChild(script);
+    
+    return () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
+
   const submitWaitlist = async (e: string, phone: string, formId: 'form1') => {
     if (isSubmitting) return;
     if (form1Submitted) return;
@@ -157,14 +183,13 @@ export default function Home() {
             <iframe
               id="Iframe1"
               src="https://dunsregistered.dnb.com/SealAuthentication.aspx?Cid=1"
-              width="114px"
-              height="97px"
+              width="114"
+              height="97"
               frameBorder="0"
               scrolling="no"
+              allowTransparency={true}
               referrerPolicy="strict-origin-when-cross-origin"
-              style={{ border: 'none' }}
               title="D&B Registered Business"
-              allow="referrer"
             />
           </div>
         </div>
